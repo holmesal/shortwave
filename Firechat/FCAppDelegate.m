@@ -10,9 +10,15 @@
 
 @implementation FCAppDelegate
 
+@synthesize userID;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    // init the user object
+    
+    NSLog(@"User ID: %@",userID);
+    
     return YES;
 }
 							

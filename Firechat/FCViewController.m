@@ -7,9 +7,12 @@
 //
 
 #import "FCViewController.h"
+//#import <Firebase/Firebase.h>
 
 @interface FCViewController ()
-
+//@property Firebase *userRef;
+//@property Firebase *wallRef;
+//@property NSMutableArray *wall;
 @end
 
 @implementation FCViewController
@@ -18,6 +21,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    // Setup firebase
+//    [self initFirebase];
 }
 
 - (void)didReceiveMemoryWarning
@@ -25,5 +30,7 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 @end

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C020258D18735A4500883A38 /* FCLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C020258C18735A4500883A38 /* FCLoadingViewController.m */; };
+		C020258F18735B1E00883A38 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020258E18735B1E00883A38 /* FirebaseSimpleLogin.framework */; };
+		C020259118735B3300883A38 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259018735B3300883A38 /* Accounts.framework */; };
+		C020259318735B3D00883A38 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259218735B3D00883A38 /* Social.framework */; };
+		C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C020259818736DC700883A38 /* FCAccountPickerViewController.m */; };
 		C02CE38E186808B000305FC9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE38D186808B000305FC9 /* Foundation.framework */; };
 		C02CE390186808B000305FC9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE38F186808B000305FC9 /* CoreGraphics.framework */; };
 		C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE391186808B000305FC9 /* UIKit.framework */; };
@@ -15,7 +20,6 @@
 		C02CE39C186808B000305FC9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C02CE39A186808B000305FC9 /* InfoPlist.strings */; };
 		C02CE39E186808B000305FC9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE39D186808B000305FC9 /* main.m */; };
 		C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3A1186808B000305FC9 /* FCAppDelegate.m */; };
-		C02CE3A5186808B000305FC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C02CE3A3186808B000305FC9 /* Main.storyboard */; };
 		C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3A7186808B000305FC9 /* FCViewController.m */; };
 		C02CE3AA186808B000305FC9 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE3A9186808B000305FC9 /* Firebase.framework */; };
 		C02CE3AD186808B000305FC9 /* FCViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C02CE3AB186808B000305FC9 /* FCViewController.xib */; };
@@ -25,6 +29,16 @@
 		C02CE3B8186808B000305FC9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE391186808B000305FC9 /* UIKit.framework */; };
 		C02CE3C0186808B000305FC9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C02CE3BE186808B000305FC9 /* InfoPlist.strings */; };
 		C02CE3C2186808B000305FC9 /* FirechatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3C1186808B000305FC9 /* FirechatTests.m */; };
+		C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE3CB1868095900305FC9 /* libicucore.dylib */; };
+		C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE3CD1868096600305FC9 /* libc++.dylib */; };
+		C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE3CF1868097E00305FC9 /* SystemConfiguration.framework */; };
+		C02CE3D218680A5F00305FC9 /* main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C02CE3D118680A5F00305FC9 /* main.storyboard */; };
+		C02CE3D5186812A700305FC9 /* FCWallTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3D4186812A700305FC9 /* FCWallTableViewController.m */; };
+		C02CE3DB186814A700305FC9 /* FCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3DA186814A700305FC9 /* FCMessage.m */; };
+		C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */; };
+		C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3F11868D1A500305FC9 /* AsyncImageView.m */; };
+		C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */; };
+		C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124D186D3D5F00BA89EA /* FCUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +52,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C020258B18735A4500883A38 /* FCLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLoadingViewController.h; sourceTree = "<group>"; };
+		C020258C18735A4500883A38 /* FCLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLoadingViewController.m; sourceTree = "<group>"; };
+		C020258E18735B1E00883A38 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
+		C020259018735B3300883A38 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		C020259218735B3D00883A38 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		C020259718736DC700883A38 /* FCAccountPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCAccountPickerViewController.h; sourceTree = "<group>"; };
+		C020259818736DC700883A38 /* FCAccountPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCAccountPickerViewController.m; sourceTree = "<group>"; };
 		C02CE38A186808B000305FC9 /* Firechat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Firechat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02CE38D186808B000305FC9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C02CE38F186808B000305FC9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -50,7 +71,6 @@
 		C02CE39F186808B000305FC9 /* Firechat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Firechat-Prefix.pch"; sourceTree = "<group>"; };
 		C02CE3A0186808B000305FC9 /* FCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCAppDelegate.h; sourceTree = "<group>"; };
 		C02CE3A1186808B000305FC9 /* FCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCAppDelegate.m; sourceTree = "<group>"; };
-		C02CE3A4186808B000305FC9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		C02CE3A6186808B000305FC9 /* FCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCViewController.h; sourceTree = "<group>"; };
 		C02CE3A7186808B000305FC9 /* FCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCViewController.m; sourceTree = "<group>"; };
 		C02CE3A9186808B000305FC9 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Firebase.framework; path = /Users/Shared/Firebase/Frameworks/Firebase.framework; sourceTree = "<absolute>"; };
@@ -61,6 +81,22 @@
 		C02CE3BD186808B000305FC9 /* FirechatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FirechatTests-Info.plist"; sourceTree = "<group>"; };
 		C02CE3BF186808B000305FC9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C02CE3C1186808B000305FC9 /* FirechatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirechatTests.m; sourceTree = "<group>"; };
+		C02CE3CB1868095900305FC9 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		C02CE3CD1868096600305FC9 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
+		C02CE3CF1868097E00305FC9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C02CE3D118680A5F00305FC9 /* main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = main.storyboard; path = ../main.storyboard; sourceTree = "<group>"; };
+		C02CE3D3186812A700305FC9 /* FCWallTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCWallTableViewController.h; sourceTree = "<group>"; };
+		C02CE3D4186812A700305FC9 /* FCWallTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCWallTableViewController.m; sourceTree = "<group>"; };
+		C02CE3D9186814A700305FC9 /* FCMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCMessage.h; path = ../FCMessage.h; sourceTree = "<group>"; };
+		C02CE3DA186814A700305FC9 /* FCMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCMessage.m; path = ../FCMessage.m; sourceTree = "<group>"; };
+		C02CE3EC1868CD3000305FC9 /* FCMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCMessageCell.h; sourceTree = "<group>"; };
+		C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCMessageCell.m; sourceTree = "<group>"; };
+		C02CE3F01868D1A500305FC9 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
+		C02CE3F11868D1A500305FC9 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
+		C05E1249186D3B3600BA89EA /* FCPostMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCPostMessageViewController.h; sourceTree = "<group>"; };
+		C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCPostMessageViewController.m; sourceTree = "<group>"; };
+		C05E124C186D3D5F00BA89EA /* FCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCUser.h; sourceTree = "<group>"; };
+		C05E124D186D3D5F00BA89EA /* FCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCUser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,12 +104,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
+				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
+				C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */,
+				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
+				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
 				C02CE390186808B000305FC9 /* CoreGraphics.framework in Frameworks */,
 				C02CE3AA186808B000305FC9 /* Firebase.framework in Frameworks */,
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
 				C02CE38E186808B000305FC9 /* Foundation.framework in Frameworks */,
+				C020258F18735B1E00883A38 /* FirebaseSimpleLogin.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +154,11 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C020259218735B3D00883A38 /* Social.framework */,
+				C020259018735B3300883A38 /* Accounts.framework */,
+				C02CE3CF1868097E00305FC9 /* SystemConfiguration.framework */,
+				C02CE3CD1868096600305FC9 /* libc++.dylib */,
+				C02CE3CB1868095900305FC9 /* libicucore.dylib */,
 				C02CE38D186808B000305FC9 /* Foundation.framework */,
 				C02CE38F186808B000305FC9 /* CoreGraphics.framework */,
 				C02CE391186808B000305FC9 /* UIKit.framework */,
@@ -125,11 +172,27 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
+				C020258B18735A4500883A38 /* FCLoadingViewController.h */,
+				C020258C18735A4500883A38 /* FCLoadingViewController.m */,
+				C020259718736DC700883A38 /* FCAccountPickerViewController.h */,
+				C020259818736DC700883A38 /* FCAccountPickerViewController.m */,
+				C02CE3D9186814A700305FC9 /* FCMessage.h */,
+				C02CE3DA186814A700305FC9 /* FCMessage.m */,
+				C02CE3D118680A5F00305FC9 /* main.storyboard */,
+				C05E1249186D3B3600BA89EA /* FCPostMessageViewController.h */,
+				C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */,
+				C02CE3EC1868CD3000305FC9 /* FCMessageCell.h */,
+				C05E124C186D3D5F00BA89EA /* FCUser.h */,
+				C05E124D186D3D5F00BA89EA /* FCUser.m */,
+				C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */,
+				C02CE3D3186812A700305FC9 /* FCWallTableViewController.h */,
+				C02CE3D4186812A700305FC9 /* FCWallTableViewController.m */,
 				C02CE3A0186808B000305FC9 /* FCAppDelegate.h */,
 				C02CE3A1186808B000305FC9 /* FCAppDelegate.m */,
-				C02CE3A3186808B000305FC9 /* Main.storyboard */,
 				C02CE3A6186808B000305FC9 /* FCViewController.h */,
 				C02CE3A7186808B000305FC9 /* FCViewController.m */,
+				C020258E18735B1E00883A38 /* FirebaseSimpleLogin.framework */,
+				C02CE3EF1868D1A500305FC9 /* AsyncImageView */,
 				C02CE3A9186808B000305FC9 /* Firebase.framework */,
 				C02CE3AB186808B000305FC9 /* FCViewController.xib */,
 				C02CE3AE186808B000305FC9 /* Images.xcassets */,
@@ -165,6 +228,15 @@
 				C02CE3BE186808B000305FC9 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C02CE3EF1868D1A500305FC9 /* AsyncImageView */ = {
+			isa = PBXGroup;
+			children = (
+				C02CE3F01868D1A500305FC9 /* AsyncImageView.h */,
+				C02CE3F11868D1A500305FC9 /* AsyncImageView.m */,
+			);
+			path = AsyncImageView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -215,6 +287,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Buildco;
 				TargetAttributes = {
+					C02CE389186808B000305FC9 = {
+						DevelopmentTeam = SQ4LKA86HJ;
+					};
 					C02CE3B3186808B000305FC9 = {
 						TestTargetID = C02CE389186808B000305FC9;
 					};
@@ -244,10 +319,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C02CE3D218680A5F00305FC9 /* main.storyboard in Resources */,
 				C02CE3AD186808B000305FC9 /* FCViewController.xib in Resources */,
 				C02CE3AF186808B000305FC9 /* Images.xcassets in Resources */,
 				C02CE39C186808B000305FC9 /* InfoPlist.strings in Resources */,
-				C02CE3A5186808B000305FC9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,7 +343,15 @@
 			files = (
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
+				C02CE3D5186812A700305FC9 /* FCWallTableViewController.m in Sources */,
+				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
+				C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */,
+				C02CE3DB186814A700305FC9 /* FCMessage.m in Sources */,
+				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
+				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
+				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
+				C020258D18735A4500883A38 /* FCLoadingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,14 +380,6 @@
 				C02CE39B186808B000305FC9 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		C02CE3A3186808B000305FC9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C02CE3A4186808B000305FC9 /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 		C02CE3AB186808B000305FC9 /* FCViewController.xib */ = {
@@ -403,9 +478,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
+					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
@@ -415,6 +493,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -424,9 +503,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
+					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
@@ -436,6 +518,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -501,6 +584,7 @@
 				C02CE3C7186808B000305FC9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C02CE3C8186808B000305FC9 /* Build configuration list for PBXNativeTarget "FirechatTests" */ = {
 			isa = XCConfigurationList;
@@ -509,6 +593,7 @@
 				C02CE3CA186808B000305FC9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

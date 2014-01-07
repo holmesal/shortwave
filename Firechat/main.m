@@ -4,7 +4,10 @@
 //
 //  Created by Alonso Holmes on 12/22/13.
 //  Copyright (c) 2013 Buildco. All rights reserved.
-//
+//  I am a comment
+//  lol I messed up all your code
+//  wow so bother much inconveniece
+//  you take a long time to shower tbh
 
 #import <UIKit/UIKit.h>
 

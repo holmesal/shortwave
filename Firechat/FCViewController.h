@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FCViewController : UIViewController
+@interface FCViewController : UITableViewController
 
 @end
