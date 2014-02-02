@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FCUser.h"
 
 @interface FCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) NSString *userID;
+@property (strong, nonatomic) FCUser *owner;
 
 @end

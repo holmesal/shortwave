@@ -8,14 +8,18 @@
 
 #import <Foundation/Foundation.h>
 #import "FCUser.h"
+#import <Firebase/Firebase.h>
 
 @interface FCMessage : NSObject
 
 @property NSString *text;
-@property FCUser *user;
+@property NSURL *imageUrl;
+@property NSString *userName;
+@property NSString *displayName;
+@property NSString *ownerId;
 
-- (id) initWithText:(NSString *)text user:(FCUser *)user;
+- (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block;
 
-- (NSDictionary *) toDictionary;
+//- (NSDictionary *) toDictionary;
 
 @end

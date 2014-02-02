@@ -10,7 +10,7 @@
 #import "AsyncImageView.h"
 
 @interface FCMessageCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *profilePhoto;
+@property (weak, nonatomic) IBOutlet UIImageView *profilePhoto;
 @property (weak, nonatomic) IBOutlet UILabel *userName;
 @property (weak, nonatomic) IBOutlet UILabel *messageText;
 

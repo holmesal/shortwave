@@ -15,6 +15,7 @@
 
 @interface FCLoadingViewController ()
 @property FirebaseSimpleLogin *authClient;
+@property FCUser *owner;
 @end
 
 @implementation FCLoadingViewController
@@ -33,7 +34,9 @@
     [super viewDidLoad];
 	// Auth with Firebase
     [self authWithFirebase];
-//    FCUser *user =
+    // Load shared user
+    self.owner = [(FCAppDelegate *)[[UIApplication sharedApplication] delegate] owner];
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)authWithFirebase
@@ -48,15 +51,18 @@
         } else if (user == nil) {
             // Show the login button
             NSLog(@"%@",@"User is NOT logged in :(");
-            
-            
         } else {
             // User is logged in
             // Segue to the wall view
-            NSLog(@"%@",@"User is logged in!");
-            [self.authClient logout];
-            // TODO - store the user somewhere... where?
-            [self performSegueWithIdentifier:@"SegueLoadingToWall" sender:self];
+            NSLog(@"%@",@"User is already logged in!");
+            [self.owner setupWithTwitter:user withCompletionBlock:^(NSError *error) {
+                if(!error){
+                    [self performSegueWithIdentifier:@"SegueLoadingToWall" sender:self];
+                }
+            }];
+//            [self.authClient logout];
+            // At this point, user is stored on the root
+            
         }
     }];
 }
@@ -80,14 +86,13 @@
         if (error!=nil) {
             NSLog(@"%@",error);
         } else{
-            NSLog(@"OK!");
-            NSLog(@"%@",twitterUser);
-            NSLog(@"%@",twitterUser.userId);
-            // Create and store the user
-            FCUser *user = [[FCUser alloc] initWithTwitter:twitterUser];
-            
-            [self.authClient logout];
-            
+            NSLog(@"Logged in user successfully.");
+            // Setup with twitter
+            [self.owner setupWithTwitter:twitterUser withCompletionBlock:^(NSError *error) {
+                if(!error){
+                    [self performSegueWithIdentifier:@"SegueLoadingToWall" sender:self];
+                }
+            }];
         }
     }];
 }

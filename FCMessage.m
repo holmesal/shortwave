@@ -11,30 +11,54 @@
 
 @implementation FCMessage
 
-- (id) initWithText:(NSString *)text user:(FCUser *)user
+- (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block
 {
     self = [super init];
     if(!self) return Nil;
     
-    self.text = text;
-    self.user = user;
+    self.text = [snapshot.value valueForKey:@"text"];
+    self.ownerId = [snapshot.value valueForKey:@"ownerId"];
+    
+    // Set up a firebase reference to this user
+    Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerId];
+    // Wait for the data
+    [ref observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+        NSLog(@"Got value for user %@",self.ownerId);
+        NSLog(@"%@",snapshot.value);
+        
+        // Set the values
+        self.userName = [snapshot.value valueForKey:@"username"];
+        self.displayName = [snapshot.value valueForKey:@"displayName"];
+        self.imageUrl = [[NSURL alloc] initWithString:[snapshot.value valueForKey:@"imageURL"]];
+        
+        // You should really do some error checking here
+        
+        // Run the callback block
+        block(nil, self);
+        
+    }];
+    
     
     return self;
     
 }
 
-- (NSDictionary *) toDictionary
-{
-//    NSDictionary *message = [[NSDictionary alloc] initWithObjectsAndKeys:<#(id), ...#>, nil];
-    NSDictionary *user = @{@"username": self.user.username,
-                                 @"id": self.user.id,
-                           @"imageURL":self.user.imageURL};
-    NSDictionary *message = @{@"text"     : self.text,
-                              @"user"     : user};
-//    [message setValue:self.text forKey:@"text"];
-//    [message setValue:self.user.id forKey:@"user"];
-    
-    return message;
-}
+//- (id)
+
+//- (id) initWithData:(
+
+//- (NSDictionary *) toDictionary
+//{
+////    NSDictionary *message = [[NSDictionary alloc] initWithObjectsAndKeys:<#(id), ...#>, nil];
+//    NSDictionary *user = @{@"username": self.user.username,
+//                                 @"id": self.user.id,
+//                           @"imageURL":self.user.imageURL};
+//    NSDictionary *message = @{@"text"     : self.text,
+//                              @"user"     : user};
+////    [message setValue:self.text forKey:@"text"];
+////    [message setValue:self.user.id forKey:@"user"];
+//    
+//    return message;
+//}
 
 @end

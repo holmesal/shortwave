@@ -6,18 +6,32 @@
 //  Copyright (c) 2013 Buildco. All rights reserved.
 //
 
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
 #import "FCAppDelegate.h"
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @implementation FCAppDelegate
-
-@synthesize userID;
+{
+    CBPeripheralManager *_peripheralManager;
+    BOOL _isAdvertising;
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
     // init the user object
+    self.owner = [[FCUser alloc] init];
     
-    NSLog(@"User ID: %@",userID);
+    // Set navigation bar style
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00CF69)]; // 0x00CF69   more green -> 0x56BD54
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{
+                                                          NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
+                                                          }];
+
+//    NSLog(@"User %@",self.owner);
     
     return YES;
 }
