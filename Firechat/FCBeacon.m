@@ -29,6 +29,7 @@
         // Init location manager
         self.locationManager = [[CLLocationManager alloc] init];
         // Setup the scanner
+        NSLog(@"SCAN INIT HAS BEEN COMMENTED OUT IN FCBEACON.m");
         [self initScanner];
     }
     return self;
@@ -72,7 +73,7 @@
 // beacons is an array. it might be empty for ~20seconds after the last beacon goes out of range
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    NSLog(@"Got beacon ranges");
+//    NSLog(@"Got beacon ranges");
     self.beacons = beacons;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Updated" object:self.beacons];
     // Will parse and push if necessary

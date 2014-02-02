@@ -31,5 +31,6 @@
 - (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id;
 //- (id) initWithTwitter:(FAUser *)twitterUser;
 - (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block;
+- (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image;
 
 @end

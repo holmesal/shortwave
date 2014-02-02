@@ -35,153 +35,52 @@ typedef void (^CompletionBlockType)(id);
 {
     self = [super init];
     if (self) {
+        // This should probably happen earlier, depending on where we want to pop up permissions
         self.beacon = [[FCBeacon alloc] init];
     }
     return self;
 }
 
-- (void) initWithId:(NSString *)id
-{
-    self.id = id;
-    [self populateFromFirebaseId:id];
-    
-//    return self;
-}
-
-- (id) initWithSnapshot:(NSDictionary *)snapshot
-{
-    
-    self = [super init];
-    if(!self) return nil;
-    
-    self.username = [snapshot objectForKey:@"username"];
-    self.imageURL = [snapshot valueForKey:@"imageURL"];
-    
-    return self;
-}
-
-- (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id
-{
-    self = [self initWithSnapshot:snapshot];
-    if(!self) return nil;
-    
-    self.id = id;
-    
-    return self;
-}
-
-//- (id) initWithTwitter:(FAUser *)twitterUser
+//- (void) initWithId:(NSString *)id
 //{
-//
-//    NSLog(@"%@",twitterUser.thirdPartyUserData);
+//    self.id = id;
+//    [self populateFromFirebaseId:id];
 //    
-//    // Create the new user
+////    return self;
+//}
+
+//- (id) initWithSnapshot:(NSDictionary *)snapshot
+//{
+//    
 //    self = [super init];
 //    if(!self) return nil;
 //    
-//    // Check for an existing user by twitter id
-//    // If one exists, populate with that one instead of creating a new one
-////    BOOL existing = [self checkExisting:@"twitter"];
-////
-////    if (!existing) {
-////        return [self populateFromFirebaseId:(NSString *)]
-////    }
+//    self.username = [snapshot objectForKey:@"username"];
+//    self.imageURL = [snapshot valueForKey:@"imageURL"];
 //    
-//    // Populate
-//    self.username =[twitterUser.thirdPartyUserData valueForKey:@"username"];
-//    self.displayName = [twitterUser.thirdPartyUserData valueForKey:@"displayName"];
-//    self.imageURL = [twitterUser.thirdPartyUserData valueForKey:@"profile_image_url"];
-//    self.description =[twitterUser.thirdPartyUserData valueForKey:@"description"];
-//    self.thirdPartyId = [NSString stringWithFormat:@"twitter:%@", twitterUser.userId];
+//    return self;
+//}
+//
+//- (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id
+//{
+//    self = [self initWithSnapshot:snapshot];
+//    if(!self) return nil;
 //    
-//    // Generate an id
-//    self.major = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-////    self.major = [self formatValue:self.major forDigits:@4[self.major length]]
-//    self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-//    self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
-//    NSLog(@"Generated id: %@",self.id);
-//    
-//    // Create ref via firebase
-//    self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
-//    
-//    // This ref should be null -> dump data in here
-//    [[self.ref childByAppendingPath:@"username" ] setValue:self.username];
-//    [[self.ref childByAppendingPath:@"major" ] setValue:self.major];
-//    [[self.ref childByAppendingPath:@"minor" ] setValue:self.minor];
-//    [[self.ref childByAppendingPath:@"displayName" ] setValue:self.displayName];
-//    [[self.ref childByAppendingPath:@"imageURL"] setValue:self.imageURL];
-//    [[self.ref childByAppendingPath:@"description"] setValue:self.description];
-//    
-//    // Logged in, so start broadcasting!
-//    [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
+//    self.id = id;
 //    
 //    return self;
 //}
 
-- (void) populateFromFirebaseId:(NSString *)userId
-{
-    
-    // Firebase ref for this user
-    self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:userId];
-    
-    // Fill in the data on a value event
-    [self.ref observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        NSLog(@"Got user back from firebase...");
-//        NSLog([snapshot.value description]);
-        if(snapshot.value){
-            // Store the dater
-            self.username = [snapshot.value objectForKey:@"username"];
-            self.displayName = [snapshot.value objectForKey:@"displayName"];
-            self.major = [snapshot.value objectForKey:@"major"];
-            self.minor = [snapshot.value objectForKey:@"minor"];
-            self.imageURL = [snapshot.value objectForKey:@"imageURL"];
-            self.description = [snapshot.value objectForKey:@"description"];
-            
-            // Start broadcasting
-            [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
-            
-            // Run the completion block if it exists
-            [self runCompletionBlock];
-        }
-        
-    }];
 
-}
-
-- (void) setupWithTwitter:(FAUser *)twitterUser
+#pragma mark - creating from a username and a profile photo
+- (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image
 {
-    
-    // Connect to the twitter -> orbiter entity
-    Firebase *twitterRef = [[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/providers/twitter"] childByAppendingPath:twitterUser.userId];
-    // Will trigger an empty snapshot if this user doesn't exist
-    [twitterRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        if(snapshot.value == [NSNull null]) {
-            NSLog(@"This user is empty!");
-            [self createWithTwitterUser:twitterUser];
-        }
-        else {
-            NSLog(@"This user already exists!");
-            [self initWithId:snapshot.value];
-        }
-    }];
-}
-
-- (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block
-{
-    self.completionBlock = block;
-    [self setupWithTwitter:twitterUser];
-    
-}
-
-- (void) createWithTwitterUser:(FAUser *)twitterUser
-{
-    NSLog(@"Creating with twitter user");
+    NSLog(@"Creating user...");
     // Populate
-    self.username =[twitterUser.thirdPartyUserData valueForKey:@"username"];
-    self.displayName = [twitterUser.thirdPartyUserData valueForKey:@"displayName"];
-    self.imageURL = [twitterUser.thirdPartyUserData valueForKey:@"profile_image_url"];
-    self.description =[twitterUser.thirdPartyUserData valueForKey:@"description"];
-    self.thirdPartyId = [NSString stringWithFormat:@"twitter:%@", twitterUser.userId];
+    self.username = username;
+    
+    // Hardcode image URL for now - in the future, we probably want to host these on s3 or sommat
+    self.imageURL = @"https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg";
     
     // Generate the id
     [self generateIds];
@@ -189,30 +88,36 @@ typedef void (^CompletionBlockType)(id);
     // Create ref via firebase
     self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
     
-    // Create the twitter -> orbiter entity
-    Firebase *twitterRef = [[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/providers/twitter"] childByAppendingPath:twitterUser.userId];
-    // Set to point to the actual user entity
-    [twitterRef setValue:self.id];
+    // Call update to set these values on firebase, and save to NSUserDefaults
+    [self updateUserData];
     
-    // Populate the actual entity
-    [self updateFirebase];
-    
-    // Logged in, so start broadcasting!
+    // Start broadcasting with a beacon
     [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
     
-    // Run the completion block if it exists
-    [self runCompletionBlock];
-    
+    // Finally, emit a "complete" event, so the view can proceed
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Signup Success" object:nil];
 }
 
-- (void) runCompletionBlock
+- (void) updateUserData
 {
-    NSLog(@"running completion block");
-    if(self.completionBlock)
-    {
-        self.completionBlock(nil);
-    }
+    // Init user defaults
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // Username
+    [[self.ref childByAppendingPath:@"username"] setValue:self.username];
+    [prefs setValue:self.username forKey:@"username"];
+    // Profile photo
+    [[self.ref childByAppendingPath:@"imageURL"] setValue:self.imageURL];
+    [prefs setValue:self.imageURL forKey:@"imageURL"];
+    // Major/minor
+    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
+    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
+    [prefs setValue:self.major forKey:@"major"];
+    [prefs setValue:self.minor forKey:@"minor"];
+    
+    // Synchronize preferences
+    [prefs synchronize];
 }
+
 
 - (void) generateIds
 {
@@ -224,38 +129,5 @@ typedef void (^CompletionBlockType)(id);
     NSLog(@"Generated id: %@",self.id);
 }
 
-- (void) updateFirebase
-{
-    // Update the firebase entity with all of the current values
-    [[self.ref childByAppendingPath:@"username" ] setValue:self.username];
-    [[self.ref childByAppendingPath:@"major" ] setValue:self.major];
-    [[self.ref childByAppendingPath:@"minor" ] setValue:self.minor];
-    [[self.ref childByAppendingPath:@"displayName" ] setValue:self.displayName];
-    [[self.ref childByAppendingPath:@"imageURL"] setValue:self.imageURL];
-    [[self.ref childByAppendingPath:@"description"] setValue:self.description];
-}
-
-//+ (NSString *)formatValue:(int)value forDigits:(int)zeros {
-//    NSString *format = [NSString stringWithFormat:@"%%0%dd", zeros];
-//    return [NSString stringWithFormat:format,value];
-//}
-//
-//- (BOOL) checkExisting:(NSString *)service
-//{
-//    return FALSE;
-//}
-
-
-
-
-    
-//    self.imageURL:@"http://t2.gstatic.com/images?q=tbn:ANd9GcSpfi-oy-mmjR35QHzmCgzKD331GmxTteCFuaO3khCTCsHV3OpNDA"
-//    
-//    self.username = username;
-//    self.id = @"hello";
-//    self.imageURL = [[NSURL alloc] initWithString:imageURL];
-//    
-//    return self;
-//}
 
 @end

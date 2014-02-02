@@ -10,6 +10,8 @@
 
 #import "FCAppDelegate.h"
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "FCLandingViewController.h"
+#import "FCWallTableViewController.h"
 
 @implementation FCAppDelegate
 {
@@ -24,12 +26,29 @@
     self.owner = [[FCUser alloc] init];
     
     // Set navigation bar style
-    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00CF69)]; // 0x00CF69   more green -> 0x56BD54
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{
                                                           NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
                                                           }];
+    
+    
+    // Skip the login flow if this isn't the first run
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *username = [prefs stringForKey:@"username"];
+    if (username) {
+        FCWallTableViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallTableViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
+        self.window.rootViewController = navController;
+    } else {
+        FCLandingViewController *landingController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCLandingViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:landingController];
+        self.window.rootViewController = navController;
+    }
+    
+    
+
 
 //    NSLog(@"User %@",self.owner);
     
