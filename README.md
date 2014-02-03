@@ -21,6 +21,7 @@ next steps
 8. Scrolling all the way up in the table view produces a weird empty white space.
 9. Should have a "pull-to-load-older" functionality at the top of the table view.
 10. Figure out the whole push-notification-when-there-are-people-nearby thing.
+11. Upload user-selected images to s3, yo.
 
 crazy features
 ---
