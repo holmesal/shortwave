@@ -11,7 +11,7 @@
 
 @interface FCMessageCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *profilePhoto;
-@property (weak, nonatomic) IBOutlet UILabel *userName;
+@property (weak, nonatomic) IBOutlet UILabel *username;
 @property (weak, nonatomic) IBOutlet UILabel *messageText;
 
 @end

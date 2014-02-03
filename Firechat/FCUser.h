@@ -15,11 +15,11 @@
 @property Firebase *ref;
 
 @property NSString *username;
-@property NSString *displayName;
+//@property NSString *displayName;
 @property NSString *imageURL;
-@property NSString *description;
+//@property NSString *description;
 @property NSString *id;
-@property NSString *thirdPartyId;
+//@property NSString *thirdPartyId;
 @property NSNumber *major;
 @property NSNumber *minor;
 
@@ -30,7 +30,8 @@
 - (id) initWithSnapshot:(NSDictionary *)snapshot;
 - (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id;
 //- (id) initWithTwitter:(FAUser *)twitterUser;
-- (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block;
+//- (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block;
 - (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image;
+- (id) initAsOwner;
 
 @end

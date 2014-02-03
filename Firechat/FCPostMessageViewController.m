@@ -47,10 +47,10 @@
         // Create a new post
 //        self.message = [[FCMessage alloc] init];
 //        self.message.text = self.messageText.text;
-//        self.message.ownerId = self.owner.id;
+//        self.message.owner = self.owner.id;
         
         // Create the message object
-        NSDictionary *message = @{@"ownerId": self.owner.id,
+        NSDictionary *message = @{@"ownerID": self.owner.id,
                                      @"text": self.messageText.text};
         
         [self postMessage:message];

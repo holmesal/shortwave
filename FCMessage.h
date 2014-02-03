@@ -14,9 +14,9 @@
 
 @property NSString *text;
 @property NSURL *imageUrl;
-@property NSString *userName;
-@property NSString *displayName;
-@property NSString *ownerId;
+@property NSString *username;
+//@property NSString *displayName;
+@property NSString *ownerID;
 
 - (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block;
 

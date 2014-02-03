@@ -261,14 +261,14 @@
     cell.profilePhoto.imageURL = message.imageUrl;
 //    NSLog(@"image url is: %@",message.imageUrl);
 //    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:@"http://upload.wikimedia.org/wikipedia/en/4/4e/Shibe_Inu_Doge_meme.jpg"];
-    cell.userName.text = message.displayName;
+    cell.username.text = message.username;
     // Rounded profile photo
     cell.profilePhoto.layer.masksToBounds = YES;
     cell.profilePhoto.layer.cornerRadius = 25;
     
 //    FCUser *user = [message objectForKey:@"user"];
     
-//    cell.userName.text = message.user.username;
+//    cell.username.text = message.user.username;
 //    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:message.user.imageURL];
     
     return cell;

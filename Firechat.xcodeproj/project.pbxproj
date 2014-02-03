@@ -10,7 +10,7 @@
 		C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */; };
 		C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */; };
 		C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */; };
-		C020258D18735A4500883A38 /* FCLoadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C020258C18735A4500883A38 /* FCLoadingViewController.m */; };
+		C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4FC189EFF44001157E3 /* FCWallViewController.m */; };
 		C020258F18735B1E00883A38 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020258E18735B1E00883A38 /* FirebaseSimpleLogin.framework */; };
 		C020259118735B3300883A38 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259018735B3300883A38 /* Accounts.framework */; };
 		C020259318735B3D00883A38 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259218735B3D00883A38 /* Social.framework */; };
@@ -64,8 +64,8 @@
 		C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C013C4F8189EF0C1001157E3 /* FCLandingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingViewController.h; sourceTree = "<group>"; };
 		C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingViewController.m; sourceTree = "<group>"; };
-		C020258B18735A4500883A38 /* FCLoadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLoadingViewController.h; sourceTree = "<group>"; };
-		C020258C18735A4500883A38 /* FCLoadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLoadingViewController.m; sourceTree = "<group>"; };
+		C013C4FB189EFF44001157E3 /* FCWallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCWallViewController.h; sourceTree = "<group>"; };
+		C013C4FC189EFF44001157E3 /* FCWallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCWallViewController.m; sourceTree = "<group>"; };
 		C020258E18735B1E00883A38 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		C020259018735B3300883A38 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		C020259218735B3D00883A38 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -197,8 +197,6 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
-				C020258B18735A4500883A38 /* FCLoadingViewController.h */,
-				C020258C18735A4500883A38 /* FCLoadingViewController.m */,
 				C020259718736DC700883A38 /* FCAccountPickerViewController.h */,
 				C020259818736DC700883A38 /* FCAccountPickerViewController.m */,
 				C02CE3D9186814A700305FC9 /* FCMessage.h */,
@@ -218,6 +216,8 @@
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
 				C05742E518831F73002509DB /* FCBeacon.h */,
 				C05742E618831F73002509DB /* FCBeacon.m */,
+				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
+				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
 				C02CE3D3186812A700305FC9 /* FCWallTableViewController.h */,
 				C02CE3D4186812A700305FC9 /* FCWallTableViewController.m */,
 				C02CE3A0186808B000305FC9 /* FCAppDelegate.h */,
@@ -381,6 +381,7 @@
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
 				C02CE3D5186812A700305FC9 /* FCWallTableViewController.m in Sources */,
+				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
@@ -391,7 +392,6 @@
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
-				C020258D18735A4500883A38 /* FCLoadingViewController.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

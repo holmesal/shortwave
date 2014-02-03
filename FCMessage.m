@@ -17,18 +17,18 @@
     if(!self) return Nil;
     
     self.text = [snapshot.value valueForKey:@"text"];
-    self.ownerId = [snapshot.value valueForKey:@"ownerId"];
+    self.ownerID = [snapshot.value valueForKey:@"ownerID"];
     
     // Set up a firebase reference to this user
-    Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerId];
+    Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerID];
     // Wait for the data
     [ref observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        NSLog(@"Got value for user %@",self.ownerId);
+        NSLog(@"Got value for user %@",self.ownerID);
         NSLog(@"%@",snapshot.value);
         
         // Set the values
-        self.userName = [snapshot.value valueForKey:@"username"];
-        self.displayName = [snapshot.value valueForKey:@"displayName"];
+        self.username = [snapshot.value valueForKey:@"username"];
+//        self.displayName = [snapshot.value valueForKey:@"displayName"];
         self.imageUrl = [[NSURL alloc] initWithString:[snapshot.value valueForKey:@"imageURL"]];
         
         // You should really do some error checking here

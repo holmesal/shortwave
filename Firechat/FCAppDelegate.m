@@ -23,7 +23,7 @@
 {
     // Override point for customization after application launch.
     // init the user object
-    self.owner = [[FCUser alloc] init];
+    self.owner = [[FCUser alloc] initAsOwner];
     
     // Set navigation bar style
     [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
@@ -35,10 +35,10 @@
     
     
     // Skip the login flow if this isn't the first run
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSString *username = [prefs stringForKey:@"username"];
-    if (username) {
-        FCWallTableViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallTableViewController"];
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    NSString *username = [prefs stringForKey:@"username"];
+    if (self.owner.id) {
+        UIViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallViewController"];
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
         self.window.rootViewController = navController;
     } else {

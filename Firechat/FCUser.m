@@ -41,6 +41,40 @@ typedef void (^CompletionBlockType)(id);
     return self;
 }
 
+// Only run once from appdelegate - initialize as an owner
+- (id) initAsOwner
+{
+    self = [self init];
+    if (self) {
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        self.id = [prefs stringForKey:@"id"];
+        if (self.id) {
+            // Link up with firebase
+            [self initFirebase:self.id];
+        }
+    }
+    
+    return self;
+}
+
+// Initialize with an ID, pull data from firebase, and run the callback block
+//- (id) initWithId:(NSString *)id
+//{
+////    [self initFirebase];
+//    return self;
+//}
+
+// Set up the firebase reference
+- (void) initFirebase:(NSString *)id
+{
+    self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+}
+
+- (void) pullFromFirebase
+{
+    
+}
+
 //- (void) initWithId:(NSString *)id
 //{
 //    self.id = id;
@@ -86,7 +120,7 @@ typedef void (^CompletionBlockType)(id);
     [self generateIds];
     
     // Create ref via firebase
-    self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    [self initFirebase:self.id];
     
     // Call update to set these values on firebase, and save to NSUserDefaults
     [self updateUserData];
@@ -104,15 +138,17 @@ typedef void (^CompletionBlockType)(id);
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     // Username
     [[self.ref childByAppendingPath:@"username"] setValue:self.username];
-    [prefs setValue:self.username forKey:@"username"];
+//    [prefs setValue:self.username forKey:@"username"];
     // Profile photo
     [[self.ref childByAppendingPath:@"imageURL"] setValue:self.imageURL];
-    [prefs setValue:self.imageURL forKey:@"imageURL"];
+//    [prefs setValue:self.imageURL forKey:@"imageURL"];
     // Major/minor
     [[self.ref childByAppendingPath:@"major"] setValue:self.major];
     [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
-    [prefs setValue:self.major forKey:@"major"];
-    [prefs setValue:self.minor forKey:@"minor"];
+//    [prefs setValue:self.major forKey:@"major"];
+//    [prefs setValue:self.minor forKey:@"minor"];
+    
+    [prefs setValue:self.id forKey:@"id"];
     
     // Synchronize preferences
     [prefs synchronize];
