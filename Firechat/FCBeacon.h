@@ -20,5 +20,6 @@
 
 - (void) startBroadcastingWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor;
 - (NSArray *)getBeaconIds;
+- (void) checkSupport;
 
 @end

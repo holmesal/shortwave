@@ -46,6 +46,7 @@
 		C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */; };
 		C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124D186D3D5F00BA89EA /* FCUser.m */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
+		C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,8 @@
 		C05E124C186D3D5F00BA89EA /* FCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCUser.h; sourceTree = "<group>"; };
 		C05E124D186D3D5F00BA89EA /* FCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCUser.m; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
+		C0EE1D3A18A3383300663283 /* FCAnonOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCAnonOverlayViewController.h; sourceTree = "<group>"; };
+		C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCAnonOverlayViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +209,8 @@
 				C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */,
 				C013C4ED189EB1A3001157E3 /* FCSignupViewController.h */,
 				C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */,
+				C0EE1D3A18A3383300663283 /* FCAnonOverlayViewController.h */,
+				C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */,
 				C05742EB188394C8002509DB /* FCSurroundingsTableViewController.h */,
 				C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */,
 				C05E1249186D3B3600BA89EA /* FCPostMessageViewController.h */,
@@ -392,6 +397,7 @@
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
+				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

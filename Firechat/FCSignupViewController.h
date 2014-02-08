@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FCSignupViewController : UIViewController <UIImagePickerControllerDelegate>
+@interface FCSignupViewController : UIViewController
 
 @end

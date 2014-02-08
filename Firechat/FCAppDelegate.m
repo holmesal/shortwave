@@ -11,7 +11,7 @@
 #import "FCAppDelegate.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FCLandingViewController.h"
-#import "FCWallTableViewController.h"
+#import "FCSignupViewController.h"
 
 @implementation FCAppDelegate
 {
@@ -42,8 +42,8 @@
         UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
         self.window.rootViewController = navController;
     } else {
-        FCLandingViewController *landingController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCLandingViewController"];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:landingController];
+        FCSignupViewController *signupController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCSignupViewController"];
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:signupController];
         self.window.rootViewController = navController;
     }
     

@@ -53,6 +53,13 @@
     }
 }
 
+- (void) checkSupport
+{
+if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
+    NSLog(@"Beacons available");
+    // If you want to get the state right away, this is the spot
+}
+
 // Called when the first beacon comes within range
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {

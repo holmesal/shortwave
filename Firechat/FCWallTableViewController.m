@@ -258,9 +258,9 @@
 //    cell.messageText.text = [message valueForKey:@"text"];
     cell.messageText.text = message.text;
 //    cell.profilePhoto.imageURL
-    cell.profilePhoto.imageURL = message.imageUrl;
+//    cell.profilePhoto.imageURL = message.imageUrl;
 //    NSLog(@"image url is: %@",message.imageUrl);
-//    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:@"http://upload.wikimedia.org/wikipedia/en/4/4e/Shibe_Inu_Doge_meme.jpg"];
+    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:@"http://upload.wikimedia.org/wikipedia/en/4/4e/Shibe_Inu_Doge_meme.jpg"];
     cell.username.text = message.username;
     // Rounded profile photo
     cell.profilePhoto.layer.masksToBounds = YES;

@@ -7,13 +7,14 @@
 //
 
 #import "FCSignupViewController.h"
-#import <MobileCoreServices/MobileCoreServices.h>
-#import "FCUser.h"
+#import "FCAnonOverlayViewController.h"
+#import "FCBeacon.h"
 
 @interface FCSignupViewController ()
-@property (weak, nonatomic) IBOutlet UITextField *usernameTextField;
-@property (weak, nonatomic) IBOutlet UIButton *profileImageButton;
-@property UIImage *image;
+@property (weak, nonatomic) IBOutlet UIButton *getStartedButton;
+@property (weak, nonatomic) IBOutlet UIView *signupOverlay;
+
+@property FCAnonOverlayViewController *overlayViewController;
 @end
 
 @implementation FCSignupViewController
@@ -31,22 +32,27 @@
 {
     [super viewDidLoad];
     self.navigationController.navigationBarHidden = YES;
-	// Image should be rounded
-    self.profileImageButton.layer.cornerRadius = self.profileImageButton.bounds.size.width / 2.0;
-    self.profileImageButton.layer.masksToBounds = YES;
-    // Close text field on tap outside
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
     
-    [self.view addGestureRecognizer:tap];
+    // Button should be square with a white border
+    self.getStartedButton.layer.borderWidth = 0.6f;
+    self.getStartedButton.layer.borderColor = [UIColor whiteColor].CGColor;
     
     // Listen for the "Signup Success" event to move forward
-    // Listen for beacon updates
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(signupSuccess:)
                                                  name:@"Signup Success"
                                                object:nil];
+}
+
+// Get the container view's embedded view controller
+- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString * segueName = segue.identifier;
+    if ([segueName isEqualToString: @"embedSignupOverlay"]) {
+        self.overlayViewController = (FCAnonOverlayViewController *) [segue destinationViewController];
+//        AlertView * alertView = childViewController.view;
+        // do something with the AlertView's subviews here...
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,89 +61,42 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)showImagePicker:(id)sender {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-    imagePicker.delegate = self;
-    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    imagePicker.mediaTypes =
-    @[(NSString *) kUTTypeImage];
-    imagePicker.allowsEditing = NO;
-    [self presentViewController:imagePicker animated:YES completion:nil];
-}
 
--(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-    // Dismiss the view controller
-    [self dismissViewControllerAnimated:YES completion:nil];
-    // store and set the image
-    UIImage *chosenImage = info[UIImagePickerControllerOriginalImage];
-    self.image = [self squareImageWithImage:chosenImage scaledToSize:self.profileImageButton.bounds.size];
-    [self.profileImageButton setBackgroundImage:self.image forState:UIControlStateNormal];
-    
-}
 
--(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    [self dismissViewControllerAnimated:YES completion:nil];
-    NSLog(@"User did cancel!");
-}
 
--(void)dismissKeyboard
-{
-    [self.usernameTextField resignFirstResponder];
-}
+
+
 
 //-(void)setProfileImage
 //{
 //    [self.profileImageButton setBackgroundImage:self.image forState:UIControlStateNormal];
 //}
 
-- (UIImage *)squareImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
-    double ratio;
-    double delta;
-    CGPoint offset;
-    
-    //make a new square size, that is the resized imaged width
-    CGSize sz = CGSizeMake(newSize.width, newSize.width);
-    
-    //figure out if the picture is landscape or portrait, then
-    //calculate scale factor and offset
-    if (image.size.width > image.size.height) {
-        ratio = newSize.width / image.size.width;
-        delta = (ratio*image.size.width - ratio*image.size.height);
-        offset = CGPointMake(delta/2, 0);
-    } else {
-        ratio = newSize.width / image.size.height;
-        delta = (ratio*image.size.height - ratio*image.size.width);
-        offset = CGPointMake(0, delta/2);
-    }
-    
-    //make the final clipping rect based on the calculated values
-    CGRect clipRect = CGRectMake(-offset.x, -offset.y,
-                                 (ratio * image.size.width) + delta,
-                                 (ratio * image.size.height) + delta);
-    
-    
-    //start a new context, with scale factor 0.0 so retina displays get
-    //high quality image
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-        UIGraphicsBeginImageContextWithOptions(sz, YES, 0.0);
-    } else {
-        UIGraphicsBeginImageContext(sz);
-    }
-    UIRectClip(clipRect);
-    [image drawInRect:clipRect];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    return newImage;
-}
+
 - (IBAction)signupButtonTapped:(id)sender {
+    // Ask for beacon support
+    [[FCBeacon alloc] init];
+    // For now - show the signup overlay
+    self.signupOverlay.hidden = NO;
+    // Animate it in
+    [UIView animateWithDuration:0.2f
+                     animations:^{
+                         // Show the overlay
+                         [self.signupOverlay setAlpha:1.0f];
+                         // Hide the get started button so the text doesn't clash
+                         [self.getStartedButton setAlpha:0];
+                         
+//                         [self.signupOverlay setCenter:CGPointMake(200, 200)];
+                     }
+     ];
+    // Have the child view controller do it's thing
+    [self.overlayViewController showWithAnimation];
+    
     // Create a new user
-    [[FCUser alloc] signupWithUsername:self.usernameTextField.text andImage:self.image];
-    // Disable the button
-    [sender setEnabled:NO];
-    [sender setTitle:@"Please wait." forState:UIControlStateNormal];
+//    [[FCUser alloc] signupWithUsername:self.usernameTextField.text andImage:self.image];
+//    // Disable the button
+//    [sender setEnabled:NO];
+//    [sender setTitle:@"Please wait." forState:UIControlStateNormal];
     // Wait for the success notification
 }
 

@@ -9,6 +9,7 @@
 #import "FCUser.h"
 #import <Firebase/Firebase.h>
 #include <stdlib.h>
+#include "FCAppDelegate.h"
 //#import "FirebaseSimpleLogin/FirebaseSimpleLogin.h"
 
 typedef void (^CompletionBlockType)(id);
@@ -41,7 +42,7 @@ typedef void (^CompletionBlockType)(id);
     return self;
 }
 
-// Only run once from appdelegate - initialize as an owner
+// Only run once from appdelegate - initialize as an owner - if the first run, this will be set later and called
 - (id) initAsOwner
 {
     self = [self init];
@@ -105,6 +106,10 @@ typedef void (^CompletionBlockType)(id);
 //    return self;
 //}
 
+- (void) startBroadcasting
+{
+    
+}
 
 #pragma mark - creating from a username and a profile photo
 - (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image
@@ -127,6 +132,10 @@ typedef void (^CompletionBlockType)(id);
     
     // Start broadcasting with a beacon
     [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
+    
+    // Set on the app delegate
+    FCAppDelegate *del =[[UIApplication sharedApplication] delegate];
+    del.owner = self;
     
     // Finally, emit a "complete" event, so the view can proceed
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Signup Success" object:nil];
