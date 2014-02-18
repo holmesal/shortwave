@@ -18,13 +18,16 @@
     
     self.text = [snapshot.value valueForKey:@"text"];
     self.ownerID = [snapshot.value valueForKey:@"ownerID"];
+    self.timestamp = [[snapshot.value valueForKey:@"timestamp"] stringValue];
     
     // Set up a firebase reference to this user
     Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerID];
     // Wait for the data
     [ref observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        NSLog(@"Got value for user %@",self.ownerID);
-        NSLog(@"%@",snapshot.value);
+//        NSLog(@"Got value for user %@",self.ownerID);
+//        NSLog(@"%@",snapshot.value);
+        
+//        NSLog(@"time: %@",[snapshot.value valueForKey:@"timestamp"]);
         
         // Set the values
         self.username = [snapshot.value valueForKey:@"username"];

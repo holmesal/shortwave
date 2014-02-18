@@ -17,6 +17,7 @@
 @property NSString *username;
 //@property NSString *displayName;
 @property NSString *ownerID;
+@property NSString *timestamp;
 
 - (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block;
 

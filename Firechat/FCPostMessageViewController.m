@@ -13,9 +13,10 @@
 
 @interface FCPostMessageViewController ()
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *postButton;
-@property (weak, nonatomic) IBOutlet UITextField *messageText;
+//@property (weak, nonatomic) IBOutlet UITextField *messageText;
 @property FCUser *owner;
 @property Firebase *rootRef;
+@property (weak, nonatomic) IBOutlet UITextView *messageText;
 @end
 
 @implementation FCPostMessageViewController
@@ -28,13 +29,13 @@
     }
     return self;
 }
-- (IBAction)fieldChanged:(id)sender {
-    if (self.messageText.text.length > 0){
-        self.postButton.enabled = YES;
-    } else{
-        self.postButton.enabled = NO;
-    }
-}
+//- (IBAction)fieldChanged:(id)sender {
+//    if (self.messageText.text.length > 0){
+//        self.postButton.enabled = YES;
+//    } else{
+//        self.postButton.enabled = NO;
+//    }
+//}
 
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -42,12 +43,17 @@
     if (sender != self.postButton){
         return;
     }
+    
+//    self.postButton.enabled = YES;
 
     if (self.messageText.text.length > 0){
         // Create a new post
 //        self.message = [[FCMessage alloc] init];
 //        self.message.text = self.messageText.text;
 //        self.message.owner = self.owner.id;
+        
+        // timestamp
+//       timestamp = NSTimeIntervalSince1970;
         
         // Create the message object
         NSDictionary *message = @{@"ownerID": self.owner.id,
@@ -94,13 +100,22 @@
     for (NSString *beaconId in beaconIds)
     {
         // Post to the firebase wall of this beacon
-        [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId] setValue:message];
+        Firebase *otherPersonMessageRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
+        [otherPersonMessageRef setValue:message];
+        [self setTimestampAsNow:otherPersonMessageRef];
         NSLog(@"Beacon loop says: %@",beaconId);
     }
     
     // Also post to yourself
-    [[[self.owner.ref childByAppendingPath:@"wall"] childByAutoId] setValue:message];
+    Firebase *ownerMessageRef = [[self.owner.ref childByAppendingPath:@"wall"] childByAutoId];
+    [ownerMessageRef setValue:message];
+    [self setTimestampAsNow:ownerMessageRef];
     
+}
+
+- (void)setTimestampAsNow:(Firebase *)ref
+{
+    [[ref childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
 }
 
 @end

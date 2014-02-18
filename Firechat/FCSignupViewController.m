@@ -14,6 +14,9 @@
 @property (weak, nonatomic) IBOutlet UIButton *getStartedButton;
 @property (weak, nonatomic) IBOutlet UIView *signupOverlay;
 
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *supportingLabel;
+@property (weak, nonatomic) IBOutlet UILabel *requirementsLabel;
 @property FCAnonOverlayViewController *overlayViewController;
 @end
 
@@ -81,10 +84,16 @@
     // Animate it in
     [UIView animateWithDuration:0.2f
                      animations:^{
-                         // Show the overlay
-                         [self.signupOverlay setAlpha:1.0f];
                          // Hide the get started button so the text doesn't clash
                          [self.getStartedButton setAlpha:0];
+                         [self.titleLabel setAlpha:0];
+                         [self.supportingLabel setAlpha:0];
+                         [self.requirementsLabel setAlpha:0];
+                         
+                         
+                         // Show the overlay
+                         [self.signupOverlay setAlpha:1.0f];
+                         
                          
 //                         [self.signupOverlay setCenter:CGPointMake(200, 200)];
                      }

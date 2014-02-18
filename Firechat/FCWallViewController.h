@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <PHFComposeBarView/PHFComposeBarView.h>
 
-@interface FCWallViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
+@interface FCWallViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 
