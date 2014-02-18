@@ -26,7 +26,8 @@
     self.owner = [[FCUser alloc] initAsOwner];
     
     // Set navigation bar style
-    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
+//    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
+    [[UINavigationBar appearance] setBarTintColor:[UIColor clearColor]]; // 0x00CF69   more green -> 0x56BD54
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{

@@ -13,6 +13,7 @@
 @interface FCUser : NSMutableDictionary
 
 @property Firebase *ref;
+@property Firebase *rootRef;
 
 @property NSString *username;
 //@property NSString *displayName;

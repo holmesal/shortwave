@@ -46,22 +46,36 @@
     
 }
 
-//- (id)
+# pragma mark - posting a message
+- (void)postText:(NSString *)text asOwner:(FCUser *)owner
+{
+    // TODO - Make the author
+    // Make the message
+    NSDictionary *message = @{@"ownerID": owner.id,
+                              @"text": text};
+    // Grab the current list of iBeacons
+    NSArray *beaconIds = [owner.beacon getBeaconIds];
+    
+    // Loop through and post to the firebase of every beacon in range
+    for (NSString *beaconId in beaconIds)
+    {
+        // Post to the firebase wall of this beacon
+        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
+        [otherPersonMessageRef setValue:message];
+        [self setTimestampAsNow:otherPersonMessageRef];
+        NSLog(@"Beacon loop says: %@",beaconId);
+    }
+    
+    // Also post to yourself
+    Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
+    [ownerMessageRef setValue:message];
+    [self setTimestampAsNow:ownerMessageRef];
+    
+}
 
-//- (id) initWithData:(
-
-//- (NSDictionary *) toDictionary
-//{
-////    NSDictionary *message = [[NSDictionary alloc] initWithObjectsAndKeys:<#(id), ...#>, nil];
-//    NSDictionary *user = @{@"username": self.user.username,
-//                                 @"id": self.user.id,
-//                           @"imageURL":self.user.imageURL};
-//    NSDictionary *message = @{@"text"     : self.text,
-//                              @"user"     : user};
-////    [message setValue:self.text forKey:@"text"];
-////    [message setValue:self.user.id forKey:@"user"];
-//    
-//    return message;
-//}
+- (void)setTimestampAsNow:(Firebase *)ref
+{
+    [[ref childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+}
 
 @end

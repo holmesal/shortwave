@@ -68,7 +68,8 @@ typedef void (^CompletionBlockType)(id);
 // Set up the firebase reference
 - (void) initFirebase:(NSString *)id
 {
-    self.ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    self.rootRef = [[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"];
+    self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
 }
 
 - (void) pullFromFirebase

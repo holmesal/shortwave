@@ -18,6 +18,7 @@
 @property Firebase *ref;
 @property NSMutableArray *wall;
 @property NSArray *beacons;
+@property PHFComposeBarView *composeBarView;
 @end
 
 @implementation FCWallViewController
@@ -47,8 +48,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Show the navbar
-    self.navigationController.navigationBarHidden = NO;
+    // Show the navbar and the status bar
+    self.navigationController.navigationBarHidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     // Init table view
     self.tableView.delegate = self;
@@ -72,6 +73,7 @@
     // Bind to the owner's wall
     [self bindToWall];
     
+    // Bind to keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillToggle:)
                                                  name:UIKeyboardWillShowNotification
@@ -81,7 +83,18 @@
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
     
+    // Hide the keyboard on taps
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:tap];
     
+    // Load the compose view
+    [self loadComposeView];
+    
+}
+
+- (void)loadComposeView{
     CGRect viewBounds = self.view.bounds;
     
     NSLog(@"%f", viewBounds.origin.x);
@@ -90,17 +103,20 @@
                               viewBounds.size.height - PHFComposeBarViewInitialHeight,
                               viewBounds.size.width,
                               PHFComposeBarViewInitialHeight);
-    PHFComposeBarView *composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
-    [composeBarView setMaxCharCount:160];
-    [composeBarView setMaxLinesCount:5];
-    [composeBarView setPlaceholder:@"Say something..."];
-    [composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
-    [composeBarView setDelegate:self];
+    self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
+    [self.composeBarView setMaxCharCount:160];
+    [self.composeBarView setMaxLinesCount:5];
+    [self.composeBarView setPlaceholder:@"Say something..."];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
+    [self.composeBarView setDelegate:self];
     
-    [self.view addSubview:composeBarView];
-
+    // Style the compose bar view
+    self.composeBarView.textView.keyboardAppearance = UIKeyboardAppearanceDark;
+    self.composeBarView.buttonTintColor = [UIColor whiteColor];
+//    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
+//    [self.composeBarView setBackgroundColor:UIColor clearColor];
     
-    
+    [self.view addSubview:self.composeBarView];
 }
 
 - (void)dealloc {
@@ -110,6 +126,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:UIKeyboardWillHideNotification
                                                   object:nil];
+}
+
+-(void)dismissKeyboard
+{
+    [self.composeBarView resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning
@@ -187,13 +208,14 @@
     cell.timestamp.text = message.timestamp;
     
     //    cell.profilePhoto.imageURL
-    cell.profilePhoto.imageURL = message.imageUrl;
+    cell.profilePhoto.image = [UIImage imageNamed:@"profilepic"];
+//    cell.profilePhoto.imageURL = message.imageUrl;
     //    NSLog(@"image url is: %@",message.imageUrl);
 //    //    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:@"http://upload.wikimedia.org/wikipedia/en/4/4e/Shibe_Inu_Doge_meme.jpg"];
     cell.username.text = message.username;
     // Rounded profile photo
     cell.profilePhoto.layer.masksToBounds = YES;
-    cell.profilePhoto.layer.cornerRadius = 25;
+    cell.profilePhoto.layer.cornerRadius = 17.5;
     
     //    FCUser *user = [message objectForKey:@"user"];
     
@@ -208,7 +230,7 @@
     FCMessage *message = [self.wall objectAtIndex:indexPath.row];
 //    NSString *text =  message.text;
 //    message.text sizeWithFont:[ ] constrainedToSize:<#(CGSize)#>
-    return 100;
+    return 75;
 }
 
 - (IBAction)unwindToList:(UIStoryboardSegue *)segue
@@ -251,6 +273,18 @@
     NSLog(@"Utility button pressed");
 }
 
+// Pressed "send"
+- (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
+//    NSString *text = [NSString stringWithFormat:@"Main button pressed. Text:\n%@", [composeBarView text]];
+//    [self prependTextToTextView:text];
+    // Send the message
+    FCMessage *message = [[FCMessage alloc] init];
+    [message postText:self.composeBarView.text asOwner:self.owner];
+    [composeBarView setText:@"" animated:YES];
+    [self.composeBarView resignFirstResponder];
+}
+
+// Handle growing/shrinking
 - (void)composeBarView:(PHFComposeBarView *)composeBarView
    willChangeFromFrame:(CGRect)startFrame
                toFrame:(CGRect)endFrame
@@ -263,7 +297,6 @@
     CGRect newFrame = [self.tableView frame];
     newFrame.origin.y -= sizeChange;
     // Animate the scrollview to match
-    NSLog(@"Offset is %f", sizeChange);
     [self.tableView setFrame:newFrame];
 }
 

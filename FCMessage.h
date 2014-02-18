@@ -20,6 +20,7 @@
 @property NSString *timestamp;
 
 - (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block;
+- (void)postText:(NSString *)text asOwner:(FCUser *)owner;
 
 //- (NSDictionary *) toDictionary;
 
