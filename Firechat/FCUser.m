@@ -37,7 +37,6 @@ typedef void (^CompletionBlockType)(id);
     self = [super init];
     if (self) {
         // This should probably happen earlier, depending on where we want to pop up permissions
-        self.beacon = [[FCBeacon alloc] init];
     }
     return self;
 }
@@ -52,7 +51,13 @@ typedef void (^CompletionBlockType)(id);
         if (self.id) {
             // Link up with firebase
             [self initFirebase:self.id];
+            // Pull from defaults
+            [self pullFromDefaults];
+        } else{
+            [self generateNewUser];
         }
+        // Init the beacon
+        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
     }
     
     return self;
@@ -77,50 +82,20 @@ typedef void (^CompletionBlockType)(id);
     
 }
 
-//- (void) initWithId:(NSString *)id
-//{
-//    self.id = id;
-//    [self populateFromFirebaseId:id];
-//    
-////    return self;
-//}
-
-//- (id) initWithSnapshot:(NSDictionary *)snapshot
-//{
-//    
-//    self = [super init];
-//    if(!self) return nil;
-//    
-//    self.username = [snapshot objectForKey:@"username"];
-//    self.imageURL = [snapshot valueForKey:@"imageURL"];
-//    
-//    return self;
-//}
-//
-//- (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id
-//{
-//    self = [self initWithSnapshot:snapshot];
-//    if(!self) return nil;
-//    
-//    self.id = id;
-//    
-//    return self;
-//}
-
 - (void) startBroadcasting
 {
     
 }
 
-#pragma mark - creating from a username and a profile photo
-- (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image
+# pragma mark - generate user
+- (void) generateNewUser
 {
-    NSLog(@"Creating user...");
-    // Populate
-    self.username = username;
-    
-    // Hardcode image URL for now - in the future, we probably want to host these on s3 or sommat
-    self.imageURL = @"https://pbs.twimg.com/profile_images/378800000822867536/3f5a00acf72df93528b6bb7cd0a4fd0c.jpeg";
+    NSLog(@"Generating new user...");
+    // Random icon and color
+    self.icon = [self getRandomIcon];
+    self.color = [self getRandomColor];
+    // Display color for things
+    self.displayColor = [self colorWithHexString:self.color];
     
     // Generate the id
     [self generateIds];
@@ -132,36 +107,58 @@ typedef void (^CompletionBlockType)(id);
     [self updateUserData];
     
     // Start broadcasting with a beacon
-    [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
+//    [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
     
     // Set on the app delegate
-    FCAppDelegate *del =[[UIApplication sharedApplication] delegate];
-    del.owner = self;
+//    FCAppDelegate *del =[[UIApplication sharedApplication] delegate];
+//    del.owner = self;
     
     // Finally, emit a "complete" event, so the view can proceed
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Signup Success" object:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"Signup Success" object:nil];
+    
+    // Return the user
+//    return self;
 }
 
 - (void) updateUserData
 {
     // Init user defaults
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    // Username
-    [[self.ref childByAppendingPath:@"username"] setValue:self.username];
-//    [prefs setValue:self.username forKey:@"username"];
-    // Profile photo
-    [[self.ref childByAppendingPath:@"imageURL"] setValue:self.imageURL];
-//    [prefs setValue:self.imageURL forKey:@"imageURL"];
+    // Color
+    [[self.ref childByAppendingPath:@"color"] setValue:self.color];
+    [prefs setValue:self.color forKey:@"color"];
+    // Icon
+    [[self.ref childByAppendingPath:@"icon"] setValue:self.icon];
+    [prefs setValue:self.icon forKey:@"icon"];
     // Major/minor
     [[self.ref childByAppendingPath:@"major"] setValue:self.major];
     [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
-//    [prefs setValue:self.major forKey:@"major"];
-//    [prefs setValue:self.minor forKey:@"minor"];
+    [prefs setValue:self.major forKey:@"major"];
+    [prefs setValue:self.minor forKey:@"minor"];
     
     [prefs setValue:self.id forKey:@"id"];
     
     // Synchronize preferences
     [prefs synchronize];
+}
+
+- (void) pullFromDefaults
+{
+    // Init
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    // Color
+    self.color = [prefs valueForKey:@"color"];
+    self.displayColor = [self colorWithHexString:self.color];
+    // Icon
+    self.icon = [prefs valueForKey:@"icon"];
+    // Major/minor
+    self.major = [prefs valueForKey:@"major"];
+    self.minor = [prefs valueForKey:@"minor"];
+    // id
+    self.id = [prefs valueForKey:@"id"];
+    
+    NSLog(@"COLOR IS %@",self.color);
+    NSLog(@"Got id: %@:%@",self.major,self.minor);
 }
 
 
@@ -173,6 +170,61 @@ typedef void (^CompletionBlockType)(id);
     self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
     self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
     NSLog(@"Generated id: %@",self.id);
+}
+
+- (NSString *)getRandomColor
+{
+//    return @"#FFA400";
+    return @"#1A8DE6";
+}
+
+- (NSString *)getRandomIcon
+{
+    return @"profilepic";
+}
+
+# pragma mark - color hex conversion
+- (UIColor *) colorWithHexString: (NSString *) hexString {
+    NSString *colorString = [[hexString stringByReplacingOccurrencesOfString: @"#" withString: @""] uppercaseString];
+    CGFloat alpha, red, blue, green;
+    switch ([colorString length]) {
+        case 3: // #RGB
+            alpha = 1.0f;
+            red   = [self colorComponentFrom: colorString start: 0 length: 1];
+            green = [self colorComponentFrom: colorString start: 1 length: 1];
+            blue  = [self colorComponentFrom: colorString start: 2 length: 1];
+            break;
+        case 4: // #ARGB
+            alpha = [self colorComponentFrom: colorString start: 0 length: 1];
+            red   = [self colorComponentFrom: colorString start: 1 length: 1];
+            green = [self colorComponentFrom: colorString start: 2 length: 1];
+            blue  = [self colorComponentFrom: colorString start: 3 length: 1];
+            break;
+        case 6: // #RRGGBB
+            alpha = 1.0f;
+            red   = [self colorComponentFrom: colorString start: 0 length: 2];
+            green = [self colorComponentFrom: colorString start: 2 length: 2];
+            blue  = [self colorComponentFrom: colorString start: 4 length: 2];
+            break;
+        case 8: // #AARRGGBB
+            alpha = [self colorComponentFrom: colorString start: 0 length: 2];
+            red   = [self colorComponentFrom: colorString start: 2 length: 2];
+            green = [self colorComponentFrom: colorString start: 4 length: 2];
+            blue  = [self colorComponentFrom: colorString start: 6 length: 2];
+            break;
+        default:
+            [NSException raise:@"Invalid color value" format: @"Color value %@ is invalid.  It should be a hex value of the form #RBG, #ARGB, #RRGGBB, or #AARRGGBB", hexString];
+            break;
+    }
+    return [UIColor colorWithRed: red green: green blue: blue alpha: alpha];
+}
+
+- (CGFloat) colorComponentFrom: (NSString *) string start: (NSUInteger) start length: (NSUInteger) length {
+    NSString *substring = [string substringWithRange: NSMakeRange(start, length)];
+    NSString *fullHex = length == 2 ? substring : [NSString stringWithFormat: @"%@%@", substring, substring];
+    unsigned hexComponent;
+    [[NSScanner scannerWithString: fullHex] scanHexInt: &hexComponent];
+    return hexComponent / 255.0;
 }
 
 

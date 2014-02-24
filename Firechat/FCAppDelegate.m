@@ -38,15 +38,15 @@
     // Skip the login flow if this isn't the first run
 //    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
 //    NSString *username = [prefs stringForKey:@"username"];
-    if (self.owner.id) {
-        UIViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallViewController"];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
-        self.window.rootViewController = navController;
-    } else {
-        FCSignupViewController *signupController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCSignupViewController"];
-        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:signupController];
-        self.window.rootViewController = navController;
-    }
+//    if (self.owner.id) {
+//        UIViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallViewController"];
+//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
+//        self.window.rootViewController = navController;
+//    } else {
+//        FCSignupViewController *signupController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCSignupViewController"];
+//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:signupController];
+//        self.window.rootViewController = navController;
+//    }
     
     
 

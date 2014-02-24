@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="46H-tc-dEv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="g3s-YS-7J1">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
@@ -52,7 +52,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="7sz-Oi-Imk">
-                                <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -92,6 +92,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" red="0.0" green="0.81176470590000005" blue="0.41176470590000003" alpha="1" colorSpace="calibratedRGB"/>
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
@@ -111,7 +112,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1s7-CE-E9b" customClass="AsyncImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1s7-CE-E9b">
                                                     <rect key="frame" x="20" y="7" width="35" height="35"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <constraints>
@@ -162,8 +163,8 @@
                             <constraint firstItem="7sz-Oi-Imk" firstAttribute="leading" secondItem="Vn0-qG-RFG" secondAttribute="leading" id="IQj-tf-b38"/>
                             <constraint firstItem="7sz-Oi-Imk" firstAttribute="trailing" secondItem="Esc-wg-ZvA" secondAttribute="trailing" id="Xyf-rw-U0l"/>
                             <constraint firstItem="Esc-wg-ZvA" firstAttribute="leading" secondItem="Vn0-qG-RFG" secondAttribute="leading" id="y3q-lo-bmO"/>
-                            <constraint firstItem="7sz-Oi-Imk" firstAttribute="top" secondItem="Vn0-qG-RFG" secondAttribute="top" constant="64" id="yDl-xt-Wzv"/>
-                            <constraint firstItem="Esc-wg-ZvA" firstAttribute="top" secondItem="7sz-Oi-Imk" secondAttribute="bottom" constant="-108" id="zxa-Et-Sm0"/>
+                            <constraint firstItem="7sz-Oi-Imk" firstAttribute="top" secondItem="Vn0-qG-RFG" secondAttribute="top" constant="20" id="yDl-xt-Wzv"/>
+                            <constraint firstItem="Esc-wg-ZvA" firstAttribute="top" secondItem="7sz-Oi-Imk" secondAttribute="bottom" constant="-64" id="zxa-Et-Sm0"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Earshot" id="O9S-WQ-sbn">
@@ -620,7 +621,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BmC-rS-GWz" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1073" y="989"/>
+            <point key="canvasLocation" x="955" y="552"/>
         </scene>
     </scenes>
     <resources>

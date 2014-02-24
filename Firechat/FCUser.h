@@ -15,9 +15,10 @@
 @property Firebase *ref;
 @property Firebase *rootRef;
 
-@property NSString *username;
+@property NSString *icon;
 //@property NSString *displayName;
-@property NSString *imageURL;
+@property NSString *color;
+@property UIColor *displayColor;
 //@property NSString *description;
 @property NSString *id;
 //@property NSString *thirdPartyId;

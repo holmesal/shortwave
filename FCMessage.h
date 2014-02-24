@@ -13,13 +13,15 @@
 @interface FCMessage : NSObject
 
 @property NSString *text;
-@property NSURL *imageUrl;
-@property NSString *username;
+//@property NSURL *imageUrl;
+//@property NSString *username;
 //@property NSString *displayName;
 @property NSString *ownerID;
-@property NSString *timestamp;
+//@property NSString *timestamp;
+@property NSString *icon;
+@property NSString *color;
 
-- (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block;
+- (id) initWithSnapshot:(FDataSnapshot *)snapshot;
 - (void)postText:(NSString *)text asOwner:(FCUser *)owner;
 
 //- (NSDictionary *) toDictionary;

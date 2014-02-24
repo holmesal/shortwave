@@ -19,18 +19,31 @@
 {
     self = [super init];
     if (self) {
+        
+    }
+    return self;
+}
+
+- (id)initWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor
+{
+    self = [super init];
+    if (self) {
         // Set up uuid
-        self.uuid = [[NSUUID alloc] initWithUUIDString:@"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"]; //orbiter devices
-//        self.uuid = [[NSUUID alloc] initWithUUIDString:@"B9407F30-F5F8-466E-AFF9-25556B57FE6D"]; //estimote
+        self.major = major;
+        self.minor = minor;
+        
+        NSLog(@"Init with major %@ and minor %@",self.major,self.minor);
+        
         // Init peripheral manager
         self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self
                                                                          queue:nil
                                                                        options:nil];
         // Init location manager
         self.locationManager = [[CLLocationManager alloc] init];
-        // Setup the scanner
-        NSLog(@"SCAN INIT HAS BEEN COMMENTED OUT IN FCBEACON.m");
-        [self initScanner];
+        
+        self.uuid = [[NSUUID alloc] initWithUUIDString:@"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"]; //orbiter devices
+        //        self.uuid = [[NSUUID alloc] initWithUUIDString:@"B9407F30-F5F8-466E-AFF9-25556B57FE6D"]; //estimote
+        
     }
     return self;
 }
@@ -82,6 +95,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 {
 //    NSLog(@"Got beacon ranges");
     self.beacons = beacons;
+    NSLog(@"%@",self.beacons);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Updated" object:self.beacons];
     // Will parse and push if necessary
 //    // Clear existing beacons
@@ -104,14 +118,14 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 
 #pragma mark - Broadcaster
 
-- (void) startBroadcastingWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor
+- (void) startBroadcasting
 {
     
-    NSLog(@"Starting to broadcast!");
+    NSLog(@"Starting to broadcast with major %@ and minor %@",self.major,self.minor);
     
     CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:self.uuid
-                                                                     major:[major unsignedIntegerValue]
-                                                                     minor:[minor unsignedIntegerValue]
+                                                                     major:[self.major unsignedIntegerValue]
+                                                                     minor:[self.minor unsignedIntegerValue]
                                                                 identifier:@"Orbiter beacon"];
     
     NSDictionary *beaconPeripheralData = [region peripheralDataWithMeasuredPower:nil];
@@ -126,12 +140,20 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
     NSLog(@"DID UPDATE STATE");
+    if (peripheral.state == CBPeripheralManagerStatePoweredOn){
+        // Setup the scanner
+        [self initScanner];
+        // Start broadcasting
+        [self startBroadcasting];
+    }
+//    CBCentralManagerStatePoweredOn
 //    [self _updateEmitterForDesiredState];
 }
 
 # pragma mark - transform beacons into ids
 - (NSArray *)getBeaconIds
 {
+    NSLog(@"got beacon ids");
     // Array to hold beacon ids
     NSMutableArray *beaconIds = [[NSMutableArray alloc] init];
     for (CLBeacon *beacon in self.beacons) {

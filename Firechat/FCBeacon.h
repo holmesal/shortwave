@@ -17,8 +17,10 @@
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property NSArray *beacons;
+@property NSNumber *major;
+@property NSNumber *minor;
 
-- (void) startBroadcastingWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor;
+- (id)initWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor;
 - (NSArray *)getBeaconIds;
 - (void) checkSupport;
 

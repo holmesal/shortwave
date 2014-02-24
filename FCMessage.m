@@ -11,35 +11,38 @@
 
 @implementation FCMessage
 
-- (id) initWithSnapshot:(FDataSnapshot *)snapshot  withLoadedBlock:(void (^)(NSError* error, FCMessage* message))block
+- (id) initWithSnapshot:(FDataSnapshot *)snapshot
 {
     self = [super init];
     if(!self) return Nil;
     
     self.text = [snapshot.value valueForKey:@"text"];
     self.ownerID = [snapshot.value valueForKey:@"ownerID"];
-    self.timestamp = [[snapshot.value valueForKey:@"timestamp"] stringValue];
+    self.icon = [snapshot.value valueForKey:@"icon"];
+    self.color = [snapshot.value valueForKey:@"color"];
+//    self.timestamp = [[snapshot.value valueForKey:@"timestamp"] stringValue];
     
     // Set up a firebase reference to this user
-    Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerID];
-    // Wait for the data
-    [ref observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-//        NSLog(@"Got value for user %@",self.ownerID);
-//        NSLog(@"%@",snapshot.value);
-        
-//        NSLog(@"time: %@",[snapshot.value valueForKey:@"timestamp"]);
-        
-        // Set the values
-        self.username = [snapshot.value valueForKey:@"username"];
-//        self.displayName = [snapshot.value valueForKey:@"displayName"];
-        self.imageUrl = [[NSURL alloc] initWithString:[snapshot.value valueForKey:@"imageURL"]];
-        
-        // You should really do some error checking here
-        
-        // Run the callback block
-        block(nil, self);
-        
-    }];
+//    Firebase *ref = [[[[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.ownerID];
+//    // Wait for the data
+//    [ref observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+////        NSLog(@"Got value for user %@",self.ownerID);
+////        NSLog(@"%@",snapshot.value);
+//        
+////        NSLog(@"time: %@",[snapshot.value valueForKey:@"timestamp"]);
+//        
+//        // Set the values
+////        self.username = [snapshot.value valueForKey:@"username"];
+//        
+////        self.displayName = [snapshot.value valueForKey:@"displayName"];
+////        self.imageUrl = [[NSURL alloc] initWithString:[snapshot.value valueForKey:@"imageURL"]];
+//        
+//        // You should really do some error checking here
+//        
+//        // Run the callback block
+//        block(nil, self);
+//        
+//    }];
     
     
     return self;
@@ -52,13 +55,18 @@
     // TODO - Make the author
     // Make the message
     NSDictionary *message = @{@"ownerID": owner.id,
+                              @"color": owner.color,
+                              @"icon": owner.icon,
                               @"text": text};
     // Grab the current list of iBeacons
     NSArray *beaconIds = [owner.beacon getBeaconIds];
     
+    NSLog(@"%@",beaconIds);
+    
     // Loop through and post to the firebase of every beacon in range
     for (NSString *beaconId in beaconIds)
     {
+        NSLog(@"Posting message to %@",beaconId);
         // Post to the firebase wall of this beacon
         Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
         [otherPersonMessageRef setValue:message];
@@ -75,6 +83,8 @@
 
 - (void)setTimestampAsNow:(Firebase *)ref
 {
+    // BEWARE - this will cause a value event that will happen AFTER the value event for setting the data.
+    // Act appropriately on the wall view controller
     [[ref childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
 }
 

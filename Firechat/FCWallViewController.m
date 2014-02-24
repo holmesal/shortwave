@@ -59,6 +59,11 @@
     NSLog(@"owner's id: %@",self.owner.id);
     [self.tableView reloadData];
     
+    // Flip the table view
+    self.tableView.transform = CGAffineTransformMakeRotation(-M_PI);
+    // Hide the scroll indicator TEHEHEHEHEHEHE
+    [self.tableView setShowsVerticalScrollIndicator:NO];
+    
     // Offset the height of the tableView by whatever the compose bar height is
     CGRect newTableFrame = self.tableView.frame;
     NSLog(@"start frame %f",self.tableView.frame.size.height);
@@ -107,7 +112,7 @@
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
     [self.composeBarView setPlaceholder:@"Say something..."];
-    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"Camera"]];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
@@ -115,8 +120,17 @@
     self.composeBarView.buttonTintColor = [UIColor whiteColor];
 //    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
 //    [self.composeBarView setBackgroundColor:UIColor clearColor];
-    
+    // Add subview
     [self.view addSubview:self.composeBarView];
+    
+    // Style the "utility button", a phrase which here means "profile photo"
+    self.composeBarView.utilityButton.imageView.layer.masksToBounds = YES;
+    self.composeBarView.utilityButton.imageView.layer.cornerRadius = self.composeBarView.utilityButton.imageView.frame.size.width/2;
+    // TODO - replace this with the owner's actual color
+    self.composeBarView.utilityButton.imageView.backgroundColor = self.owner.displayColor;
+    
+    // Style the image
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"profilepic"]];
 }
 
 - (void)dealloc {
@@ -146,35 +160,18 @@
     self.ref = [self.owner.ref childByAppendingPath:@"wall"];
     // Watch for changes
     [self.ref observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot) {
+        NSLog(@"GOT MESSAGE!");
         
+        FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
         // Init a new message
-        // the message will take care of loading the user, so give it a callback for finishing that
-        // when that callback fires, add it to the messages array
-        // MAYBE - add a placeholder, and call reload data when it loads?
-        // Create the message
-        //        NSLog(@"%@",snapshot.value);
-        [[FCMessage alloc] initWithSnapshot:snapshot withLoadedBlock:^(NSError *error, FCMessage *message) {
-            //            NSLog(@"RAN MESSAGE USER LOADED CALLBACK BLOCK with message");
-            //            NSLog(@"%@",message.text);
-            // Push onto the wall array
-            //            [self.wall addObject:message];
-            //            NSLog(@"%@",self.wall);
-//            [self.wall insertObject:message atIndex:0];
-            [self.wall addObject:message];
-            
-            //            NSLog(@"Wall count is %i",[self.wall count]);
-            
-            // Update the table view
-            [self.tableView reloadData];
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[self.wall count] - 1 inSection:0]
-                                  atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        }];
+        [self.wall insertObject:message atIndex:0];
+        //[self.wall addObject:message]; // For right-side up table view
+        NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
+        [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
         
-        //        FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
-        // Unshift
-        //        [self.wall insertObject:message atIndex:0];
-        // Update the table view
-        //        [self.tableView reloadData];
+        // Scroll to the new message
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+                                      atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }];
 }
 
@@ -199,28 +196,16 @@
     static NSString *CellIdentifier = @"MessageCell";
     FCMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
+    // Flip the cell 180 degrees
+    cell.transform = CGAffineTransformMakeRotation(M_PI);
+    
     // Configure the cell...
     FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-    
-    NSLog(@"Message timestamp: %@", message.timestamp);
-    //    cell.messageText.text = [message valueForKey:@"text"];
-    cell.messageText.text = message.text;
-    cell.timestamp.text = message.timestamp;
-    
-    //    cell.profilePhoto.imageURL
-    cell.profilePhoto.image = [UIImage imageNamed:@"profilepic"];
-//    cell.profilePhoto.imageURL = message.imageUrl;
-    //    NSLog(@"image url is: %@",message.imageUrl);
-//    //    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:@"http://upload.wikimedia.org/wikipedia/en/4/4e/Shibe_Inu_Doge_meme.jpg"];
-    cell.username.text = message.username;
-    // Rounded profile photo
-    cell.profilePhoto.layer.masksToBounds = YES;
-    cell.profilePhoto.layer.cornerRadius = 17.5;
-    
-    //    FCUser *user = [message objectForKey:@"user"];
-    
-    //    cell.username.text = message.user.username;
-    //    cell.profilePhoto.imageURL = [[NSURL alloc] initWithString:message.user.imageURL];
+    // Hardcoding message icon and color for now
+//    message.color = @"#FFA400";
+//    message.icon = @"profilepic";
+    // Set message cell values
+    [cell setMessage:message];
     
     return cell;
 }
@@ -231,10 +216,6 @@
 //    NSString *text =  message.text;
 //    message.text sizeWithFont:[ ] constrainedToSize:<#(CGSize)#>
     return 75;
-}
-
-- (IBAction)unwindToList:(UIStoryboardSegue *)segue
-{
 }
 
 # pragma mark - keyboard did show/hide
@@ -275,8 +256,6 @@
 
 // Pressed "send"
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
-//    NSString *text = [NSString stringWithFormat:@"Main button pressed. Text:\n%@", [composeBarView text]];
-//    [self prependTextToTextView:text];
     // Send the message
     FCMessage *message = [[FCMessage alloc] init];
     [message postText:self.composeBarView.text asOwner:self.owner];
@@ -299,77 +278,5 @@
     // Animate the scrollview to match
     [self.tableView setFrame:newFrame];
 }
-
-
-//- (void) keyboardWillShow: (NSNotification *)notification
-//{
-//    NSLog(@"KEYBOARD WILL SHOW");
-//    NSDictionary *userInfo = notification.userInfo;
-//    
-//    //
-//    // Get keyboard size.
-//    
-//    NSValue *beginFrameValue = userInfo[UIKeyboardFrameBeginUserInfoKey];
-//    CGRect keyboardBeginFrame = [self.view convertRect:beginFrameValue.CGRectValue fromView:nil];
-//    
-//    NSValue *endFrameValue = userInfo[UIKeyboardFrameEndUserInfoKey];
-//    CGRect keyboardEndFrame = [self.view convertRect:endFrameValue.CGRectValue fromView:nil];
-//    
-//    //
-//    // Get keyboard animation.
-//    
-//    NSNumber *durationValue = userInfo[UIKeyboardAnimationDurationUserInfoKey];
-//    NSTimeInterval animationDuration = durationValue.doubleValue;
-//    
-//    NSNumber *curveValue = userInfo[UIKeyboardAnimationCurveUserInfoKey];
-//    UIViewAnimationCurve animationCurve = curveValue.intValue;
-//    
-//    //
-//    // Create animation.
-//    
-//    CGRect tableViewFrame = self.tableView.frame;
-//    tableViewFrame.size.height = (keyboardBeginFrame.origin.y - tableViewFrame.origin.y);
-//    self.tableView.frame = tableViewFrame;
-//    
-//    //
-//    // Calculate the offset
-////    int offset = keyboardEndFrame.size.height + self.messageField.frame.size.height;
-//    
-//    void (^animations)() = ^() {
-//        CGRect tableViewFrame = self.tableView.frame;
-////        tableViewFrame.size.height = (keyboardEndFrame.origin.y - tableViewFrame.origin.y - self.messageField.frame.size.height);
-//        self.tableView.frame = tableViewFrame;
-////        [self.tableView setCenter:CGPointMake(self.tableView.center.x, self.tableView.center.y-(keyboardEndFrame.size.height + self.messageField.frame.size.height))];
-////        [self.messageField setCenter:CGPointMake(self.messageField.center.x, self.messageField.center.y-keyboardEndFrame.size.height)];
-//    };
-//    
-//    //
-//    // Begin animation.
-//    
-//    [UIView animateWithDuration:animationDuration
-//                          delay:0.0
-//                        options:(animationCurve << 16)
-//                     animations:animations
-//                     completion:nil];
-//    // Animate the text input up
-////    [UIView animateWithDuration:0.4f
-////                     animations:^{
-////                         // Hide the get started button so the text doesn't clash
-////                         [self.tableView setCenter:CGPointMake(self.tableView.center.x, self.tableView.center.y-200)];
-//////                         [self.tableView setCenter:CGPointMake(self.tableView.center.x, self.tableView.center.y-200)];
-////                         
-////                         
-////                         //                         [self.signupOverlay setCenter:CGPointMake(200, 200)];
-////                     }
-////     ];
-////    notification
-//    
-//}
-//- (void) keyboardWillHide: (NSNotification *)notification
-//{
-//    
-//}
-
-
 
 @end
