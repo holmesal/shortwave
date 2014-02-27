@@ -20,7 +20,7 @@ next steps
 7. Expand or shrink table view cells to fit the content inside. Right now it just cuts off at one line.
 8. ~~Scrolling all the way up in the table view produces a weird empty white space.~~
 9. ~~Should have a "pull-to-load-older" functionality at the top of the table view.~~
-10. Figure out the whole push-notification-when-you-get-a-message thing.
+10. ~~Figure out the whole push-notification-when-you-get-a-message thing.~~
 11. ~~Upload user-selected images to s3, yo.~~ (not needed)
 12. Show a lightweight popup on the right if you're scrolled up and new messages appear down there
 13. Fade out messages from people no longer in range.
