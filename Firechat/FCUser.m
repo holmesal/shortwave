@@ -77,6 +77,26 @@ typedef void (^CompletionBlockType)(id);
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
 }
 
+# pragma mark - push notification registration
+- (void)sendProviderDeviceToken:(NSData *)token
+{
+    NSString *hexToken = [self hexStringFromData:token];
+    NSLog(@"Got token, sending this to firebase: %@",hexToken);
+    [[self.ref childByAppendingPath:@"pushToken"] setValue:hexToken];
+}
+
+- (NSString *)hexStringFromData:(NSData *)data
+{
+	NSMutableString *hex = [NSMutableString stringWithCapacity:[data length]*2];
+	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
+		const unsigned char *dataBytes = (const unsigned char *)bytes;
+		for (NSUInteger i = byteRange.location; i < byteRange.length; ++i) {
+			[hex appendFormat:@"%02x", dataBytes[i]];
+		}
+	}];
+	return hex;
+}
+
 - (void) pullFromFirebase
 {
     

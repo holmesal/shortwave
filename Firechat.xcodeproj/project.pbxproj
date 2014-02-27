@@ -576,7 +576,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2862BA6C-0BE9-4D3F-A3A4-06712FF0757A";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -602,7 +602,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2862BA6C-0BE9-4D3F-A3A4-06712FF0757A";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

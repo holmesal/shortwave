@@ -29,6 +29,8 @@
 
 //- (id) linkFirebase:(NSString *)id;
 
+- (void)sendProviderDeviceToken:(NSData *)bytes;
+
 - (id) initWithSnapshot:(NSDictionary *)snapshot;
 - (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id;
 //- (id) initWithTwitter:(FAUser *)twitterUser;

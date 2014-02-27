@@ -34,6 +34,9 @@
                                                           NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
                                                           }];
     
+    // Register for push notifications
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge)];
+    
     
     // Skip the login flow if this isn't the first run
 //    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
@@ -55,6 +58,22 @@
     
     return YES;
 }
+
+// Delegation methods
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+    // Set the token on firebase via the user object
+    [self.owner sendProviderDeviceToken:devToken]; // custom method
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSLog(@"Error in registration. Error: %@", err);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"Got remote notification!");
+}
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

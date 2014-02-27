@@ -42,7 +42,7 @@
         self.locationManager = [[CLLocationManager alloc] init];
         
         self.uuid = [[NSUUID alloc] initWithUUIDString:@"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"]; //orbiter devices
-        //        self.uuid = [[NSUUID alloc] initWithUUIDString:@"B9407F30-F5F8-466E-AFF9-25556B57FE6D"]; //estimote
+//        self.uuid = [[NSUUID alloc] initWithUUIDString:@"B9407F30-F5F8-466E-AFF9-25556B57FE6D"]; //estimote
         
     }
     return self;
@@ -95,7 +95,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 {
 //    NSLog(@"Got beacon ranges");
     self.beacons = beacons;
-    NSLog(@"%@",self.beacons);
+//    NSLog(@"%@",self.beacons);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Updated" object:self.beacons];
     // Will parse and push if necessary
 //    // Clear existing beacons

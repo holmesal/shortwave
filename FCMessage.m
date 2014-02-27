@@ -71,13 +71,32 @@
         Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
         [otherPersonMessageRef setValue:message];
         [self setTimestampAsNow:otherPersonMessageRef];
-        NSLog(@"Beacon loop says: %@",beaconId);
+        
+        // Send a push notification to this user
+        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"deviceToken"];
+        [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+            // Make the push notification
+            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value]};
+            // Set the push notification
+            Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+            [pushQueueRef setValue:pushNotification];
+        }];
     }
     
     // Also post to yourself
     Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
     [ownerMessageRef setValue:message];
     [self setTimestampAsNow:ownerMessageRef];
+    
+    // Finally, post to the push notification queue with the device token from this user
+    // First, get the device token to send to
+//    Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+//    NSDictionary *pushQueueItem = @{@"ownerID": owner.id,
+//                                    @"color": owner.color,
+//                                    @"icon": owner.icon,
+//                                    @"text": text,
+//                                    @"receivers": beaconIds};
+//    [pushQueueRef setValue:pushQueueItem];
     
 }
 
