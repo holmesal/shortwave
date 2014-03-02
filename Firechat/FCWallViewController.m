@@ -18,6 +18,8 @@
 @property Firebase *ref;
 @property NSMutableArray *wall;
 @property NSArray *beacons;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImage;
+@property (weak, nonatomic) IBOutlet UICollectionView *nearbyView;
 @property PHFComposeBarView *composeBarView;
 @end
 
@@ -94,9 +96,28 @@
                                    action:@selector(dismissKeyboard)];
     [self.view addGestureRecognizer:tap];
     
+    // Transparent mask over the top of the table view
+    [self makeTransparentMask];
+    
     // Load the compose view
     [self loadComposeView];
     
+}
+
+- (void)makeTransparentMask
+{
+    // Copy the background image top section, based on the dimensions of the covering view (collection view)
+//    CALayer *imageCopy = [UIImage alloc] initWith
+//    struct CGImage *imageCopy = CGImageCreateWithImageInRect(self.bgImage.image.CGImage, self.nearbyView.bounds);
+//    // Mask
+//    CAGradientLayer *l = [CAGradientLayer layer];
+//    l.frame = self.nearbyView.bounds;
+//    l.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], nil];
+//    l.startPoint = CGPointMake(0.0, 0.0f);
+//    l.endPoint = CGPointMake(1.0f, 1.0f);
+//    UIImage *maskedCopy = [UIImage imageWithCGImage:imageCopy];
+//    struct CGImage maskedCopy = CGImageCreateWithMask(imageCopy, l);
+
 }
 
 - (void)loadComposeView{
@@ -206,6 +227,13 @@
 //    message.icon = @"profilepic";
     // Set message cell values
     [cell setMessage:message];
+    
+    // This message should track whether it's owner is in range or not, and fade out if appropriate...
+    if ([message.text  isEqual: @"Wat"]) {
+        cell.contentView.alpha = 0.2;
+    } else { // Must be reset, because the cell gets recycled
+        cell.contentView.alpha = 1.0;
+    }
     
     return cell;
 }
