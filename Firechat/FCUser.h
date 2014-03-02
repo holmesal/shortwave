@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FirebaseSimpleLogin/FirebaseSimpleLogin.h"
+
+
 #import "FCBeacon.h"
 
 @interface FCUser : NSMutableDictionary

@@ -10,7 +10,6 @@
 #import <Firebase/Firebase.h>
 #include <stdlib.h>
 #include "FCAppDelegate.h"
-//#import "FirebaseSimpleLogin/FirebaseSimpleLogin.h"
 
 typedef void (^CompletionBlockType)(id);
 
@@ -19,18 +18,8 @@ typedef void (^CompletionBlockType)(id);
 @end
 
 @implementation FCUser
-//
-//
-//
-//// Make that shit a singleton
-//+ (void) initialize
-//{
-//    static BOOL initialized = NO;
-//    if(!initialized){
-//        initialized = YES;
-//        self = [[self alloc] init];
-//    }
-//}
+
+
 
 - (id)init
 {
