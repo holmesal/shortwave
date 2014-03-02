@@ -219,6 +219,7 @@
 }
 
 # pragma mark - keyboard did show/hide
+// Handles the resizing on a keyboard show or hide event
 - (void)keyboardWillToggle:(NSNotification *)notification {
     NSDictionary* userInfo = [notification userInfo];
     NSTimeInterval duration;
@@ -239,14 +240,18 @@
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
-    CGRect newContainerFrame = [[self view] frame];
-    newContainerFrame.origin.y += sizeChange;
+    CGRect newContainerFrame = [[self tableView] frame];
+    newContainerFrame.size.height += sizeChange;
+    
+    CGRect newComposeBarFrame = [[self composeBarView] frame];
+    newComposeBarFrame.origin.y += sizeChange;
     
     [UIView animateWithDuration:duration
                           delay:0
                         options:(animationCurve << 16)|UIViewAnimationOptionBeginFromCurrentState
                      animations:^{
-                         [[self view] setFrame:newContainerFrame];
+                         [[self tableView] setFrame:newContainerFrame];
+                         [[self composeBarView] setFrame:newComposeBarFrame];
                      }
                      completion:NULL];
 }

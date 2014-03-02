@@ -76,7 +76,8 @@
         Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"deviceToken"];
         [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
             // Make the push notification
-            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value]};
+            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+                                               @"alert": text};
             // Set the push notification
             Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
             [pushQueueRef setValue:pushNotification];
