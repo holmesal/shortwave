@@ -56,7 +56,7 @@ static NSCache *cacheOfUrlsToColors;
 
 -(void)boop
 {
-    [self startGlowingWithColor:[UIColor whiteColor] fromIntensity:0 toIntensity:1 repeat:NO];
+    [self startGlowingWithColor:glowColor fromIntensity:0 toIntensity:1 repeat:NO];
 }
 
 -(void)setImageURL:(NSURL*)url
