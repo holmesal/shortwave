@@ -12,18 +12,33 @@
 #import "FCMessage.h"
 #import "FCMessageCell.h"
 
+
+
+
 @interface FCWallViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) CALayer *tableViewMask;
+
 @property FCUser *owner;
 @property Firebase *ref;
 @property NSMutableArray *wall;
 @property NSArray *beacons;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;
-@property (weak, nonatomic) IBOutlet UICollectionView *nearbyView;
+
+
+
+
+
 @property PHFComposeBarView *composeBarView;
 @end
 
 @implementation FCWallViewController
+@synthesize tableViewMask;
+@synthesize tableView;
+
+
+static CGFloat HeightOfGradient = 60;
+static CGFloat HeightOfWhoseHereView = 50.0f;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +65,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    
     // Show the navbar and the status bar
     self.navigationController.navigationBarHidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -61,18 +78,11 @@
     NSLog(@"owner's id: %@",self.owner.id);
     [self.tableView reloadData];
     
-    // Flip the table view
-    self.tableView.transform = CGAffineTransformMakeRotation(-M_PI);
+    // Flip the table view in viewWillLayoutSubviews, frame adjust in viewDidLayoutSubviews
+    
+    
     // Hide the scroll indicator TEHEHEHEHEHEHE
     [self.tableView setShowsVerticalScrollIndicator:NO];
-    
-    // Offset the height of the tableView by whatever the compose bar height is
-    CGRect newTableFrame = self.tableView.frame;
-    NSLog(@"start frame %f",self.tableView.frame.size.height);
-    
-    newTableFrame.size.height -= 200;
-    NSLog(@"end frame %f",newTableFrame.size.height);
-    [self.tableView setFrame:newTableFrame];
     
     // Hide the back button
     [self.navigationItem setHidesBackButton:YES];
@@ -97,28 +107,84 @@
     [self.view addGestureRecognizer:tap];
     
     // Transparent mask over the top of the table view
-    [self makeTransparentMask];
+
     
     // Load the compose view
     [self loadComposeView];
     
 }
 
-- (void)makeTransparentMask
-{
-    // Copy the background image top section, based on the dimensions of the covering view (collection view)
-//    CALayer *imageCopy = [UIImage alloc] initWith
-//    struct CGImage *imageCopy = CGImageCreateWithImageInRect(self.bgImage.image.CGImage, self.nearbyView.bounds);
-//    // Mask
-//    CAGradientLayer *l = [CAGradientLayer layer];
-//    l.frame = self.nearbyView.bounds;
-//    l.colors = [NSArray arrayWithObjects:(id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:0] CGColor], (id)[[UIColor colorWithRed:0 green:0 blue:0 alpha:1] CGColor], nil];
-//    l.startPoint = CGPointMake(0.0, 0.0f);
-//    l.endPoint = CGPointMake(1.0f, 1.0f);
-//    UIImage *maskedCopy = [UIImage imageWithCGImage:imageCopy];
-//    struct CGImage maskedCopy = CGImageCreateWithMask(imageCopy, l);
 
+//is calld after layout is determined for "tableView" due to constraints and scren size.  If you do this in
+//view did load, you will get incorrect sizes of tableView, necessary because tableview is upside down!
+
+-(void)viewWillLayoutSubviews
+{
+    [self.tableView setTransform:CGAffineTransformMakeRotation(-M_PI)];
 }
+-(void)viewDidLayoutSubviews
+{
+    
+    //tableView setup goes on here!
+    {
+    
+        self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        //table view is upsid down, so insets beware
+        self.tableView.contentInset = UIEdgeInsetsMake(40, 0, HeightOfWhoseHereView+HeightOfGradient, 0);
+        
+        //setup tableViewMask, remember tableView is upside down
+        if (!tableViewMask)
+        {
+            //create tableViewMask
+            tableViewMask = [CALayer layer];
+            
+            
+            CGRect tableViewMaskFrame = {0.0f, 0.0f, tableView.frame.size.width, tableView.frame.size.height};
+            [tableViewMask setFrame:tableViewMaskFrame];
+            [tableViewMask setBackgroundColor:[UIColor clearColor].CGColor];
+            tableViewMask.anchorPoint = CGPointZero;
+            [tableView.layer setMask:tableViewMask];
+            
+            
+            //the area behind the whosethereview
+            CALayer *areaBehindWhoseThereView = [CALayer layer];
+            CGRect areaBehindWhoseThereViewFrame = {0.0f, tableViewMaskFrame.size.height-HeightOfWhoseHereView,
+                                                    tableViewMaskFrame.size.width, HeightOfWhoseHereView};
+            areaBehindWhoseThereView.frame = areaBehindWhoseThereViewFrame;
+            [areaBehindWhoseThereView setBackgroundColor:[UIColor clearColor].CGColor];
+            [tableViewMask addSublayer:areaBehindWhoseThereView];
+            
+            //the gradient layer underneath
+            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+            CGRect gradientLayerFrame = {0.0f, areaBehindWhoseThereViewFrame.origin.y-HeightOfGradient,
+                                         tableView.frame.size.width, HeightOfGradient};
+            
+            [gradientLayer setFrame:gradientLayerFrame];
+            [gradientLayer setStartPoint:CGPointMake(0.5, 1)];
+            [gradientLayer setEndPoint:CGPointMake(0.5, 0)];
+            [gradientLayer setColors:@[(id)[UIColor clearColor].CGColor, (id)[UIColor blackColor].CGColor ] ];
+            [tableViewMask addSublayer:gradientLayer];
+            
+            //all the rest
+            CALayer *allTheRest = [CALayer layer];
+            CGFloat allRestHeight = tableView.frame.size.height - HeightOfWhoseHereView - HeightOfGradient;
+            CGRect allTheRestFrame = {0.0f, gradientLayerFrame.origin.y-allRestHeight,
+                                      tableView.frame.size.width, allRestHeight};
+            [allTheRest setFrame:allTheRestFrame];
+            [allTheRest setBackgroundColor:[UIColor blackColor].CGColor];
+            [tableViewMask addSublayer:allTheRest];
+            
+            
+            //to center the anchor point, act as if tableview did scroll
+            [self scrollViewDidScroll:self.tableView];
+            
+        }
+        
+    }//end of tableview setup
+    
+}
+
+
 
 - (void)loadComposeView{
     CGRect viewBounds = self.view.bounds;
@@ -212,38 +278,48 @@
     return [self.wall count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tV cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"MessageCell";
-    FCMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    // Flip the cell 180 degrees
-    cell.transform = CGAffineTransformMakeRotation(M_PI);
-    
-    // Configure the cell...
-    FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-    // Hardcoding message icon and color for now
-//    message.color = @"#FFA400";
-//    message.icon = @"profilepic";
-    // Set message cell values
-    [cell setMessage:message];
-    
-    // This message should track whether it's owner is in range or not, and fade out if appropriate...
-    if ([message.text  isEqual: @"Wat"]) {
-        cell.contentView.alpha = 0.2;
-    } else { // Must be reset, because the cell gets recycled
-        cell.contentView.alpha = 1.0;
+    if (tableView == tV)
+    {
+        static NSString *CellIdentifier = @"MessageCell";
+        FCMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+        
+        // Flip the cell 180 degrees
+        cell.transform = CGAffineTransformMakeRotation(M_PI);
+        
+        // Configure the cell...
+        FCMessage *message = [self.wall objectAtIndex:indexPath.row];
+        // Hardcoding message icon and color for now
+    //    message.color = @"#FFA400";
+    //    message.icon = @"profilepic";
+        // Set message cell values
+        [cell setMessage:message];
+        
+        // This message should track whether it's owner is in range or not, and fade out if appropriate...
+        if ([message.text  isEqual: @"Wat"]) {
+            cell.contentView.alpha = 0.2;
+        } else { // Must be reset, because the cell gets recycled
+            cell.contentView.alpha = 1.0;
+        }
+        
+        return cell;
     }
     
-    return cell;
+    return nil;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-//    NSString *text =  message.text;
-//    message.text sizeWithFont:[ ] constrainedToSize:<#(CGSize)#>
-    return 75;
+    
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+    CGSize constraintSize = {225.0f, 700};
+    CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
+    CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
+    
+
+    return height;
 }
 
 # pragma mark - keyboard did show/hide
@@ -271,16 +347,29 @@
     CGRect newContainerFrame = [[self tableView] frame];
     newContainerFrame.size.height += sizeChange;
     
+    NSLog(@"sizeChange = %f", sizeChange);
+    
     CGRect newComposeBarFrame = [[self composeBarView] frame];
     newComposeBarFrame.origin.y += sizeChange;
+    
+    CGPoint contentOffset = {0.0f, tableView.contentOffset.y + sizeChange};
+    
+    //ethan changed this because edge insets is the way to go when resizing from keyboard
+    UIEdgeInsets edgeInsets = self.tableView.contentInset;
+    edgeInsets.top -= sizeChange;
     
     [UIView animateWithDuration:duration
                           delay:0
                         options:(animationCurve << 16)|UIViewAnimationOptionBeginFromCurrentState
-                     animations:^{
-                         [[self tableView] setFrame:newContainerFrame];
+                     animations:^
+                    {
+//                         [[self tableView] setFrame:newContainerFrame];
+                        [self.tableView setContentInset:edgeInsets];
+                        [self.tableView setContentOffset:contentOffset];
+                        
+//                        [[self tableView] setContentInset:UIEdgeInsetsMake(0, 0, HeightOfWhoseHereView+HeightOfGradient, 0)];
                          [[self composeBarView] setFrame:newComposeBarFrame];
-                     }
+                    }
                      completion:NULL];
 }
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView {
@@ -309,7 +398,34 @@
     CGRect newFrame = [self.tableView frame];
     newFrame.origin.y -= sizeChange;
     // Animate the scrollview to match
-    [self.tableView setFrame:newFrame];
+    
+    sizeChange *= -1;
+    CGPoint contentOffset = {0.0f, tableView.contentOffset.y + sizeChange};
+    //ethan changed this because edge insets is the way to go when resizing from keyboard
+    UIEdgeInsets edgeInsets = self.tableView.contentInset;
+    edgeInsets.top -= sizeChange;
+    
+    [self.tableView setContentInset:edgeInsets];
+    [self.tableView setContentOffset:contentOffset];
+}
+
+
+
+-(CGAffineTransform)transformForTableViewMask
+{
+    return CGAffineTransformMakeTranslation(0, self.tableView.contentOffset.y);
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView == tableView)
+    {
+        //disable animations, then move the tableViewMask layer
+        [CATransaction begin];
+        [CATransaction setDisableActions:YES];
+        tableViewMask.position = CGPointMake(0, scrollView.contentOffset.y);
+        [CATransaction commit];
+    }
 }
 
 @end
