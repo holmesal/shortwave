@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 
 @interface ProfileCollectionViewCell : UICollectionViewCell
-@property (weak, nonatomic) IBOutlet AsyncImageView *asyncImageView;
+
 
 -(void)boop;
+//calculates the glow color and sets it on main thread
+-(void)setImageURL:(NSURL*)url;
 
 @end

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
+		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
@@ -63,6 +64,8 @@
 /* Begin PBXFileReference section */
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Firebase.a"; path = "Pods/build/Debug-iphoneos/libPods-Firebase.a"; sourceTree = "<group>"; };
+		AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColor.h"; sourceTree = "<group>"; };
+		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
 		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileCollectionViewCell.h; sourceTree = "<group>"; };
 		AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileCollectionViewCell.m; sourceTree = "<group>"; };
@@ -201,8 +204,8 @@
 		AA1F2DEF18C3D91A0087AAF7 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				AAE1028A18C469EC00BC7269 /* UIView+Glow.h */,
-				AAE1028B18C469EC00BC7269 /* UIView+Glow.m */,
+				AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */,
+				AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */,
 				C02CE3EC1868CD3000305FC9 /* FCMessageCell.h */,
 				C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */,
 			);
@@ -214,10 +217,19 @@
 			children = (
 				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
 				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
-				AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */,
-				AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */,
 			);
 			name = viewcontrollers;
+			sourceTree = "<group>";
+		};
+		AA8EC98B18C5039500A8C4DC /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				AAE1028A18C469EC00BC7269 /* UIView+Glow.h */,
+				AAE1028B18C469EC00BC7269 /* UIView+Glow.m */,
+				AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */,
+				AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */,
+			);
+			name = extensions;
 			sourceTree = "<group>";
 		};
 		AAE1028318C44A0A00BC7269 /* iPad */ = {
@@ -230,7 +242,6 @@
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
-				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,
 				C02CE397186808B000305FC9 /* Firechat */,
@@ -253,6 +264,7 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
 				AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */,
 				C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */,
 				C057427E187BA603002509DB /* CoreBluetooth.framework */,
@@ -276,6 +288,7 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
+				AA8EC98B18C5039500A8C4DC /* extensions */,
 				AAE1028318C44A0A00BC7269 /* iPad */,
 				AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */,
 				AA1F2DEF18C3D91A0087AAF7 /* views */,
@@ -485,6 +498,7 @@
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
+				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
