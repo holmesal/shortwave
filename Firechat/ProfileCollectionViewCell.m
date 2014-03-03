@@ -31,13 +31,15 @@ static NSCache *cacheOfUrlsToColors;
     if (self)
     {
         //when an image is set, i will call this method
-        [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:nil context:0];
         
         if (!cacheOfUrlsToColors)
         {
             cacheOfUrlsToColors = [[NSCache alloc] init];
             [cacheOfUrlsToColors setCountLimit:60];
             glowColor = [UIColor whiteColor];
+           
+#warning NO!  later
+//            [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:nil context:0];
         }
     }
     return self;
@@ -60,6 +62,9 @@ static NSCache *cacheOfUrlsToColors;
 -(void)setImageURL:(NSURL*)url
 {
     [asyncImageView setImageURL:url];
+#warning an interesting idea to bridge cast the @{ } so I lock down the url at the time of the load, incase 1 image does not load next image is set scenario
+    
+    [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:@{@"imageURL": url.absoluteString} context:0];
 }
 
 -(void)dealloc
@@ -69,18 +74,21 @@ static NSCache *cacheOfUrlsToColors;
 
 -(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if ([keyPath isEqualToString:@"setImage"] && object == asyncImageView)
+    if ([keyPath isEqualToString:@"setImage"] &&
+        object == asyncImageView &&
+        change)
     {
+        
 #warning what if another async image is set before this one loads; then the image will correspond to the incorrect URL?
-        NSURL *theUrl = asyncImageView.imageURL;
+        NSString *theAbsUrl = [change objectForKey:@"imageURL"];
         UIImage *theImage = asyncImageView.image;
         
-        if ( !(glowColor = [cacheOfUrlsToColors objectForKey:theUrl.absoluteString] ) )
+        if ( !(glowColor = [cacheOfUrlsToColors objectForKey:theAbsUrl] ) )
         {
             glowColor = [theImage averageColor];
-            [cacheOfUrlsToColors setObject:glowColor forKey:theUrl.absoluteString];
+            [cacheOfUrlsToColors setObject:glowColor forKey:theAbsUrl];
         }
-        NSLog(@"image got loaded, color got set to %@", glowColor);
+        NSLog(@"image got loaded, color got set to %@ for resource %@", glowColor, theAbsUrl);
     }
 }
 
