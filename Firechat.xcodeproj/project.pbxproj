@@ -209,6 +209,13 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
+		AAE1028318C44A0A00BC7269 /* iPad */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = iPad;
+			sourceTree = "<group>";
+		};
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +265,7 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
+				AAE1028318C44A0A00BC7269 /* iPad */,
 				AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */,
 				AA1F2DEF18C3D91A0087AAF7 /* views */,
 				AA1F2DEE18C3D9070087AAF7 /* models */,
@@ -604,12 +612,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
 				INFOPLIST_FILE = "Firechat/Firechat-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "07BADC76-88E7-4457-B478-9F0233C912DD";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -631,12 +641,14 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
 				INFOPLIST_FILE = "Firechat/Firechat-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-licucore",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "07BADC76-88E7-4457-B478-9F0233C912DD";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

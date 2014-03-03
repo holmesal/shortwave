@@ -24,6 +24,10 @@
 @property NSMutableArray *wall;
 @property NSArray *beacons;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
+
+
+@property (nonatomic) UICollectionView *whoIsHereCollectionView;
 
 
 
@@ -33,22 +37,25 @@
 @end
 
 @implementation FCWallViewController
+@synthesize backgroundImageView;
+
 @synthesize tableViewMask;
 @synthesize tableView;
+@synthesize whoIsHereCollectionView;
 
 
 static CGFloat HeightOfGradient = 60;
-static CGFloat HeightOfWhoseHereView = 50.0f;
+static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-
-    }
-    return self;
-}
+//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//{
+//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+//    if (self) {
+//        // Custom initialization
+//
+//    }
+//    return self;
+//}
 
 - (id)initWithCoder:(NSCoder*)aDecoder
 {
@@ -65,6 +72,42 @@ static CGFloat HeightOfWhoseHereView = 50.0f;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    {
+//        UICollectionViewLayout *layout = [UICollectionViewLayout ]
+//        whoIsHereCollectionView = [UICollectionView alloc] initWithFrame:CGRectMake(0, 20, 320, HeightOfWhoIsHereView-20) collectionViewLayout:[ ]
+    }
+    
+    //paralax?
+    {
+        // Set vertical effect
+        UIInterpolatingMotionEffect *verticalMotionEffect =
+        [[UIInterpolatingMotionEffect alloc]
+         initWithKeyPath:@"center.y"
+         type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+        
+        static CGFloat wiggle = 50;
+        
+        verticalMotionEffect.minimumRelativeValue = @(-wiggle);
+        verticalMotionEffect.maximumRelativeValue = @(wiggle);
+        
+        // Set horizontal effect
+        UIInterpolatingMotionEffect *horizontalMotionEffect =
+        [[UIInterpolatingMotionEffect alloc]
+         initWithKeyPath:@"center.x"
+         type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+        horizontalMotionEffect.minimumRelativeValue = @(-wiggle);
+        horizontalMotionEffect.maximumRelativeValue = @(wiggle);
+        
+        // Create group to combine both
+        UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+        group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+        
+        // Add both effects to your view
+        [backgroundImageView addMotionEffect:group];
+    }
+    
+    
     [self.tableView setBackgroundColor:[UIColor clearColor]];
     
     // Show the navbar and the status bar
@@ -130,7 +173,7 @@ static CGFloat HeightOfWhoseHereView = 50.0f;
     
         self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         //table view is upsid down, so insets beware
-        self.tableView.contentInset = UIEdgeInsetsMake(40, 0, HeightOfWhoseHereView+HeightOfGradient, 0);
+        self.tableView.contentInset = UIEdgeInsetsMake(40, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
         
         //setup tableViewMask, remember tableView is upside down
         if (!tableViewMask)
@@ -148,8 +191,8 @@ static CGFloat HeightOfWhoseHereView = 50.0f;
             
             //the area behind the whosethereview
             CALayer *areaBehindWhoseThereView = [CALayer layer];
-            CGRect areaBehindWhoseThereViewFrame = {0.0f, tableViewMaskFrame.size.height-HeightOfWhoseHereView,
-                                                    tableViewMaskFrame.size.width, HeightOfWhoseHereView};
+            CGRect areaBehindWhoseThereViewFrame = {0.0f, tableViewMaskFrame.size.height-HeightOfWhoIsHereView,
+                                                    tableViewMaskFrame.size.width, HeightOfWhoIsHereView};
             areaBehindWhoseThereView.frame = areaBehindWhoseThereViewFrame;
             [areaBehindWhoseThereView setBackgroundColor:[UIColor clearColor].CGColor];
             [tableViewMask addSublayer:areaBehindWhoseThereView];
@@ -158,7 +201,8 @@ static CGFloat HeightOfWhoseHereView = 50.0f;
             CAGradientLayer *gradientLayer = [CAGradientLayer layer];
             CGRect gradientLayerFrame = {0.0f, areaBehindWhoseThereViewFrame.origin.y-HeightOfGradient,
                                          tableView.frame.size.width, HeightOfGradient};
-            
+            //high resolution drawing for retina, low res for non retina
+            [gradientLayer setContentsScale:[[UIScreen mainScreen] scale]];
             [gradientLayer setFrame:gradientLayerFrame];
             [gradientLayer setStartPoint:CGPointMake(0.5, 1)];
             [gradientLayer setEndPoint:CGPointMake(0.5, 0)];
@@ -167,7 +211,7 @@ static CGFloat HeightOfWhoseHereView = 50.0f;
             
             //all the rest
             CALayer *allTheRest = [CALayer layer];
-            CGFloat allRestHeight = tableView.frame.size.height - HeightOfWhoseHereView - HeightOfGradient;
+            CGFloat allRestHeight = tableView.frame.size.height - HeightOfWhoIsHereView - HeightOfGradient;
             CGRect allTheRestFrame = {0.0f, gradientLayerFrame.origin.y-allRestHeight,
                                       tableView.frame.size.width, allRestHeight};
             [allTheRest setFrame:allTheRestFrame];
