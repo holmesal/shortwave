@@ -11,11 +11,15 @@
 #import <Firebase/Firebase.h>
 #import "FCMessage.h"
 #import "FCMessageCell.h"
+#import "ProfileCollectionViewCell.h"
 
 
 
+@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@property (assign, nonatomic) NSInteger lastNumberOfPeopleInCollectionView;
 
-@interface FCWallViewController ()
+
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) CALayer *tableViewMask;
 
@@ -27,7 +31,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 
 
-@property (nonatomic) UICollectionView *whoIsHereCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *whoIsHereCollectionView;
 
 
 
@@ -37,6 +41,9 @@
 @end
 
 @implementation FCWallViewController
+
+@synthesize lastNumberOfPeopleInCollectionView;
+
 @synthesize backgroundImageView;
 
 @synthesize tableViewMask;
@@ -73,9 +80,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 {
     [super viewDidLoad];
     
+    NSTimer *timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(randomBing) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+    
+    
+    //whoishereCollectionView
     {
-//        UICollectionViewLayout *layout = [UICollectionViewLayout ]
-//        whoIsHereCollectionView = [UICollectionView alloc] initWithFrame:CGRectMake(0, 20, 320, HeightOfWhoIsHereView-20) collectionViewLayout:[ ]
+        [whoIsHereCollectionView setClipsToBounds:NO];
+        [whoIsHereCollectionView setShowsHorizontalScrollIndicator:NO];
+        [whoIsHereCollectionView setAlwaysBounceHorizontal:YES];
+        whoIsHereCollectionView.delegate = self;
+        whoIsHereCollectionView.dataSource = self;
+        
+        [self.view addSubview:whoIsHereCollectionView];
     }
     
     //paralax?
@@ -471,5 +488,57 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
         [CATransaction commit];
     }
 }
+
+#pragma mark UICollectionViewDelegate, UICollectionViewDataSource start
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    
+    NSInteger returnValue = 7;//change this value for now
+    
+    if (returnValue != lastNumberOfPeopleInCollectionView)
+    {
+        lastNumberOfPeopleInCollectionView = returnValue;
+        CGFloat span = 50*returnValue+(10*returnValue-1);
+        CGFloat leftInset = MAX((self.view.frame.size.width - span)/2, 10); //center the cells
+        
+//        [UIView animateWithDuration:1 delay:0.0f usingSpringWithDamping:1 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+//        {
+            [collectionView setContentInset:UIEdgeInsetsMake(0, leftInset, 0, 0)];
+//        } completion:^(BOOL finished){}];
+    }
+    
+    return returnValue;
+}
+-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *collectionViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ProfileCollectionViewCell" forIndexPath:indexPath];
+    
+    NSLog(@"collectionViewCell = %@", collectionViewCell);
+    return collectionViewCell;
+}
+
+-(void)randomBing
+{
+    NSLog(@"randomBing");
+    NSInteger randomInteger = esRandomNumberIn(0, [self collectionView:whoIsHereCollectionView numberOfItemsInSection:0]);
+    
+    ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:randomInteger inSection:0]];
+    if (!pcvc)
+    {
+        return;
+    }
+    [pcvc boop];
+    
+}
+
+
+#pragma mark UICollectionViewDelegate, UICollectionViewDataSource end
+
 
 @end
