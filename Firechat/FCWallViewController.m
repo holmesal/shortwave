@@ -80,7 +80,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 {
     [super viewDidLoad];
     
-    NSTimer *timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(randomBing) userInfo:nil repeats:YES];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(randomBing) userInfo:nil repeats:NO];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     
     
@@ -313,7 +313,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
         FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
         // Init a new message
         [self.wall insertObject:message atIndex:0];
-        //[self.wall addObject:message]; // For right-side up table view
         NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
         [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
         
@@ -499,7 +498,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     
-    NSInteger returnValue = 7;//change this value for now
+    FCAppDelegate *appDelegate = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+    FCUser *owner = appDelegate.owner;
+    NSLog(@"major:minor = %@:%@", owner.major, owner.minor);
+    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getBeaconIds].count;
+    
+    NSInteger returnValue = numberOfBecons + 1;//change this value for now
     
     if (returnValue != lastNumberOfPeopleInCollectionView)
     {

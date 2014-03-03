@@ -72,9 +72,11 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
     animation.fromValue = @(fromIntensity);
     animation.toValue = @(toIntensity);
     animation.repeatCount = repeat ? HUGE_VAL : 0;
-    animation.duration = 0.1;
+    animation.duration = 2.1;
     animation.autoreverses = YES;
     animation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    CAMediaTimingFunction *timeFunct= [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    
     
     [glowView.layer addAnimation:animation forKey:@"pulse"];
     

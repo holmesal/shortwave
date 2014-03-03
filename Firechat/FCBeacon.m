@@ -51,6 +51,7 @@
 #pragma mark - Scanner
 - (void) initScanner
 {
+    
     // Set delegate
     self.locationManager.delegate = self;
     // Create region
@@ -137,9 +138,61 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 
 //- (void)peripheralManagerDid
 
+-(void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
+{
+    NSLog(@"peripheralManagerDidStartAdvertising error %@", error.localizedDescription);
+}
+
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
     NSLog(@"DID UPDATE STATE");
+    
+    /*CBPeripheralManagerStateUnknown = 0,
+     CBPeripheralManagerStateResetting,
+     CBPeripheralManagerStateUnsupported,
+     CBPeripheralManagerStateUnauthorized,
+     CBPeripheralManagerStatePoweredOff,
+     CBPeripheralManagerStatePoweredOn
+     */
+    NSLog(@"\n");
+    switch (peripheral.state) {
+        case CBPeripheralManagerStateUnknown:
+        {
+            NSLog(@"CBPeripheralManagerStateUnknown");
+        }
+            break;
+        case CBPeripheralManagerStateResetting:
+        {
+            NSLog(@"CBPeripheralManagerStateResetting");
+        }
+            break;
+        case CBPeripheralManagerStateUnsupported:
+        {
+            //unsuported state means the device cannot do bluetooth low energy
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
+            [alert show];
+            NSLog(@"CBPeripheralManagerStateUnsupported");
+        }
+            break;
+        case CBPeripheralManagerStateUnauthorized:
+        {
+            NSLog(@"CBPeripheralManagerStateUnauthorized");
+        }
+            break;
+        case CBPeripheralManagerStatePoweredOff:
+        {
+            NSLog(@"CBPeripheralManagerStatePoweredOff");
+            
+        }
+            break;
+        case CBPeripheralManagerStatePoweredOn:
+        {
+            NSLog(@"CBPeripheralManagerStatePoweredOn");
+        }
+            break;
+    }
+    NSLog(@"\n");
+    
     if (peripheral.state == CBPeripheralManagerStatePoweredOn){
         // Setup the scanner
         [self initScanner];
