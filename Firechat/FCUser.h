@@ -14,6 +14,7 @@
 @interface FCUser : NSMutableDictionary
 
 @property Firebase *ref;
+@property Firebase *onOffRef;//reference to the boolan value of keyboard pressed or not pressed
 @property Firebase *rootRef;
 
 @property NSString *icon;

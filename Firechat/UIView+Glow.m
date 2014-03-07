@@ -19,6 +19,61 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
     return objc_getAssociatedObject(self, GLOWVIEW_KEY);
 }
 
+-(void)addGlowViewOfColor:(UIColor *)color
+{
+    if (self.glowView)
+    {
+        [self.glowView removeFromSuperview];
+        self.glowView = nil;
+    }
+    UIImage* image;
+    
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [UIScreen mainScreen].scale); {
+        [self.layer renderInContext:UIGraphicsGetCurrentContext()];
+        
+        UIBezierPath* path = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height)];
+        
+        [color setFill];
+        
+        [path fillWithBlendMode:kCGBlendModeSourceAtop alpha:1.0];
+        
+        
+        image = UIGraphicsGetImageFromCurrentImageContext();
+    } UIGraphicsEndImageContext();
+    
+    // Make the glowing view itself, and position it at the same
+    // point as ourself. Overlay it over ourself.
+    UIView* glowView = [[UIImageView alloc] initWithImage:image];
+    glowView.center = self.center;
+    [self.superview insertSubview:glowView aboveSubview:self];
+    [self setGlowView:glowView];
+    
+    
+    //thing
+//    UIView* glowView = [[UIImageView alloc] initWithImage:image];
+//    glowView.center = self.center;
+//    [self.superview insertSubview:glowView aboveSubview:self];
+    
+    // We don't want to show the image, but rather a shadow created by
+    // Core Animation. By setting the shadow to white and the shadow radius to
+    // something large, we get a pleasing glow.
+    glowView.alpha = 1.0;
+    glowView.layer.shadowColor = color.CGColor;
+    glowView.layer.shadowOffset = CGSizeZero;
+    glowView.layer.shadowRadius = 10;
+    glowView.layer.shadowOpacity = 1.0;
+}
+-(void)setGlowViewHidden:(BOOL)hidden
+{
+    id something = self.glowView;
+    [self.glowView setHidden:hidden];
+    id parent = self.glowView.superview;
+    if (!parent)
+    {
+        [self.superview insertSubview:self.glowView aboveSubview:self];
+    }
+}
+
 // Attach a view to this one, which we'll use as the glowing view.
 - (void) setGlowView:(UIView*)glowView {
     objc_setAssociatedObject(self, GLOWVIEW_KEY, glowView, OBJC_ASSOCIATION_RETAIN);

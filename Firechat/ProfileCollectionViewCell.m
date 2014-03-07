@@ -10,6 +10,8 @@
 #import "UIView+Glow.h"
 #import "UIImage+AverageColor.h"
 
+#define flash_approach 1
+
 @interface ProfileCollectionViewCell ()
 
 
@@ -30,19 +32,33 @@ static NSCache *cacheOfUrlsToColors;
     self = [super initWithFrame:frame];
     if (self)
     {
-        //when an image is set, i will call this method
-        
-        if (!cacheOfUrlsToColors)
-        {
-            cacheOfUrlsToColors = [[NSCache alloc] init];
-            [cacheOfUrlsToColors setCountLimit:60];
-            glowColor = [UIColor whiteColor];
-           
-#warning NO!  later
-//            [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:nil context:0];
-        }
+        [self initialize];
     }
     return self;
+}
+
+-(void)initialize
+{
+
+
+    
+    if (!cacheOfUrlsToColors)
+    {
+        cacheOfUrlsToColors = [[NSCache alloc] init];
+        [cacheOfUrlsToColors setCountLimit:60];
+        
+        
+#warning NO!  later
+        //            [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:nil context:0];
+    }
+    //when an image is set, i will call this method
+    glowColor = [UIColor whiteColor];
+    [self addGlowViewOfColor:glowColor];
+}
+
+-(void)awakeFromNib
+{
+    [self initialize];
 }
 
 /*
@@ -56,7 +72,14 @@ static NSCache *cacheOfUrlsToColors;
 
 -(void)boop
 {
-    [self startGlowingWithColor:[UIColor whiteColor] fromIntensity:0 toIntensity:1 repeat:YES];
+    if (!flash_approach)
+        [self startGlowingWithColor:[UIColor whiteColor] fromIntensity:0 toIntensity:1 repeat:YES];
+}
+
+-(void)setTurnOn:(BOOL)isOn
+{
+    if (flash_approach)
+        [self setGlowViewHidden:!isOn];
 }
 
 -(void)setImageURL:(NSURL*)url
@@ -87,7 +110,11 @@ static NSCache *cacheOfUrlsToColors;
         {
             glowColor = [theImage averageColor];
             [cacheOfUrlsToColors setObject:glowColor forKey:theAbsUrl];
+            
         }
+        
+        if (flash_approach)
+            [self addGlowViewOfColor:glowColor];
         NSLog(@"image got loaded, color got set to %@ for resource %@", glowColor, theAbsUrl);
     }
 }

@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "FCUser.h"
+#import "ESApplication.h"
 
-@interface FCAppDelegate : UIResponder <UIApplicationDelegate>
+@interface FCAppDelegate : UIResponder <ESApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) FCUser *owner;

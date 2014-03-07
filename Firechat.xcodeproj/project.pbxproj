@@ -10,6 +10,7 @@
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
+		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
 		C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */; };
@@ -67,6 +68,8 @@
 		AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColor.h"; sourceTree = "<group>"; };
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
+		AADE168F18C52C8100F70F75 /* ESApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESApplication.h; sourceTree = "<group>"; };
+		AADE169018C52C8100F70F75 /* ESApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESApplication.m; sourceTree = "<group>"; };
 		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileCollectionViewCell.h; sourceTree = "<group>"; };
 		AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileCollectionViewCell.m; sourceTree = "<group>"; };
 		AAE1028A18C469EC00BC7269 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
@@ -232,13 +235,6 @@
 			name = extensions;
 			sourceTree = "<group>";
 		};
-		AAE1028318C44A0A00BC7269 /* iPad */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = iPad;
-			sourceTree = "<group>";
-		};
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
@@ -289,13 +285,14 @@
 			isa = PBXGroup;
 			children = (
 				AA8EC98B18C5039500A8C4DC /* extensions */,
-				AAE1028318C44A0A00BC7269 /* iPad */,
 				AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */,
 				AA1F2DEF18C3D91A0087AAF7 /* views */,
 				AA1F2DEE18C3D9070087AAF7 /* models */,
 				C02CE3D118680A5F00305FC9 /* main.storyboard */,
 				C02CE3A0186808B000305FC9 /* FCAppDelegate.h */,
 				C02CE3A1186808B000305FC9 /* FCAppDelegate.m */,
+				AADE168F18C52C8100F70F75 /* ESApplication.h */,
+				AADE169018C52C8100F70F75 /* ESApplication.m */,
 				C02CE398186808B000305FC9 /* Supporting Files */,
 			);
 			path = Firechat;
@@ -496,6 +493,7 @@
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
+				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,

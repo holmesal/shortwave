@@ -102,4 +102,32 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark custom touches captured
+- (void)application:(ESApplication *)application willSendTouchEvent:(UIEvent *)event
+{
+//    NSLog(@"touch event: %@", event);
+    
+    if (event.type == UIEventTypeTouches)
+    {
+        id rootContr = self.window.rootViewController;
+        
+        NSArray *viewControllers = @[rootContr];
+        
+        if ([rootContr isKindOfClass:[UINavigationController class] ])
+        {
+            viewControllers = ((UINavigationController*)rootContr).viewControllers;
+        }
+        
+        for (UIViewController *vc in viewControllers)
+        {
+            if ([vc respondsToSelector:@selector(receiveTouchEvent:)])
+            {
+                [vc performSelector:@selector(receiveTouchEvent:) withObject:event];
+            }
+        }
+    }
+    // Reset your idle timer here.
+}
+#pragma mark custom touches captured end
+
 @end

@@ -21,6 +21,13 @@
 
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+
+//SOME KEYBOARD PROPERTIES FOR HIT TESTING A TOUCH
+@property (nonatomic) BOOL keyboardIsVisible;
+@property (nonatomic) CGRect keyboardRect;
+
+
 @property (nonatomic) CALayer *tableViewMask;
 
 @property FCUser *owner;
@@ -50,19 +57,15 @@
 @synthesize tableView;
 @synthesize whoIsHereCollectionView;
 
+//SOME KEYBOARD PROPERTIES FOR HIT TESTING A TOUCH
+@synthesize keyboardIsVisible;
+@synthesize keyboardRect;
+
 
 static CGFloat HeightOfGradient = 60;
-static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
+static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  Eeeewps :)
 
-//- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-//{
-//    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    if (self) {
-//        // Custom initialization
-//
-//    }
-//    return self;
-//}
+
 
 - (id)initWithCoder:(NSCoder*)aDecoder
 {
@@ -80,8 +83,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 {
     [super viewDidLoad];
     
-    NSTimer *timer = [NSTimer timerWithTimeInterval:0.25 target:self selector:@selector(randomBing) userInfo:nil repeats:NO];
-    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+    
+    //Flash yourself
+    FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+    [owner.onOffRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapShot)
+    {
+        BOOL isOn = [snapShot.value boolValue];
+        
+        ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        if (pcvc)
+        {
+            NSLog(@"pcvc turn on ? %@", isOn ? @"YES": @"NO");
+            [pcvc setTurnOn:isOn];
+        }
+    }];
     
     
     //whoishereCollectionView
@@ -247,6 +262,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 
 
 
+
 - (void)loadComposeView{
     CGRect viewBounds = self.view.bounds;
     
@@ -264,6 +280,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
+
     self.composeBarView.textView.keyboardAppearance = UIKeyboardAppearanceDark;
     self.composeBarView.buttonTintColor = [UIColor whiteColor];
 //    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
@@ -385,7 +402,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 # pragma mark - keyboard did show/hide
 // Handles the resizing on a keyboard show or hide event
 - (void)keyboardWillToggle:(NSNotification *)notification {
+    
+    
+    
+    
     NSDictionary* userInfo = [notification userInfo];
+    NSLog(@"userInfo = %@", userInfo);
     NSTimeInterval duration;
     UIViewAnimationCurve animationCurve;
     CGRect startFrame;
@@ -399,10 +421,17 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
     if (startFrame.origin.y < 0 || startFrame.origin.x < 0 || endFrame.origin.y < 0 || endFrame.origin.x < 0)
         signCorrection = -1;
     
+    
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
+    
+    //ethan did some stuff here.  Needs revision if support multiple orientation!
+    keyboardIsVisible = (sizeChange < 0);
+    keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
+//    NSLog(@"keyboardIsVIsible ? %@", (keyboardIsVisible ? @"YES": @"NO"));
+    NSLog(@"keyboardRect = %@", NSStringFromCGRect(keyboardRect));
     
     CGRect newContainerFrame = [[self tableView] frame];
     newContainerFrame.size.height += sizeChange;
@@ -544,5 +573,34 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;
 
 #pragma mark UICollectionViewDelegate, UICollectionViewDataSource end
 
+
+#pragma mark trickle-down touche-event
+//test to see if it is on the keyboard, and light up firebase reference to onOff if yes
+-(void)receiveTouchEvent:(UIEvent*)touchEvent
+{
+    if (keyboardIsVisible)
+    {
+        NSSet *allTouches = [touchEvent allTouches];
+        for (UITouch *touch in allTouches)
+        {
+            CGPoint position = [touch locationInView:self.view];
+            
+            
+            FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+            
+            if (touch.phase == UITouchPhaseBegan &&
+                CGRectContainsPoint(keyboardRect, position))
+            {
+                [owner.onOffRef setValue:[NSNumber numberWithBool:YES]];
+//                NSLog(@"\t\tON!");
+            } else
+            if (touch.phase == UITouchPhaseEnded)
+            {
+                [owner.onOffRef setValue:[NSNumber numberWithBool:NO]];
+//                NSLog(@"\t\tOFF!");
+            }
+        }
+    }
+}
 
 @end

@@ -14,5 +14,6 @@
 -(void)boop;
 //calculates the glow color and sets it on main thread
 -(void)setImageURL:(NSURL*)url;
+-(void)setTurnOn:(BOOL)isOn;
 
 @end

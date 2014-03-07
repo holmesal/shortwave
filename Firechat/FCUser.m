@@ -64,6 +64,8 @@ typedef void (^CompletionBlockType)(id);
 {
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
+    [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
 }
 
 # pragma mark - push notification registration

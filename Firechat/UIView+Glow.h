@@ -23,4 +23,6 @@
 
 - (void) stopGlowing;
 
+-(void)addGlowViewOfColor:(UIColor*)color;
+-(void)setGlowViewHidden:(BOOL)hidden;
 @end
