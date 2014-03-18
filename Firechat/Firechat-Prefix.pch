@@ -17,5 +17,6 @@
     #import <Firebase/Firebase.h>
     #import <Foundation/Foundation.h>
     #import "AsyncImageView.h"
+    #import "UIColor+HexString.h"
 
 #endif

@@ -88,6 +88,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
     [owner.onOffRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapShot)
     {
+        if (snapShot.value == [NSNull null])
+        {
+            return;
+        }
         BOOL isOn = [snapShot.value boolValue];
         
         ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
