@@ -254,8 +254,7 @@ static CGFloat kTextViewToSuperviewHeightDelta;
         CGRect frame = [self bounds];
         frame.size.height = 0.5f;
         _topLineView = [[UIView alloc] initWithFrame:frame];
-//        [_topLineView setBackgroundColor:[UIColor colorWithWhite:0.98f alpha:1.0f]];
-        [_topLineView setBackgroundColor:[UIColor colorWithWhite:0.98f alpha:0.2f]];
+        [_topLineView setBackgroundColor:[UIColor colorWithWhite:0.98f alpha:1.0f]];
         [_topLineView setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
     }
 
@@ -268,7 +267,7 @@ static CGFloat kTextViewToSuperviewHeightDelta;
         CGRect frame = [self bounds];
         frame.origin.y = 0.5f;
         _backgroundView = [[UIToolbar alloc] initWithFrame:frame];
-        [_backgroundView setBarStyle:UIBarStyleBlackTranslucent];
+        [_backgroundView setBarStyle:UIBarStyleDefault];
         [_backgroundView setTranslucent:YES];
         [_backgroundView setTintColor:[UIColor whiteColor]];
         [_backgroundView setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
@@ -334,18 +333,14 @@ static CGFloat kTextViewToSuperviewHeightDelta;
         _textContainer = [UIButton buttonWithType:UIButtonTypeCustom];
         [_textContainer setFrame:textContainerFrame];
         [_textContainer setClipsToBounds:YES];
-//        [_textContainer setBackgroundColor:[UIColor colorWithWhite:0.98f alpha:1.0f]];
-        [_textContainer setBackgroundColor:[UIColor colorWithWhite:0.2f alpha:0.2f]];
+        [_textContainer setBackgroundColor:[UIColor colorWithWhite:0.98f alpha:1.0f]];
         [_textContainer setAutoresizingMask:UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight];
 
         CALayer *layer = [_textContainer layer];
-//        UIColor *borderColor = [UIColor colorWithHue:240.0f/360.0f saturation:0.02f brightness:0.8f alpha:1.0f];
-        UIColor *borderColor = [UIColor colorWithHue:240.0f/360.0f saturation:0.02f brightness:0.8f alpha:0.1f];
+        UIColor *borderColor = [UIColor colorWithHue:240.0f/360.0f saturation:0.02f brightness:0.8f alpha:1.0f];
         [layer setBorderColor:[borderColor CGColor]];
         [layer setBorderWidth:0.5f];
         [layer setCornerRadius:kTextContainerCornerRadius];
-        
-        [[self textView] setTextColor:[UIColor whiteColor]];
 
         CGFloat textHeight = [self textHeight];
         [self setPreviousTextHeight:textHeight];

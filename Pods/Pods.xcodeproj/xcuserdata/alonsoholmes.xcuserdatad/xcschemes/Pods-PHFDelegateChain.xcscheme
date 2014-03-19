@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CB1ADEF28DCF4692A5BB5BCF"
+               BlueprintIdentifier = "DE9816D594AC49A597BB97E9"
                BuildableName = "libPods-PHFDelegateChain.a"
                BlueprintName = "Pods-PHFDelegateChain"
                ReferencedContainer = "container:Pods.xcodeproj">

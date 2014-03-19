@@ -4,66 +4,35 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-Firebase.xcscheme</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
-		</dict>
 		<key>Pods-PHFComposeBarView.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-PHFDelegateChain.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>01BCB5046DBF4235A150EBE0</key>
+		<key>148FF86F81BF4BA780250B8D</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>1696091C119744E5ABB1BB6F</key>
+		<key>93B375F46C3A4D58A723521F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>48668B8044B24604B93F13EA</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>4B300B984BDC40929BB3C8DD</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>947CFC5B11F443C0A980E936</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CB1ADEF28DCF4692A5BB5BCF</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>E070D6B851404E368126A5AD</key>
+		<key>DE9816D594AC49A597BB97E9</key>
 		<dict>
 			<key>primary</key>
 			<true/>

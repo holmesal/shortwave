@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1696091C119744E5ABB1BB6F"
+               BlueprintIdentifier = "93B375F46C3A4D58A723521F"
                BuildableName = "libPods-PHFComposeBarView.a"
                BlueprintName = "Pods-PHFComposeBarView"
                ReferencedContainer = "container:Pods.xcodeproj">

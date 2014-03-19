@@ -212,7 +212,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.tableView.contentInset = UIEdgeInsetsMake(40, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
         
         //setup tableViewMask, remember tableView is upside down
-        if (!tableViewMask)
+        if (NO) //(!tableViewMask)
         {
             //create tableViewMask
             tableViewMask = [CALayer layer];
@@ -280,7 +280,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
     [self.composeBarView setPlaceholder:@"Say something..."];
-    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
+//    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
@@ -293,13 +293,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.view addSubview:self.composeBarView];
     
     // Style the "utility button", a phrase which here means "profile photo"
-    self.composeBarView.utilityButton.imageView.layer.masksToBounds = YES;
-    self.composeBarView.utilityButton.imageView.layer.cornerRadius = self.composeBarView.utilityButton.imageView.frame.size.width/2;
-    // TODO - replace this with the owner's actual color
-    self.composeBarView.utilityButton.imageView.backgroundColor = self.owner.displayColor;
-    
-    // Style the image
-    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"profilepic"]];
+//    self.composeBarView.utilityButton.imageView.layer.masksToBounds = YES;
+//    self.composeBarView.utilityButton.imageView.layer.cornerRadius = self.composeBarView.utilityButton.imageView.frame.size.width/2;
+//    // TODO - replace this with the owner's actual color
+//    self.composeBarView.utilityButton.imageView.backgroundColor = self.owner.displayColor;
+//    
+//    // Style the image
+//    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"profilepic"]];
 }
 
 - (void)dealloc {
