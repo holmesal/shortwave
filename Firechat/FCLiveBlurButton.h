@@ -12,4 +12,6 @@
 
 -(void)invalidatePressedLayer;
 
+-(void)addTarget:(id)target action:(SEL)selector forControlEvents:(UIControlEvents)controlEvents;
+
 @end

@@ -20,6 +20,8 @@ typedef enum
 
 @interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) UIImageView *extractedImageViewOnDone;
+
 @property (nonatomic) PanGestureDirection panDirection;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
 @property (nonatomic) NSInteger colorIndex;
@@ -59,8 +61,8 @@ typedef enum
 {
     [super viewDidLoad];
     
-#warning Alonso put colors here
-    NSArray *colorsHex = @[@"00CF69", @"FFA400", @"1A8DE6"];
+#pragma mark Alonso put colors here
+    NSArray *colorsHex = @[@"FF0000", @"00FF00", @"0000FF"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
@@ -114,8 +116,62 @@ typedef enum
                      }
                      completion:nil
      ];
+    [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
 
 }
+
+-(void)doneBlurButtonAction:(UIButton*)button
+{
+    NSLog(@"doneBlurButtonAction");
+    int currentIndex = (iconTableView.contentOffset.y/self.cellHeight);
+    
+    UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndex inSection:0] ];
+//    cell.reuseIdentifier = @"lolaok";
+    
+    UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
+    [imageView setHidden:YES];
+    self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:imageView.frame];
+    [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
+    [self.extractedImageViewOnDone setImage:imageView.image];
+    
+
+    
+    CGRect tempFrame = self.extractedImageViewOnDone.frame;
+    tempFrame.origin = CGPointMake((self.view.frame.size.width-tempFrame.size.width)*0.5f, (self.view.frame.size.height -tempFrame.size.height)*0.5f);
+    self.extractedImageViewOnDone.frame = tempFrame;
+    [self.view addSubview:self.extractedImageViewOnDone];
+    
+    [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        for (UIView *subview in self.view.subviews)
+        {
+            if (subview != self.extractedImageViewOnDone)
+            {
+                subview.alpha = 0.0f;
+            }
+        }
+
+    } completion:^(BOOL finished)
+    {
+        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andColor:self.view.backgroundColor];
+    }];
+    
+//OK now it is done!
+
+}
+
+-(void)transitionToFCWallViewControllerWithImage:(UIImage*)image andColor:(UIColor*)backgroundColor
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
+    UIViewController *nextViewController = [storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
+
+    [nextViewController performSelector:@selector(beginTransitionWithIcon:andColor:) withObject:image withObject:backgroundColor];
+    
+    NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [viewControllers addObject:nextViewController];
+    self.navigationController.viewControllers = viewControllers;
+}
+
 
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -342,14 +398,13 @@ typedef enum
                     end = 0;
                 }
                 
-//                NSLog(@"fabsf(velocity.x) = %f", fabsf(velocity.x) );
-                //switch back if not going fast enough for a certain percent traveled
+//switch back if not going fast enough for a certain percent traveled
                 if (fabsf(velocity.x) < 40 && fabsf(percent) < 0.7f)
                 {
                     end = start;
                 }
                 
-                [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:0.5f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+                [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                 {
                     self.view.backgroundColor = [colors objectAtIndex:end];
                     self.colorIndex = end;
@@ -369,13 +424,12 @@ typedef enum
                 
                 CGFloat y = self.offsetOfTableViewAtStartOfVertical.y - numberOfWraps*direction*self.cellHeight;
                 
-                [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+                [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                 {
                     
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     
-//                    NSLog(@"self.iconIndex = %d", self.iconIndex);
                 } completion:^(BOOL finished)
                 {
                     

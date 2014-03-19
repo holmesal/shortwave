@@ -19,6 +19,9 @@
 @property (assign, nonatomic) NSInteger lastNumberOfPeopleInCollectionView;
 
 
+@property (nonatomic) UIView *shadeView;
+@property (nonatomic) UIImageView *icon;
+
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -79,10 +82,42 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return self;
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.shadeView)
+    {
+        [UIView animateWithDuration:1.2f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+        {
+            CGRect frame = self.shadeView.frame;
+            frame.size.height = 64;
+            frame.origin.y = 0;
+            self.shadeView.frame = frame;
+            
+            frame = self.icon.frame;
+            frame.origin.y = 20;
+            frame.size.width = 35;
+            frame.size.height = 35;
+            
+            self.icon.frame = frame;
+        } completion:^(BOOL finished){}];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    
+    if (self.shadeView)
+    {
+        [self.view addSubview:self.shadeView];
+        
+    } else
+    {
+        NSLog(@"warning! you are instaniating FCWallViewController without setting it up properly via beginTransitionWithIcon method.  Expect to see no transition");
+    }
     
     //Flash yourself
     FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
@@ -605,6 +640,18 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             }
         }
     }
+}
+
+#pragma mark called by FCWallViewController when initializing this ViewController as the next
+-(void)beginTransitionWithIcon:(UIImage*)image andColor:(UIColor*)backgroundColor
+{
+    self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    [self.shadeView setBackgroundColor:backgroundColor];
+    
+    self.icon = [[UIImageView alloc] initWithFrame:CGRectMake((self.shadeView.frame.size.width-50)*0.5f, (self.shadeView.frame.size.height-50)*0.5f, 50, 50)];
+    [self.icon setImage:image];
+    [self.icon setContentMode:UIViewContentModeScaleAspectFit];
+    [self.shadeView addSubview:self.icon];
 }
 
 @end

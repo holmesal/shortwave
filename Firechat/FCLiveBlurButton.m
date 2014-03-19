@@ -12,6 +12,8 @@
 
 @property (nonatomic) CALayer *pressedLayer;
 @property (nonatomic) CALayer *frameLayer;
+@property (nonatomic) UIColor *originalColorText;
+
 
 
 @property (nonatomic) UILabel *label;
@@ -42,6 +44,7 @@
         if ([view isKindOfClass:[UILabel class]])
         {
             self.label = view;
+            self.originalColorText = self.label.textColor;
             break;
         }
     }
@@ -65,15 +68,18 @@
 }
 -(void)touchEnd
 {
-    [UIView animateWithDuration:0.3f delay:0.0f usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    [UIView animateWithDuration:5.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
+#warning this is fucked
+//         self.label.textColor = self.originalColorText;
          self.pressedLayer.opacity = 0.0f;
      } completion:^(BOOL finished){}];
 }
 -(void)touchBegan
 {
-    [UIView animateWithDuration:0.3f delay:0.0f usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
     {
+
         self.pressedLayer.opacity = 1.0f;
     } completion:^(BOOL finished){}];
 }
@@ -88,6 +94,11 @@
     [frameLayer setBackgroundColor:[UIColor clearColor].CGColor];
     
     [self.layer insertSublayer:frameLayer atIndex:0];
+}
+
+-(void)addTarget:(id)target action:(SEL)selector forControlEvents:(UIControlEvents)controlEvents
+{
+    [self.button addTarget:target action:selector forControlEvents:controlEvents];
 }
 
 -(void)invalidatePressedLayer
@@ -125,7 +136,7 @@
     pressedLayer = [CALayer layer];
     [pressedLayer setFrame:self.bounds];
 
-    image = [image applyExtraLightEffect ];
+    image = [image applyBlurWithRadius:10.0f tintColor:[UIColor colorWithWhite:1.0f alpha:0.6f] saturationDeltaFactor:1 maskImage:nil];//[image applyExtraLightEffect ];
     pressedLayer.contents = (id)image.CGImage;
     
     CALayer *mask = [CALayer layer];
@@ -137,7 +148,6 @@
     pressedLayer.mask = mask;
     [pressedLayer setOpacity:0.0f];
     [self.layer insertSublayer:pressedLayer below:self.frameLayer];
-    
     
     UIGraphicsEndImageContext();
     [self setHidden:NO];

@@ -65,7 +65,6 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
 }
 -(void)setGlowViewHidden:(BOOL)hidden
 {
-    id something = self.glowView;
     [self.glowView setHidden:hidden];
     id parent = self.glowView.superview;
     if (!parent)
