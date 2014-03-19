@@ -62,7 +62,7 @@ typedef enum
     [super viewDidLoad];
     
 #pragma mark Alonso put colors here
-    NSArray *colorsHex = @[@"FF0000", @"00FF00", @"0000FF"];
+    NSArray *colorsHex = @[@"00CF69", @"FFA400", @"1A8DE6"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
