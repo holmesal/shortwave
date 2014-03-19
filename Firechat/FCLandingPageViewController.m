@@ -26,6 +26,7 @@ typedef enum
 
 @property (nonatomic) CGPoint offsetOfTableViewAtStartOfVertical;
 
+@property (weak, nonatomic) IBOutlet UIImageView *spinnerImageView;
 
 @property (nonatomic) UITableView *iconTableView;
 @property (weak, nonatomic) IBOutlet UIView *iconContainerView;
@@ -59,7 +60,7 @@ typedef enum
     [super viewDidLoad];
     
 #warning Alonso put colors here
-    NSArray *colorsHex = @[@"FF0000", @"00FF00", @"0000FF"];
+    NSArray *colorsHex = @[@"00CF69", @"FFA400", @"1A8DE6"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
@@ -104,7 +105,15 @@ typedef enum
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:self.panGesture];
     
-    
+    // Start animating the image view
+    [UIView animateWithDuration:40.0f
+                          delay:0.0f
+                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+                     }
+                     completion:nil
+     ];
 
 }
 
