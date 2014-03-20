@@ -439,8 +439,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     // Style the compose bar view
 
-    self.composeBarView.textView.keyboardAppearance = UIKeyboardAppearanceDark;
-    self.composeBarView.buttonTintColor = [UIColor whiteColor];
+//    self.composeBarView.textView.keyboardAppearance = UIKeyboardAppearanceDark;
+//    self.composeBarView.buttonTintColor = [UIColor whiteColor];
 //    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
 //    [self.composeBarView setBackgroundColor:UIColor clearColor];
     // Add subview
