@@ -541,7 +541,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
 #warning test
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-        NSLog(@"self.beacons.count = %d", self.beacons.count);
+//        NSLog(@"self.beacons.count = %d", self.beacons.count);
         BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
         
         FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
@@ -552,15 +552,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [cell setFaded:isFaded animated:NO];
 
         
-        NSLog(@"beacon mssage = %@ ownrId %@", message.text, message.ownerID);
-        NSLog(@"isFaded = %@", (isFaded? @"YES": @"NO") );
-        
-//        message.ownerID
-//        if ([message.text  isEqual: @"Wat"]) {
-//            cell.contentView.alpha = 0.2;
-//        } else { // Must be reset, because the cell gets recycled
-//            cell.contentView.alpha = 1.0;
-//        }
+
         
         
         
@@ -596,7 +588,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     
     NSDictionary* userInfo = [notification userInfo];
-    NSLog(@"userInfo = %@", userInfo);
+    
     NSTimeInterval duration;
     UIViewAnimationCurve animationCurve;
     CGRect startFrame;
@@ -619,13 +611,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //ethan did some stuff here.  Needs revision if support multiple orientation!
     keyboardIsVisible = (sizeChange < 0);
     keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
-//    NSLog(@"keyboardIsVIsible ? %@", (keyboardIsVisible ? @"YES": @"NO"));
-    NSLog(@"keyboardRect = %@", NSStringFromCGRect(keyboardRect));
     
     CGRect newContainerFrame = [[self tableView] frame];
     newContainerFrame.size.height += sizeChange;
-    
-    NSLog(@"sizeChange = %f", sizeChange);
     
     CGRect newComposeBarFrame = [[self composeBarView] frame];
     newComposeBarFrame.origin.y += sizeChange;
@@ -719,7 +707,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     FCAppDelegate *appDelegate = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
     FCUser *owner = appDelegate.owner;
-    NSLog(@"major:minor = %@:%@", owner.major, owner.minor);
     NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getBeaconIds].count;
     
     NSInteger returnValue = numberOfBecons + 1;//change this value for now
@@ -782,12 +769,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 CGRectContainsPoint(keyboardRect, position))
             {
                 [owner.onOffRef setValue:[NSNumber numberWithBool:YES]];
-//                NSLog(@"\t\tON!");
+
             } else
             if (touch.phase == UITouchPhaseEnded)
             {
                 [owner.onOffRef setValue:[NSNumber numberWithBool:NO]];
-//                NSLog(@"\t\tOFF!");
+
             }
         }
     }
@@ -817,7 +804,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)iconButtonAction:(UIButton*)iconButtonThe
 {
-    NSLog(@"iconButtonAction");
     CGRect realPeopleNearbyLabelFrame = self.peopleNearbyLabel.frame;
     
     [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
@@ -869,10 +855,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         BOOL isFaded = !beaconFound && !messageBelongsToMe;
         
         
-        
-        NSLog(@"cellId = %@", mssgCell.ownerID);
-        NSLog(@"isFaded %@", (isFaded ? @"YES": @"NO"));
-
         
         
         [mssgCell setFaded:isFaded animated:YES];

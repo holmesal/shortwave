@@ -32,16 +32,16 @@
 {
     if (!coloredCircleLayer)
     {
-        CGFloat radius = 15;
+        CGFloat radius = 16;
         coloredCircleLayer = [CALayer layer];
         [coloredCircleLayer setBackgroundColor:[UIColor blackColor].CGColor];
         [coloredCircleLayer setBorderColor:[UIColor clearColor].CGColor];
         [coloredCircleLayer setCornerRadius:radius];
         
         
-        CGRect frame = CGRectMake(0, 0, radius*2, radius*2);
-        frame.origin.x = (self.sneakyView.frame.size.width-frame.size.width)*0.5f;
-        frame.origin.y = (self.sneakyView.frame.size.height-frame.size.height)*0.5f;
+        CGRect frame = CGRectMake(-0.5f, -0.5f, radius*2, radius*2);
+        frame.origin.x += (self.sneakyView.frame.size.width-frame.size.width)*0.5f;
+        frame.origin.y += (self.sneakyView.frame.size.height-frame.size.height)*0.5f;
         [coloredCircleLayer setFrame:frame];
         
         [self.sneakyView.layer insertSublayer:coloredCircleLayer atIndex:0];

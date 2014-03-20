@@ -17,6 +17,7 @@
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
+        //Welcome to the You-Fucked-Up screen!
         return UIApplicationMain(argc, argv,
                                  NSStringFromClass([ESApplication class]),
                                  NSStringFromClass([FCAppDelegate class]));
