@@ -15,5 +15,5 @@
 
 
 -(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor;
-
+@property (nonatomic) NSString *iconName;
 @end

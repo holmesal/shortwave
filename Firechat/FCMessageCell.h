@@ -21,9 +21,6 @@
 @property (nonatomic) CAShapeLayer *lineLayer;
 
 - (void)setMessage:(FCMessage *)message;
-// Not the best place to expose this but whatever you only live once
-- (UIColor *) colorWithHexString: (NSString *) hexString;
 
 -(void)setFaded:(BOOL)faded animated:(BOOL)animated;
-
 @end

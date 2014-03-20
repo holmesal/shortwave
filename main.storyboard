@@ -32,18 +32,18 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hNe-T6-fzo">
                                                     <rect key="frame" x="17" y="4" width="41" height="41"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="41" id="g3r-i4-ez6"/>
                                                         <constraint firstAttribute="height" constant="41" id="gpU-k5-EC1"/>
                                                     </constraints>
                                                 </view>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1s7-CE-E9b">
-                                                    <rect key="frame" x="20" y="7" width="35" height="35"/>
+                                                    <rect key="frame" x="27" y="14" width="20" height="20"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="35" id="3Wg-1W-fOL"/>
-                                                        <constraint firstAttribute="height" constant="35" id="OjC-FV-G3s"/>
+                                                        <constraint firstAttribute="width" constant="20" id="Ibg-mc-JGS"/>
+                                                        <constraint firstAttribute="height" constant="20" id="z0H-ye-VAV"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="900" verticalHuggingPriority="900" horizontalCompressionResistancePriority="900" verticalCompressionResistancePriority="900" text="This is some text" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="225" translatesAutoresizingMaskIntoConstraints="NO" id="sR9-7Q-T6Q">
@@ -67,19 +67,19 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="sR9-7Q-T6Q" secondAttribute="trailing" constant="20" id="0IX-1D-Xml"/>
-                                                <constraint firstItem="hNe-T6-fzo" firstAttribute="top" secondItem="wNA-VD-qQo" secondAttribute="top" constant="4" id="BFP-jF-K71"/>
+                                                <constraint firstItem="1s7-CE-E9b" firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" constant="-0.5" id="KV2-Bv-uK2"/>
                                                 <constraint firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" constant="13" id="TF4-sx-R9r"/>
                                                 <constraint firstItem="hNe-T6-fzo" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="17" id="Ueu-LU-RCT"/>
-                                                <constraint firstItem="1s7-CE-E9b" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="20" id="WJy-9n-abo"/>
-                                                <constraint firstItem="1s7-CE-E9b" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="14" id="YZX-Fu-8Ek"/>
-                                                <constraint firstItem="1s7-CE-E9b" firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" id="ZK3-pD-YQa"/>
-                                                <constraint firstItem="sR9-7Q-T6Q" firstAttribute="leading" secondItem="1s7-CE-E9b" secondAttribute="trailing" constant="20" id="xW1-el-AmX"/>
+                                                <constraint firstItem="hNe-T6-fzo" firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" id="cAY-0P-TsR"/>
+                                                <constraint firstItem="1s7-CE-E9b" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="27" id="uhE-IF-i1n"/>
+                                                <constraint firstItem="sR9-7Q-T6Q" firstAttribute="leading" secondItem="1s7-CE-E9b" secondAttribute="trailing" constant="28" id="xep-NS-c5F"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <connections>
                                             <outlet property="messageText" destination="sR9-7Q-T6Q" id="2tx-fL-4qc"/>
                                             <outlet property="profilePhoto" destination="1s7-CE-E9b" id="Eew-qq-LQJ"/>
+                                            <outlet property="sneakyView" destination="hNe-T6-fzo" id="EoC-NN-4aC"/>
                                             <outlet property="timestamp" destination="m9t-SF-OMt" id="8Ap-S0-R3C"/>
                                         </connections>
                                     </tableViewCell>

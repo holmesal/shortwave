@@ -197,8 +197,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [super viewDidLoad];
     
     lineLayer = [CAShapeLayer layer];
-    [lineLayer setLineWidth:2.5f];
-    [lineLayer setStrokeColor:[UIColor redColor].CGColor];//[UIColor colorWithWhite:228/255.0f alpha:1.0f].CGColor];
+    [lineLayer setLineWidth:0.5f];
+    [lineLayer setStrokeColor:[UIColor colorWithWhite:225/255.0f alpha:1.0f].CGColor];//[UIColor colorWithWhite:228/255.0f alpha:1.0f].CGColor];
     [lineLayer setFillColor:[UIColor clearColor].CGColor];
     [self.tableView.layer insertSublayer:lineLayer atIndex:0];
     [self updateLine];
@@ -530,19 +530,17 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
         // Configure the cell...
         FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-        // Hardcoding message icon and color for now
-    //    message.color = @"#FFA400";
-    //    message.icon = @"profilepic";
+        
         // Set message cell values
         [cell setMessage:message];
         
         // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
         cell.ownerID = message.ownerID;
-        NSString *major = [[message.ownerID componentsSeparatedByString:@":"] objectAtIndex:0];
-        NSString *minor = [[message.ownerID componentsSeparatedByString:@":"] objectAtIndex:1];
+        NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+        NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
         
 #warning test
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major = %@ AND SELF.minor == %@)", major, minor];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
         NSLog(@"self.beacons.count = %d", self.beacons.count);
         BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
         
@@ -550,10 +548,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSString *myId = me.id;
         BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
         
-        beaconFound = beaconFound || messageBelongsToMe;
-        [cell setFaded:beaconFound animated:NO];
+        BOOL isFaded = !beaconFound && !messageBelongsToMe;
+        [cell setFaded:isFaded animated:NO];
 
-        NSLog(@"beacon found = %@", (beaconFound? @"YES": @"NO") );
+        
+        NSLog(@"beacon mssage = %@ ownrId %@", message.text, message.ownerID);
+        NSLog(@"isFaded = %@", (isFaded? @"YES": @"NO") );
         
 //        message.ownerID
 //        if ([message.text  isEqual: @"Wat"]) {
@@ -853,16 +853,30 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     for (FCMessageCell *mssgCell in tableView.visibleCells)
     {
-        NSString *major = [[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0];
-        NSString *minor = [[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1];
+        NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+        NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
         
 #warning test
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major = %@ AND SELF.minor == %@)", major, minor];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
         
-        id beaconFound = [self.beacons filteredArrayUsingPredicate:predicate];
+        id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
+        BOOL beaconFound = obj ? YES : NO;
         
-        [mssgCell setFaded:!(beaconFound?YES:NO) animated:YES];
-        NSLog(@"beaconFound = %@", (beaconFound ? @"YES": @"NO"));
+        FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+        NSString *myId = me.id;
+        BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
+        
+        BOOL isFaded = !beaconFound && !messageBelongsToMe;
+        
+        
+        
+        NSLog(@"cellId = %@", mssgCell.ownerID);
+        NSLog(@"isFaded %@", (isFaded ? @"YES": @"NO"));
+
+        
+        
+        [mssgCell setFaded:isFaded animated:YES];
+//        NSLog(@"beaconFound = %@", (beaconFound ? @"YES": @"NO"));
     }
     
     [self updatePeopleNearby:self.beacons.count];

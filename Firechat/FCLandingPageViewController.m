@@ -8,6 +8,7 @@
 
 #import "FCLandingPageViewController.h"
 #import "FCLiveBlurButton.h"
+#import "FCAppDelegate.h"
 #import "FCWallViewController.h"
 typedef enum
 {
@@ -247,6 +248,12 @@ typedef enum
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
     FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
 
+    NSString *iconIndexStr = [NSString stringWithFormat:@"%d", self.selectedIconIndex+1];
+    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+    appDel.owner.color = [backgroundColor toHexString];
+    appDel.owner.icon = iconIndexStr;
+
+    [nextViewController setIconName:iconIndexStr];
     [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor];
     
     NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
