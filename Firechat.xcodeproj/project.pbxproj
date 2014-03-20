@@ -232,10 +232,10 @@
 		AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
-				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
-				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
 				AAD2449218D777590042A93F /* FCLandingPageViewController.h */,
 				AAD2449318D777590042A93F /* FCLandingPageViewController.m */,
+				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
+				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
 			);
 			name = viewcontrollers;
 			sourceTree = "<group>";

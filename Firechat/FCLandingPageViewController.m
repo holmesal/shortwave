@@ -8,7 +8,7 @@
 
 #import "FCLandingPageViewController.h"
 #import "FCLiveBlurButton.h"
-
+#import "FCWallViewController.h"
 typedef enum
 {
     PanGestureDirectionNone,
@@ -20,7 +20,10 @@ typedef enum
 
 @interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) NSInteger selectedIconIndex;
 @property (nonatomic) UIImageView *extractedImageViewOnDone;
+@property (weak, nonatomic) IBOutlet UIView *welcomeView2;
+@property (weak, nonatomic) IBOutlet FCLiveBlurButton *startTalkingBlurButton;
 
 @property (nonatomic) PanGestureDirection panDirection;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
@@ -44,6 +47,10 @@ typedef enum
 
 
 @implementation FCLandingPageViewController
+@synthesize welcomeView2;
+@synthesize startTalkingBlurButton;
+
+
 @synthesize colorIndex;
 @synthesize panDirection;
 
@@ -60,6 +67,16 @@ typedef enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
+    
+    //hide welcomeVIew2
+    [welcomeView2 setBackgroundColor:[UIColor clearColor]];
+    [welcomeView2 setHidden:YES];
+    
+    [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 #pragma mark Alonso put colors here
     NSArray *colorsHex = @[@"00CF69", @"FFA400", @"1A8DE6"];
@@ -87,6 +104,7 @@ typedef enum
     {
         CALayer *layer = [CALayer layer];
         [layer setFrame:self.iconContainerView.bounds];
+        
         [layer setCornerRadius:self.iconContainerView.bounds.size.height/2];
         [layer setBackgroundColor:[UIColor whiteColor].CGColor];
         
@@ -107,6 +125,145 @@ typedef enum
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:self.panGesture];
     
+    
+    [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+
+}
+
+#pragma mark blurActionButton callbacks
+-(void)doneBlurButtonAction:(UIButton*)button
+{
+
+    [self.view removeGestureRecognizer:self.panGesture];
+    
+    //extract current icon
+    self.selectedIconIndex = (iconTableView.contentOffset.y/self.cellHeight);
+
+    UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
+    UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
+    [imageView setHidden:YES];
+    CGRect frameForIcon = CGRectMake(self.iconContainerView.frame.origin.x, self.iconContainerView.frame.origin.y, 50, 50);
+    frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
+    frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
+    
+    self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:frameForIcon];
+    [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
+    [self.extractedImageViewOnDone setImage:imageView.image];
+    [self.view addSubview:self.extractedImageViewOnDone];
+    
+    //welcomeView2 setup centers view unhides and alpha 0 for begin animation
+    [welcomeView2 setHidden:NO];
+    [welcomeView2 setAlpha:1.0f];
+    [welcomeView2 setBackgroundColor:self.view.backgroundColor];
+    [startTalkingBlurButton invalidatePressedLayer];
+    [welcomeView2 setAlpha:0.0f];
+    [welcomeView2 setBackgroundColor:[UIColor clearColor] ];
+    
+    __block CGRect tempFrame = welcomeView2.frame;
+    tempFrame.origin.x = (self.view.frame.size.width -tempFrame.size.width)*0.5f;
+    tempFrame.origin.y = (self.view.frame.size.height -tempFrame.size.height)*0.5f;
+    tempFrame.origin.y += 5;
+    [welcomeView2 setFrame:tempFrame];
+
+    CGRect targetFrameForExtractedImageView = frameForIcon;
+    targetFrameForExtractedImageView.origin.y = welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
+    
+    [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        
+        
+        for (UIView *subview in self.view.subviews)
+        {
+            if (subview == welcomeView2)
+            {
+//                tempFrame.origin.y -=5;
+//                welcomeView2.frame = tempFrame;
+//                welcomeView2.alpha = 1.0f;
+            } else
+            if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
+            {
+                subview.alpha = 0.0f;
+                subview.transform = CGAffineTransformMakeTranslation(0, -5);
+            }
+        }
+
+    } completion:^(BOOL finished)
+    {}];
+    
+    [UIView animateWithDuration:1.6f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+     {
+         self.extractedImageViewOnDone.frame = targetFrameForExtractedImageView;
+         
+     } completion:^(BOOL finished)
+     {}];
+    
+    [UIView animateWithDuration:0.4f delay:0.6 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+     {
+            tempFrame.origin.y -=5;
+            welcomeView2.frame = tempFrame;
+            welcomeView2.alpha = 1.0f;
+         
+     } completion:^(BOOL finished)
+     {}];
+    
+}
+
+-(void)startTalkingBlurButtonAction
+{
+
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        for (UIView *subview in self.view.subviews)
+        {
+            if (subview != self.extractedImageViewOnDone)
+            {
+                subview.alpha = 0.0f;
+            }
+        }
+    } completion:^(BOOL finsihed)
+    {
+        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+    }];
+//    [UIView animateWithDuration:1.6f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+//    {
+//        for (UIView *subview in self.view.subviews)
+//        {
+//            if (subview != self.extractedImageViewOnDone)
+//            {
+//                subview.alpha = 0.0f;
+//            }
+//        }
+//
+//    } completion:^(BOOL finished)
+//    {
+//        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+//    }];
+}
+#pragma mark blurActionButton callbacks end
+
+
+-(void)transitionToFCWallViewControllerWithImage:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
+    FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
+
+    [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor];
+    
+    NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+    [viewControllers addObject:nextViewController];
+    self.navigationController.viewControllers = viewControllers;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+}
+
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     // Start animating the image view
     [UIView animateWithDuration:40.0f
                           delay:0.0f
@@ -116,66 +273,7 @@ typedef enum
                      }
                      completion:nil
      ];
-    [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-
-}
-
--(void)doneBlurButtonAction:(UIButton*)button
-{
-    NSLog(@"doneBlurButtonAction");
-    int currentIndex = (iconTableView.contentOffset.y/self.cellHeight);
     
-    UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:currentIndex inSection:0] ];
-//    cell.reuseIdentifier = @"lolaok";
-    
-    UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
-    [imageView setHidden:YES];
-    self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:imageView.frame];
-    [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
-    [self.extractedImageViewOnDone setImage:imageView.image];
-    
-
-    
-    CGRect tempFrame = self.extractedImageViewOnDone.frame;
-    tempFrame.origin = CGPointMake((self.view.frame.size.width-tempFrame.size.width)*0.5f, (self.view.frame.size.height -tempFrame.size.height)*0.5f);
-    self.extractedImageViewOnDone.frame = tempFrame;
-    [self.view addSubview:self.extractedImageViewOnDone];
-    
-    [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-    {
-        for (UIView *subview in self.view.subviews)
-        {
-            if (subview != self.extractedImageViewOnDone)
-            {
-                subview.alpha = 0.0f;
-            }
-        }
-
-    } completion:^(BOOL finished)
-    {
-        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andColor:self.view.backgroundColor];
-    }];
-    
-//OK now it is done!
-
-}
-
--(void)transitionToFCWallViewControllerWithImage:(UIImage*)image andColor:(UIColor*)backgroundColor
-{
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
-    UIViewController *nextViewController = [storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
-
-    [nextViewController performSelector:@selector(beginTransitionWithIcon:andColor:) withObject:image withObject:backgroundColor];
-    
-    NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
-    [viewControllers addObject:nextViewController];
-    self.navigationController.viewControllers = viewControllers;
-}
-
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     [doneBlurButton invalidatePressedLayer];
 }
 
@@ -532,6 +630,26 @@ typedef enum
 
 
 #pragma mark iconTableView datasource callback
+
+#pragma mark Notifications
+- (void)appDidBecomeActive:(NSNotification *)notification
+{
+    [UIView animateWithDuration:40.0f
+                          delay:0.0f
+                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+                     }
+                     completion:nil
+     ];
+    NSLog(@"did become active notification");
+}
+
+- (void)appDidEnterForeground:(NSNotification *)notification
+{
+    NSLog(@"did enter foreground notification");
+}
+#pragma mark Notifications end
 
 
 @end

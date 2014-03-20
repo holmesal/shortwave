@@ -13,6 +13,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 
--(void)beginTransitionWithIcon:(UIImage*)image andColor:(UIColor*)backgroundColor;
+
+-(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor;
 
 @end

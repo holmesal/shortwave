@@ -111,6 +111,7 @@
 
 - (void)signupSuccess:(NSNotification *)notification
 {
+    
     NSLog(@"Signup was a success!");
     [self performSegueWithIdentifier:@"showHomescreen" sender:self];
 }

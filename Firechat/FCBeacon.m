@@ -96,6 +96,8 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 {
 //    NSLog(@"Got beacon ranges");
     self.beacons = beacons;
+    
+
 //    NSLog(@"%@",self.beacons);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Updated" object:self.beacons];
     // Will parse and push if necessary

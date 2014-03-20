@@ -18,10 +18,12 @@
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 @property (assign, nonatomic) NSInteger lastNumberOfPeopleInCollectionView;
 
+@property (nonatomic) BOOL needsToDoTransitionWithShadeView;
 
 @property (nonatomic) UIView *shadeView;
-@property (nonatomic) UIImageView *icon;
+@property (nonatomic) UIButton *iconButton;
 
+@property (nonatomic) CAShapeLayer *lineLayer;
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
@@ -33,6 +35,7 @@
 
 @property (nonatomic) CALayer *tableViewMask;
 
+@property (nonatomic) UILabel *peopleNearbyLabel;
 @property FCUser *owner;
 @property Firebase *ref;
 @property NSMutableArray *wall;
@@ -51,7 +54,7 @@
 @end
 
 @implementation FCWallViewController
-
+@synthesize peopleNearbyLabel;
 @synthesize lastNumberOfPeopleInCollectionView;
 
 @synthesize backgroundImageView;
@@ -59,6 +62,8 @@
 @synthesize tableViewMask;
 @synthesize tableView;
 @synthesize whoIsHereCollectionView;
+
+@synthesize lineLayer;
 
 //SOME KEYBOARD PROPERTIES FOR HIT TESTING A TOUCH
 @synthesize keyboardIsVisible;
@@ -86,22 +91,104 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidAppear:animated];
     
-    if (self.shadeView)
+    
+
+    //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
+    if (self.shadeView && self.needsToDoTransitionWithShadeView)
     {
-        [UIView animateWithDuration:1.2f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+        self.needsToDoTransitionWithShadeView = NO;
+        CGRect targetPeopleNearbyLabelFrame = peopleNearbyLabel.frame;
+        
+        peopleNearbyLabel.frame = CGRectMake(
+                                             (self.view.frame.size.width-40)*0.5f,
+                                             targetPeopleNearbyLabelFrame.origin.y, 0, targetPeopleNearbyLabelFrame.size.height);
+        [self.shadeView addSubview:peopleNearbyLabel];
+        
+        [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
         {
             CGRect frame = self.shadeView.frame;
             frame.size.height = 64;
             frame.origin.y = 0;
             self.shadeView.frame = frame;
             
-            frame = self.icon.frame;
+            frame = self.iconButton.frame;
             frame.origin.y = 20;
             frame.size.width = 35;
             frame.size.height = 35;
             
-            self.icon.frame = frame;
-        } completion:^(BOOL finished){}];
+            self.iconButton.frame = frame;
+        } completion:^(BOOL finished)
+        {
+            [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+            {
+                CGRect frame = self.iconButton.frame;
+                frame.origin.x = self.view.frame.size.width - 5 - frame.size.width;
+                [self.iconButton setFrame:frame];
+                
+                
+                //explode grow the status label which explains who is where
+                peopleNearbyLabel.frame = targetPeopleNearbyLabelFrame;
+                
+            } completion:^(BOOL finished)
+            {
+//                [self.iconButton setUserInteractionEnabled:YES];
+            }];
+            
+        }];
+    }
+}
+
+-(void)updatePeopleNearby:(int)numPeople
+{
+    NSRange rangeOfNumber;
+    NSMutableAttributedString *notifyingStr;
+    NSString *numPeopleStr = [NSString stringWithFormat:@"%d", numPeople];
+    rangeOfNumber.length = numPeopleStr.length;
+    if (numPeople == 1)
+    {
+        rangeOfNumber.location = 9;
+        notifyingStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"There is %d person nearby.", numPeople] ];
+    } else
+    {
+        rangeOfNumber.location = 10;
+        notifyingStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %d people nearby.", numPeople] ];
+    }
+    
+
+    
+
+    
+    [notifyingStr beginEditing];
+    [notifyingStr addAttribute:NSFontAttributeName
+                         value:[UIFont boldSystemFontOfSize:15]
+                         range:rangeOfNumber];//range of normal string, e.g. 2012/10/14];
+    [notifyingStr endEditing];
+    
+    peopleNearbyLabel.attributedText = notifyingStr;
+}
+
+-(void)updateLine
+{
+    //thing is flipped btw!
+//    NSArray *visibleIndexPaths = [self.tableView visibleCells];
+    
+    
+    CGFloat heightForZeroPath = [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] ];
+    
+    if (self.wall.count)
+    {
+        CGRect rectOfZeroCell = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:self.wall.count-1 inSection:0 ]];
+//        NSLog(@"rectOfZeroCell = %@", NSStringFromCGRect(rectOfZeroCell));
+        
+        UIBezierPath *linePath = [UIBezierPath bezierPath];
+        CGFloat x = self.tableView.frame.size.width - (20 + 35/2.0f);
+        CGFloat ystart = rectOfZeroCell.origin.y+rectOfZeroCell.size.height - (7+35/2.0f);
+        CGFloat bottomOfScreen = self.tableView.contentOffset.y;
+        
+        [linePath moveToPoint:CGPointMake(x, ystart) ];//(heightForZeroPath)/2)];
+        [linePath addLineToPoint:CGPointMake(x, bottomOfScreen)];
+        
+        [lineLayer setPath:linePath.CGPath];
     }
 }
 
@@ -109,6 +196,38 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidLoad];
     
+    lineLayer = [CAShapeLayer layer];
+    [lineLayer setLineWidth:2.5f];
+    [lineLayer setStrokeColor:[UIColor redColor].CGColor];//[UIColor colorWithWhite:228/255.0f alpha:1.0f].CGColor];
+    [lineLayer setFillColor:[UIColor clearColor].CGColor];
+    [self.tableView.layer insertSublayer:lineLayer atIndex:0];
+    [self updateLine];
+    
+    
+    //use updatePeoplNearby in order to do so
+    peopleNearbyLabel = [[UILabel alloc] initWithFrame:CGRectMake(9, 20, self.view.frame.size.width-40, 44)];
+    peopleNearbyLabel.font = [UIFont systemFontOfSize:15];
+    [peopleNearbyLabel setTextColor:[UIColor whiteColor]];
+    [peopleNearbyLabel setClipsToBounds:YES];
+    //begin observing "Beacons Updated" event
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsUpdated:) name:@"Beacons Updated" object:nil];
+    [self updatePeopleNearby:0];
+
+
+//    [self.view addSubview:peopleNearbyLabel];
+    /*
+     UILabel *displayLabel = [[UILabel alloc] initWithFrame://label frame];
+    displayLabel.font = [UIFont boldSystemFontOfSize://bold font size];
+    
+    NSMutableAttributedString *notifyingStr = [[NSMutableAttributedString alloc] initWithString:@"Updated: 2012/10/14 21:59 PM"];
+    [notifyingStr beginEditing];
+    [notifyingStr addAttribute:NSFontAttributeName
+                         value:[UIFont systemFontOfSize://normal font size]
+                         range:NSMakeRange(8,10)//range of normal string, e.g. 2012/10/14];
+    [notifyingStr endEditing];
+    
+    displayLabel.attributedText = notifyingStr;
+     */
     
     if (self.shadeView)
     {
@@ -179,7 +298,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }
     
     
-    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    [self.tableView setBackgroundColor:[UIColor whiteColor]];
     
     // Show the navbar and the status bar
     self.navigationController.navigationBarHidden = YES;
@@ -338,13 +457,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillShowNotification
-                                                  object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:UIKeyboardWillHideNotification
-                                                  object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:UIKeyboardWillShowNotification
+//                                                  object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self
+//                                                    name:UIKeyboardWillHideNotification
+//                                                  object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 
 -(void)dismissKeyboard
 {
@@ -373,8 +494,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
         
         // Scroll to the new message
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
-                                      atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        
+        [self updateLine];
     }];
 }
 
@@ -400,6 +522,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         static NSString *CellIdentifier = @"MessageCell";
         FCMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+
+//        [cell setBackgroundColor:[UIColor yellowColor]];
         
         // Flip the cell 180 degrees
         cell.transform = CGAffineTransformMakeRotation(M_PI);
@@ -412,12 +536,34 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         // Set message cell values
         [cell setMessage:message];
         
-        // This message should track whether it's owner is in range or not, and fade out if appropriate...
-        if ([message.text  isEqual: @"Wat"]) {
-            cell.contentView.alpha = 0.2;
-        } else { // Must be reset, because the cell gets recycled
-            cell.contentView.alpha = 1.0;
-        }
+        // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
+        cell.ownerID = message.ownerID;
+        NSString *major = [[message.ownerID componentsSeparatedByString:@":"] objectAtIndex:0];
+        NSString *minor = [[message.ownerID componentsSeparatedByString:@":"] objectAtIndex:1];
+        
+#warning test
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major = %@ AND SELF.minor == %@)", major, minor];
+        NSLog(@"self.beacons.count = %d", self.beacons.count);
+        BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
+        
+        FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+        NSString *myId = me.id;
+        BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
+        
+        beaconFound = beaconFound || messageBelongsToMe;
+        [cell setFaded:beaconFound animated:NO];
+
+        NSLog(@"beacon found = %@", (beaconFound? @"YES": @"NO") );
+        
+//        message.ownerID
+//        if ([message.text  isEqual: @"Wat"]) {
+//            cell.contentView.alpha = 0.2;
+//        } else { // Must be reset, because the cell gets recycled
+//            cell.contentView.alpha = 1.0;
+//        }
+        
+        
+        
         
         return cell;
     }
@@ -427,6 +573,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row >= self.wall.count)
+    {
+        return 0.0f;
+    }
     FCMessage *message = [self.wall objectAtIndex:indexPath.row];
     
     UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
@@ -548,6 +698,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (scrollView == tableView)
     {
+        [self updateLine];
         //disable animations, then move the tableViewMask layer
         [CATransaction begin];
         [CATransaction setDisableActions:YES];
@@ -643,15 +794,79 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 #pragma mark called by FCWallViewController when initializing this ViewController as the next
--(void)beginTransitionWithIcon:(UIImage*)image andColor:(UIColor*)backgroundColor
+-(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor
 {
+    self.needsToDoTransitionWithShadeView = YES;
     self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.shadeView setBackgroundColor:backgroundColor];
     
-    self.icon = [[UIImageView alloc] initWithFrame:CGRectMake((self.shadeView.frame.size.width-50)*0.5f, (self.shadeView.frame.size.height-50)*0.5f, 50, 50)];
-    [self.icon setImage:image];
-    [self.icon setContentMode:UIViewContentModeScaleAspectFit];
-    [self.shadeView addSubview:self.icon];
+    self.iconButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.iconButton setUserInteractionEnabled:NO];
+    [self.iconButton setFrame:frame];
+    [self.iconButton setImage:image forState:UIControlStateNormal];
+    [self.iconButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.iconButton addTarget:self action:@selector(iconButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    //[[UIImageView alloc] initWithFrame:frame];
+                 
+                 //CGRectMake((self.shadeView.frame.size.width-50)*0.5f, (self.shadeView.frame.size.height-50)*0.5f, 50, 50)];
+
+    [self.iconButton setContentMode:UIViewContentModeScaleAspectFit];
+    [self.shadeView addSubview:self.iconButton];
 }
+
+-(void)iconButtonAction:(UIButton*)iconButtonThe
+{
+    NSLog(@"iconButtonAction");
+    CGRect realPeopleNearbyLabelFrame = self.peopleNearbyLabel.frame;
+    
+    [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+     {
+         CGRect frame = self.iconButton.frame;
+         frame.origin.x = (self.view.frame.size.width - frame.size.width)*0.5f;
+         [self.iconButton setFrame:frame];
+         
+         
+ //explode grow the status label which explains who is where
+//         CGRect tempRect = realPeopleNearbyLabelFrame;
+//         tempRect.origin.x = (self.view.frame.size.width)*0.5f;
+////         tempRect.size.width = 2;
+//         
+//         
+//         peopleNearbyLabel.frame = tempRect;//CGRectMake((self.view.frame.size.width-40)*0.5f, 20, 0, 44);
+         
+//         CATransform3D translation = CATransform3DMakeTranslation(self.view.frame.size.width*0.5f, 0, 0);
+//         CATransform3D scale = CATransform3DMakeScale(35/peopleNearbyLabel.frame.size.width, 1, 1);
+//         peopleNearbyLabel.layer.transform = CATransform3DConcat(translation, scale);
+//         
+     } completion:^(BOOL finished)
+     {
+        
+     }];
+    
+}
+
+#pragma mark NSNotificationCenter beaconsUpdated start
+-(void)beaconsUpdated:(NSNotification*)notification
+{
+    self.beacons = notification.object;
+    
+    for (FCMessageCell *mssgCell in tableView.visibleCells)
+    {
+        NSString *major = [[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0];
+        NSString *minor = [[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1];
+        
+#warning test
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major = %@ AND SELF.minor == %@)", major, minor];
+        
+        id beaconFound = [self.beacons filteredArrayUsingPredicate:predicate];
+        
+        [mssgCell setFaded:!(beaconFound?YES:NO) animated:YES];
+        NSLog(@"beaconFound = %@", (beaconFound ? @"YES": @"NO"));
+    }
+    
+    [self updatePeopleNearby:self.beacons.count];
+}
+#pragma mark NSNotificationCenter beaconsUpdated end
 
 @end

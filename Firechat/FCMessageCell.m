@@ -89,4 +89,20 @@
     return hexComponent / 255.0;
 }
 
+-(void)setFaded:(BOOL)faded animated:(BOOL)animated
+{
+    CGFloat targetAlpha = (faded? 0.2f : 1.0f);
+    
+    if (animated)
+    {
+        [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+        {
+            self.messageText.alpha = targetAlpha;
+        } completion:^(BOOL finishd){}];
+    } else
+    {
+        self.messageText.alpha  = targetAlpha;
+    }
+}
+
 @end
