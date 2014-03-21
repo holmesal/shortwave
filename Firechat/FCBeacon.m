@@ -58,11 +58,18 @@
     self.region = [[CLBeaconRegion alloc] initWithProximityUUID:self.uuid identifier:@"Orbiter region"];
     // Launch app with display off when inside region
     self.region.notifyEntryStateOnDisplay = YES;
+    [self.region setNotifyOnEntry:YES];
+    [self.region setNotifyOnExit:YES];
     
     // Check for supported devices
     if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     {
+        
+        
         [self.locationManager startMonitoringForRegion:self.region];
+        [self.locationManager requestStateForRegion:self.region];
+        
+        
         // If you want to get the state right away, this is the spot
     }
 }
@@ -90,28 +97,36 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     [_locationManager stopRangingBeaconsInRegion:self.region];
 }
 
+
 // Called when a beacon is ranged
 // beacons is an array. it might be empty for ~20seconds after the last beacon goes out of range
+
+
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-//    NSLog(@"Got beacon ranges");
+    NSLog(@"locationManager didRangeBeacons: beacons.count = %d", beacons.count);
+
+    //determine if a beacon is new.
+    NSMutableArray *newBeacons = [[NSMutableArray alloc] initWithCapacity:beacons.count];
+    for (CLBeacon *beacon in beacons)
+    {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"( SELF.major == %@ AND self.minor == %@)", beacon.major, beacon.minor];
+        id beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
+        if (!beaconFound)
+        {
+            [newBeacons addObject:beacon];
+        }
+    }
+    if (newBeacons.count)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Added" object:[NSArray arrayWithArray:newBeacons]];
+    }
+    
+    
     self.beacons = beacons;
     
-
-//    NSLog(@"%@",self.beacons);
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Beacons Updated" object:self.beacons];
-    // Will parse and push if necessary
-//    // Clear existing beacons
-//    self.beacons = [[NSMutableArray alloc] init];
-//    // Parse and push beacons
-//    for (CLBeacon *beacon in beacons)
-//    {
-//        NSLog(@"%@:%@ at range %d",beacon.major,beacon.minor, beacon.proximity);
-//        NSDictionary *user = [[NSDictionary alloc] init];
-//    }
-//    CLBeacon *beacon = [[CLBeacon alloc] init];
-//    beacon = [beacons lastObject];
-//    NSLog(@"%@:%@ at range %d",beacon.major,beacon.minor, beacon.proximity);
+    
 }
 
 // Start montoring for region
@@ -217,5 +232,33 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     }
     return beaconIds;
 }
+
+
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+{
+    
+    NSLog(@"locationManager:didDetermineState:forRegion:   where region = %@", region);
+    
+    switch (state) {
+        case CLRegionStateInside:
+        {
+            NSLog(@"CLREgionSTateInside! OMG");
+            [self locationManager:manager didEnterRegion:region];
+        }
+        break;
+            
+        case CLRegionStateOutside:
+        {
+            [self locationManager:manager didExitRegion:region];
+        }
+        break;
+            
+        default:
+            break;
+    }
+    
+    
+}
+
 
 @end

@@ -12,6 +12,9 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FCLandingViewController.h"
 #import "FCSignupViewController.h"
+#import <CoreData/CoreData.h>
+#import "ESCoreDataController.h"
+#import "Beacon.h" //NSManagedObject (core data)
 
 @implementation FCAppDelegate
 {
@@ -21,9 +24,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    //clear local notifications
+    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        
+        [application cancelAllLocalNotifications];
+    }
+    
     // init the user object
     self.owner = [[FCUser alloc] initAsOwner];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsDiscovered:) name:@"Beacons Added" object:nil];
     
     // Set navigation bar style
 //    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
@@ -130,4 +141,60 @@
 }
 #pragma mark custom touches captured end
 
+
+#pragma mark discover beacons
+-(void)beaconsDiscovered:(NSNotification*)notification
+{
+    NSArray *newBeacons = notification.object;
+    
+    NSLog(@"newBaecons.count = %d", newBeacons.count);
+    
+    NSManagedObjectContext *managedObjectContext = [[ESCoreDataController sharedInstance] masterManagedObjectContext];
+    
+    [managedObjectContext performBlock:^{
+    
+        BOOL hasEncounteredNewBeacon = NO;
+        for (CLBeacon *beacon in newBeacons)
+        {
+            NSString *majorMinor = [NSString stringWithFormat:@"%d:%d", beacon.major.intValue, beacon.minor.intValue];
+            NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"Beacon"];
+            fetch.predicate = [NSPredicate predicateWithFormat:@"(SELF.identifier == %@)", majorMinor];
+            
+            NSError *error = nil;
+            NSArray *fetchedResults = [managedObjectContext executeFetchRequest:fetch error:&error];
+            if (error)
+            {
+                NSLog(@"fetch beacon request error: %@", error.localizedDescription);
+            }
+            
+            //if I have encountered this beacon, nevermind...  else add the beacon and flag hasEncounteredNewBeacon
+            if (!fetchedResults.count)
+            {
+                hasEncounteredNewBeacon = YES;
+                Beacon *beacon = [NSEntityDescription insertNewObjectForEntityForName:@"Beacon" inManagedObjectContext:managedObjectContext];
+                beacon.identifier = majorMinor;
+            }
+            
+        }
+        
+        //Change this bellow to see new people
+        if (hasEncounteredNewBeacon) //|| YES)
+        {
+            NSLog(@"scheduled notification!");
+            //now it is time to do a local notification!
+            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+            
+            localNotification.fireDate = [NSDate date];
+            localNotification.alertBody = @"A new person is nearby!";
+            localNotification.timeZone = [NSTimeZone defaultTimeZone];
+            
+            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+        }
+        
+//            [managedObjectContext save:nil];
+        
+    }];
+    
+}
+#pragma mark discover beacons end
 @end

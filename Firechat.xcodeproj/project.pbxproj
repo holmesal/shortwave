@@ -17,6 +17,10 @@
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
+		AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743518DC0520006A9C82 /* myCoreDataModel.xcdatamodeld */; };
+		AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743A18DC05AB006A9C82 /* Beacon.m */; };
+		AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */; };
+		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */; };
 		C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */; };
 		C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */; };
@@ -87,6 +91,12 @@
 		AAE1028A18C469EC00BC7269 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
 		AAE1028B18C469EC00BC7269 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
 		AAE1028D18C4729200BC7269 /* Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Math.h; sourceTree = "<group>"; };
+		AAE3743618DC0520006A9C82 /* myCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = myCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
+		AAE3743918DC05AB006A9C82 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
+		AAE3743A18DC05AB006A9C82 /* Beacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Beacon.m; sourceTree = "<group>"; };
+		AAE3743C18DC05F2006A9C82 /* ESCoreDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESCoreDataController.h; sourceTree = "<group>"; };
+		AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESCoreDataController.m; sourceTree = "<group>"; };
+		AAE3743F18DC098B006A9C82 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C013C4ED189EB1A3001157E3 /* FCSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCSignupViewController.h; path = Firechat/FCSignupViewController.h; sourceTree = "<group>"; };
 		C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCSignupViewController.m; path = Firechat/FCSignupViewController.m; sourceTree = "<group>"; };
 		C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
@@ -149,6 +159,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */,
 				C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */,
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
@@ -255,6 +266,18 @@
 			name = extensions;
 			sourceTree = "<group>";
 		};
+		AAE3743818DC052C006A9C82 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				AAE3743518DC0520006A9C82 /* myCoreDataModel.xcdatamodeld */,
+				AAE3743918DC05AB006A9C82 /* Beacon.h */,
+				AAE3743A18DC05AB006A9C82 /* Beacon.m */,
+				AAE3743C18DC05F2006A9C82 /* ESCoreDataController.h */,
+				AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
@@ -280,6 +303,7 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAE3743F18DC098B006A9C82 /* CoreData.framework */,
 				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
 				AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */,
 				C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */,
@@ -304,6 +328,7 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
+				AAE3743818DC052C006A9C82 /* Core Data */,
 				AA8EC98B18C5039500A8C4DC /* extensions */,
 				AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */,
 				AA1F2DEF18C3D91A0087AAF7 /* views */,
@@ -508,14 +533,17 @@
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
 				AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */,
 				C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */,
+				AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */,
 				C02CE3DB186814A700305FC9 /* FCMessage.m in Sources */,
 				AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */,
 				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
+				AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */,
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */,
+				AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */,
 				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
@@ -776,6 +804,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		AAE3743518DC0520006A9C82 /* myCoreDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				AAE3743618DC0520006A9C82 /* myCoreDataModel.xcdatamodel */,
+			);
+			currentVersion = AAE3743618DC0520006A9C82 /* myCoreDataModel.xcdatamodel */;
+			path = myCoreDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C02CE382186808B000305FC9 /* Project object */;
 }
