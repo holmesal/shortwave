@@ -327,7 +327,7 @@ typedef enum
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    [doneBlurButton invalidatePressedLayer];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
@@ -345,8 +345,10 @@ typedef enum
                      completion:nil
      ];
     
-    [doneBlurButton invalidatePressedLayer];
+
 }
+
+
 
 -(void)handlePan:(UIPanGestureRecognizer*)panGesture
 {
