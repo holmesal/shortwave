@@ -9,11 +9,8 @@
 #import "FCLEErrorViewController.h"
 #import "FCLiveBlurButton.h"
 @interface FCLEErrorViewController ()
-
 @property (weak, nonatomic) IBOutlet UILabel *label;
-
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *tryAgainBlurButton;
-
 @end
 
 @implementation FCLEErrorViewController
@@ -23,7 +20,6 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-
 }
 
 -(void)viewDidAppear:(BOOL)animated

@@ -808,11 +808,30 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.shadeView setBackgroundColor:backgroundColor];
     
+    
+    
     self.iconButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    //input for sizing down image
+    CGFloat buttonImageInset = 4.5;
+    UIEdgeInsets insets = UIEdgeInsetsMake(buttonImageInset, buttonImageInset, buttonImageInset, buttonImageInset);
+    [self.iconButton setContentEdgeInsets:insets];
+    
     [self.iconButton setUserInteractionEnabled:NO];
+    //correct image to be correct size despite edge inset
+    frame.origin.y -= buttonImageInset;
+    frame.origin.x -= buttonImageInset;
+    frame.size.width += 2*buttonImageInset;
+    frame.size.height += 2*buttonImageInset;
+    
+    resetIconFrame.origin.y -= buttonImageInset;
+    resetIconFrame.origin.x -= buttonImageInset;
+    resetIconFrame.size.width += 2*buttonImageInset;
+    resetIconFrame.size.height += 2*buttonImageInset;
+    
+    
     [self.iconButton setFrame:frame];
     self.originalRectOfIcon = resetIconFrame;
-//    NSLog(@"originalRectOfIcon = %@", NSStringFromCGRect(frame));
     [self.iconButton setImage:image forState:UIControlStateNormal];
     [self.iconButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.iconButton addTarget:self action:@selector(iconButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -828,6 +847,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)iconButtonAction:(UIButton*)iconButtonThe
 {
+    if (keyboardIsVisible)
+    {
+        [self.composeBarView.textView resignFirstResponder];
+    }
+    
     CGRect realPeopleNearbyLabelFrame = self.peopleNearbyLabel.frame;
     //labelMaskView
     CGRect newTargetFrame = realPeopleNearbyLabelFrame;
@@ -879,7 +903,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
         NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
         
-#warning test
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
         
         id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];

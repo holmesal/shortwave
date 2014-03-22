@@ -14,6 +14,7 @@
 @end
 
 @implementation FCBeacon
+@synthesize peripheralManagerIsRunning;
 
 - (id)init
 {
@@ -50,10 +51,13 @@
 
 -(void)start
 {
-    // Init peripheral manager
+    
+    int state = [CLLocationManager authorizationStatus];
+    [self locationManager:self.locationManager didChangeAuthorizationStatus:state];
+    
     self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self
                                                                      queue:nil
-                                                                   options:nil];
+                                                                options:nil];
 }
 
 #pragma mark - Scanner
@@ -83,6 +87,8 @@
         // If you want to get the state right away, this is the spot
     }
 }
+
+//-(void)peripheralManager:(CBPeripheralManager *)peripheral didChange
 
 -(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
@@ -343,6 +349,29 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 -(void)blueToothStackNeedsUserToActivateMessage
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+}
+
+-(BOOL)peripheralManagerIsRunning
+{
+    BOOL isOK = NO;
+    switch ([ CLLocationManager authorizationStatus] ) {
+        case kCLAuthorizationStatusAuthorized:
+            isOK = YES;
+            break;
+        case kCLAuthorizationStatusDenied:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusRestricted:
+            isOK = NO;
+            break;
+
+    }
+    
+    BOOL val = peripheralManagerIsRunning && isOK;
+    return val;
 }
 
 @end

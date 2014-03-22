@@ -10,6 +10,7 @@
 #import <Firebase/Firebase.h>
 #include <stdlib.h>
 #include "FCAppDelegate.h"
+#import "UIColor+HexString.h"
 
 typedef void (^CompletionBlockType)(id);
 
@@ -64,8 +65,8 @@ typedef void (^CompletionBlockType)(id);
 {
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
-    self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
-    [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
+//    self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
+//    [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
 }
 
 # pragma mark - push notification registration
@@ -160,12 +161,30 @@ typedef void (^CompletionBlockType)(id);
     //    self.major = [self formatValue:self.major forDigits:@4[self.major length]]
     self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
     self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
+    
+    Firebase *wall = [[[[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    Firebase *post = [[wall childByAppendingPath:@"wall"] childByAutoId];
+    
+    [post setValue:self.generateFirstPost];
+    
+    
+//    self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    
     NSLog(@"Generated id: %@",self.id);
+}
+
+-(NSDictionary*)generateFirstPost
+{
+    
+    return @{@"color": [[UIColor whiteColor] toHexString] ,
+             @"icon":@"1",
+             @"ownerID":self.id,
+             @"text":@"Hey! Welcome to Earshot!",
+             @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]};
 }
 
 - (NSString *)getRandomColor
 {
-//    return @"#FFA400";
     return @"#1A8DE6";
 }
 

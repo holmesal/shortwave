@@ -21,6 +21,8 @@ typedef enum
 
 @interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
+
 
 @property (weak, nonatomic) IBOutlet UILabel *attributionLabel;
 @property (nonatomic) CGRect originalFrameForIcon;
@@ -55,7 +57,7 @@ typedef enum
 @synthesize welcomeView2;
 @synthesize startTalkingBlurButton;
 
-
+@synthesize hasBeenHereBefore;
 @synthesize colorIndex;
 @synthesize panDirection;
 
@@ -108,14 +110,15 @@ typedef enum
     self.icons = @[@{@"name":@"1", @"attribution":@"FIND THIS1"}, //cloud
                    @{@"name":@"2", @"attribution":@"FIND THIS2"}, //person
                    @{@"name":@"3", @"attribution":@"FIND THIS3"}, //balloon
-                   @{@"name":@"4", @"attribution":@"FIND THIS4"}];//paw
+                   @{@"name":@"4", @"attribution":@"FIND THIS4"} ];//paw
     // @"5", @"6", @"7"];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
     
     int randIcon = esRandomNumberIn(0, icons.count);
     [self setIconIndex:randIcon];
-    [self.attributionLabel setText:[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
+    NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
+    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
     iconTableView = [[UITableView alloc] initWithFrame:self.iconContainerView.bounds style:UITableViewStylePlain];
     [iconTableView setBackgroundColor:[UIColor clearColor]];
@@ -141,11 +144,10 @@ typedef enum
     
     [self.iconContainerView addSubview:iconTableView];
 
-    colorIndex = esRandomNumberIn(0, self.colors.count);
+    colorIndex = 0;//esRandomNumberIn(0, self.colors.count);
     [self.view setBackgroundColor:[colors objectAtIndex:colorIndex] ];
     
     //add gesture listener pan left right
-    
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self.view addGestureRecognizer:self.panGesture];
     
@@ -157,7 +159,12 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
-
+    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
+    //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+    owner.color = [self.view.backgroundColor toHexString];
+    owner.icon = iconIndexStr;
+    
     [self.view removeGestureRecognizer:self.panGesture];
     
     //extract current icon
@@ -182,7 +189,7 @@ typedef enum
     
     //welcomeView2 setup centers view unhides and alpha 0 for begin animation
     [welcomeView2 setHidden:NO];
-    [welcomeView2 setAlpha:1.0f];
+    [welcomeView2 setAlpha:1.0f];//unhide for invalidatePressedLayer on blurButton
     [welcomeView2 setBackgroundColor:self.view.backgroundColor];
     [startTalkingBlurButton invalidatePressedLayer];
     [welcomeView2 setAlpha:0.0f];
@@ -199,7 +206,7 @@ typedef enum
     
     
 
-    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+//    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
     BOOL peripheralManagerIsRunning = owner.beacon.peripheralManagerIsRunning;
 //    if (peripheralManagerIsRunning)
 //    {
@@ -242,20 +249,21 @@ typedef enum
          if (peripheralManagerIsRunning)
          {
              [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+         } else
+//             if (!peripheralManagerIsRunning)
+         {
+             [UIView animateWithDuration:0.4f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+              {
+                  tempFrame.origin.y -= 5;
+                  welcomeView2.frame = tempFrame;
+                  welcomeView2.alpha = 1.0f;
+                  
+              } completion:^(BOOL finished)
+              {}];
          }
      }];
     
-    if (!peripheralManagerIsRunning)
-    {
-        [UIView animateWithDuration:0.4f delay:0.6 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-         {
-                tempFrame.origin.y -=5;
-                welcomeView2.frame = tempFrame;
-                welcomeView2.alpha = 1.0f;
-             
-         } completion:^(BOOL finished)
-         {}];
-    }
+    
 }
 
 
@@ -265,6 +273,8 @@ typedef enum
 -(void)startTalkingBlurButtonAction
 {
     FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+
+    
     if (!owner.beacon.peripheralManagerIsRunning)
     {
         [owner.beacon start];
@@ -280,9 +290,6 @@ typedef enum
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Disabled" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Enabled" object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"Bluetooth Disabled"];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"Bluetooth Enabled"];
 }
 
 -(void)continueWithBluetooth:(NSNotification*)notification
@@ -312,9 +319,9 @@ typedef enum
     FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
 
     NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
-    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
-    appDel.owner.color = [backgroundColor toHexString];
-    appDel.owner.icon = iconIndexStr;
+//    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+//    appDel.owner.color = [backgroundColor toHexString];
+//    appDel.owner.icon = iconIndexStr;
 
     [nextViewController setIconName:iconIndexStr];
     [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor andResetFrame:self.originalFrameForIcon];
@@ -327,24 +334,59 @@ typedef enum
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [doneBlurButton invalidatePressedLayer];
+    ////this is to fade in the view after splash screen is gone
+    
+    if (!hasBeenHereBefore)
+    {
+
+        for (UIView *view in self.view.subviews)
+        {
+            view.alpha = 0.0f;
+        }
+        
+
+    }
+    
+    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(invalidate) userInfo:nil repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
+-(void)invalidate
+{
+    [doneBlurButton invalidatePressedLayer];
+}
 
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    // Start animating the image view
-    [UIView animateWithDuration:40.0f
-                          delay:0.0f
-                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
-                     }
-                     completion:nil
-     ];
     
+    //this is to fade in the view after splash screen is gone
+    if (!hasBeenHereBefore)
+    {
+        hasBeenHereBefore = YES;
+
+        [UIView animateWithDuration:0.8f delay:0.25f usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^
+        {
+            
+            for (UIView *view in self.view.subviews)
+            {
+                view.alpha = 1.0f;
+            }
+        } completion:^(BOOL finishd)
+         {
+         }];
+    }
+
+//// Start animating the image view
+//    [UIView animateWithDuration:40.0f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+//                     }
+//                     completion:nil
+//     ];
 
 }
 
@@ -355,7 +397,7 @@ typedef enum
 //    NSLog(@"panGesture = %@", panGesture);
 
     CGPoint velocity = [panGesture velocityInView:self.view];
-    CGPoint location = [panGesture locationInView:self.view];
+//    CGPoint location = [panGesture locationInView:self.view];
     CGPoint translation = [panGesture translationInView:self.view];
 
     
@@ -631,7 +673,7 @@ typedef enum
                     int index = y/self.cellHeight;
                     NSDictionary *dc = [self.icons objectAtIndex:index];
                     NSString *attribution = [dc objectForKey:@"attribution"];
-                    [self.attributionLabel setText:attribution];
+                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     

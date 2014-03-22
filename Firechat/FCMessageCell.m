@@ -89,11 +89,13 @@
     {
         [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
         {
+            self.coloredCircleLayer.opacity = targetAlpha;
             self.profilePhoto.alpha = targetAlpha;
             self.messageText.alpha = targetAlpha;
         } completion:^(BOOL finishd){}];
     } else
     {
+        self.coloredCircleLayer.opacity = targetAlpha;
         self.profilePhoto.alpha = targetAlpha;
         self.messageText.alpha  = targetAlpha;
     }

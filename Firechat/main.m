@@ -1,9 +1,10 @@
-    //
+
 //  main.m
 //  Firechat
 //
 //  Created by Alonso Holmes on 12/22/13.
 //  Copyright (c) 2013 Buildco. All rights reserved.
+
 //  I am a comment
 //  lol I messed up all your code
 //  wow so bother much inconveniece
@@ -18,7 +19,8 @@
 
 int main(int argc, char * argv[])
 {
-    @autoreleasepool {
+    @autoreleasepool
+    {
         //Welcome back to main.m!  Goodbye, take care!
         return UIApplicationMain(argc, argv,
                                  NSStringFromClass([ESApplication class]),

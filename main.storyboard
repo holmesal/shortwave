@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
                                     <fragment>
-                                        <string key="content">Earshot uses Location + Bluetooth (iBeacons) to connect you to other users nearby, and won't work properly without your permission.</string>
+                                        <string key="content">Ears hot uses Location + Bluetooth (iBeacons) to connect you to other users nearby, and won't work properly without your permission.</string>
                                         <attributes>
                                             <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="15" name="HelveticaNeue"/>
