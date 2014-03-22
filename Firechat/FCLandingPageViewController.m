@@ -34,6 +34,7 @@ typedef enum
 @property (nonatomic) NSInteger colorIndex;
 
 @property (nonatomic) CGPoint offsetOfTableViewAtStartOfVertical;
+@property (nonatomic) BOOL stateChanged;
 
 @property (weak, nonatomic) IBOutlet UIImageView *spinnerImageView;
 
@@ -364,6 +365,8 @@ typedef enum
             //determine what kind of swipe, up down left or right
         case UIGestureRecognizerStateBegan:
         {
+//            NSLog(@"UIGestureRecognizerStateBegan");
+            self.stateChanged = NO;
             
 //            NSLog(@"velocity = %@", NSStringFromCGPoint(velocity));
 //            NSLog(@"location = %@", NSStringFromCGPoint(location));
@@ -397,6 +400,8 @@ typedef enum
         break;
         case UIGestureRecognizerStateChanged:
         {
+//            NSLog(@"UIGestureRecognizerStateChanged");
+            self.stateChanged = YES;
             
             CGFloat percent = 0;
             
@@ -435,7 +440,6 @@ typedef enum
                 int direction = fabsf(percent)/percent;
                 while (fabsf(percent >= 1))
                 {
-                    NSLog(@"direction = %d", direction);
                     
                     percent += -direction;
                     [self setColorIndex:colorIndex+direction];
@@ -539,6 +543,14 @@ typedef enum
         break;
         case UIGestureRecognizerStateEnded:
         {
+            if (!self.stateChanged)
+            {
+                return;
+            } else
+            {
+                self.stateChanged = NO;
+            }
+
             CGFloat percent = 0;
             switch (panDirection)
             {
@@ -615,7 +627,9 @@ typedef enum
                 {
                     
                     int index = y/self.cellHeight;
-                    [self.attributionLabel setText:[[self.icons objectAtIndex:index] objectForKey:@"attribution"]];
+                    NSDictionary *dc = [self.icons objectAtIndex:index];
+                    NSString *attribution = [dc objectForKey:@"attribution"];
+                    [self.attributionLabel setText:attribution];
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     
