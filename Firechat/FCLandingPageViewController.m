@@ -21,6 +21,7 @@ typedef enum
 
 @interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic) CGRect originalFrameForIcon;
 @property (nonatomic) NSInteger selectedIconIndex;
 @property (nonatomic) UIImageView *extractedImageViewOnDone;
 @property (weak, nonatomic) IBOutlet UIView *welcomeView2;
@@ -147,6 +148,7 @@ typedef enum
     frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
     frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
     
+    self.originalFrameForIcon = frameForIcon;
     self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:frameForIcon];
     [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
     [self.extractedImageViewOnDone setImage:imageView.image];
@@ -225,20 +227,6 @@ typedef enum
     {
         [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
     }];
-//    [UIView animateWithDuration:1.6f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-//    {
-//        for (UIView *subview in self.view.subviews)
-//        {
-//            if (subview != self.extractedImageViewOnDone)
-//            {
-//                subview.alpha = 0.0f;
-//            }
-//        }
-//
-//    } completion:^(BOOL finished)
-//    {
-//        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
-//    }];
 }
 #pragma mark blurActionButton callbacks end
 
@@ -254,7 +242,8 @@ typedef enum
     appDel.owner.icon = iconIndexStr;
 
     [nextViewController setIconName:iconIndexStr];
-    [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor];
+    [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor andResetFrame:self.originalFrameForIcon];
+
     
     NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
     [viewControllers addObject:nextViewController];
@@ -309,22 +298,22 @@ typedef enum
             {
                 if (velocity.x < 0)
                 {
-                    NSLog(@"Left");
+                 
                     panDirection = PanGestureDirectionLeft;
                 } else
                 {
-                    NSLog(@"Right");
+                 
                     panDirection = PanGestureDirectionRight;
                 }
             } else
             {
                 if (velocity.y < 0)
                 {
-                    NSLog(@"Up");
+
                     panDirection = PanGestureDirectionUp;
                 } else
                 {
-                    NSLog(@"Down");
+
                     panDirection = PanGestureDirectionDown;
                 }
                 
@@ -609,6 +598,7 @@ typedef enum
     UITableViewCell *iconCell = [tableView dequeueReusableCellWithIdentifier:@"IconCell"];
     if (!iconCell)
     {
+        
         iconCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"IconCell"];
         [iconCell setBackgroundColor:[UIColor clearColor]];
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((self.iconContainerView.bounds.size.width-50)*0.5, (self.iconContainerView.bounds.size.height-50)*0.5, 50, 50)];
@@ -619,7 +609,10 @@ typedef enum
         [iconCell.contentView addSubview:imageView];
     }
     
+    
+    
     UIImageView *imageView = (UIImageView*)[iconCell viewWithTag:5];
+    [imageView setHidden:NO];
     [imageView setImage:[UIImage imageNamed:[iconNames objectAtIndex:indexPath.row] ] ];
     
     return iconCell;
@@ -658,5 +651,30 @@ typedef enum
 }
 #pragma mark Notifications end
 
+//redraw the view as if it were the first time.
+-(void)resetAsNewAnimated
+{
+    [self.view addGestureRecognizer:self.panGesture];
+    [self.iconTableView reloadData];
+    self.extractedImageViewOnDone.frame = self.originalFrameForIcon;
+    
+    for (UIView *view in self.view.subviews)
+    {
+        view.transform = CGAffineTransformIdentity;
+    }
+    [UIView animateWithDuration:0.3f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+        for (UIView *view in self.view.subviews)
+        {
+            if (view != self.welcomeView2)
+            {
+                view.alpha = 1.0f;
+
+            }
+        }
+    } completion:^(BOOL finished)
+    {
+        [self.extractedImageViewOnDone removeFromSuperview];
+    }];
+}
 
 @end

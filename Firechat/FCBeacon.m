@@ -84,15 +84,15 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 // Called when the first beacon comes within range
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
-    NSLog(@"Entered beacon region!");
-    // Start ranging the beacons
+//    NSLog(@"Entered beacon region!");
+//    // Start ranging the beacons
     [_locationManager startRangingBeaconsInRegion:self.region];
 }
 
 // Called when the last beacon leaves range
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-    NSLog(@"Left beacon region!");
+//    NSLog(@"Left beacon region!");
     // No need to range the beacons anymore
     [_locationManager stopRangingBeaconsInRegion:self.region];
 }
@@ -104,7 +104,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    NSLog(@"locationManager didRangeBeacons: beacons.count = %d", beacons.count);
+//    NSLog(@"locationManager didRangeBeacons: beacons.count = %d", beacons.count);
 
     //determine if a beacon is new.
     NSMutableArray *newBeacons = [[NSMutableArray alloc] initWithCapacity:beacons.count];
@@ -139,7 +139,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 - (void) startBroadcasting
 {
     
-    NSLog(@"Starting to broadcast with major %@ and minor %@",self.major,self.minor);
+//    NSLog(@"Starting to broadcast with major %@ and minor %@",self.major,self.minor);
     
     CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:self.uuid
                                                                      major:[self.major unsignedIntegerValue]
@@ -157,7 +157,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 
 -(void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
 {
-    NSLog(@"peripheralManagerDidStartAdvertising error %@", error.localizedDescription);
+//    NSLog(@"peripheralManagerDidStartAdvertising error %@", error.localizedDescription);
 }
 
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
@@ -223,8 +223,6 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 # pragma mark - transform beacons into ids
 - (NSArray *)getBeaconIds
 {
-    NSLog(@"got beacon ids");
-    // Array to hold beacon ids
     NSMutableArray *beaconIds = [[NSMutableArray alloc] init];
     for (CLBeacon *beacon in self.beacons) {
         NSString *idString = [[NSString alloc] initWithFormat:@"%@:%@",beacon.major,beacon.minor];
@@ -237,12 +235,9 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     
-    NSLog(@"locationManager:didDetermineState:forRegion:   where region = %@", region);
-    
     switch (state) {
         case CLRegionStateInside:
         {
-            NSLog(@"CLREgionSTateInside! OMG");
             [self locationManager:manager didEnterRegion:region];
         }
         break;

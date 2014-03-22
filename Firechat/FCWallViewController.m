@@ -14,14 +14,22 @@
 #import "ProfileCollectionViewCell.h"
 
 
+#define kFirebaseHandleOnOff 2
+
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+
+//firebase handles
+@property (nonatomic) FirebaseHandle bindToWallHandle;
+
+
 @property (assign, nonatomic) NSInteger lastNumberOfPeopleInCollectionView;
 
 @property (nonatomic) BOOL needsToDoTransitionWithShadeView;
 
 @property (nonatomic) UIView *shadeView;
 @property (nonatomic) UIButton *iconButton;
+@property (nonatomic) UIView *labelMaskView;
 
 @property (nonatomic) CAShapeLayer *lineLayer;
 
@@ -45,7 +53,7 @@
 
 
 @property (weak, nonatomic) IBOutlet UICollectionView *whoIsHereCollectionView;
-
+@property (nonatomic) CGRect originalRectOfIcon;
 
 
 
@@ -74,7 +82,6 @@ static CGFloat HeightOfGradient = 60;
 static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  Eeeewps :)
 
 
-
 - (id)initWithCoder:(NSCoder*)aDecoder
 {
     if(self = [super initWithCoder:aDecoder])
@@ -99,10 +106,18 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.needsToDoTransitionWithShadeView = NO;
         CGRect targetPeopleNearbyLabelFrame = peopleNearbyLabel.frame;
         
+        
         peopleNearbyLabel.frame = CGRectMake(
                                              (self.view.frame.size.width-40)*0.5f,
-                                             targetPeopleNearbyLabelFrame.origin.y, 0, targetPeopleNearbyLabelFrame.size.height);
-        [self.shadeView addSubview:peopleNearbyLabel];
+                                             targetPeopleNearbyLabelFrame.origin.y, targetPeopleNearbyLabelFrame.size.width, targetPeopleNearbyLabelFrame.size.height);
+        [peopleNearbyLabel setBackgroundColor:[UIColor clearColor]];
+        
+        self.labelMaskView = [[UIView alloc] initWithFrame:peopleNearbyLabel.frame];
+        {
+            UIColor *color = self.shadeView.backgroundColor;
+            [self.labelMaskView setBackgroundColor:color];
+        }
+        [self.shadeView insertSubview:self.labelMaskView aboveSubview:self.peopleNearbyLabel];
         
         [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
         {
@@ -125,13 +140,17 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 frame.origin.x = self.view.frame.size.width - 5 - frame.size.width;
                 [self.iconButton setFrame:frame];
                 
-                
                 //explode grow the status label which explains who is where
                 peopleNearbyLabel.frame = targetPeopleNearbyLabelFrame;
+                CGRect maskFrame = targetPeopleNearbyLabelFrame;
+                maskFrame.origin.x += targetPeopleNearbyLabelFrame.size.width;
+                self.labelMaskView.frame = maskFrame;
+                
+
                 
             } completion:^(BOOL finished)
             {
-//                [self.iconButton setUserInteractionEnabled:YES];
+                [self.iconButton setUserInteractionEnabled:YES];
             }];
             
         }];
@@ -196,6 +215,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidLoad];
     
+    
     lineLayer = [CAShapeLayer layer];
     [lineLayer setLineWidth:0.5f];
     [lineLayer setStrokeColor:[UIColor colorWithWhite:225/255.0f alpha:1.0f].CGColor];//[UIColor colorWithWhite:228/255.0f alpha:1.0f].CGColor];
@@ -213,7 +233,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsUpdated:) name:@"Beacons Updated" object:nil];
     [self updatePeopleNearby:0];
 
-
+    [self.shadeView insertSubview:peopleNearbyLabel belowSubview:self.iconButton];
 //    [self.view addSubview:peopleNearbyLabel];
     /*
      UILabel *displayLabel = [[UILabel alloc] initWithFrame://label frame];
@@ -238,64 +258,64 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSLog(@"warning! you are instaniating FCWallViewController without setting it up properly via beginTransitionWithIcon method.  Expect to see no transition");
     }
     
-    //Flash yourself
-    FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
-    [owner.onOffRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapShot)
-    {
-        if (snapShot.value == [NSNull null])
-        {
-            return;
-        }
-        BOOL isOn = [snapShot.value boolValue];
-        
-        ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-        if (pcvc)
-        {
-            NSLog(@"pcvc turn on ? %@", isOn ? @"YES": @"NO");
-            [pcvc setTurnOn:isOn];
-        }
-    }];
+    //Flash yourself demo
+//    FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+//    [owner.onOffRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapShot) //in dealloc
+//    {
+//        if (snapShot.value == [NSNull null])
+//        {
+//            return;
+//        }
+//        BOOL isOn = [snapShot.value boolValue];
+//        
+//        ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+//        if (pcvc)
+//        {
+//            NSLog(@"pcvc turn on ? %@", isOn ? @"YES": @"NO");
+//            [pcvc setTurnOn:isOn];
+//        }
+//    }];
     
     
     //whoishereCollectionView
-    {
-        [whoIsHereCollectionView setClipsToBounds:NO];
-        [whoIsHereCollectionView setShowsHorizontalScrollIndicator:NO];
-        [whoIsHereCollectionView setAlwaysBounceHorizontal:YES];
-        whoIsHereCollectionView.delegate = self;
-        whoIsHereCollectionView.dataSource = self;
-        
-        [self.view addSubview:whoIsHereCollectionView];
-    }
+//    {
+//        [whoIsHereCollectionView setClipsToBounds:NO];
+//        [whoIsHereCollectionView setShowsHorizontalScrollIndicator:NO];
+//        [whoIsHereCollectionView setAlwaysBounceHorizontal:YES];
+//        whoIsHereCollectionView.delegate = self;
+//        whoIsHereCollectionView.dataSource = self;
+//        
+//        [self.view addSubview:whoIsHereCollectionView];
+//    }
     
     //paralax?
-    {
-        // Set vertical effect
-        UIInterpolatingMotionEffect *verticalMotionEffect =
-        [[UIInterpolatingMotionEffect alloc]
-         initWithKeyPath:@"center.y"
-         type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
-        
-        static CGFloat wiggle = 50;
-        
-        verticalMotionEffect.minimumRelativeValue = @(-wiggle);
-        verticalMotionEffect.maximumRelativeValue = @(wiggle);
-        
-        // Set horizontal effect
-        UIInterpolatingMotionEffect *horizontalMotionEffect =
-        [[UIInterpolatingMotionEffect alloc]
-         initWithKeyPath:@"center.x"
-         type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-        horizontalMotionEffect.minimumRelativeValue = @(-wiggle);
-        horizontalMotionEffect.maximumRelativeValue = @(wiggle);
-        
-        // Create group to combine both
-        UIMotionEffectGroup *group = [UIMotionEffectGroup new];
-        group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
-        
-        // Add both effects to your view
-        [backgroundImageView addMotionEffect:group];
-    }
+//    {
+//        // Set vertical effect
+//        UIInterpolatingMotionEffect *verticalMotionEffect =
+//        [[UIInterpolatingMotionEffect alloc]
+//         initWithKeyPath:@"center.y"
+//         type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+//        
+//        static CGFloat wiggle = 50;
+//        
+//        verticalMotionEffect.minimumRelativeValue = @(-wiggle);
+//        verticalMotionEffect.maximumRelativeValue = @(wiggle);
+//        
+//        // Set horizontal effect
+//        UIInterpolatingMotionEffect *horizontalMotionEffect =
+//        [[UIInterpolatingMotionEffect alloc]
+//         initWithKeyPath:@"center.x"
+//         type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+//        horizontalMotionEffect.minimumRelativeValue = @(-wiggle);
+//        horizontalMotionEffect.maximumRelativeValue = @(wiggle);
+//        
+//        // Create group to combine both
+//        UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+//        group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+//        
+//        // Add both effects to your view
+//        [backgroundImageView addMotionEffect:group];
+//    }
     
     
     [self.tableView setBackgroundColor:[UIColor whiteColor]];
@@ -323,6 +343,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's wall
     [self bindToWall];
     
+#warning should not retain
     // Bind to keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillToggle:)
@@ -334,6 +355,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                                object:nil];
     
     // Hide the keyboard on taps
+#warning should not retain
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -416,6 +438,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
     }//end of tableview setup
     
+    [self.view layoutSubviews];
+    
 }
 
 
@@ -456,13 +480,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"profilepic"]];
 }
 
-- (void)dealloc {
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIKeyboardWillShowNotification
-//                                                  object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self
-//                                                    name:UIKeyboardWillHideNotification
-//                                                  object:nil];
+- (void)dealloc
+{
+    [self.ref removeObserverWithHandle:self.bindToWallHandle];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -484,19 +504,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.ref = [self.owner.ref childByAppendingPath:@"wall"];
     // Watch for changes
-    [self.ref observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot) {
-        NSLog(@"GOT MESSAGE!");
+    
+    __weak typeof(self) weakSelf = self;
+    self.bindToWallHandle = [self.ref observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+    {
+//        for (int i = 0; i < 1; i++)
+//        {
         
-        FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
-        // Init a new message
-        [self.wall insertObject:message atIndex:0];
-        NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
-        [self.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
-        
-        // Scroll to the new message
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-        
-        [self updateLine];
+            NSLog(@"GOT MESSAGE!");
+            
+            FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
+            // Init a new message
+            [weakSelf.wall insertObject:message atIndex:0];
+            NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
+            [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+            
+            // Scroll to the new message
+            [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            
+            [weakSelf updateLine];
+            
+//        }
     }];
 }
 
@@ -781,7 +809,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 #pragma mark called by FCWallViewController when initializing this ViewController as the next
--(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor
+-(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor andResetFrame:(CGRect)resetIconFrame
 {
     self.needsToDoTransitionWithShadeView = YES;
     self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
@@ -790,6 +818,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.iconButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.iconButton setUserInteractionEnabled:NO];
     [self.iconButton setFrame:frame];
+    self.originalRectOfIcon = resetIconFrame;
+    NSLog(@"originalRectOfIcon = %@", NSStringFromCGRect(frame));
     [self.iconButton setImage:image forState:UIControlStateNormal];
     [self.iconButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.iconButton addTarget:self action:@selector(iconButtonAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -799,12 +829,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                  //CGRectMake((self.shadeView.frame.size.width-50)*0.5f, (self.shadeView.frame.size.height-50)*0.5f, 50, 50)];
 
     [self.iconButton setContentMode:UIViewContentModeScaleAspectFit];
+
     [self.shadeView addSubview:self.iconButton];
 }
 
 -(void)iconButtonAction:(UIButton*)iconButtonThe
 {
     CGRect realPeopleNearbyLabelFrame = self.peopleNearbyLabel.frame;
+    //labelMaskView
+    CGRect newTargetFrame = realPeopleNearbyLabelFrame;
+    newTargetFrame.origin.x = (self.view.frame.size.width*0.5f);
+    
+    //moving shadeView to the top
+    [self.shadeView removeFromSuperview];
+    [self.view addSubview:self.shadeView];
     
     [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
@@ -812,22 +850,28 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
          frame.origin.x = (self.view.frame.size.width - frame.size.width)*0.5f;
          [self.iconButton setFrame:frame];
          
-         
- //explode grow the status label which explains who is where
-//         CGRect tempRect = realPeopleNearbyLabelFrame;
-//         tempRect.origin.x = (self.view.frame.size.width)*0.5f;
-////         tempRect.size.width = 2;
-//         
-//         
-//         peopleNearbyLabel.frame = tempRect;//CGRectMake((self.view.frame.size.width-40)*0.5f, 20, 0, 44);
-         
-//         CATransform3D translation = CATransform3DMakeTranslation(self.view.frame.size.width*0.5f, 0, 0);
-//         CATransform3D scale = CATransform3DMakeScale(35/peopleNearbyLabel.frame.size.width, 1, 1);
-//         peopleNearbyLabel.layer.transform = CATransform3DConcat(translation, scale);
-//         
+         [self.labelMaskView setFrame:newTargetFrame];
+         [self.peopleNearbyLabel setFrame:newTargetFrame];
+
      } completion:^(BOOL finished)
      {
-        
+         [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+         {
+             
+             [self.shadeView setFrame:self.view.bounds];
+             
+             [self.iconButton setFrame:self.originalRectOfIcon];
+         } completion:^(BOOL finished)
+         {
+             UINavigationController *navContr = self.navigationController;
+             NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
+             
+             UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
+             [landingPageViewController performSelector:@selector(resetAsNewAnimated)];
+             [vc removeLastObject];
+             
+             navContr.viewControllers = vc;
+         }];
      }];
     
 }
@@ -855,14 +899,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         BOOL isFaded = !beaconFound && !messageBelongsToMe;
         
         
-        
-        
         [mssgCell setFaded:isFaded animated:YES];
-//        NSLog(@"beaconFound = %@", (beaconFound ? @"YES": @"NO"));
     }
     
     [self updatePeopleNearby:self.beacons.count];
 }
 #pragma mark NSNotificationCenter beaconsUpdated end
+
 
 @end

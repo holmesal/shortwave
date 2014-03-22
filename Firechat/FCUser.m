@@ -109,18 +109,6 @@ typedef void (^CompletionBlockType)(id);
     // Call update to set these values on firebase, and save to NSUserDefaults
     [self updateUserData];
     
-    // Start broadcasting with a beacon
-//    [self.beacon startBroadcastingWithMajor:self.major andMinor:self.minor];
-    
-    // Set on the app delegate
-//    FCAppDelegate *del =[[UIApplication sharedApplication] delegate];
-//    del.owner = self;
-    
-    // Finally, emit a "complete" event, so the view can proceed
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"Signup Success" object:nil];
-    
-    // Return the user
-//    return self;
 }
 
 - (void) updateUserData
