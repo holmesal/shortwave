@@ -81,7 +81,7 @@ typedef enum
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 #pragma mark Alonso put colors here
-    NSArray *colorsHex = @[@"00CF69", @"FFA400", @"1A8DE6"];
+    NSArray *colorsHex = @[@"4F92E0", @"F1793A", @"AB4EFE", @"FBB829", @"00CF69"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
@@ -93,7 +93,9 @@ typedef enum
     
     
  
-    self.iconNames = @[@"1", @"2", @"3", @"4"];
+    self.iconNames = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7"];
+# pragma mark Ethan match these to icons via an attribution at the bottom of the screen
+    NSArray *iconAttributions = @[@"FIND THIS", @"FIND THIS", @"FIND THIS", @"FIND THIS", @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
     [self setIconIndex:0];
 
 
