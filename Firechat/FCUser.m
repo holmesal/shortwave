@@ -176,8 +176,8 @@ typedef void (^CompletionBlockType)(id);
 -(NSDictionary*)generateFirstPost
 {
     
-    return @{@"color": [[UIColor whiteColor] toHexString] ,
-             @"icon":@"1",
+    return @{@"color": @"FFFFFF" ,
+             @"icon":@"nakedicon",
              @"ownerID":self.id,
              @"text":@"Hey! Welcome to Earshot!",
              @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]};
