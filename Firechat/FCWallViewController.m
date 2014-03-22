@@ -813,7 +813,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.iconButton setUserInteractionEnabled:NO];
     [self.iconButton setFrame:frame];
     self.originalRectOfIcon = resetIconFrame;
-    NSLog(@"originalRectOfIcon = %@", NSStringFromCGRect(frame));
+//    NSLog(@"originalRectOfIcon = %@", NSStringFromCGRect(frame));
     [self.iconButton setImage:image forState:UIControlStateNormal];
     [self.iconButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.iconButton addTarget:self action:@selector(iconButtonAction:) forControlEvents:UIControlEventTouchUpInside];
