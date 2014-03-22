@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 Buildco. All rights reserved.
 //
 
-#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define kAlwaysLocalUpdateWhenEncounteringAnyBeacon 1
+
+//#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
 #import "FCAppDelegate.h"
 #import <CoreBluetooth/CoreBluetooth.h>
@@ -40,13 +42,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsDiscovered:) name:@"Beacons Added" object:nil];
     
     // Set navigation bar style
-//    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0x00DA6D)]; // 0x00CF69   more green -> 0x56BD54
-    [[UINavigationBar appearance] setBarTintColor:[UIColor clearColor]]; // 0x00CF69   more green -> 0x56BD54
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{
-                                                          NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
-                                                          }];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor clearColor]]; // 0x00CF69   more green -> 0x56BD54
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{
+//                                                          NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
+//                                                          }];
     
     // Register for push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
@@ -67,9 +68,6 @@
     
     
 
-
-//    NSLog(@"User %@",self.owner);
-    
     return YES;
 }
 
@@ -181,9 +179,8 @@
         }
         
         //Change this bellow to see new people
-        if (hasEncounteredNewBeacon) //|| YES)
+        if (hasEncounteredNewBeacon || kAlwaysLocalUpdateWhenEncounteringAnyBeacon) //|| YES)
         {
-            NSLog(@"scheduled notification!");
             //now it is time to do a local notification!
             UILocalNotification *localNotification = [[UILocalNotification alloc] init];
             
@@ -192,9 +189,10 @@
             localNotification.timeZone = [NSTimeZone defaultTimeZone];
             
             [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+            
+            [managedObjectContext save:nil];
         }
         
-//            [managedObjectContext save:nil];
         
     }];
     

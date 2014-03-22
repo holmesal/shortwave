@@ -9,6 +9,8 @@
 //  wow so bother much inconveniece
 //  you take a long time to shower tbh
 
+// but its ok because I'm washing dishes with the runoff
+
 #import <UIKit/UIKit.h>
 
 #import "FCAppDelegate.h"
@@ -17,7 +19,7 @@
 int main(int argc, char * argv[])
 {
     @autoreleasepool {
-        //Welcome to the You-Fucked-Up screen!
+        //Welcome back to main.m!  Goodbye, take care!
         return UIApplicationMain(argc, argv,
                                  NSStringFromClass([ESApplication class]),
                                  NSStringFromClass([FCAppDelegate class]));
