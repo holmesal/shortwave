@@ -74,7 +74,7 @@
 	// Do any additional setup after loading the view.
     self.owner = [(FCAppDelegate *)[[UIApplication sharedApplication] delegate] owner];
     // Setup the firebase ref
-    self.rootRef = [[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"];
+    self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     
 }
 

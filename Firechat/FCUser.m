@@ -62,7 +62,7 @@ typedef void (^CompletionBlockType)(id);
 // Set up the firebase reference
 - (void) initFirebase:(NSString *)id
 {
-    self.rootRef = [[Firebase alloc] initWithUrl:@"https://orbit.firebaseio.com/"];
+    self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
     self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
     [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
