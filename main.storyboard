@@ -4,6 +4,68 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
+        <!--Error View Controller-->
+        <scene sceneID="RZc-F6-0SH">
+            <objects>
+                <viewController restorationIdentifier="FCLEErrorViewController" storyboardIdentifier="FCLEErrorViewController" id="Onb-Ca-k4I" customClass="FCLEErrorViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cUM-Rc-oIf"/>
+                        <viewControllerLayoutGuide type="bottom" id="Z8s-cK-XpB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rdL-Qq-tHC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="247" translatesAutoresizingMaskIntoConstraints="NO" id="7gW-HF-UPl">
+                                <rect key="frame" x="37" y="57" width="247" height="127"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">Earshot uses Location + Bluetooth (iBeacons) to connect you to other users nearby, and won't work properly without your permission.</string>
+                                        <attributes>
+                                            <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                            <font key="NSFont" size="15" name="HelveticaNeue"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TsL-tz-POI" customClass="FCLiveBlurButton">
+                                <rect key="frame" x="37" y="214" width="247" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Try again" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1DP-cT-Wzg">
+                                        <rect key="frame" x="89" y="10" width="69" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=":(" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hNU-4j-vFo">
+                                <rect key="frame" x="85" y="28" width="150" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="16"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="hDY-ag-eEF"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="label" destination="7gW-HF-UPl" id="FYE-sh-VS8"/>
+                        <outlet property="tryAgainBlurButton" destination="TsL-tz-POI" id="lxy-G3-5ur"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fLG-da-bBc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="45" y="959"/>
+        </scene>
         <!--Wall View Controller - Earshot-->
         <scene sceneID="dP9-ri-AdD">
             <objects>
@@ -132,7 +194,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9eR-vx-lrH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="207" y="961"/>
+            <point key="canvasLocation" x="431" y="959"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jMG-oP-dBb">
@@ -396,6 +458,13 @@
                                     <constraint firstAttribute="width" constant="160" id="SHc-4F-rC2"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="attribution label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WjN-UH-haZ">
+                                <rect key="frame" x="23" y="535" width="275" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -423,16 +492,18 @@
                     <navigationItem key="navigationItem" id="iTQ-ZQ-ekq"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="attributionLabel" destination="WjN-UH-haZ" id="CZj-ib-mLe"/>
                         <outlet property="doneBlurButton" destination="X2a-HY-yRh" id="7eh-3y-14L"/>
                         <outlet property="iconContainerView" destination="4nl-Dd-943" id="JTl-Pk-Jvf"/>
                         <outlet property="spinnerImageView" destination="wYh-G0-bJ6" id="Z8U-Mz-zCq"/>
                         <outlet property="startTalkingBlurButton" destination="Dyl-rh-dhX" id="7ga-wv-wZw"/>
                         <outlet property="welcomeView2" destination="hs1-Gq-bzV" id="YHR-io-Laa"/>
+                        <segue destination="Onb-Ca-k4I" kind="push" identifier="errorPush" id="6wC-sh-CPZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jb4-vV-D5a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-516" y="968"/>
+            <point key="canvasLocation" x="-388" y="981"/>
         </scene>
         <!--Signup View Controller-->
         <scene sceneID="7LO-4r-9I5">

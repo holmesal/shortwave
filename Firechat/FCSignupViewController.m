@@ -79,6 +79,7 @@
 - (IBAction)signupButtonTapped:(id)sender {
     // Ask for beacon support
     [[FCBeacon alloc] init];
+    
     // For now - show the signup overlay
     self.signupOverlay.hidden = NO;
     // Animate it in

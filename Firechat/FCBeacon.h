@@ -12,16 +12,20 @@
 
 @interface FCBeacon : NSObject<CBPeripheralManagerDelegate,CLLocationManagerDelegate>
 
-@property BOOL isBroadcasting;
-@property BOOL isListening;
+
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property NSArray *beacons;
 @property NSNumber *major;
 @property NSNumber *minor;
 
+
+
 - (id)initWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor;
 - (NSArray *)getBeaconIds;
 - (void) checkSupport;
+
+-(void)start;
+@property (nonatomic) BOOL peripheralManagerIsRunning;
 
 @end

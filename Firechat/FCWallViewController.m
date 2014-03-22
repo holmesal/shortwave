@@ -14,7 +14,6 @@
 #import "ProfileCollectionViewCell.h"
 
 
-#define kFirebaseHandleOnOff 2
 
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
+		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
 		AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */; };
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
 		AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */; };
@@ -73,6 +74,8 @@
 /* Begin PBXFileReference section */
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Firebase.a"; path = "Pods/build/Debug-iphoneos/libPods-Firebase.a"; sourceTree = "<group>"; };
+		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
+		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		AA69A5E818D7AD27000E6781 /* FCLiveBlurButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLiveBlurButton.h; sourceTree = "<group>"; };
@@ -247,6 +250,8 @@
 				AAD2449318D777590042A93F /* FCLandingPageViewController.m */,
 				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
 				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
+				AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */,
+				AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */,
 			);
 			name = viewcontrollers;
 			sourceTree = "<group>";
@@ -529,6 +534,7 @@
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
+				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
 				AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */,

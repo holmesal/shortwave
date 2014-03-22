@@ -11,7 +11,7 @@
 
 #import "FCBeacon.h"
 
-@interface FCUser : NSMutableDictionary
+@interface FCUser : NSObject
 
 @property Firebase *ref;
 @property Firebase *onOffRef;//reference to the boolan value of keyboard pressed or not pressed
@@ -27,7 +27,7 @@
 @property NSNumber *major;
 @property NSNumber *minor;
 
-@property FCBeacon *beacon;
+@property (nonatomic) FCBeacon *beacon;
 
 //- (id) linkFirebase:(NSString *)id;
 

@@ -21,6 +21,8 @@ typedef enum
 
 @interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
 
+
+@property (weak, nonatomic) IBOutlet UILabel *attributionLabel;
 @property (nonatomic) CGRect originalFrameForIcon;
 @property (nonatomic) NSInteger selectedIconIndex;
 @property (nonatomic) UIImageView *extractedImageViewOnDone;
@@ -39,7 +41,7 @@ typedef enum
 @property (weak, nonatomic) IBOutlet UIView *iconContainerView;
 @property (nonatomic) NSInteger iconIndex;
 
-@property (nonatomic) NSArray *iconNames;
+@property (nonatomic) NSArray *icons;
 @property (nonatomic) NSArray *colors;
 
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *doneBlurButton;
@@ -58,7 +60,7 @@ typedef enum
 
 @synthesize iconIndex;
 
-@synthesize iconNames;
+@synthesize icons;
 @synthesize iconTableView;
 
 @synthesize doneBlurButton;
@@ -69,6 +71,15 @@ typedef enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [UIView animateWithDuration:40.0f
+                          delay:0.0f
+                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+                     animations:^{
+                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+                     }
+                     completion:nil
+     ];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -93,17 +104,25 @@ typedef enum
     
     
  
-    self.iconNames = @[@"1", @"2", @"3", @"4", @"5", @"6", @"7"];
+    self.icons = @[@{@"name":@"1", @"attribution":@"FIND THIS1"}, //cloud
+                   @{@"name":@"2", @"attribution":@"FIND THIS2"}, //person
+                   @{@"name":@"3", @"attribution":@"FIND THIS3"}, //balloon
+                   @{@"name":@"4", @"attribution":@"FIND THIS4"}];//paw
+    // @"5", @"6", @"7"];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
-    NSArray *iconAttributions = @[@"FIND THIS", @"FIND THIS", @"FIND THIS", @"FIND THIS", @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
-    [self setIconIndex:0];
-
+//    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
+    
+    int randIcon = esRandomNumberIn(0, icons.count);
+    [self setIconIndex:randIcon];
+    [self.attributionLabel setText:[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
     iconTableView = [[UITableView alloc] initWithFrame:self.iconContainerView.bounds style:UITableViewStylePlain];
     [iconTableView setBackgroundColor:[UIColor clearColor]];
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
     [iconTableView setUserInteractionEnabled:NO];
+    
+    [iconTableView setContentOffset:CGPointMake(0, self.iconIndex*self.cellHeight)];
     
     {
         CALayer *layer = [CALayer layer];
@@ -121,7 +140,7 @@ typedef enum
     
     [self.iconContainerView addSubview:iconTableView];
 
-    
+    colorIndex = esRandomNumberIn(0, self.colors.count);
     [self.view setBackgroundColor:[colors objectAtIndex:colorIndex] ];
     
     //add gesture listener pan left right
@@ -153,8 +172,12 @@ typedef enum
     self.originalFrameForIcon = frameForIcon;
     self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:frameForIcon];
     [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
-    [self.extractedImageViewOnDone setImage:imageView.image];
+    NSString *imageName = [[self.icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
+    [self.extractedImageViewOnDone setImage:[UIImage imageNamed:imageName]];
     [self.view addSubview:self.extractedImageViewOnDone];
+    
+    
+    
     
     //welcomeView2 setup centers view unhides and alpha 0 for begin animation
     [welcomeView2 setHidden:NO];
@@ -172,6 +195,16 @@ typedef enum
 
     CGRect targetFrameForExtractedImageView = frameForIcon;
     targetFrameForExtractedImageView.origin.y = welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
+    
+    
+
+    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    BOOL peripheralManagerIsRunning = owner.beacon.peripheralManagerIsRunning;
+//    if (peripheralManagerIsRunning)
+//    {
+//        targetFrameForExtractedImageView.origin.y = 20;
+//        targetFrameForExtractedImageView.size = CGSizeMake(35, 35);
+//    }
     
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
     {
@@ -195,41 +228,80 @@ typedef enum
     } completion:^(BOOL finished)
     {}];
     
+    
+    
     [UIView animateWithDuration:1.6f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
-         self.extractedImageViewOnDone.frame = targetFrameForExtractedImageView;
-         
+         if (!peripheralManagerIsRunning)
+         {
+             self.extractedImageViewOnDone.frame = targetFrameForExtractedImageView;
+         }
      } completion:^(BOOL finished)
-     {}];
-    
-    [UIView animateWithDuration:0.4f delay:0.6 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
-            tempFrame.origin.y -=5;
-            welcomeView2.frame = tempFrame;
-            welcomeView2.alpha = 1.0f;
-         
-     } completion:^(BOOL finished)
-     {}];
+         if (peripheralManagerIsRunning)
+         {
+             [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+         }
+     }];
     
+    if (!peripheralManagerIsRunning)
+    {
+        [UIView animateWithDuration:0.4f delay:0.6 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+         {
+                tempFrame.origin.y -=5;
+                welcomeView2.frame = tempFrame;
+                welcomeView2.alpha = 1.0f;
+             
+         } completion:^(BOOL finished)
+         {}];
+    }
 }
+
+
+
+
 
 -(void)startTalkingBlurButtonAction
 {
-
-    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
+    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    if (!owner.beacon.peripheralManagerIsRunning)
     {
-        for (UIView *subview in self.view.subviews)
-        {
-            if (subview != self.extractedImageViewOnDone)
-            {
-                subview.alpha = 0.0f;
-            }
-        }
-    } completion:^(BOOL finsihed)
-    {
-        [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
-    }];
+        [owner.beacon start];
+    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:@"Bluetooth Disabled" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:@"Bluetooth Enabled" object:nil];
+    return;
+    
+    
 }
+
+-(void)removeBluetoothEvents
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Disabled" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Enabled" object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"Bluetooth Disabled"];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self forKeyPath:@"Bluetooth Enabled"];
+}
+
+-(void)continueWithBluetooth:(NSNotification*)notification
+{
+    [self removeBluetoothEvents];
+    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
+     {
+         for (UIView *subview in self.view.subviews)
+         {
+             if (subview != self.extractedImageViewOnDone)
+             {
+                 subview.alpha = 0.0f;
+             }
+         }
+     } completion:^(BOOL finsihed)
+     {
+         [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+     }];
+}
+
 #pragma mark blurActionButton callbacks end
 
 
@@ -238,7 +310,7 @@ typedef enum
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
     FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
 
-    NSString *iconIndexStr = [NSString stringWithFormat:@"%d", self.selectedIconIndex+1];
+    NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
     FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
     appDel.owner.color = [backgroundColor toHexString];
     appDel.owner.icon = iconIndexStr;
@@ -246,7 +318,6 @@ typedef enum
     [nextViewController setIconName:iconIndexStr];
     [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor andResetFrame:self.originalFrameForIcon];
 
-    
     NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
     [viewControllers addObject:nextViewController];
     self.navigationController.viewControllers = viewControllers;
@@ -256,6 +327,7 @@ typedef enum
 {
     [super viewWillAppear:animated];
 
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 
@@ -402,13 +474,22 @@ typedef enum
                 //following if else clause will appear to loop the tableview, aka: no top nor bottom.
                 if (y < 0)
                 {
-                    //reshuffle bottom to top
-                    id lastObject = [self.iconNames lastObject];
+                    NSLog(@"reshuffle bottom to top");
+                    id lastObject = [self.icons lastObject];
                     
-                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.iconNames];
+                    
+//                    id lastAttrib = [self.iconAttributions lastObject];
+//                    NSMutableArray *iconAttribsMutable = [NSMutableArray arrayWithArray:self.iconAttributions];
+//                    [iconAttribsMutable removeLastObject];
+//                    [iconAttribsMutable insertObject:lastAttrib atIndex:0];
+//                    self.iconAttributions = [NSArray arrayWithArray:iconAttribsMutable];
+                    
+                    
+                    
+                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
                     [iconNamesMutable removeLastObject];
                     [iconNamesMutable insertObject:lastObject atIndex:0];
-                    self.iconNames = [NSArray arrayWithArray:iconNamesMutable];
+                    self.icons = [NSArray arrayWithArray:iconNamesMutable];
                     [self.iconTableView reloadData];
                 
                     //move tableView
@@ -418,20 +499,30 @@ typedef enum
                     
                     y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
                     
-                } else
-                if (y > self.cellHeight*(self.iconNames.count-1))
-                {
-                    //reshuffle top to bottom
-                    id firstObject = [self.iconNames objectAtIndex:0];
                     
-                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.iconNames];
+                    
+                } else
+                if (y > self.cellHeight*(self.icons.count-1))
+                {
+                    NSLog(@"reshuffle top to bottom");
+                    //reshuffle top to bottom
+                    id firstObject = [self.icons objectAtIndex:0];
+                    
+//                    id firstAttrib = [self.iconAttributions objectAtIndex:0];
+//                    NSMutableArray *iconAttribsMutable = [NSMutableArray arrayWithArray:self.iconAttributions];
+//                    [iconAttribsMutable removeObject:firstAttrib];
+//                    [iconAttribsMutable addObject:firstAttrib];
+//                    self.iconAttributions = [NSArray arrayWithArray:iconAttribsMutable];
+                    
+                    
+                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
                     [iconNamesMutable removeObject:firstObject];
                     [iconNamesMutable addObject:firstObject];
-                    self.iconNames = [NSArray arrayWithArray:iconNamesMutable];
+                    self.icons = [NSArray arrayWithArray:iconNamesMutable];
                     [self.iconTableView reloadData];
                     
                     //move tableView
-                    CGPoint offset = {0, self.cellHeight*(self.iconNames.count-1)-self.cellHeight};
+                    CGPoint offset = {0, self.cellHeight*(self.icons.count-1)-self.cellHeight};
                     
                     self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
                     
@@ -523,6 +614,8 @@ typedef enum
                 [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                 {
                     
+                    int index = y/self.cellHeight;
+                    [self.attributionLabel setText:[[self.icons objectAtIndex:index] objectForKey:@"attribution"]];
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     
@@ -570,10 +663,14 @@ typedef enum
 {
     while (newIconIndex < 0)
     {
-        newIconIndex += iconNames.count;
+        newIconIndex += icons.count;
     }
     
-    iconIndex = newIconIndex%iconNames.count;
+
+    
+    iconIndex = newIconIndex%icons.count;
+    
+
 }
 
 -(void)setColorIndex:(NSInteger)newColorIndex
@@ -593,7 +690,7 @@ typedef enum
 }
 -(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return iconNames.count;
+    return icons.count;
 }
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -615,8 +712,9 @@ typedef enum
     
     UIImageView *imageView = (UIImageView*)[iconCell viewWithTag:5];
     [imageView setHidden:NO];
-    [imageView setImage:[UIImage imageNamed:[iconNames objectAtIndex:indexPath.row] ] ];
-    
+    [imageView setImage:[UIImage imageNamed: [ [icons objectAtIndex:indexPath.row] objectForKey:@"name"] ] ];
+//    [iconCell setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
+
     return iconCell;
 }
 
@@ -636,15 +734,15 @@ typedef enum
 #pragma mark Notifications
 - (void)appDidBecomeActive:(NSNotification *)notification
 {
-    [UIView animateWithDuration:40.0f
-                          delay:0.0f
-                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
-                     }
-                     completion:nil
-     ];
-    NSLog(@"did become active notification");
+//    [UIView animateWithDuration:40.0f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+//                     }
+//                     completion:nil
+//     ];
+//    NSLog(@"did become active notification");
 }
 
 - (void)appDidEnterForeground:(NSNotification *)notification
@@ -662,9 +760,12 @@ typedef enum
     
     for (UIView *view in self.view.subviews)
     {
-        view.transform = CGAffineTransformIdentity;
+        if (view != self.extractedImageViewOnDone)
+        {
+            view.transform = CGAffineTransformIdentity;
+        }
     }
-    [UIView animateWithDuration:0.3f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+    [UIView animateWithDuration:0.5f delay:0.2f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
         for (UIView *view in self.view.subviews)
         {
             if (view != self.welcomeView2)
@@ -677,6 +778,20 @@ typedef enum
     {
         [self.extractedImageViewOnDone removeFromSuperview];
     }];
+}
+
+-(void)pushErrorScreen:(NSNotification*)notification
+{
+    [self removeBluetoothEvents];
+    [self performSegueWithIdentifier:@"errorPush" sender:self];
+}
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"errorPush"])
+    {
+        UIViewController *viewController = segue.destinationViewController;
+        [viewController.view setBackgroundColor:self.view.backgroundColor];
+    }
 }
 
 @end

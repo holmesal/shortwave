@@ -34,12 +34,12 @@
         
         NSLog(@"Init with major %@ and minor %@",self.major,self.minor);
         
-        // Init peripheral manager
-        self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self
-                                                                         queue:nil
-                                                                       options:nil];
-        // Init location manager
-        self.locationManager = [[CLLocationManager alloc] init];
+//        // Init peripheral manager
+//        self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self
+//                                                                         queue:nil
+//                                                                       options:nil];
+//        // Init location manager
+//        self.locationManager = [[CLLocationManager alloc] init];
         
 //        self.uuid = [[NSUUID alloc] initWithUUIDString:@"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"]; //orbiter devices
         self.uuid = [[NSUUID alloc] initWithUUIDString:@"B9407F30-F5F8-466E-AFF9-25556B57FE6D"]; //estimote
@@ -48,10 +48,19 @@
     return self;
 }
 
+-(void)start
+{
+    // Init peripheral manager
+    self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self
+                                                                     queue:nil
+                                                                   options:nil];
+}
+
 #pragma mark - Scanner
 - (void) initScanner
 {
-    
+    // Init location manager
+    self.locationManager = [[CLLocationManager alloc] init];
     // Set delegate
     self.locationManager.delegate = self;
     // Create region
@@ -61,10 +70,11 @@
     [self.region setNotifyOnEntry:YES];
     [self.region setNotifyOnExit:YES];
     
-    // Check for supported devices
+
+    
+    
     if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     {
-        
         
         [self.locationManager startMonitoringForRegion:self.region];
         [self.locationManager requestStateForRegion:self.region];
@@ -73,6 +83,66 @@
         // If you want to get the state right away, this is the spot
     }
 }
+
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    // Check for supported devices
+    switch ([CLLocationManager authorizationStatus])
+    {
+        case kCLAuthorizationStatusRestricted:
+        {
+            NSLog(@"kCLAuthorizationStatusRestricted");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusDenied:
+        {
+            NSLog(@"kCLAuthorizationStatusDenied");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusAuthorized:
+        {
+            NSLog(@"kCLAuthorizationStatusAuthorized");
+            [self blueToothStackIsActive];
+        }
+            break;
+            
+        case kCLAuthorizationStatusNotDetermined:
+        {
+            NSLog(@"kCLAuthorizationStatusNotDetermined");//user has not yet said yes or no
+        }
+            break;
+    }
+}
+//- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+//    
+//    if ([error domain] == kCLErrorDomain) {
+//        
+//        // We handle CoreLocation-related errors here
+//        switch ([error code]) {
+//                // "Don't Allow" on two successive app launches is the same as saying "never allow". The user
+//                // can reset this for all apps by going to Settings > General > Reset > Reset Location Warnings.
+//            case kCLErrorDenied:
+//            {
+//                NSLog(@"kCLErrorDenied");
+//            }
+//                
+//            case kCLErrorLocationUnknown:
+//            {
+//                NSLog(@"kCLErrorLocationUnknown");
+//            }
+//                
+//            default:
+//                break;
+//        }
+//        
+//    } else {
+//        // We handle all non-CoreLocation errors here
+//    }
+//}
 
 - (void) checkSupport
 {
@@ -188,36 +258,46 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
             //unsuported state means the device cannot do bluetooth low energy
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
             [alert show];
+            self.peripheralManagerIsRunning = NO;
             NSLog(@"CBPeripheralManagerStateUnsupported");
         }
             break;
         case CBPeripheralManagerStateUnauthorized:
         {
             NSLog(@"CBPeripheralManagerStateUnauthorized");
+            self.peripheralManagerIsRunning = NO;
+            
+            [self blueToothStackNeedsUserToActivateMessage];
+            
         }
             break;
         case CBPeripheralManagerStatePoweredOff:
         {
             NSLog(@"CBPeripheralManagerStatePoweredOff");
+            self.peripheralManagerIsRunning = NO;
+            
+            [self blueToothStackNeedsUserToActivateMessage];
             
         }
             break;
         case CBPeripheralManagerStatePoweredOn:
         {
             NSLog(@"CBPeripheralManagerStatePoweredOn");
+//            if (!self.peripheralManagerIsRunning)
+//            {
+
+                // Setup the scanner
+                [self initScanner];
+                // Start broadcasting
+                [self startBroadcasting];
+
+//            }
         }
             break;
     }
     NSLog(@"\n");
     
-    if (peripheral.state == CBPeripheralManagerStatePoweredOn){
-        // Setup the scanner
-        [self initScanner];
-        // Start broadcasting
-        [self startBroadcasting];
-    }
-//    CBCentralManagerStatePoweredOn
-//    [self _updateEmitterForDesiredState];
+
 }
 
 # pragma mark - transform beacons into ids
@@ -255,5 +335,14 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     
 }
 
+-(void)blueToothStackIsActive
+{
+    self.peripheralManagerIsRunning = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Enabled" object:nil];
+}
+-(void)blueToothStackNeedsUserToActivateMessage
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+}
 
 @end
