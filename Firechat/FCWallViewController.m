@@ -569,7 +569,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
 #warning test
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-//        NSLog(@"self.beacons.count = %d", self.beacons.count);
+
         BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
         
         FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
