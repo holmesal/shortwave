@@ -2,4 +2,4 @@ platform :ios, '7'
 
 pod 'PHFComposeBarView', '~> 2.0.0'
 
-workspace 'Firechat.xcworkspace'
+workspace 'Earshot.xcworkspace'
