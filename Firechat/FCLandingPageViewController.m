@@ -70,6 +70,17 @@ typedef enum
 @synthesize colors;
 
 
+-(BOOL)userIsLoggedIn
+{
+    NSLog(@"userIsLoggedIn = %@", ([[NSUserDefaults standardUserDefaults] boolForKey:@"isLoggedIn"] ? @"YES": @"NO"));
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"isLoggedIn"];
+}
+-(void)setUserIsLoggedIn:(BOOL)b
+{
+    [[NSUserDefaults standardUserDefaults] setBool:b forKey:@"isLoggedIn"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 - (void)viewDidLoad
 {
@@ -116,7 +127,20 @@ typedef enum
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
     
     int randIcon = esRandomNumberIn(0, icons.count);
+    
+    if ([self userIsLoggedIn])
+    {
+        NSString *icon = [[NSUserDefaults standardUserDefaults] objectForKey:@"icon"];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name == %@", icon];
+        id theObject = [[self.icons filteredArrayUsingPredicate:predicate] lastObject];
+        
+        int index = [self.icons indexOfObject:theObject];
+        self.selectedIconIndex = index;
+        randIcon = index;
+    }
     [self setIconIndex:randIcon];
+    
     NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
     [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
@@ -145,6 +169,20 @@ typedef enum
     [self.iconContainerView addSubview:iconTableView];
 
     colorIndex = 0;//esRandomNumberIn(0, self.colors.count);
+    
+    if ([self userIsLoggedIn])
+    {
+        NSString *color = [[NSUserDefaults  standardUserDefaults] objectForKey:@"color"];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF == %@)", color];
+        id theColor = [[colorsHex filteredArrayUsingPredicate:predicate] lastObject];
+        int colorIndexActually = [colorsHex indexOfObject:theColor];
+        
+        
+        
+        colorIndex = colorIndexActually;
+    }
+    
     [self.view setBackgroundColor:[colors objectAtIndex:colorIndex] ];
     
     //add gesture listener pan left right
@@ -153,12 +191,17 @@ typedef enum
     
     
     [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+
 
 }
 
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
+    //extract current icon
+    self.selectedIconIndex = (iconTableView.contentOffset.y/self.cellHeight);
+    
     FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
     NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
     //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
@@ -167,8 +210,7 @@ typedef enum
     
     [self.view removeGestureRecognizer:self.panGesture];
     
-    //extract current icon
-    self.selectedIconIndex = (iconTableView.contentOffset.y/self.cellHeight);
+
 
     UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
     UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
@@ -315,6 +357,7 @@ typedef enum
 
 -(void)transitionToFCWallViewControllerWithImage:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor
 {
+    [self setUserIsLoggedIn:YES];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
     FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
 
@@ -324,7 +367,7 @@ typedef enum
 //    appDel.owner.icon = iconIndexStr;
 
     [nextViewController setIconName:iconIndexStr];
-    [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor andResetFrame:self.originalFrameForIcon];
+    [nextViewController beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)startingFrame andColor:(UIColor*)backgroundColor andResetFrame:self.originalFrameForIcon isAnimated:YES];
 
     NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
     [viewControllers addObject:nextViewController];
@@ -338,18 +381,100 @@ typedef enum
     
     if (!hasBeenHereBefore)
     {
-
         for (UIView *view in self.view.subviews)
         {
             view.alpha = 0.0f;
         }
-        
-
     }
     
     NSTimer *timer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(invalidate) userInfo:nil repeats:NO];
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    
+//    [self skipIfLoggedIn];
+    
+}
+
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+//    [super viewWillLayoutSubviews];
+//    [self skipIfLoggedIn];
+}
+-(void)viewDidLayoutSubviews
+{
+    NSLog(@"viewDidLayoutSubviews");
+}
+
+
+-(void)skipIfLoggedIn
+{
+    //It is time to Just Present the wallView controller view controller
+    if ([self userIsLoggedIn])
+    {
+        self.hasBeenHereBefore = YES;
+        UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
+        UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
+        [imageView setHidden:YES];
+        CGRect frameForIcon = CGRectMake(self.iconContainerView.frame.origin.x, self.iconContainerView.frame.origin.y, 50, 50);
+        frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
+        frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
+
+        
+        self.originalFrameForIcon = frameForIcon;
+        self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:frameForIcon];
+        [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
+        NSString *imageName = [[self.icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
+        [self.extractedImageViewOnDone setImage:[UIImage imageNamed:imageName]];
+//        [self.view addSubview:self.extractedImageViewOnDone];
+        self.extractedImageViewOnDone.alpha = 1.0f;
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"main" bundle:nil];
+        FCWallViewController *nextViewController = (FCWallViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FCWallViewController"];
+        
+        NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
+        //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+        //    appDel.owner.color = [backgroundColor toHexString];
+        //    appDel.owner.icon = iconIndexStr;
+        
+        [nextViewController setIconName:iconIndexStr];
+        CGFloat dim = 50;
+        CGRect startingFrame = CGRectMake((self.view.frame.size.width-dim)*0.5f,(self.view.frame.size.height-dim)*0.5f,dim,dim);
+        NSString *icon = [[NSUserDefaults standardUserDefaults] objectForKey:@"icon"];
+        [nextViewController beginTransitionWithIcon:[UIImage imageNamed:icon] andFrame:startingFrame andColor:self.view.backgroundColor andResetFrame:CGRectMake(0, 0, 0, 0) isAnimated:NO];
+        
+        NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
+        [viewControllers addObject:nextViewController];
+        [self.navigationController pushViewController:nextViewController animated:NO];
+//        self.navigationController.viewControllers = viewControllers;
+        
+        FCAppDelegate* appDelegate = (FCAppDelegate*)[UIApplication sharedApplication].delegate;
+        [appDelegate.owner.beacon start];
+        
+    }
+}
+-(CGRect)getOriginalRect
+{
+    UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
+    UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
+    [imageView setHidden:YES];
+    CGRect frameForIcon = CGRectMake(self.iconContainerView.frame.origin.x, self.iconContainerView.frame.origin.y, 50, 50);
+    frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
+    frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
+//    frameForIcon.origin.y -= 20;
+    self.originalFrameForIcon = frameForIcon;
+    
+    if (![self.extractedImageViewOnDone superview])
+    {
+//        CGRect jkFrame = self.originalFrameForIcon;
+//        jkFrame.origin.y -= 20;
+//        [self.extractedImageViewOnDone setFrame:jkFrame];
+//        [self.view addSubview:self.extractedImageViewOnDone];
+    }
+
+    frameForIcon.origin.y += 20;
+    
+    return frameForIcon;
 }
 
 -(void)invalidate
@@ -360,6 +485,8 @@ typedef enum
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    
     
     //this is to fade in the view after splash screen is gone
     if (!hasBeenHereBefore)
@@ -378,15 +505,9 @@ typedef enum
          }];
     }
 
-//// Start animating the image view
-//    [UIView animateWithDuration:40.0f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
-//                     animations:^{
-//                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
-//                     }
-//                     completion:nil
-//     ];
+    
+    [self skipIfLoggedIn];
+
 
 }
 
@@ -812,6 +933,7 @@ typedef enum
 //redraw the view as if it were the first time.
 -(void)resetAsNewAnimated
 {
+    [self setUserIsLoggedIn:NO];
     [self.view addGestureRecognizer:self.panGesture];
     [self.iconTableView reloadData];
     self.extractedImageViewOnDone.frame = self.originalFrameForIcon;

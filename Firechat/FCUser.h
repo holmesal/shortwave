@@ -17,9 +17,9 @@
 @property Firebase *onOffRef;//reference to the boolan value of keyboard pressed or not pressed
 @property Firebase *rootRef;
 
-@property NSString *icon;
+@property (strong, nonatomic) NSString *icon;
 //@property NSString *displayName;
-@property NSString *color;
+@property (strong, nonatomic) NSString *color;
 @property UIColor *displayColor;
 //@property NSString *description;
 @property NSString *id;

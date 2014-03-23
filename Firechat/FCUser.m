@@ -1,3 +1,4 @@
+
 //
 //  FCUser.m
 //  Firechat
@@ -19,6 +20,7 @@ typedef void (^CompletionBlockType)(id);
 @end
 
 @implementation FCUser
+@synthesize color, icon;
 
 
 
@@ -153,7 +155,38 @@ typedef void (^CompletionBlockType)(id);
     NSLog(@"Got id: %@:%@",self.major,self.minor);
 }
 
+-(void)setColor:(NSString *)clr
+{
+    color = clr;
+    if ([self isOwner])
+    {
+        //post to firebase
+        [[self.ref childByAppendingPath:@"color"] setValue:color];
+        [[NSUserDefaults standardUserDefaults] setObject:color forKey:@"color"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
 
+-(void)setIcon:(NSString *)icn
+{
+    NSLog(@"icon set as %@", icn);
+    icon = icn;
+    if ([self isOwner])
+    {
+        //post to firebase
+        [[self.ref childByAppendingPath:@"icon"] setValue:icon];
+        [[NSUserDefaults standardUserDefaults] setObject:icon forKey:@"icon"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+-(BOOL)isOwner
+{
+    return self == ((FCAppDelegate*)([UIApplication sharedApplication].delegate)).owner;
+}
+
+
+//generatesIds but also posts to wall a greeting message!
 - (void) generateIds
 {
     // Generate an id
@@ -162,19 +195,21 @@ typedef void (^CompletionBlockType)(id);
     self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
     self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
     
+    
+    //greeting msesage post to their wall
+    [self postHello];
+}
+-(void)postHello
+{
     Firebase *wall = [[[[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
     Firebase *post = [[wall childByAppendingPath:@"wall"] childByAutoId];
-    
     [post setValue:self.generateFirstPost];
-    
-    
-//    self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
-    
-    NSLog(@"Generated id: %@",self.id);
 }
 
 -(NSDictionary*)generateFirstPost
 {
+    NSString *whiteHex = @"ffffff";
+    
     
     return @{@"color": @"FFFFFF" ,
              @"icon":@"nakedicon",

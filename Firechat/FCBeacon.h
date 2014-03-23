@@ -20,7 +20,7 @@
 @property NSNumber *minor;
 
 
-
+-(CLLocation*)getLocation;
 - (id)initWithMajor:(NSNumber *)major andMinor:(NSNumber *)minor;
 - (NSArray *)getBeaconIds;
 - (void) checkSupport;

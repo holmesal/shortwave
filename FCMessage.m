@@ -31,10 +31,23 @@
 - (void)postText:(NSString *)text asOwner:(FCUser *)owner
 {
     // Make the message
+    
+    NSNumber *accuracy = [NSNumber numberWithDouble:-1];
+    NSNumber *lat = [NSNumber numberWithDouble:0];// [NSNumber numberWithDouble:self.location.coordinate.latitude];
+    NSNumber *lon = [NSNumber numberWithDouble:0];//[NSNumber numberWithDouble:self.location.coordinate.longitude];
+    if (self.location)
+    {
+        accuracy = [NSNumber numberWithDouble:self.location.horizontalAccuracy];
+        lat = [NSNumber numberWithDouble:self.location.coordinate.latitude];
+        lon = [NSNumber numberWithDouble:self.location.coordinate.longitude];
+    }
+    
+    
     NSDictionary *message = @{@"ownerID": owner.id,
                               @"color": owner.color,
                               @"icon": owner.icon,
-                              @"text": text};
+                              @"text": text,
+                              @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy} };
     // Grab the current list of iBeacons
     NSArray *beaconIds = [owner.beacon getBeaconIds];
     

@@ -13,15 +13,15 @@
 #import "FCMessageCell.h"
 #import "ProfileCollectionViewCell.h"
 
-
+#import "FCLandingPageViewController.h"
 
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
 //firebase handles
 @property (nonatomic) FirebaseHandle bindToWallHandle;
-
-
+@property (nonatomic) CGFloat buttonImageInset;
+@property (nonatomic) BOOL presentAnimated;
 @property (assign, nonatomic) NSInteger lastNumberOfPeopleInCollectionView;
 
 @property (nonatomic) BOOL needsToDoTransitionWithShadeView;
@@ -61,6 +61,8 @@
 @end
 
 @implementation FCWallViewController
+
+@synthesize buttonImageInset;
 @synthesize peopleNearbyLabel;
 @synthesize lastNumberOfPeopleInCollectionView;
 
@@ -667,6 +669,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
     // Send the message
     FCMessage *message = [[FCMessage alloc] init];
+    
+    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    CLLocation *location = [owner.beacon getLocation];
+    message.location = location;
+    
+//    message.lat =
+//    message.lon = ;
     [message postText:self.composeBarView.text asOwner:self.owner];
     [composeBarView setText:@"" animated:YES];
     [self.composeBarView resignFirstResponder];
@@ -802,8 +811,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 #pragma mark called by FCWallViewController when initializing this ViewController as the next
--(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor andResetFrame:(CGRect)resetIconFrame
+-(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor andResetFrame:(CGRect)resetIconFrame isAnimated:(BOOL)animated
 {
+    self.presentAnimated = animated;
     self.needsToDoTransitionWithShadeView = YES;
     self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
     [self.shadeView setBackgroundColor:backgroundColor];
@@ -813,7 +823,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.iconButton = [UIButton buttonWithType:UIButtonTypeCustom];
     
     //input for sizing down image
-    CGFloat buttonImageInset = 4.5;
+    self.buttonImageInset = 4.5;
     UIEdgeInsets insets = UIEdgeInsetsMake(buttonImageInset, buttonImageInset, buttonImageInset, buttonImageInset);
     [self.iconButton setContentEdgeInsets:insets];
     
@@ -861,6 +871,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.shadeView removeFromSuperview];
     [self.view addSubview:self.shadeView];
     
+    UINavigationController *navContr = self.navigationController;
+    NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
+    
+    UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
+    
     [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
          CGRect frame = self.iconButton.frame;
@@ -877,13 +892,29 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
              
              [self.shadeView setFrame:self.view.bounds];
              
+             if (self.originalRectOfIcon.origin.y < 0)
+             {
+                 CGRect rect = [((FCLandingPageViewController*)landingPageViewController) getOriginalRect];
+                 rect.origin.y -= 20;
+
+                 
+                 CGRect resetIconFrame = rect;
+                 resetIconFrame.origin.y -= buttonImageInset;
+                 resetIconFrame.origin.x -= buttonImageInset;
+                 resetIconFrame.size.width += 2*buttonImageInset;
+                 resetIconFrame.size.height += 2*buttonImageInset;
+                 
+                  self.originalRectOfIcon = resetIconFrame;
+                 
+
+             }
              [self.iconButton setFrame:self.originalRectOfIcon];
          } completion:^(BOOL finished)
          {
-             UINavigationController *navContr = self.navigationController;
-             NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
-             
-             UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
+//             UINavigationController *navContr = self.navigationController;
+//             NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
+//             
+//             UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
              [landingPageViewController performSelector:@selector(resetAsNewAnimated)];
              [vc removeLastObject];
              

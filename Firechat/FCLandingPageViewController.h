@@ -10,6 +10,6 @@
 
 @interface FCLandingPageViewController : UIViewController
 
-
+-(CGRect)getOriginalRect;
 
 @end

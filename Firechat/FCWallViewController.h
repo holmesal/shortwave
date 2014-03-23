@@ -14,6 +14,6 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 
 
--(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor andResetFrame:(CGRect)resetIconFrame;
+-(void)beginTransitionWithIcon:(UIImage*)image andFrame:(CGRect)frame andColor:(UIColor*)backgroundColor andResetFrame:(CGRect)resetIconFrame isAnimated:(BOOL)animated;
 @property (nonatomic) NSString *iconName;
 @end

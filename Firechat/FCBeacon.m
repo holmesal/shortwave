@@ -374,4 +374,9 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
     return val;
 }
 
+-(CLLocation*)getLocation
+{
+    return self.locationManager.location;
+}
+
 @end
