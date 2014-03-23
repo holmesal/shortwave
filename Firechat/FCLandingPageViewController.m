@@ -446,7 +446,7 @@ typedef enum
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         [viewControllers addObject:nextViewController];
         [self.navigationController pushViewController:nextViewController animated:NO];
-//        self.navigationController.viewControllers = viewControllers;
+
         
         FCAppDelegate* appDelegate = (FCAppDelegate*)[UIApplication sharedApplication].delegate;
         [appDelegate.owner.beacon start];

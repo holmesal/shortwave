@@ -119,7 +119,7 @@
 //        [self drawViewHierarchyInRect:self.frame afterScreenUpdates:YES]; // Doesn't work!
 //    else
 //        [self.layer renderInContext:UIGraphicsGetCurrentContext()];     // Works!
-    [self.superview drawViewHierarchyInRect:self.superview.bounds afterScreenUpdates:YES];
+    [self.superview drawViewHierarchyInRect:self.superview.bounds afterScreenUpdates:NO];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     
