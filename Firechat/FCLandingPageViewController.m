@@ -121,7 +121,10 @@ typedef enum
     self.icons = @[@{@"name":@"1", @"attribution":@"FIND THIS1"}, //cloud
                    @{@"name":@"2", @"attribution":@"FIND THIS2"}, //person
                    @{@"name":@"3", @"attribution":@"FIND THIS3"}, //balloon
-                   @{@"name":@"4", @"attribution":@"FIND THIS4"} ];//paw
+                   @{@"name":@"4", @"attribution":@"FIND THIS4"},
+                   @{@"name":@"5", @"attribution":@"Edward Boatman"},
+                   @{@"name":@"6", @"attribution":@"Antonis Makriyannis"},
+                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"}];//paw
     // @"5", @"6", @"7"];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
