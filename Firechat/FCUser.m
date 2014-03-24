@@ -28,6 +28,37 @@ typedef void (^CompletionBlockType)(id);
 
 static FCUser *currentUser;
 
+/*
+ {
+ "rules":
+ {
+ ".read":true,
+ ".write":true,
+ 
+ "users":
+ {
+ "$user":{
+ 
+ "userId":{
+ ".read":"auth != null && auth.id == data.val()",
+ ".write":true
+ },
+ 
+ "$attr":{
+ ".read":"auth != null",
+ ".write":"auth != null && auth.id == data.parent().child('userId').val()"
+ }
+ 
+ 
+ 
+ 
+ }
+ }
+ }
+ 
+ }
+ */
+
 
 +(FCUser*)owner
 {
@@ -42,6 +73,26 @@ static FCUser *currentUser;
 -(void)setFuser:(FAUser *)bewser
 {
     fuser = bewser;
+    
+    NSString *userId = fuser.userId;
+    
+    NSLog(@"self.ref = %@", self.ref);
+    
+    
+    self.color = color;
+    self.icon = icon;
+
+    [[self.ref childByAppendingPath:@"userId"] setValue:userId];
+    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
+    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
+    {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
+        //greeting msesage post to their wall
+        [self postHello];
+    }
+
 }
 
 - (id)init
@@ -89,32 +140,6 @@ static FCUser *currentUser;
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
 
-
-//    
-//    [self.authClient checkAuthStatusWithBlock:^(NSError* error, FAUser* user) {
-//        if (error != nil)
-//        {
-//            NSLog(@"Oh no! There was an error performing the check");
-//        } else if (user == nil)
-//        {
-//            NSLog(@"No user is logged in");
-//        } else
-//        {
-//            NSLog(@"There is a logged in user");
-//        }
-//    }];
-    
-//    Firebase* authRef = [self.rootRef.root childByAppendingPath:@".info/authenticated"];
-//    [authRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap) {
-//        
-//        BOOL isAuthenticated = [snap.value boolValue];
-//        NSLog(@"isAuthenticated = %@", (isAuthenticated ? @"YES" : @"NO"));
-//    }];
-//    
-
-    
-//    self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
-//    [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
 }
 
 # pragma mark - push notification registration
@@ -171,8 +196,8 @@ static FCUser *currentUser;
     [[self.ref childByAppendingPath:@"icon"] setValue:self.icon];
     [prefs setValue:self.icon forKey:@"icon"];
     // Major/minor
-    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
-    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
+//    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
+//    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
     [prefs setValue:self.major forKey:@"major"];
     [prefs setValue:self.minor forKey:@"minor"];
     
@@ -209,6 +234,12 @@ static FCUser *currentUser;
         //post to firebase
         [[NSUserDefaults standardUserDefaults] setObject:color forKey:@"color"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        if (self.fuser)
+        {
+            Firebase *colorRef = [self.ref childByAppendingPath:@"color"];
+            [colorRef setValue:color];
+        }
     }
 }
 
@@ -222,6 +253,12 @@ static FCUser *currentUser;
 //        [[self.ref childByAppendingPath:@"icon"] setValue:icon];
         [[NSUserDefaults standardUserDefaults] setObject:icon forKey:@"icon"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        if (self.fuser)
+        {
+            Firebase *colorRef = [self.ref childByAppendingPath:@"icon"];
+            [colorRef setValue:icon];
+        }
     }
 }
 
@@ -248,9 +285,7 @@ static FCUser *currentUser;
     self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
     self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
     
-    
-    //greeting msesage post to their wall
-    [self postHello];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];
 }
 -(void)postHello
 {
@@ -261,7 +296,6 @@ static FCUser *currentUser;
 
 -(NSDictionary*)generateFirstPost
 {
-    NSString *whiteHex = @"ffffff";
     
     
     return @{@"color": @"FFFFFF" ,

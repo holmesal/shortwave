@@ -19,7 +19,7 @@
 #import "Beacon.h" //NSManagedObject (core data)
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
 
-@interface FCAppDelegate ()
+@interface FCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
 
@@ -97,7 +97,7 @@
         [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
             if (error != nil)
             {
-                NSLog(@"oh no an error when loginAnonymouselyWithCompletionBlock! %@", error.localizedDescription);
+                NSLog(@"loginAnonymouslywithCompletionBlock%@", error.localizedDescription);
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
                 [alert show];
                 // There was an error logging in to this account
@@ -112,6 +112,14 @@
 //        
 //    }
 
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex)
+    {//try again!
+        [self authorizeWithFirebase];
+    }
 }
 
 // Delegation methods
