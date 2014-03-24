@@ -17,6 +17,13 @@
 #import <CoreData/CoreData.h>
 #import "ESCoreDataController.h"
 #import "Beacon.h" //NSManagedObject (core data)
+#import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
+
+@interface FCAppDelegate ()
+
+@property (nonatomic) FirebaseSimpleLogin *authClient;
+
+@end
 
 @implementation FCAppDelegate
 {
@@ -36,8 +43,8 @@
         [application cancelAllLocalNotifications];
     }
     
-    // init the user object
-    self.owner = [[FCUser alloc] initAsOwner];
+    [self authorizeWithFirebase]; //creates owner
+
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsDiscovered:) name:@"Beacons Added" object:nil];
     
@@ -71,10 +78,46 @@
     return YES;
 }
 
+-(void)authorizeWithFirebase
+{
+    FCUser *owner = [FCUser owner];
+    if (!owner)
+    {
+        owner = [FCUser createOwner];
+    }
+    
+    if (!self.authClient)
+    {
+        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:owner.rootRef];
+    }
+    
+
+//    if (!owner.fuser)
+//    {
+        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
+            if (error != nil)
+            {
+                NSLog(@"oh no an error when loginAnonymouselyWithCompletionBlock! %@", error.localizedDescription);
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
+                [alert show];
+                // There was an error logging in to this account
+            } else
+            {
+                
+                owner.fuser = user; // We are now logged in
+            }
+        }];
+//    } else
+//    {
+//        
+//    }
+
+}
+
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     // Set the token on firebase via the user object
-    [self.owner sendProviderDeviceToken:devToken]; // custom method
+    [[FCUser owner] sendProviderDeviceToken:devToken]; // custom method
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

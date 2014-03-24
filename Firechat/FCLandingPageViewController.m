@@ -19,7 +19,7 @@ typedef enum
     PanGestureDirectionRight
 }PanGestureDirection;
 
-@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 
@@ -47,6 +47,8 @@ typedef enum
 @property (nonatomic) NSArray *icons;
 @property (nonatomic) NSArray *colors;
 
+
+@property (nonatomic) FirebaseSimpleLogin *authClient;
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *doneBlurButton;
 
 @end
@@ -195,6 +197,7 @@ typedef enum
     
     [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    
 
 
 }
@@ -202,10 +205,56 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
+    
+    FCUser *owner =  [FCUser owner];
+    
+    [self continueWithDonBlurButtonAction];
+//    if (!self.authClient)
+//    {
+//        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:owner.rootRef];
+//    }
+//    
+//    if (!owner.fuser)
+//    {
+//        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
+//            if (error != nil)
+//            {
+//                NSLog(@"oh no an error when loginAnonymouselyWithCompletionBlock! %@", error.localizedDescription);
+//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
+//                [alert show];
+//                // There was an error logging in to this account
+//            } else
+//            {
+//                
+//                owner.fuser = user;
+//                [self continueWithDonBlurButtonAction];
+//                
+//                // We are now logged in
+//            }
+//        }];
+//    } else
+//    {
+//        
+//    }
+    
+    
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex)
+    {
+        [self doneBlurButtonAction:nil];
+    }
+}
+
+-(void)continueWithDonBlurButtonAction
+{
     //extract current icon
     self.selectedIconIndex = (iconTableView.contentOffset.y/self.cellHeight);
     
-    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    FCUser *owner = [FCUser owner];
+    
     NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
     //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
     owner.color = [self.view.backgroundColor toHexString];
@@ -213,8 +262,8 @@ typedef enum
     
     [self.view removeGestureRecognizer:self.panGesture];
     
-
-
+    
+    
     UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
     UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
     [imageView setHidden:YES];
@@ -245,41 +294,41 @@ typedef enum
     tempFrame.origin.y = (self.view.frame.size.height -tempFrame.size.height)*0.5f;
     tempFrame.origin.y += 5;
     [welcomeView2 setFrame:tempFrame];
-
+    
     CGRect targetFrameForExtractedImageView = frameForIcon;
     targetFrameForExtractedImageView.origin.y = welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
     
     
-
-//    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    
+    //    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
     BOOL peripheralManagerIsRunning = owner.beacon.peripheralManagerIsRunning;
-//    if (peripheralManagerIsRunning)
-//    {
-//        targetFrameForExtractedImageView.origin.y = 20;
-//        targetFrameForExtractedImageView.size = CGSizeMake(35, 35);
-//    }
+    //    if (peripheralManagerIsRunning)
+    //    {
+    //        targetFrameForExtractedImageView.origin.y = 20;
+    //        targetFrameForExtractedImageView.size = CGSizeMake(35, 35);
+    //    }
     
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-    {
-        
-        
-        for (UIView *subview in self.view.subviews)
-        {
-            if (subview == welcomeView2)
-            {
-//                tempFrame.origin.y -=5;
-//                welcomeView2.frame = tempFrame;
-//                welcomeView2.alpha = 1.0f;
-            } else
-            if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
-            {
-                subview.alpha = 0.0f;
-                subview.transform = CGAffineTransformMakeTranslation(0, -5);
-            }
-        }
-
-    } completion:^(BOOL finished)
-    {}];
+     {
+         
+         
+         for (UIView *subview in self.view.subviews)
+         {
+             if (subview == welcomeView2)
+             {
+                 //                tempFrame.origin.y -=5;
+                 //                welcomeView2.frame = tempFrame;
+                 //                welcomeView2.alpha = 1.0f;
+             } else
+                 if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
+                 {
+                     subview.alpha = 0.0f;
+                     subview.transform = CGAffineTransformMakeTranslation(0, -5);
+                 }
+         }
+         
+     } completion:^(BOOL finished)
+     {}];
     
     
     
@@ -295,7 +344,7 @@ typedef enum
          {
              [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
          } else
-//             if (!peripheralManagerIsRunning)
+             //             if (!peripheralManagerIsRunning)
          {
              [UIView animateWithDuration:0.4f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
               {
@@ -307,8 +356,7 @@ typedef enum
               {}];
          }
      }];
-    
-    
+
 }
 
 
@@ -317,7 +365,7 @@ typedef enum
 
 -(void)startTalkingBlurButtonAction
 {
-    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    FCUser *owner = [FCUser owner];
 
     
     if (!owner.beacon.peripheralManagerIsRunning)
@@ -450,9 +498,7 @@ typedef enum
         [viewControllers addObject:nextViewController];
         [self.navigationController pushViewController:nextViewController animated:NO];
 
-        
-        FCAppDelegate* appDelegate = (FCAppDelegate*)[UIApplication sharedApplication].delegate;
-        [appDelegate.owner.beacon start];
+        [[FCUser owner].beacon start];
         
     }
 }
@@ -464,7 +510,7 @@ typedef enum
     CGRect frameForIcon = CGRectMake(self.iconContainerView.frame.origin.x, self.iconContainerView.frame.origin.y, 50, 50);
     frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
     frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
-//    frameForIcon.origin.y -= 20;
+
     self.originalFrameForIcon = frameForIcon;
     
     if (![self.extractedImageViewOnDone superview])

@@ -10,6 +10,7 @@
 
 
 #import "FCBeacon.h"
+#import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
 
 @interface FCUser : NSObject
 
@@ -28,6 +29,8 @@
 @property NSNumber *minor;
 
 @property (nonatomic) FCBeacon *beacon;
+@property (nonatomic) FAUser *fuser;
+
 
 //- (id) linkFirebase:(NSString *)id;
 
@@ -39,5 +42,8 @@
 //- (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block;
 - (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image;
 - (id) initAsOwner;
+
++(FCUser*)owner;
++(FCUser*)createOwner;
 
 @end

@@ -13,6 +13,7 @@
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
 		AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
+		AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
@@ -84,6 +85,7 @@
 		AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColor.h"; sourceTree = "<group>"; };
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
+		AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
@@ -162,16 +164,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
+				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
 				AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */,
 				C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */,
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
 				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
 				C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */,
+				AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */,
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
-				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
-				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
 				AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */,
 				C02CE390186808B000305FC9 /* CoreGraphics.framework in Frameworks */,
@@ -308,6 +311,7 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */,
 				AAE3743F18DC098B006A9C82 /* CoreData.framework */,
 				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
 				AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */,

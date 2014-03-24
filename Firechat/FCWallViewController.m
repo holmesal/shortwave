@@ -328,7 +328,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
 	// Get the owner
-    self.owner = [(FCAppDelegate *)[[UIApplication sharedApplication] delegate] owner];
+    self.owner = [FCUser owner];
     NSLog(@"owner's id: %@",self.owner.id);
     [self.tableView reloadData];
     
@@ -572,7 +572,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
         BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
         
-        FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+        FCUser *me = [FCUser owner];
         NSString *myId = me.id;
         BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
         
@@ -670,7 +670,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Send the message
     FCMessage *message = [[FCMessage alloc] init];
     
-    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
+    FCUser *owner = [FCUser owner];
     CLLocation *location = [owner.beacon getLocation];
     message.location = location;
     
@@ -735,8 +735,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     
-    FCAppDelegate *appDelegate = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
-    FCUser *owner = appDelegate.owner;
+    FCUser *owner = [FCUser owner];
     NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getBeaconIds].count;
     
     NSInteger returnValue = numberOfBecons + 1;//change this value for now
@@ -792,8 +791,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         {
             CGPoint position = [touch locationInView:self.view];
             
-            
-            FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+            FCUser *owner = [FCUser owner];
             
             if (touch.phase == UITouchPhaseBegan &&
                 CGRectContainsPoint(keyboardRect, position))
@@ -939,7 +937,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
         BOOL beaconFound = obj ? YES : NO;
         
-        FCUser *me = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
+        FCUser *me = [FCUser owner];
+        
         NSString *myId = me.id;
         BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
         

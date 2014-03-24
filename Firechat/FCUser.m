@@ -12,17 +12,37 @@
 #include <stdlib.h>
 #include "FCAppDelegate.h"
 #import "UIColor+HexString.h"
+#import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
+
 
 typedef void (^CompletionBlockType)(id);
 
 @interface FCUser ()
 @property (nonatomic, copy) CompletionBlockType completionBlock;
+@property (nonatomic) FirebaseSimpleLogin* authClient;
 @end
 
 @implementation FCUser
 @synthesize color, icon;
+@synthesize fuser;
+
+static FCUser *currentUser;
 
 
++(FCUser*)owner
+{
+    return currentUser;
+}
++(FCUser*)createOwner
+{
+    currentUser = [[FCUser alloc] initAsOwner];
+    return currentUser;
+}
+
+-(void)setFuser:(FAUser *)bewser
+{
+    fuser = bewser;
+}
 
 - (id)init
 {
@@ -45,7 +65,8 @@ typedef void (^CompletionBlockType)(id);
             [self initFirebase:self.id];
             // Pull from defaults
             [self pullFromDefaults];
-        } else{
+        } else
+        {
             [self generateNewUser];
         }
         // Init the beacon
@@ -67,6 +88,31 @@ typedef void (^CompletionBlockType)(id);
 {
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
+
+
+//    
+//    [self.authClient checkAuthStatusWithBlock:^(NSError* error, FAUser* user) {
+//        if (error != nil)
+//        {
+//            NSLog(@"Oh no! There was an error performing the check");
+//        } else if (user == nil)
+//        {
+//            NSLog(@"No user is logged in");
+//        } else
+//        {
+//            NSLog(@"There is a logged in user");
+//        }
+//    }];
+    
+//    Firebase* authRef = [self.rootRef.root childByAppendingPath:@".info/authenticated"];
+//    [authRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap) {
+//        
+//        BOOL isAuthenticated = [snap.value boolValue];
+//        NSLog(@"isAuthenticated = %@", (isAuthenticated ? @"YES" : @"NO"));
+//    }];
+//    
+
+    
 //    self.onOffRef = [self.ref childByAppendingPath:@"onOff"];
 //    [self.onOffRef setValue:[NSNumber numberWithBool:NO]];
 }
@@ -161,7 +207,6 @@ typedef void (^CompletionBlockType)(id);
     if ([self isOwner])
     {
         //post to firebase
-        [[self.ref childByAppendingPath:@"color"] setValue:color];
         [[NSUserDefaults standardUserDefaults] setObject:color forKey:@"color"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
@@ -174,15 +219,23 @@ typedef void (^CompletionBlockType)(id);
     if ([self isOwner])
     {
         //post to firebase
-        [[self.ref childByAppendingPath:@"icon"] setValue:icon];
+//        [[self.ref childByAppendingPath:@"icon"] setValue:icon];
         [[NSUserDefaults standardUserDefaults] setObject:icon forKey:@"icon"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
+-(void)synchWithFirebase
+{
+    if ([self isOwner] && self.fuser && self.fuser.userId)
+    {
+        [[self.ref childByAppendingPath:@"color"] setValue:color];
+    }
+}
+
 -(BOOL)isOwner
 {
-    return self == ((FCAppDelegate*)([UIApplication sharedApplication].delegate)).owner;
+    return self == [FCUser owner];
 }
 
 

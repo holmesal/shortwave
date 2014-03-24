@@ -72,7 +72,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.owner = [(FCAppDelegate *)[[UIApplication sharedApplication] delegate] owner];
+    self.owner = [FCUser owner];
     // Setup the firebase ref
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     

@@ -13,6 +13,6 @@
 @interface FCAppDelegate : UIResponder <ESApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) FCUser *owner;
+
 
 @end
