@@ -27,6 +27,7 @@
 //@property NSString *thirdPartyId;
 @property NSNumber *major;
 @property NSNumber *minor;
+@property NSString *deviceToken;
 
 @property (nonatomic) FCBeacon *beacon;
 @property (nonatomic) FAUser *fuser;

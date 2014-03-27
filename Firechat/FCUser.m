@@ -19,7 +19,6 @@ typedef void (^CompletionBlockType)(id);
 
 @interface FCUser ()
 @property (nonatomic, copy) CompletionBlockType completionBlock;
-@property (nonatomic) FirebaseSimpleLogin* authClient;
 @end
 
 @implementation FCUser
@@ -85,6 +84,7 @@ static FCUser *currentUser;
     [[self.ref childByAppendingPath:@"userId"] setValue:userId];
     [[self.ref childByAppendingPath:@"major"] setValue:self.major];
     [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
+    [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
     {
@@ -145,9 +145,11 @@ static FCUser *currentUser;
 # pragma mark - push notification registration
 - (void)sendProviderDeviceToken:(NSData *)token
 {
-    NSString *hexToken = [self hexStringFromData:token];
-    NSLog(@"Got token, sending this to firebase: %@",hexToken);
-    [[self.ref childByAppendingPath:@"deviceToken"] setValue:hexToken];
+    self.deviceToken = [self hexStringFromData:token];
+    NSLog(@"Got token: %@",self.deviceToken);
+    
+    // This will fail if not logged in but no big deal
+    [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
 }
 
 - (NSString *)hexStringFromData:(NSData *)data

@@ -171,8 +171,8 @@
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
 				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
-				C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */,
 				AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */,
+				C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */,
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
@@ -646,7 +646,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "2076664E-2BED-431F-B19E-82BB6EF3F7C3";
+				PROVISIONING_PROFILE = "9D70C728-EC7A-4F59-9C5B-EC1DD548AA14";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -679,7 +679,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "2076664E-2BED-431F-B19E-82BB6EF3F7C3";
+				PROVISIONING_PROFILE = "9D70C728-EC7A-4F59-9C5B-EC1DD548AA14";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -697,7 +697,9 @@
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
 					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
-					"/Users/ethan/Documents/iPhone\\ workspace/earshot",
+					/Users/ethan/Documents/iPhone,
+					workspace/earshot,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
@@ -726,7 +728,9 @@
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
 					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
-					"/Users/ethan/Documents/iPhone\\ workspace/earshot",
+					/Users/ethan/Documents/iPhone,
+					workspace/earshot,
+					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
