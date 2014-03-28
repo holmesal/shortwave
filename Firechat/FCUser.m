@@ -13,6 +13,7 @@
 #include "FCAppDelegate.h"
 #import "UIColor+HexString.h"
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
+#import <Mixpanel/Mixpanel.h>
 
 
 typedef void (^CompletionBlockType)(id);
@@ -85,6 +86,12 @@ static FCUser *currentUser;
     [[self.ref childByAppendingPath:@"major"] setValue:self.major];
     [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
     [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
+    
+    // Set via mixpanel
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel identify:self.id];
+    [mixpanel.people set:@{@"userID": self.id}];
+    [mixpanel.people set:@{@"name": self.id}];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
     {
@@ -242,6 +249,10 @@ static FCUser *currentUser;
             Firebase *colorRef = [self.ref childByAppendingPath:@"color"];
             [colorRef setValue:color];
         }
+        
+        // Set via mixpanel
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel.people set:@{@"color": clr}];
     }
 }
 
@@ -261,6 +272,10 @@ static FCUser *currentUser;
             Firebase *colorRef = [self.ref childByAppendingPath:@"icon"];
             [colorRef setValue:icon];
         }
+        
+        // Set via mixpanel
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel.people set:@{@"icon": icn}];
     }
 }
 

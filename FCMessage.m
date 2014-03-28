@@ -8,7 +8,7 @@
 
 #import "FCMessage.h"
 #import "FCUser.h"
-#
+#import <Mixpanel/Mixpanel.h>
 
 @implementation FCMessage
 
@@ -77,6 +77,12 @@
     Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
     [ownerMessageRef setValue:message];
     [self setTimestampAsNow:ownerMessageRef];
+    
+    // Finally, log the message
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"Message Sent" properties:@{
+                                                 @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy},
+                                                 @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[beaconIds count]]}];
     
 
 }

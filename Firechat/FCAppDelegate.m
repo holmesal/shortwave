@@ -18,6 +18,7 @@
 #import "ESCoreDataController.h"
 #import "Beacon.h" //NSManagedObject (core data)
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
+#import <Mixpanel/Mixpanel.h>
 
 @interface FCAppDelegate () <UIAlertViewDelegate>
 
@@ -72,6 +73,15 @@
 //        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:signupController];
 //        self.window.rootViewController = navController;
 //    }
+    
+    
+    // Add mixpanel
+    #define MIXPANEL_TOKEN @"8a3d5ae8ce286cefdff58b462b124250"
+    
+    // Initialize the library with your
+    // Mixpanel project token, MIXPANEL_TOKEN
+    [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+
     
     
 

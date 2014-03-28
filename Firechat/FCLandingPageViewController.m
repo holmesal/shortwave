@@ -10,6 +10,7 @@
 #import "FCLiveBlurButton.h"
 #import "FCAppDelegate.h"
 #import "FCWallViewController.h"
+#import <Mixpanel/Mixpanel.h>
 typedef enum
 {
     PanGestureDirectionNone,
@@ -46,6 +47,8 @@ typedef enum
 
 @property (nonatomic) NSArray *icons;
 @property (nonatomic) NSArray *colors;
+
+@property Mixpanel *mixpanel;
 
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
@@ -100,6 +103,8 @@ typedef enum
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     
+    self.mixpanel = [Mixpanel sharedInstance];
+    
     
     //hide welcomeVIew2
     [welcomeView2 setBackgroundColor:[UIColor clearColor]];
@@ -130,6 +135,9 @@ typedef enum
     // @"5", @"6", @"7"];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
+    
+    // Mixpanel init
+    [self.mixpanel track:@"Icon/color select screen loaded" properties:@{@"loggedIn": ([self userIsLoggedIn]?@"true":@"false") }];
     
     int randIcon = esRandomNumberIn(0, icons.count);
     
@@ -288,6 +296,8 @@ typedef enum
     [startTalkingBlurButton invalidatePressedLayer];
     [welcomeView2 setAlpha:0.0f];
     [welcomeView2 setBackgroundColor:[UIColor clearColor] ];
+    
+    [self.mixpanel track:@"Second welcome screen loaded"];
     
     __block CGRect tempFrame = welcomeView2.frame;
     tempFrame.origin.x = (self.view.frame.size.width -tempFrame.size.width)*0.5f;
