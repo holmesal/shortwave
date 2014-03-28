@@ -97,7 +97,10 @@ static FCUser *currentUser;
     {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
         //greeting msesage post to their wall
-        [self postHello];
+        [self postHello:@"Hey! Welcome to Earshot!"];
+        [self postHello:@"You can see how many people are in range above."];
+        [self postHello:@"Tap your icon in the upper right to change your icon/color."];
+        [self postHello:@"That's it - have fun!"];
     }
 
 }
@@ -304,22 +307,22 @@ static FCUser *currentUser;
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];
 }
--(void)postHello
+-(void)postHello:(NSString *)message
 {
     Firebase *wall = [[[[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
     Firebase *post = [[wall childByAppendingPath:@"wall"] childByAutoId];
-    [post setValue:self.generateFirstPost];
+    [post setValue:[self generateFirstPost:message]];
+    [[post childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
 }
 
--(NSDictionary*)generateFirstPost
+-(NSDictionary*)generateFirstPost:(NSString *)message
 {
     
     
     return @{@"color": @"FFFFFF" ,
              @"icon":@"nakedicon",
              @"ownerID":self.id,
-             @"text":@"Hey! Welcome to Earshot!",
-             @"timestamp": [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]};
+             @"text":message};
 }
 
 - (NSString *)getRandomColor
