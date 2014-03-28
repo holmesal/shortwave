@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Buildco. All rights reserved.
 //
 
-#define kAlwaysLocalUpdateWhenEncounteringAnyBeacon 0
+#define kAlwaysLocalUpdateWhenEncounteringAnyBeacon 1
 
 //#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
@@ -207,6 +207,7 @@
 
 
 #pragma mark discover beacons
+//this code is not actually ever used
 -(void)beaconsDiscovered:(NSNotification*)notification
 {
     NSArray *newBeacons = notification.object;
@@ -238,6 +239,8 @@
             }
             
         }
+        
+        NSLog(@"it is %@a new beacon", (hasEncounteredNewBeacon?@" ": @"NOT " ));
         
         //Change this bellow to see new people
         if (hasEncounteredNewBeacon || kAlwaysLocalUpdateWhenEncounteringAnyBeacon) //|| YES)
