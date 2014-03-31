@@ -443,7 +443,7 @@
 				ORGANIZATIONNAME = Buildco;
 				TargetAttributes = {
 					C02CE389186808B000305FC9 = {
-						DevelopmentTeam = SQ4LKA86HJ;
+						DevelopmentTeam = YXG5MLKLJ3;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
