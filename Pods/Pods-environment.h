@@ -16,7 +16,7 @@
 #define COCOAPODS_POD_AVAILABLE_PHFComposeBarView
 #define COCOAPODS_VERSION_MAJOR_PHFComposeBarView 2
 #define COCOAPODS_VERSION_MINOR_PHFComposeBarView 0
-#define COCOAPODS_VERSION_PATCH_PHFComposeBarView 0
+#define COCOAPODS_VERSION_PATCH_PHFComposeBarView 1
 
 // PHFDelegateChain
 #define COCOAPODS_POD_AVAILABLE_PHFDelegateChain

@@ -214,8 +214,8 @@
     
     NSManagedObjectContext *managedObjectContext = [[ESCoreDataController sharedInstance] masterManagedObjectContext];
     
-    [managedObjectContext performBlock:^{
-    
+    [managedObjectContext performBlock:^
+    {
         BOOL hasEncounteredNewBeacon = NO;
         for (CLBeacon *beacon in newBeacons)
         {
