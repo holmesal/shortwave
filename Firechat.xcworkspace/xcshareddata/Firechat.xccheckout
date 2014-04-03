@@ -5,14 +5,12 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>ABB24B48-F6F9-493B-90BA-7571A60639A0</string>
+	<string>2A8E6BA2-43E8-4E50-89B5-64CE4386E3A9</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Firechat</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>9579A83A-974B-43CB-AA52-B2D473F960F2</key>
-		<string>ssh://github.com/holmesal/earshot.git</string>
-		<key>FA491CE6-1F40-4E42-9A3D-3886D3D37D44</key>
 		<string>ssh://github.com/holmesal/earshot.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
@@ -21,8 +19,6 @@
 	<dict>
 		<key>9579A83A-974B-43CB-AA52-B2D473F960F2</key>
 		<string>..</string>
-		<key>FA491CE6-1F40-4E42-9A3D-3886D3D37D44</key>
-		<string>../../../../Developer/ios/Firechat</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://github.com/holmesal/earshot.git</string>
@@ -37,14 +33,6 @@
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>9579A83A-974B-43CB-AA52-B2D473F960F2</string>
-			<key>IDESourceControlWCCName</key>
-			<string>Firechat</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>FA491CE6-1F40-4E42-9A3D-3886D3D37D44</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Firechat</string>
 		</dict>

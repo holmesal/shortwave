@@ -58,6 +58,7 @@
 		C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */; };
 		C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */; };
 		C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124D186D3D5F00BA89EA /* FCUser.m */; };
+		C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */; };
 /* End PBXBuildFile section */
@@ -153,6 +154,8 @@
 		C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCPostMessageViewController.m; path = Firechat/FCPostMessageViewController.m; sourceTree = "<group>"; };
 		C05E124C186D3D5F00BA89EA /* FCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCUser.h; sourceTree = "<group>"; };
 		C05E124D186D3D5F00BA89EA /* FCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCUser.m; sourceTree = "<group>"; };
+		C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTransponder.h; sourceTree = "<group>"; };
+		C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTransponder.m; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0EE1D3A18A3383300663283 /* FCAnonOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCAnonOverlayViewController.h; path = Firechat/FCAnonOverlayViewController.h; sourceTree = "<group>"; };
 		C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCAnonOverlayViewController.m; path = Firechat/FCAnonOverlayViewController.m; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
 				C05742E518831F73002509DB /* FCBeacon.h */,
 				C05742E618831F73002509DB /* FCBeacon.m */,
+				C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */,
+				C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */,
 				C02CE3D9186814A700305FC9 /* FCMessage.h */,
 				C02CE3DA186814A700305FC9 /* FCMessage.m */,
 			);
@@ -536,6 +541,7 @@
 			files = (
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
+				C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */,
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
