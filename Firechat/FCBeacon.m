@@ -349,10 +349,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 //            //ranging is shot off here by calling didEnterRegion
             [self locationManager:manager didEnterRegion:region];
             
-            //send notification that user is inside;
-            
-//            NSLog(@"CLRegionStateInside");
-            
+
             
             UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 

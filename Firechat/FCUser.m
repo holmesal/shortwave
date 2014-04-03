@@ -317,12 +317,11 @@ static FCUser *currentUser;
 
 -(NSDictionary*)generateFirstPost:(NSString *)message
 {
-    
-    
     return @{@"color": @"FFFFFF" ,
              @"icon":@"nakedicon",
-             @"ownerID":self.id,
-             @"text":message};
+             @"text":message,
+             @"meta":@{@"ownerID":@"Welcome:Bot"}
+             };
 }
 
 - (NSString *)getRandomColor

@@ -12,6 +12,8 @@
 #import "FCMessage.h"
 #import "FCMessageCell.h"
 #import "ProfileCollectionViewCell.h"
+#import "ESSwapUserStateMessage.h"
+#import "ESSwapUserStateCell.h"
 
 #import "FCLandingPageViewController.h"
 
@@ -215,6 +217,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"shouldPostSwapUserMessageWhenStateChange"];
     
     
     lineLayer = [CAShapeLayer layer];
@@ -513,18 +517,39 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        {
         
             NSLog(@"GOT MESSAGE!");
+        
+            if ([snapshot.value isKindOfClass:[NSDictionary class]])
+            {
             
-            FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
-            // Init a new message
-            [weakSelf.wall insertObject:message atIndex:0];
-            NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
-            [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
-            
-            // Scroll to the new message
-            [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-            
-            [weakSelf updateLine];
-            
+                if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
+                {
+                    ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+                    [weakSelf.wall insertObject:swapMsg atIndex:0];
+                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+                    
+                    // Scroll to the new message
+                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    
+                    [weakSelf updateLine];
+                    
+                    //timer to prform some operation on this cell
+                    
+                } else
+                {//implies type isEqual "ESMessage" or no type exists
+                
+                    FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
+                    // Init a new message
+                    [weakSelf.wall insertObject:message atIndex:0];
+                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+                    
+                    // Scroll to the new message
+                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    
+                    [weakSelf updateLine];
+                }
+            }
 //        }
     }];
 }
@@ -549,40 +574,83 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (tableView == tV)
     {
-        static NSString *CellIdentifier = @"MessageCell";
-        FCMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-
-//        [cell setBackgroundColor:[UIColor yellowColor]];
-        
-        // Flip the cell 180 degrees
-        cell.transform = CGAffineTransformMakeRotation(M_PI);
-        
-        // Configure the cell...
-        FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-        
-        // Set message cell values
-        [cell setMessage:message];
-        
-        // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
-        cell.ownerID = message.ownerID;
-        NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-        NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
-        
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-
-        BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
-        
-        FCUser *me = [FCUser owner];
-        NSString *myId = me.id;
-        BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
-        
-        BOOL isFaded = !beaconFound && !messageBelongsToMe;
-        [cell setFaded:isFaded animated:NO];
-
-        
-        return cell;
-    }
+        id unknownTypeOfMessage = [self.wall objectAtIndex:indexPath.row];
     
+        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
+        {
+            FCMessage *message = unknownTypeOfMessage;
+            
+            static NSString *CellIdentifier = @"MessageCell";
+            static NSString *ownerCellIdentifire = @"OwnerMessageCell";
+            
+            
+            FCMessageCell *cell;
+            if ([[FCUser owner].id isEqualToString:message.ownerID])
+            {
+                cell = [tableView dequeueReusableCellWithIdentifier:ownerCellIdentifire forIndexPath:indexPath];
+            } else
+            {
+                cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+            }
+            
+            
+            
+
+            // [cell setBackgroundColor:[UIColor yellowColor]];
+            
+            // Flip the cell 180 degrees
+            cell.transform = CGAffineTransformMakeRotation(M_PI);
+            
+            
+            
+            // Set message cell values
+            [cell setMessage:message];
+            
+            // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
+            cell.ownerID = message.ownerID;
+            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+            
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+
+            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
+            
+            FCUser *me = [FCUser owner];
+            NSString *myId = me.id;
+            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
+            
+            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
+            
+
+            
+            [cell setFaded:isFaded animated:NO];
+
+            
+            return cell;
+        } else
+        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+        {
+            static NSString *swapIdentifier = @"SwapCell";
+            
+            ESSwapUserStateMessage *message = unknownTypeOfMessage;
+            ESSwapUserStateCell *cell = [tableView dequeueReusableCellWithIdentifier:swapIdentifier forIndexPath:indexPath];
+            
+            // [cell setBackgroundColor:[UIColor yellowColor]];
+            
+            // Flip the cell 180 degrees
+            cell.transform = CGAffineTransformMakeRotation(M_PI);
+            [cell setFromColor:message.fromColor andIcon:message.fromIcon toColor:message.toColor andIcon:message.toIcon];
+            
+            if (!message.hasDoneFirstTimeAnimation)
+            {
+                message.hasDoneFirstTimeAnimation = YES;
+                
+                [cell doFirstTimeAnimation];
+            }
+            
+            return cell;
+        }
+    }
     return nil;
 }
 
@@ -592,15 +660,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         return 0.0f;
     }
-    FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-    
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
-    CGSize constraintSize = {225.0f, 700};
-    CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
-    CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
-    
+    id unknownType = [self.wall objectAtIndex:indexPath.row];
 
-    return height;
+    if ([unknownType isKindOfClass:[FCMessage class]])
+    {
+
+        FCMessage *message = [self.wall objectAtIndex:indexPath.row];
+        
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+        CGSize constraintSize = {225.0f, 700};
+        CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
+        CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
+        return height;
+    } else
+    if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
+    {
+        return 50;
+    }
+    
+    return 0;
+
+
 }
 
 # pragma mark - keyboard did show/hide
@@ -929,23 +1009,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     for (FCMessageCell *mssgCell in tableView.visibleCells)
     {
-        NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-        NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+        if ([mssgCell isKindOfClass:[FCMessageCell class]])
+        {
+            NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+            NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
         
-        id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
-        BOOL beaconFound = obj ? YES : NO;
-        
-        FCUser *me = [FCUser owner];
-        
-        NSString *myId = me.id;
-        BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
-        
-        BOOL isFaded = !beaconFound && !messageBelongsToMe;
-        
-        
-        [mssgCell setFaded:isFaded animated:YES];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+            
+            id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
+            BOOL beaconFound = obj ? YES : NO;
+            
+            FCUser *me = [FCUser owner];
+            
+            NSString *myId = me.id;
+            BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
+            
+            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![mssgCell.ownerID isEqualToString:@"Welcome:Bot"];
+#warning somthing is wrong here
+            
+            [mssgCell setFaded:isFaded animated:YES];
+        }
     }
     
     [self updatePeopleNearby:self.beacons.count];

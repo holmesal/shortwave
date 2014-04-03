@@ -12,7 +12,10 @@
 		AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */; };
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
 		AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */; };
+		AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */; };
+		AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
+		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
@@ -84,8 +87,14 @@
 		AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLiveBlurButton.m; sourceTree = "<group>"; };
 		AA69A5EB18D7B4D4000E6781 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
+		AA6BB86C18ED141E00EE6CF5 /* ESSwapUserStateMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESSwapUserStateMessage.h; sourceTree = "<group>"; };
+		AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESSwapUserStateMessage.m; sourceTree = "<group>"; };
+		AA6BB86F18ED180000EE6CF5 /* ESSwapUserStateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESSwapUserStateCell.h; sourceTree = "<group>"; };
+		AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESSwapUserStateCell.m; sourceTree = "<group>"; };
 		AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColor.h"; sourceTree = "<group>"; };
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
+		AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCOwnerMessageCell.h; sourceTree = "<group>"; };
+		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOwnerMessageCell.m; sourceTree = "<group>"; };
 		AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
@@ -236,6 +245,8 @@
 				C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */,
 				C02CE3D9186814A700305FC9 /* FCMessage.h */,
 				C02CE3DA186814A700305FC9 /* FCMessage.m */,
+				AA6BB86C18ED141E00EE6CF5 /* ESSwapUserStateMessage.h */,
+				AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -243,10 +254,14 @@
 		AA1F2DEF18C3D91A0087AAF7 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */,
+				AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */,
 				C02CE3EC1868CD3000305FC9 /* FCMessageCell.h */,
 				C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */,
 				AA69A5E818D7AD27000E6781 /* FCLiveBlurButton.h */,
 				AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */,
+				AA6BB86F18ED180000EE6CF5 /* ESSwapUserStateCell.h */,
+				AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -547,6 +562,7 @@
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
+				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
 				AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */,
 				C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */,
 				AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */,
@@ -554,6 +570,7 @@
 				AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */,
 				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
+				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
 				AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */,
@@ -561,6 +578,7 @@
 				AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */,
 				AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */,
 				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
+				AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,

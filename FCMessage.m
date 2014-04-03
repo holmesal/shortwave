@@ -18,10 +18,10 @@
     if(!self) return Nil;
     
     self.text = [snapshot.value valueForKey:@"text"];
-    self.ownerID = [snapshot.value valueForKey:@"ownerID"];
+    self.ownerID = [[snapshot.value valueForKey:@"meta"] objectForKey:@"ownerID"];
+    NSLog(@"self.ownerID = %@", self.ownerID);
     self.icon = [snapshot.value valueForKey:@"icon"];
     self.color = [snapshot.value valueForKey:@"color"];
-    
     
     return self;
     
@@ -43,11 +43,17 @@
     }
     
     
-    NSDictionary *message = @{@"ownerID": owner.id,
+    
+    
+    NSDictionary *message = @{@"type":@"FCMessage",
                               @"color": owner.color,
                               @"icon": owner.icon,
                               @"text": text,
-                              @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy} };
+                              @"meta":
+                                  @{@"ownerID": owner.id, @"location":
+                                        @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
+                                    }
+                              };
     // Grab the current list of iBeacons
     NSArray *beaconIds = [owner.beacon getBeaconIds];
     

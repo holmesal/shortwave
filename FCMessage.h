@@ -12,6 +12,8 @@
 
 @interface FCMessage : NSObject
 
+
+
 @property (nonatomic) CLLocation *location;
 @property NSString *text;
 //@property NSURL *imageUrl;

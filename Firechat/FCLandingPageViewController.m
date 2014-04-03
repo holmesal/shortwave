@@ -11,6 +11,7 @@
 #import "FCAppDelegate.h"
 #import "FCWallViewController.h"
 #import <Mixpanel/Mixpanel.h>
+#import "ESSwapUserStateMessage.h"
 typedef enum
 {
     PanGestureDirectionNone,
@@ -265,6 +266,30 @@ typedef enum
     
     NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
     //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldPostSwapUserMessageWhenStateChange"])
+    {
+        //if state actually changed
+        NSString *oldIcon = owner.icon;
+        NSString *oldColor = owner.color;
+        
+        NSString *newIcon = iconIndexStr;
+        NSString *newColor = [self.view.backgroundColor toHexString];
+        NSLog(@"newColor = %@ oldColor = %@", newColor, owner.color);
+        if (![oldColor isEqualToString:newColor] || ![oldIcon isEqualToString:newIcon])
+        {
+            //post a change message
+            
+            ESSwapUserStateMessage *swapStateMessage = [[ESSwapUserStateMessage alloc] initWithOldIcon:oldIcon oldColor:oldColor newIcon:newIcon newColor:newColor];
+            [swapStateMessage postMessageAsOwner];
+            
+        }
+            
+        
+    }
+    
+    
     owner.color = [self.view.backgroundColor toHexString];
     owner.icon = iconIndexStr;
     
