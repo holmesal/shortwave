@@ -56,15 +56,15 @@
 		C02CE3DB186814A700305FC9 /* FCMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3DA186814A700305FC9 /* FCMessage.m */; };
 		C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */; };
 		C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C02CE3F11868D1A500305FC9 /* AsyncImageView.m */; };
-		C02EBAB918EE82AE004D93F6 /* CBCentralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB418EE82AE004D93F6 /* CBCentralManager+Ext.m */; };
-		C02EBABA18EE82AE004D93F6 /* CBPeripheralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB618EE82AE004D93F6 /* CBPeripheralManager+Ext.m */; };
-		C02EBABB18EE82AE004D93F6 /* CBUUID+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C02EBAB818EE82AE004D93F6 /* CBUUID+Ext.m */; };
 		C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C057427C187BA5FE002509DB /* CoreLocation.framework */; };
 		C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C057427E187BA603002509DB /* CoreBluetooth.framework */; };
 		C05742E718831F73002509DB /* FCBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = C05742E618831F73002509DB /* FCBeacon.m */; };
 		C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */; };
 		C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */; };
 		C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124D186D3D5F00BA89EA /* FCUser.m */; };
+		C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A1FE18EF54C3000C9D3C /* CBCentralManager+Ext.m */; };
+		C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A20018EF54C3000C9D3C /* CBPeripheralManager+Ext.m */; };
+		C070A20518EF54C3000C9D3C /* CBUUID+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */; };
 		C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */; };
@@ -159,12 +159,6 @@
 		C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCMessageCell.m; sourceTree = "<group>"; };
 		C02CE3F01868D1A500305FC9 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
 		C02CE3F11868D1A500305FC9 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
-		C02EBAB318EE82AE004D93F6 /* CBCentralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CBCentralManager+Ext.h"; path = "../../../beacons/transponder/transponder/CBCentralManager+Ext.h"; sourceTree = "<group>"; };
-		C02EBAB418EE82AE004D93F6 /* CBCentralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CBCentralManager+Ext.m"; path = "../../../beacons/transponder/transponder/CBCentralManager+Ext.m"; sourceTree = "<group>"; };
-		C02EBAB518EE82AE004D93F6 /* CBPeripheralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CBPeripheralManager+Ext.h"; path = "../../../beacons/transponder/transponder/CBPeripheralManager+Ext.h"; sourceTree = "<group>"; };
-		C02EBAB618EE82AE004D93F6 /* CBPeripheralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CBPeripheralManager+Ext.m"; path = "../../../beacons/transponder/transponder/CBPeripheralManager+Ext.m"; sourceTree = "<group>"; };
-		C02EBAB718EE82AE004D93F6 /* CBUUID+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CBUUID+Ext.h"; path = "../../../beacons/transponder/transponder/CBUUID+Ext.h"; sourceTree = "<group>"; };
-		C02EBAB818EE82AE004D93F6 /* CBUUID+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "CBUUID+Ext.m"; path = "../../../beacons/transponder/transponder/CBUUID+Ext.m"; sourceTree = "<group>"; };
 		C057427C187BA5FE002509DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C057427E187BA603002509DB /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		C05742E518831F73002509DB /* FCBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCBeacon.h; sourceTree = "<group>"; };
@@ -175,6 +169,12 @@
 		C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCPostMessageViewController.m; path = Firechat/FCPostMessageViewController.m; sourceTree = "<group>"; };
 		C05E124C186D3D5F00BA89EA /* FCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCUser.h; sourceTree = "<group>"; };
 		C05E124D186D3D5F00BA89EA /* FCUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCUser.m; sourceTree = "<group>"; };
+		C070A1FD18EF54C3000C9D3C /* CBCentralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBCentralManager+Ext.h"; sourceTree = "<group>"; };
+		C070A1FE18EF54C3000C9D3C /* CBCentralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBCentralManager+Ext.m"; sourceTree = "<group>"; };
+		C070A1FF18EF54C3000C9D3C /* CBPeripheralManager+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBPeripheralManager+Ext.h"; sourceTree = "<group>"; };
+		C070A20018EF54C3000C9D3C /* CBPeripheralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheralManager+Ext.m"; sourceTree = "<group>"; };
+		C070A20118EF54C3000C9D3C /* CBUUID+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBUUID+Ext.h"; sourceTree = "<group>"; };
+		C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+Ext.m"; sourceTree = "<group>"; };
 		C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTransponder.h; sourceTree = "<group>"; };
 		C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTransponder.m; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
@@ -296,12 +296,12 @@
 		AA8EC98B18C5039500A8C4DC /* extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C02EBAB318EE82AE004D93F6 /* CBCentralManager+Ext.h */,
-				C02EBAB418EE82AE004D93F6 /* CBCentralManager+Ext.m */,
-				C02EBAB518EE82AE004D93F6 /* CBPeripheralManager+Ext.h */,
-				C02EBAB618EE82AE004D93F6 /* CBPeripheralManager+Ext.m */,
-				C02EBAB718EE82AE004D93F6 /* CBUUID+Ext.h */,
-				C02EBAB818EE82AE004D93F6 /* CBUUID+Ext.m */,
+				C070A1FD18EF54C3000C9D3C /* CBCentralManager+Ext.h */,
+				C070A1FE18EF54C3000C9D3C /* CBCentralManager+Ext.m */,
+				C070A1FF18EF54C3000C9D3C /* CBPeripheralManager+Ext.h */,
+				C070A20018EF54C3000C9D3C /* CBPeripheralManager+Ext.m */,
+				C070A20118EF54C3000C9D3C /* CBUUID+Ext.h */,
+				C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */,
 				AA69A5EB18D7B4D4000E6781 /* UIImage+ImageEffects.h */,
 				AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */,
 				AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */,
@@ -583,7 +583,7 @@
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
 				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
-				C02EBAB918EE82AE004D93F6 /* CBCentralManager+Ext.m in Sources */,
+				C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */,
 				AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */,
 				C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */,
 				AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */,
@@ -598,7 +598,7 @@
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */,
 				AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */,
-				C02EBABB18EE82AE004D93F6 /* CBUUID+Ext.m in Sources */,
+				C070A20518EF54C3000C9D3C /* CBUUID+Ext.m in Sources */,
 				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
 				AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
@@ -607,7 +607,7 @@
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
 				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
-				C02EBABA18EE82AE004D93F6 /* CBPeripheralManager+Ext.m in Sources */,
+				C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -235,6 +235,7 @@
         case CBPeripheralManagerStatePoweredOn:
         {
             self.peripheralManagerIsRunning = YES;
+            [self blueToothStackIsActive];
             [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(startScanning) userInfo:nil repeats:NO];
 //            [self startScanning];
         }
@@ -494,28 +495,28 @@
     }
 }
 
--(BOOL)peripheralManagerIsRunning
-{
-    BOOL isOK = NO;
-    switch ([ CLLocationManager authorizationStatus] ) {
-        case kCLAuthorizationStatusAuthorized:
-            isOK = YES;
-            break;
-        case kCLAuthorizationStatusDenied:
-            isOK = NO;
-            break;
-        case kCLAuthorizationStatusNotDetermined:
-            isOK = NO;
-            break;
-        case kCLAuthorizationStatusRestricted:
-            isOK = NO;
-            break;
-            
-    }
-    
-    BOOL val = self.peripheralManagerIsRunning && isOK;
-    return val;
-}
+//-(BOOL)peripheralManagerIsRunning
+//{
+//    BOOL isOK = NO;
+//    switch ([ CLLocationManager authorizationStatus] ) {
+//        case kCLAuthorizationStatusAuthorized:
+//            isOK = YES;
+//            break;
+//        case kCLAuthorizationStatusDenied:
+//            isOK = NO;
+//            break;
+//        case kCLAuthorizationStatusNotDetermined:
+//            isOK = NO;
+//            break;
+//        case kCLAuthorizationStatusRestricted:
+//            isOK = NO;
+//            break;
+//            
+//    }
+//    
+//    BOOL val = self.peripheralManagerIsRunning && isOK;
+//    return val;
+//}
 
 -(CLLocation*)getLocation
 {

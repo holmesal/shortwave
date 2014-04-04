@@ -134,6 +134,9 @@ static FCUser *currentUser;
 //        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
         // Init the transponder class
         self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id];
+        
+        // Listen for beacon discover events
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:@"earshotDiscover" object:nil];
     }
     
     return self;
@@ -174,6 +177,14 @@ static FCUser *currentUser;
 		}
 	}];
 	return hex;
+}
+
+# pragma mark - bluetooth discover events
+- (void)bluetoothDiscover:(NSNotification *)note
+{
+    // Got a beacon from the bluetooth stack
+    NSLog(@"Got a discover event!");
+    NSLog(@"%@",note.userInfo);
 }
 
 
