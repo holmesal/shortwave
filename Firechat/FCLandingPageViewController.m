@@ -88,18 +88,40 @@ typedef enum
 }
 
 
+-(void)reanimate
+{
+    NSLog(@"reanimate");
+    [self.spinnerImageView.layer removeAllAnimations];
+    
+//    [UIView animateWithDuration:40.0f
+//                          delay:0.0f
+//                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
+//                     animations:^{
+//                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
+//                     }
+//                     completion:nil
+//     ];
+
+
+    CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    
+    animation.fromValue       = @0.0f;
+    animation.toValue         = @M_PI;
+    animation.duration        = 40.0f;
+    animation.timingFunction  = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+    animation.autoreverses    = NO;
+    animation.repeatCount     = HUGE_VALF;
+    animation.keyPath = @"transform.rotation.z";
+    
+    [[self.spinnerImageView layer] addAnimation:animation forKey:@"transform.rotation.z"];
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [UIView animateWithDuration:40.0f
-                          delay:0.0f
-                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
-                     animations:^{
-                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
-                     }
-                     completion:nil
-     ];
+
+//    [self reanimate];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -318,7 +340,7 @@ typedef enum
     [welcomeView2 setHidden:NO];
     [welcomeView2 setAlpha:1.0f];//unhide for invalidatePressedLayer on blurButton
     [welcomeView2 setBackgroundColor:self.view.backgroundColor];
-    [startTalkingBlurButton invalidatePressedLayer];
+//    [startTalkingBlurButton invalidatePressedLayer];
     [welcomeView2 setAlpha:0.0f];
     [welcomeView2 setBackgroundColor:[UIColor clearColor] ];
     
@@ -388,7 +410,11 @@ typedef enum
                   welcomeView2.alpha = 1.0f;
                   
               } completion:^(BOOL finished)
-              {}];
+              {
+                  startTalkingBlurButton.backgroundColor = self.view.backgroundColor;
+//                  [startTalkingBlurButton setBackgroundColor:self.view.backgroundColor];
+                  [startTalkingBlurButton invalidatePressedLayer];
+              }];
          }
      }];
 
@@ -576,6 +602,8 @@ typedef enum
 {
     [super viewDidAppear:animated];
     
+    [self reanimate];
+    
     
     
     //this is to fade in the view after splash screen is gone
@@ -607,6 +635,7 @@ typedef enum
 {
 //    NSLog(@"panGesture = %@", panGesture);
 
+    
     CGPoint velocity = [panGesture velocityInView:self.view];
 //    CGPoint location = [panGesture locationInView:self.view];
     CGPoint translation = [panGesture translationInView:self.view];
@@ -620,7 +649,7 @@ typedef enum
             //determine what kind of swipe, up down left or right
         case UIGestureRecognizerStateBegan:
         {
-//            NSLog(@"UIGestureRecognizerStateBegan");
+            NSLog(@"UIGestureRecognizerStateBegan");
             self.stateChanged = NO;
             
 //            NSLog(@"velocity = %@", NSStringFromCGPoint(velocity));
@@ -655,7 +684,7 @@ typedef enum
         break;
         case UIGestureRecognizerStateChanged:
         {
-//            NSLog(@"UIGestureRecognizerStateChanged");
+            NSLog(@"UIGestureRecognizerStateChanged translation.x = %f", translation.x);
             self.stateChanged = YES;
             
             CGFloat percent = 0;
@@ -665,21 +694,27 @@ typedef enum
 
                 case PanGestureDirectionLeft:
                 {
+
                     percent = translation.x/swipeWidth;
+                    NSLog(@"PanGestureDirectionLeft %f", percent);
                 }
                 break;
                 case PanGestureDirectionRight:
                 {
+                    NSLog(@"PanGestureDirectionRight");
                     percent = translation.x/swipeWidth;
+                    NSLog(@"PanGestureDirectionLeft %f", percent);
                 }
                 break;
                 case PanGestureDirectionUp:
                 {
+                    NSLog(@"PanGestureDirectionUp");
                     percent = translation.y/swipeHeight;
                 }
                 break;
                 case PanGestureDirectionDown:
                 {
+                    NSLog(@"PanGestureDirectionDown");
                     percent = translation.y/swipeHeight;
                 }
                 break;
@@ -692,7 +727,10 @@ typedef enum
 
             if (PanGestureDirectionLeft == panDirection || PanGestureDirectionRight == panDirection )
             {//Left Right color change CHANGE
-                int direction = fabsf(percent)/percent;
+                int direction =  (percent < 0 ? -1 : 1);
+                
+                NSLog(@"dirction = %d", direction);
+                
                 while (fabsf(percent >= 1))
                 {
                     
@@ -700,8 +738,12 @@ typedef enum
                     [self setColorIndex:colorIndex+direction];
                 }
                 
-                int start = self.colorIndex;
-                int end = self.colorIndex+direction;
+                NSInteger start = self.colorIndex;
+                NSInteger end = self.colorIndex+direction;
+                
+                
+//                NSLog(@"1. start, end -> %ld, %ld", start, end);
+                
                 if (end < 0)
                 {
                     end = colors.count-1;
@@ -711,13 +753,17 @@ typedef enum
                     end = 0;
                 }
                 
+//                NSLog(@"2. start, end -> %ld, %ld", start, end);
+                
                 if (direction < 0)
                 {//switch start and end colors
-                    int tempStart = start;
+                    NSInteger tempStart = start;
                     start = end;
                     end = tempStart;
                     percent += 1.0f;
                 }
+                
+//                NSLog(@"3. start, end -> %ld, %ld", start, end);
                 //percent always positive here
                 [self.view setBackgroundColor:[self colorLerpFrom:[colors objectAtIndex:start] to:[colors objectAtIndex:end] withDuration:percent]];
                 
@@ -726,7 +772,7 @@ typedef enum
             if (PanGestureDirectionUp == panDirection || PanGestureDirectionDown == panDirection)
             {
                 //up is negative, down is positive
-                int direction = fabsf(percent)/percent;
+                int direction = (percent < 0 ? -1 : 1);//fabsf(percent)/percent;
                 
                 CGFloat y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
                 
@@ -793,11 +839,11 @@ typedef enum
                 [self.iconTableView setContentOffset:CGPointMake(0, y)];
                 
             }
-//            NSLog(@"percent = %f", percent);
         }
         break;
         case UIGestureRecognizerStateEnded:
         {
+            NSLog(@"UIGestureRecognizerStateEnded");
             if (!self.stateChanged)
             {
                 return;
@@ -836,7 +882,7 @@ typedef enum
                 }
                 break;
             }
-            int direction = fabsf(percent)/percent;
+            int direction = (percent < 0 ? -1 : 1) ;//fabsf(percent)/percent;
             
             if (PanGestureDirectionLeft == panDirection || PanGestureDirectionRight == panDirection )
             {//Left Right color change END
@@ -870,7 +916,7 @@ typedef enum
             } else
             if (PanGestureDirectionUp == panDirection || PanGestureDirectionDown == panDirection)
             {
-                int direction = fabsf(percent)/percent;
+                int direction = (percent < 0 ? -1 : 1);//fabsf(percent)/percent;
                 
                 int numberOfWraps = abs((int)percent);
                 numberOfWraps = MAX(1, numberOfWraps);
@@ -1017,6 +1063,7 @@ typedef enum
 - (void)appDidEnterForeground:(NSNotification *)notification
 {
     NSLog(@"did enter foreground notification");
+    [self reanimate];
 }
 #pragma mark Notifications end
 
@@ -1041,7 +1088,6 @@ typedef enum
             if (view != self.welcomeView2)
             {
                 view.alpha = 1.0f;
-
             }
         }
     } completion:^(BOOL finished)

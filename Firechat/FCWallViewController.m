@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Buildco. All rights reserved.
 //
 
+
 #import "FCWallViewController.h"
 #import "FCAppDelegate.h"
 #import <Firebase/Firebase.h>
@@ -19,7 +20,6 @@
 #import "FCLandingPageViewController.h"
 
 #define WIDTH_OF_PM_LIST 75.0f
-
 
 
 
@@ -380,7 +380,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //pm stuff setup
     
     panLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    [self.view addGestureRecognizer:panLeftGesture];
+//    [self.view addGestureRecognizer:panLeftGesture];
     
 
     

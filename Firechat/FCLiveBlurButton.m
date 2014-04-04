@@ -113,7 +113,7 @@
         [pressedLayer removeFromSuperlayer];
     }
     [self setHidden:YES];
-    UIGraphicsBeginImageContextWithOptions(self.superview.bounds.size, YES, self.window.screen.scale);    // Still slow.
+    UIGraphicsBeginImageContextWithOptions(self.superview.bounds.size, NO, self.window.screen.scale);    // Still slow.
     
 //    if ( [AIMAppDelegate isOniOS7OrNewer] )
 //        [self drawViewHierarchyInRect:self.frame afterScreenUpdates:YES]; // Doesn't work!
