@@ -109,9 +109,11 @@
     }
     
     //also post to yourself
-    Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
-    [ownerMessageRef setValue:message];
-    [self setTimestampAsNow:ownerMessageRef];
+    //I actually don't want these posting to my wall.
+    
+    //Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
+    //[ownerMessageRef setValue:message];
+    //[self setTimestampAsNow:ownerMessageRef];
 }
 
 - (void)setTimestampAsNow:(Firebase *)ref
