@@ -405,7 +405,10 @@ typedef enum
     
     if (!owner.beacon.peripheralManagerIsRunning)
     {
-        [owner.beacon start];
+//        [owner.beacon start];
+        [owner.beacon startBroadcasting];
+        [owner.beacon startDetecting];
+        [[FCUser owner].beacon chirpBeacon];
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:@"Bluetooth Disabled" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:@"Bluetooth Enabled" object:nil];
@@ -532,8 +535,11 @@ typedef enum
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         [viewControllers addObject:nextViewController];
         [self.navigationController pushViewController:nextViewController animated:NO];
-
-        [[FCUser owner].beacon start];
+//
+//        [[FCUser owner].beacon start];
+        [[FCUser owner].beacon startBroadcasting];
+        [[FCUser owner].beacon startDetecting];
+        [[FCUser owner].beacon chirpBeacon];
         
     }
 }

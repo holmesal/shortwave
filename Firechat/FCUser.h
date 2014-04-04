@@ -9,7 +9,8 @@
 #import <Foundation/Foundation.h>
 
 
-#import "FCBeacon.h"
+//#import "FCBeacon.h"
+#import "ESTransponder.h"
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
 
 @interface FCUser : NSObject
@@ -29,7 +30,7 @@
 @property NSNumber *minor;
 @property NSString *deviceToken;
 
-@property (nonatomic) FCBeacon *beacon;
+@property (nonatomic) ESTransponder *beacon;
 @property (nonatomic) FAUser *fuser;
 
 

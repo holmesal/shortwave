@@ -164,12 +164,14 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"chirpBeacon" object:self];
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"chirpBeacon" object:self];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -206,60 +208,60 @@
 #pragma mark custom touches captured end
 
 
-#pragma mark discover beacons
-//this code is not actually ever used
--(void)beaconsDiscovered:(NSNotification*)notification
-{
-    NSArray *newBeacons = notification.object;
-    
-    NSManagedObjectContext *managedObjectContext = [[ESCoreDataController sharedInstance] masterManagedObjectContext];
-    
-    [managedObjectContext performBlock:^
-    {
-        BOOL hasEncounteredNewBeacon = NO;
-        for (CLBeacon *beacon in newBeacons)
-        {
-            NSString *majorMinor = [NSString stringWithFormat:@"%d:%d", beacon.major.intValue, beacon.minor.intValue];
-            NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"Beacon"];
-            fetch.predicate = [NSPredicate predicateWithFormat:@"(SELF.identifier == %@)", majorMinor];
-            
-            NSError *error = nil;
-            NSArray *fetchedResults = [managedObjectContext executeFetchRequest:fetch error:&error];
-            if (error)
-            {
-                NSLog(@"fetch beacon request error: %@", error.localizedDescription);
-            }
-            
-            //if I have encountered this beacon, nevermind...  else add the beacon and flag hasEncounteredNewBeacon
-            if (!fetchedResults.count)
-            {
-                hasEncounteredNewBeacon = YES;
-                Beacon *beacon = [NSEntityDescription insertNewObjectForEntityForName:@"Beacon" inManagedObjectContext:managedObjectContext];
-                beacon.identifier = majorMinor;
-            }
-            
-        }
-        
-        NSLog(@"it is %@a new beacon", (hasEncounteredNewBeacon?@" ": @"NOT " ));
-        
-        //Change this bellow to see new people
-        if (hasEncounteredNewBeacon || kAlwaysLocalUpdateWhenEncounteringAnyBeacon) //|| YES)
-        {
-            //now it is time to do a local notification!
-            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-            
-            localNotification.fireDate = [NSDate date];
-            localNotification.alertBody = @"A new person is nearby!";
-            localNotification.timeZone = [NSTimeZone defaultTimeZone];
-            
-            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-            
-            [managedObjectContext save:nil];
-        }
-        
-        
-    }];
-    
-}
-#pragma mark discover beacons end
+//#pragma mark discover beacons
+////this code is not actually ever used
+//-(void)beaconsDiscovered:(NSNotification*)notification
+//{
+//    NSArray *newBeacons = notification.object;
+//    
+//    NSManagedObjectContext *managedObjectContext = [[ESCoreDataController sharedInstance] masterManagedObjectContext];
+//    
+//    [managedObjectContext performBlock:^
+//    {
+//        BOOL hasEncounteredNewBeacon = NO;
+//        for (CLBeacon *beacon in newBeacons)
+//        {
+//            NSString *majorMinor = [NSString stringWithFormat:@"%d:%d", beacon.major.intValue, beacon.minor.intValue];
+//            NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"Beacon"];
+//            fetch.predicate = [NSPredicate predicateWithFormat:@"(SELF.identifier == %@)", majorMinor];
+//            
+//            NSError *error = nil;
+//            NSArray *fetchedResults = [managedObjectContext executeFetchRequest:fetch error:&error];
+//            if (error)
+//            {
+//                NSLog(@"fetch beacon request error: %@", error.localizedDescription);
+//            }
+//            
+//            //if I have encountered this beacon, nevermind...  else add the beacon and flag hasEncounteredNewBeacon
+//            if (!fetchedResults.count)
+//            {
+//                hasEncounteredNewBeacon = YES;
+//                Beacon *beacon = [NSEntityDescription insertNewObjectForEntityForName:@"Beacon" inManagedObjectContext:managedObjectContext];
+//                beacon.identifier = majorMinor;
+//            }
+//            
+//        }
+//        
+//        NSLog(@"it is %@a new beacon", (hasEncounteredNewBeacon?@" ": @"NOT " ));
+//        
+//        //Change this bellow to see new people
+//        if (hasEncounteredNewBeacon || kAlwaysLocalUpdateWhenEncounteringAnyBeacon) //|| YES)
+//        {
+//            //now it is time to do a local notification!
+//            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+//            
+//            localNotification.fireDate = [NSDate date];
+//            localNotification.alertBody = @"A new person is nearby!";
+//            localNotification.timeZone = [NSTimeZone defaultTimeZone];
+//            
+//            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+//            
+//            [managedObjectContext save:nil];
+//        }
+//        
+//        
+//    }];
+//    
+//}
+//#pragma mark discover beacons end
 @end

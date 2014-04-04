@@ -283,7 +283,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [peopleNearbyLabel setTextColor:[UIColor whiteColor]];
     [peopleNearbyLabel setClipsToBounds:YES];
     //begin observing "Beacons Updated" event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsUpdated:) name:@"Beacons Updated" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsUpdated:) name:@"earshotDiscover" object:nil];
     [self updatePeopleNearby:0];
 
     [self.shadeView insertSubview:peopleNearbyLabel belowSubview:self.iconButton];
@@ -1001,7 +1001,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     
     FCUser *owner = [FCUser owner];
-    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getBeaconIds].count;
+    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getUsersInRange].count;
     
     NSInteger returnValue = numberOfBecons + 1;//change this value for now
     
@@ -1190,34 +1190,35 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 #pragma mark NSNotificationCenter beaconsUpdated start
 -(void)beaconsUpdated:(NSNotification*)notification
 {
-    self.beacons = notification.object;
-    
-    for (FCMessageCell *mssgCell in tableView.visibleCells)
-    {
-        
-        if ([mssgCell isKindOfClass:[FCMessageCell class]])
-        {
-            NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-            NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
-        
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-            
-            id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
-            BOOL beaconFound = obj ? YES : NO;
-            
-            FCUser *me = [FCUser owner];
-            
-            NSString *myId = me.id;
-            BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
-            
-            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![mssgCell.ownerID isEqualToString:@"Welcome:Bot"];
-#warning somthing is wrong here
-            
-            [mssgCell setFaded:isFaded animated:YES];
-        }
-    }
-    
-    [self updatePeopleNearby:self.beacons.count];
+//    self.beacons = notification.object;
+//
+//    for (FCMessageCell *mssgCell in tableView.visibleCells)
+//    {
+//        
+//        if ([mssgCell isKindOfClass:[FCMessageCell class]])
+//        {
+//            NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+//            NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+//        
+//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+//            
+//            id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
+//            BOOL beaconFound = obj ? YES : NO;
+//            
+//            FCUser *me = [FCUser owner];
+//            
+//            NSString *myId = me.id;
+//            BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
+//            
+//            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![mssgCell.ownerID isEqualToString:@"Welcome:Bot"];
+//#warning somthing is wrong here
+//            
+//            [mssgCell setFaded:isFaded animated:YES];
+//        }
+//    }
+#warning Ethan - need to update the above code
+//    NSLog(@"People nearby: %lu",(unsigned long)[[notification.userInfo objectForKey:@"identifiedUsers"] count]);
+    [self updatePeopleNearby:[[notification.userInfo objectForKey:@"identifiedUsers"] count]];
 }
 #pragma mark NSNotificationCenter beaconsUpdated end
 

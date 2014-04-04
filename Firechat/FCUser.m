@@ -131,7 +131,9 @@ static FCUser *currentUser;
             [self generateNewUser];
         }
         // Init the beacon
-        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
+//        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
+        // Init the transponder class
+        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id];
     }
     
     return self;

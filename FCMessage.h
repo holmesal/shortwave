@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "FCUser.h"
 #import <Firebase/Firebase.h>
+#import <CoreLocation/CoreLocation.h>
 
 @interface FCMessage : NSObject
 

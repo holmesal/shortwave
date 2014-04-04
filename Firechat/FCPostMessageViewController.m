@@ -94,7 +94,7 @@
 - (void)postMessage:(NSDictionary *)message
 {
     // Grab the current list of iBeacons
-    NSArray *beaconIds = [self.owner.beacon getBeaconIds];
+    NSArray *beaconIds = [self.owner.beacon getUsersInRange];
     
     // Loop through and post to the firebase of every beacon in range
     for (NSString *beaconId in beaconIds)

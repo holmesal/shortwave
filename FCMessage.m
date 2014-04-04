@@ -53,7 +53,7 @@
                                     }
                               };
     // Grab the current list of iBeacons
-    NSArray *beaconIds = [owner.beacon getBeaconIds];
+    NSArray *beaconIds = [owner.beacon getUsersInRange];
     
     
     // Loop through and post to the firebase of every beacon in range
