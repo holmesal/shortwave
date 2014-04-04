@@ -128,8 +128,8 @@
 
 - (void)startDetecting
 {
-//    if (![self canMonitorTransponders])
-//        return;
+    //    if (![self canMonitorTransponders])
+    //        return;
     [self startDetectingTransponders];
 }
 
@@ -144,11 +144,11 @@
 {
     if (!self.centralManager)
         NSLog(@"New central created");
-        self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    self.centralManager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
     
     // Uncomment this timer if you need to report ranges in a timer
-//    detectorTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self
-//                                                   selector:@selector(reportRanges:) userInfo:nil repeats:YES];
+    //    detectorTimer = [NSTimer scheduledTimerWithTimeInterval:UPDATE_INTERVAL target:self
+    //                                                   selector:@selector(reportRanges:) userInfo:nil repeats:YES];
 }
 
 - (void)startBluetoothBroadcast
@@ -237,7 +237,7 @@
             self.peripheralManagerIsRunning = YES;
             [self blueToothStackIsActive];
             [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(startScanning) userInfo:nil repeats:NO];
-//            [self startScanning];
+            //            [self startScanning];
         }
             break;
         case CBPeripheralManagerStateUnknown:
@@ -374,7 +374,7 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
             [self flipState];
         });
-
+        
     } else
     {
         [self resetBluetooth];
@@ -445,7 +445,7 @@
 {
     // What region?
     NSNumber *minor = [region valueForKey:@"minor"];
-//    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
+    //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
@@ -462,10 +462,10 @@
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@NO];
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+                //                UILocalNotification *notice = [[UILocalNotification alloc] init];
+                //                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",minor];
+                //                notice.alertAction = @"Open";
+                //                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -478,7 +478,7 @@
     }
 }
 
-#pragma mark - bluetooth stack reporting 
+#pragma mark - bluetooth stack reporting
 -(void)blueToothStackIsActive
 {
     self.peripheralManagerIsRunning = YES;
@@ -495,28 +495,28 @@
     }
 }
 
-//-(BOOL)peripheralManagerIsRunning
-//{
-//    BOOL isOK = NO;
-//    switch ([ CLLocationManager authorizationStatus] ) {
-//        case kCLAuthorizationStatusAuthorized:
-//            isOK = YES;
-//            break;
-//        case kCLAuthorizationStatusDenied:
-//            isOK = NO;
-//            break;
-//        case kCLAuthorizationStatusNotDetermined:
-//            isOK = NO;
-//            break;
-//        case kCLAuthorizationStatusRestricted:
-//            isOK = NO;
-//            break;
-//            
-//    }
-//    
-//    BOOL val = self.peripheralManagerIsRunning && isOK;
-//    return val;
-//}
+-(BOOL)peripheralManagerIsRunning
+{
+    BOOL isOK = NO;
+    switch ([ CLLocationManager authorizationStatus] ) {
+        case kCLAuthorizationStatusAuthorized:
+            isOK = YES;
+            break;
+        case kCLAuthorizationStatusDenied:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusNotDetermined:
+            isOK = NO;
+            break;
+        case kCLAuthorizationStatusRestricted:
+            isOK = NO;
+            break;
+            
+    }
+    
+    BOOL val = peripheralManagerIsRunning && isOK;
+    return val;
+}
 
 -(CLLocation*)getLocation
 {
