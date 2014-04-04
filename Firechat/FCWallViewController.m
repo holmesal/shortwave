@@ -14,13 +14,38 @@
 #import "ProfileCollectionViewCell.h"
 #import "ESSwapUserStateMessage.h"
 #import "ESSwapUserStateCell.h"
+#import "ESUserPMCell.h"
 
 #import "FCLandingPageViewController.h"
+
+#define WIDTH_OF_PM_LIST 75.0f
+
+
+
 
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
+typedef enum
+{
+    WallStateGlobal,
+    WallStatePMUsers,
+    WallStatePM
+    
+} WallState;
+
+@property (nonatomic) WallState wallState;
 //firebase handles
+
+
+@property (nonatomic) NSMutableArray *currentPrivateMessages;
+
+@property (nonatomic) IBOutlet UIView *contentView;
+@property (nonatomic) IBOutlet UIView *pmListContainerView;
+@property (nonatomic) IBOutlet UITableView *pmUsersTableView;
+@property (weak, nonatomic) IBOutlet UITableView *pmTableView;
+@property (weak, nonatomic) IBOutlet UIView *pmTableViewContainer;
+
 @property (nonatomic) FirebaseHandle bindToWallHandle;
 @property (nonatomic) CGFloat buttonImageInset;
 @property (nonatomic) BOOL presentAnimated;
@@ -57,6 +82,13 @@
 @property (nonatomic) CGRect originalRectOfIcon;
 
 
+//pm stuff
+@property (nonatomic) BOOL isPanAnimating;
+@property (nonatomic) UIPanGestureRecognizer *panLeftGesture;
+//@property (nonatomic) UIPanGestureRecognizer *panRightGesture;
+
+
+
 
 
 @property PHFComposeBarView *composeBarView;
@@ -80,6 +112,12 @@
 @synthesize keyboardIsVisible;
 @synthesize keyboardRect;
 
+@synthesize wallState;
+@synthesize panLeftGesture;
+@synthesize contentView;
+
+@synthesize currentPrivateMessages;
+
 
 static CGFloat HeightOfGradient = 60;
 static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  Eeeewps :)
@@ -90,6 +128,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if(self = [super initWithCoder:aDecoder])
     {
         self.wall = [NSMutableArray array];
+        
+        self.currentPrivateMessages = self.wall;
         self.beacons = [[NSArray alloc] init];
         
 
@@ -97,10 +137,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return self;
 }
 
+
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
+
     
 
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
@@ -218,6 +261,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidLoad];
     
+    //actually just have currentPrivateMessages == wall
+//    currentPrivateMessages = [[NSMutableArray alloc] init];
+    
+    wallState = WallStateGlobal;
+    
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"shouldPostSwapUserMessageWhenStateChange"];
     
     
@@ -239,59 +287,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self updatePeopleNearby:0];
 
     [self.shadeView insertSubview:peopleNearbyLabel belowSubview:self.iconButton];
-//    [self.view addSubview:peopleNearbyLabel];
-    /*
-     UILabel *displayLabel = [[UILabel alloc] initWithFrame://label frame];
-    displayLabel.font = [UIFont boldSystemFontOfSize://bold font size];
-    
-    NSMutableAttributedString *notifyingStr = [[NSMutableAttributedString alloc] initWithString:@"Updated: 2012/10/14 21:59 PM"];
-    [notifyingStr beginEditing];
-    [notifyingStr addAttribute:NSFontAttributeName
-                         value:[UIFont systemFontOfSize://normal font size]
-                         range:NSMakeRange(8,10)//range of normal string, e.g. 2012/10/14];
-    [notifyingStr endEditing];
-    
-    displayLabel.attributedText = notifyingStr;
-     */
+
     
     if (self.shadeView)
     {
-        [self.view addSubview:self.shadeView];
+        [self.contentView addSubview:self.shadeView];
         
     } else
     {
         NSLog(@"warning! you are instaniating FCWallViewController without setting it up properly via beginTransitionWithIcon method.  Expect to see no transition");
     }
-    
-    //Flash yourself demo
-//    FCUser *owner = ((FCAppDelegate*)[ESApplication sharedApplication].delegate).owner;
-//    [owner.onOffRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapShot) //in dealloc
-//    {
-//        if (snapShot.value == [NSNull null])
-//        {
-//            return;
-//        }
-//        BOOL isOn = [snapShot.value boolValue];
-//        
-//        ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-//        if (pcvc)
-//        {
-//            NSLog(@"pcvc turn on ? %@", isOn ? @"YES": @"NO");
-//            [pcvc setTurnOn:isOn];
-//        }
-//    }];
-    
-    
-    //whoishereCollectionView
-//    {
-//        [whoIsHereCollectionView setClipsToBounds:NO];
-//        [whoIsHereCollectionView setShowsHorizontalScrollIndicator:NO];
-//        [whoIsHereCollectionView setAlwaysBounceHorizontal:YES];
-//        whoIsHereCollectionView.delegate = self;
-//        whoIsHereCollectionView.dataSource = self;
-//        
-//        [self.view addSubview:whoIsHereCollectionView];
-//    }
     
     //paralax?
 //    {
@@ -372,6 +377,30 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Load the compose view
     [self loadComposeView];
     
+    //pm stuff setup
+    
+    panLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.view addGestureRecognizer:panLeftGesture];
+    
+
+    
+    self.contentView.frame = self.view.bounds;
+    [self.contentView setClipsToBounds:YES];
+    [self.contentView setBackgroundColor:[UIColor clearColor]];
+    
+    self.pmListContainerView.frame = CGRectMake(self.view.frame.size.width-WIDTH_OF_PM_LIST, 0, WIDTH_OF_PM_LIST, self.view.frame.size.height);
+    [self.pmListContainerView setBackgroundColor:[UIColor grayColor]];
+    
+    self.pmUsersTableView.frame = self.pmListContainerView.bounds;
+    [self.pmUsersTableView setSeparatorColor:[UIColor clearColor]];
+    self.pmUsersTableView.delegate = self;
+    self.pmUsersTableView.dataSource = self;
+    [self.pmUsersTableView setBackgroundColor:[UIColor clearColor]];
+
+    
+    [self.view insertSubview:self.pmListContainerView atIndex:0];
+    
+
 }
 
 
@@ -381,9 +410,28 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)viewWillLayoutSubviews
 {
     [self.tableView setTransform:CGAffineTransformMakeRotation(-M_PI)];
+    
+    //stuff here!lol ok!
+    
+
 }
 -(void)viewDidLayoutSubviews
 {
+    
+    {
+        [self.pmTableViewContainer setFrame:CGRectMake(WIDTH_OF_PM_LIST, 0, self.view.frame.size.width-WIDTH_OF_PM_LIST, self.view.frame.size.height)];
+        [self.pmTableViewContainer setClipsToBounds:YES];//CGRectMake(WIDTH_OF_PM_LIST+900, 100, 50,50)];// 5, self.view.frame.size.height)]
+
+        [self.pmTableView setFrame:self.pmTableViewContainer.bounds];
+        [self.pmUsersTableView setContentInset:UIEdgeInsetsMake(14, 0, 0, 0)];
+        [self.view insertSubview:self.pmTableViewContainer atIndex:0];
+        [self.pmTableView setSeparatorColor:[UIColor redColor]];
+        
+        [self.pmTableView setDelegate:self];
+        [self.pmTableView setDataSource:self];
+
+        [self.pmTableViewContainer setBackgroundColor:[UIColor greenColor]];
+    }
     
     //tableView setup goes on here!
     {
@@ -473,7 +521,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
 //    [self.composeBarView setBackgroundColor:UIColor clearColor];
     // Add subview
-    [self.view addSubview:self.composeBarView];
+    [self.contentView addSubview:self.composeBarView];
     
     // Style the "utility button", a phrase which here means "profile photo"
 //    self.composeBarView.utilityButton.imageView.layer.masksToBounds = YES;
@@ -516,7 +564,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        for (int i = 0; i < 1; i++)
 //        {
         
-            NSLog(@"GOT MESSAGE!");
+//            NSLog(@"GOT MESSAGE!");
         
             if ([snapshot.value isKindOfClass:[NSDictionary class]])
             {
@@ -524,6 +572,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
                 {
                     ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+                    
+
                     [weakSelf.wall insertObject:swapMsg atIndex:0];
                     NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
                     [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
@@ -549,12 +599,46 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                     
                     [weakSelf updateLine];
                 }
+                
+                [weakSelf.pmTableView reloadData];
             }
 //        }
     }];
 }
 
 #pragma mark - Table view data source
+
+-(void)didSelectPmWithUserAtIndex:(NSNumber*)indexNumber
+{
+    NSLog(@"selected user %@", indexNumber);
+    self.wallState = WallStatePM;
+    
+    [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.6f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        CGRect contentFrame = self.contentView.frame;
+        contentFrame.origin.x = -contentFrame.size.width;
+        
+        [self.contentView setFrame:contentFrame];
+        
+        CGRect pmListViewRect = self.pmListContainerView.frame;
+        pmListViewRect.origin.x = 0;
+        [self.pmListContainerView setFrame:pmListViewRect];
+        
+    } completion:^(BOOL finished){}];
+}
+
+//-(void)tableView:(UITableView *)tV didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    
+//    if (tV == self.tableView)
+//    {
+//        NSLog(@"add pm!");
+//    } else
+//    if (tV == self.pmUsersTableView)
+//    {
+//        NSLog(@"begin pm!");
+//    }
+//}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -563,14 +647,25 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tV numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-//    NSLog(@"wall length count: %lu", (unsigned long)[self.wall count]);
-    return [self.wall count];
+    if (tV == self.tableView)
+    {
+        return [self.wall count];
+    } else
+    if (tV == self.pmUsersTableView)
+    {
+        return 5;
+    } else
+    if (tV == self.pmTableView)
+    {
+        NSInteger count = [self.currentPrivateMessages count];
+        return count;
+    }
+    return 0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tV cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell*)tableView:(UITableView *)tV cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (tableView == tV)
     {
@@ -650,34 +745,124 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             return cell;
         }
+    } else
+    if (self.pmUsersTableView == tV)
+    {
+        ESUserPMCell *pmCell = [self.pmUsersTableView dequeueReusableCellWithIdentifier:@"pm"];
+        return pmCell;
+    } else
+    if (self.pmTableView == tV)
+    {
+        id unknownTypeOfMessage = [self.currentPrivateMessages objectAtIndex:indexPath.row];
+        
+        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
+        {
+            FCMessage *message = unknownTypeOfMessage;
+            
+            static NSString *CellIdentifier = @"MessageCell";
+            static NSString *ownerCellIdentifire = @"OwnerMessageCell";
+            
+            
+            FCMessageCell *cell;
+            if ([[FCUser owner].id isEqualToString:message.ownerID])
+            {
+                cell = [tableView dequeueReusableCellWithIdentifier:ownerCellIdentifire forIndexPath:indexPath];
+            } else
+            {
+                cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+            }
+            
+            
+            
+            
+            // [cell setBackgroundColor:[UIColor yellowColor]];
+            
+            // Flip the cell 180 degrees
+            cell.transform = CGAffineTransformMakeRotation(M_PI);
+            
+            
+            
+            // Set message cell values
+            [cell setMessage:message];
+            
+            // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
+            cell.ownerID = message.ownerID;
+            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+            
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+            
+            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
+            
+            FCUser *me = [FCUser owner];
+            NSString *myId = me.id;
+            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
+            
+            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
+            
+            
+            
+            [cell setFaded:isFaded animated:NO];
+            
+            
+            return cell;
+        }  else
+        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+        {
+            static NSString *swapIdentifier = @"SwapCell";
+            
+            ESSwapUserStateMessage *message = unknownTypeOfMessage;
+            ESSwapUserStateCell *cell = [tableView dequeueReusableCellWithIdentifier:swapIdentifier forIndexPath:indexPath];
+            
+            // [cell setBackgroundColor:[UIColor yellowColor]];
+            
+            // Flip the cell 180 degrees
+            cell.transform = CGAffineTransformMakeRotation(M_PI);
+            [cell setFromColor:message.fromColor andIcon:message.fromIcon toColor:message.toColor andIcon:message.toIcon];
+            
+            if (!message.hasDoneFirstTimeAnimation)
+            {
+                message.hasDoneFirstTimeAnimation = YES;
+                
+                [cell doFirstTimeAnimation];
+            }
+            
+            return cell;
+        }
     }
     return nil;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat) tableView:(UITableView *)tV heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row >= self.wall.count)
+    if (tV == self.tableView)
     {
-        return 0.0f;
-    }
-    id unknownType = [self.wall objectAtIndex:indexPath.row];
+        if (indexPath.row >= self.wall.count)
+        {
+            return 0.0f;
+        }
+        id unknownType = [self.wall objectAtIndex:indexPath.row];
 
-    if ([unknownType isKindOfClass:[FCMessage class]])
-    {
+        if ([unknownType isKindOfClass:[FCMessage class]])
+        {
 
-        FCMessage *message = [self.wall objectAtIndex:indexPath.row];
-        
-        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
-        CGSize constraintSize = {225.0f, 700};
-        CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
-        CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
-        return height;
+            FCMessage *message = [self.wall objectAtIndex:indexPath.row];
+            
+            UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+            CGSize constraintSize = {225.0f, 700};
+            CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
+            CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
+            return height;
+        } else
+        if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
+        {
+            return 50;
+        }
     } else
-    if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
+    if (tV == self.pmUsersTableView)
     {
-        return 50;
+        return WIDTH_OF_PM_LIST;
     }
-    
     return 0;
 
 
@@ -947,7 +1132,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     //moving shadeView to the top
     [self.shadeView removeFromSuperview];
-    [self.view addSubview:self.shadeView];
+    [self.contentView addSubview:self.shadeView];
     
     UINavigationController *navContr = self.navigationController;
     NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
@@ -1035,6 +1220,130 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self updatePeopleNearby:self.beacons.count];
 }
 #pragma mark NSNotificationCenter beaconsUpdated end
+
+
+-(void)handlePan:(UIPanGestureRecognizer*)panGesture
+{
+    if (!self.isPanAnimating)
+    {
+        
+        self.isPanAnimating = YES;
+//        CGPoint translation = [panLeftGesture translationInView:self.view];
+        CGPoint velocity = [panLeftGesture velocityInView:self.view];
+
+        if (velocity.x < 0 && (self.wallState == WallStateGlobal || self.wallState == WallStatePMUsers))
+        {
+//            [self.view setUserInteractionEnabled:NO];
+            [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+            {
+                CGRect frame = self.contentView.frame;
+                frame.origin.x = -WIDTH_OF_PM_LIST;
+                [self.contentView setFrame:frame];
+
+            } completion:^(BOOL finished)
+            {
+                //ready!
+                self.wallState = WallStatePMUsers;
+                self.isPanAnimating = NO;
+
+            }];
+        } else
+        {
+//            [self.view setUserInteractionEnabled:NO];
+            [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:10.0f options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 CGRect frame = self.contentView.frame;
+                 frame.origin.x = 0;
+                 [self.contentView setFrame:frame];
+                 
+                 CGRect pmListFrame = self.pmListContainerView.frame;
+                 pmListFrame.origin.x = (self.contentView.frame.size.width - WIDTH_OF_PM_LIST);
+                 self.pmListContainerView.frame = pmListFrame;
+             } completion:^(BOOL finished)
+             {
+                 //ready!
+                 self.wallState = WallStateGlobal;
+                  self.isPanAnimating = NO;
+             }];
+        }
+    }
+}
+//PM stuff
+//-(void)handlePanLeft:(UIPanGestureRecognizer*)panGesture //aka panLeftGesture
+//{
+//    CGPoint translation = [panLeftGesture translationInView:self.view];
+//    CGPoint velocity = [panLeftGesture velocityInView:self.view];
+//
+//    
+//    CGAffineTransform transform;
+//    if (self.canPanRight)
+//    {
+//        translation.x += -WIDTH_OF_PM_LIST;
+//    }
+//    
+//    
+////    if (-translation.x < WIDTH_OF_PM_LIST)
+////    {
+////        transform = CGAffineTransformMakeTranslation(translation.x, 0);
+////    } else
+////    {
+////        //smooth
+////        transform = CGAffineTransformMakeTranslation(-WIDTH_OF_PM_LIST, 0);
+////    }
+//    
+//        self.contentView.transform = transform;
+//    
+//    switch (panLeftGesture.state)
+//    {
+//
+//        
+//        case UIGestureRecognizerStateBegan:
+//        {
+//            
+//        }
+//        break;
+//        case UIGestureRecognizerStateEnded:
+//        {
+//            
+//            if (velocity.x < 0)
+//            {
+//            
+//                [self.view setUserInteractionEnabled:NO];
+//                [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:10.0f options:UIViewAnimationOptionCurveLinear animations:^
+//                {
+//                    self.contentView.transform = CGAffineTransformMakeTranslation(-WIDTH_OF_PM_LIST, 0);
+//                } completion:^(BOOL finished)
+//                {
+//                    //ready!
+//                    [self.view setUserInteractionEnabled:YES];
+//                    self.canPanRight = YES;
+//                }];
+//            } else
+//            {
+//                [self.view setUserInteractionEnabled:NO];
+//                [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:10.0f options:UIViewAnimationOptionCurveLinear animations:^
+//                 {
+//                     self.contentView.transform = CGAffineTransformMakeTranslation(0, 0);
+//                 } completion:^(BOOL finished)
+//                 {
+//                     //ready!
+//                     [self.view setUserInteractionEnabled:YES];
+//                     self.canPanRight = NO;
+//                 }];
+//            }
+//        }
+//        break;
+//            
+//        case UIGestureRecognizerStateChanged:
+//        {
+//            
+//        }
+//            break;
+//            
+//        default:
+//            break;
+//    }
+//}
 
 
 @end

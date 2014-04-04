@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
+		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
 		AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */; };
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
 		AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */; };
@@ -81,6 +82,8 @@
 		AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Firebase.a"; path = "Pods/build/Debug-iphoneos/libPods-Firebase.a"; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
+		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
+		AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESUserPMCell.m; sourceTree = "<group>"; };
 		AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		AA69A5E818D7AD27000E6781 /* FCLiveBlurButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLiveBlurButton.h; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 				AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */,
 				AA6BB86F18ED180000EE6CF5 /* ESSwapUserStateCell.h */,
 				AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */,
+				AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */,
+				AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -583,6 +588,7 @@
 				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
+				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);

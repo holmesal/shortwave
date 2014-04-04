@@ -76,7 +76,7 @@ static FCUser *currentUser;
     
     NSString *userId = fuser.userId;
     
-    NSLog(@"self.ref = %@", self.ref);
+//    NSLog(@"self.ref = %@", self.ref);
     
     
     self.color = color;

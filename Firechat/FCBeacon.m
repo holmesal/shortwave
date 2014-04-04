@@ -7,6 +7,7 @@
 //
 
 #import "FCBeacon.h"
+#define IS_RUNNING_ON_SIMULATOR 1
 
 @interface FCBeacon ()
 @property NSUUID *uuid;
@@ -282,11 +283,21 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
             break;
         case CBPeripheralManagerStateUnsupported:
         {
-            //unsuported state means the device cannot do bluetooth low energy
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
-            [alert show];
-            self.peripheralManagerIsRunning = NO;
-            NSLog(@"CBPeripheralManagerStateUnsupported");
+            //just for when I am running on simulator,
+            if (!IS_RUNNING_ON_SIMULATOR)
+            {
+                //unsuported state means the device cannot do bluetooth low energy
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
+                [alert show];
+                self.peripheralManagerIsRunning = NO;
+                NSLog(@"CBPeripheralManagerStateUnsupported");
+            } else
+            {
+                NSLog(@"FAKE CBPeripheralManagerStateUnauthorized");
+                self.peripheralManagerIsRunning = NO;
+                
+                [self blueToothStackNeedsUserToActivateMessage];
+            }
         }
             break;
         case CBPeripheralManagerStateUnauthorized:
@@ -388,7 +399,13 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 }
 -(void)blueToothStackNeedsUserToActivateMessage
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+    if (IS_RUNNING_ON_SIMULATOR)
+    {
+        [self blueToothStackIsActive];
+    } else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+    }
 }
 
 -(BOOL)peripheralManagerIsRunning

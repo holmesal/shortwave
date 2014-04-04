@@ -19,12 +19,10 @@
     
     self.text = [snapshot.value valueForKey:@"text"];
     self.ownerID = [[snapshot.value valueForKey:@"meta"] objectForKey:@"ownerID"];
-    NSLog(@"self.ownerID = %@", self.ownerID);
     self.icon = [snapshot.value valueForKey:@"icon"];
     self.color = [snapshot.value valueForKey:@"color"];
     
     return self;
-    
 }
 
 # pragma mark - posting a message
