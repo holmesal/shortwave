@@ -262,7 +262,8 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 {
     NSLog(@"DID UPDATE STATE");
     
-    /*CBPeripheralManagerStateUnknown = 0,
+    /*
+     CBPeripheralManagerStateUnknown = 0,
      CBPeripheralManagerStateResetting,
      CBPeripheralManagerStateUnsupported,
      CBPeripheralManagerStateUnauthorized,

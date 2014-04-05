@@ -264,8 +264,6 @@
 }
 
 
-
-
 #pragma mark - CBCentralManagerDelegate
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral
      advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI
