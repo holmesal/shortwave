@@ -62,6 +62,7 @@ static FCUser *currentUser;
 
 +(FCUser*)owner
 {
+//    NSAssert(currentUser, @"must have owner");
     return currentUser;
 }
 +(FCUser*)createOwner
@@ -183,8 +184,8 @@ static FCUser *currentUser;
 - (void)bluetoothDiscover:(NSNotification *)note
 {
     // Got a beacon from the bluetooth stack
-    NSLog(@"Got a discover event!");
-    NSLog(@"%@",note.userInfo);
+//    NSLog(@"Got a discover event!");
+//    NSLog(@"%@",note.userInfo);
     // Check if this user already exists in this array
 }
 

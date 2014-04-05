@@ -15,9 +15,9 @@
 #import "CBUUID+Ext.h"
 
 #define DEBUG_CENTRAL YES
-#define DEBUG_PERIPHERAL YES
-#define DEBUG_BEACON NO
-#define DEBUG_USERS YES
+#define DEBUG_PERIPHERAL NO
+#define DEBUG_BEACON YES
+#define DEBUG_USERS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
@@ -61,10 +61,10 @@
         [self initFirebase:firebaseURL];
         // Start off NOT flipping between beacons/bluetooth
         self.isAdvertisingAsBeacon = NO;
-        // Setup beacon monitoring for regions
-        [self setupBeaconRegions];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
+        // Listen for chirpBeacon events
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:@"chirpBeacon" object:nil];
     }
     return self;
 }
@@ -212,8 +212,9 @@
 
 - (void)startDetecting
 {
-    //    if (![self canMonitorTransponders])
-    //        return;
+    // Setup beacon monitoring for regions
+    [self setupBeaconRegions];
+    // Listen for bluetooth LE
     [self startDetectingTransponders];
 }
 

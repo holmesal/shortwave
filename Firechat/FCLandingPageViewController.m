@@ -237,7 +237,7 @@ typedef enum
 -(void)doneBlurButtonAction:(UIButton*)button
 {
     
-    FCUser *owner =  [FCUser owner];
+//    FCUser *owner =  [FCUser owner];
     
     [self continueWithDonBlurButtonAction];
 //    if (!self.authClient)
@@ -561,8 +561,8 @@ typedef enum
         NSMutableArray *viewControllers = [NSMutableArray arrayWithArray:self.navigationController.viewControllers];
         [viewControllers addObject:nextViewController];
         [self.navigationController pushViewController:nextViewController animated:NO];
-//
-//        [[FCUser owner].beacon start];
+
+        
         [[FCUser owner].beacon startBroadcasting];
         [[FCUser owner].beacon startDetecting];
         [[FCUser owner].beacon chirpBeacon];
