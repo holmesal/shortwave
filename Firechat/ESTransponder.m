@@ -14,9 +14,9 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL NO
+#define DEBUG_CENTRAL YES
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
@@ -114,7 +114,7 @@
         float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
         if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
         // If it's longer than 20 seconds, they're probs gone
-        if (lastSeen > 20.0) {
+        if (lastSeen > 120.0) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
             // Remove from earshotUsers, if it's actually in there
             if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
