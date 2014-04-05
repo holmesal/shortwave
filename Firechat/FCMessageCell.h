@@ -24,5 +24,6 @@
 
 -(void)setFaded:(BOOL)faded animated:(BOOL)animated;
 
+-(void)initializeDoubleTap;
 -(void)initializeLongPress;
 @end

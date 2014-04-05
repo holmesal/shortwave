@@ -13,6 +13,7 @@
 @property (nonatomic) CALayer *coloredCircleLayer;
 @property (weak, nonatomic) IBOutlet UIView *sneakyView; //the view bhind the image view holds the coloredCircleLayer
 @property (nonatomic) UILongPressGestureRecognizer *longPress;
+@property (nonatomic) UITapGestureRecognizer *doubleTap;
 
 @end
 
@@ -33,13 +34,32 @@
 {
     if (self.longPress) return;
     self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressSelector)];
+    [self addGestureRecognizer:self.longPress];
+}
+-(void)initializeDoubleTap
+{
+    if (self.doubleTap) return;
+    self.doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapSelector)];
+    [self.doubleTap setNumberOfTapsRequired:2];
+    [self addGestureRecognizer:self.doubleTap];
 }
 -(void)longPressSelector
 {
     UITableView *tableView = (UITableView*)(self.superview.superview);
-    if ([tableView.delegate respondsToSelector:@selector(tableView:didLongPressOnCellAtIndex:)])
+    if ([tableView.delegate respondsToSelector:@selector(tableView:didLongPressCellAtIndexPath:)])
     {
-        [tableView.delegate performSelector:@selector(tableView:didLongPressOnCellAtIndex:) withObject:tableView withObject:[NSNumber numberWithInt:self.tag] ];
+        
+        NSIndexPath *indexPath = [tableView indexPathForCell:self];
+        [tableView.delegate performSelector:@selector(tableView:didLongPressCellAtIndexPath:) withObject:tableView withObject:indexPath];
+    }
+}
+-(void)doubleTapSelector
+{
+    UITableView *tableView = (UITableView*)(self.superview.superview);
+    if ([tableView.delegate respondsToSelector:@selector(tableView:didDoubleTapCellAtIndexPath:)])
+    {
+        NSIndexPath *indexPath = [tableView indexPathForCell:self];
+        [tableView.delegate performSelector:@selector(tableView:didDoubleTapCellAtIndexPath:) withObject:tableView withObject:indexPath];
     }
 }
 

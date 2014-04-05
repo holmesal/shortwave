@@ -46,6 +46,8 @@ typedef enum
 @property (weak, nonatomic) IBOutlet UITableView *pmTableView;
 @property (weak, nonatomic) IBOutlet UIView *pmTableViewContainer;
 
+@property (nonatomic) FirebaseHandle removeFromUserPmListHandle;
+@property (nonatomic) FirebaseHandle bindToUserPmListHandle;
 @property (nonatomic) FirebaseHandle bindToWallHandle;
 @property (nonatomic) CGFloat buttonImageInset;
 @property (nonatomic) BOOL presentAnimated;
@@ -71,7 +73,9 @@ typedef enum
 
 @property (nonatomic) UILabel *peopleNearbyLabel;
 @property FCUser *owner;
-@property Firebase *ref;
+
+@property Firebase *userPmListRef;
+@property Firebase *wallRef;
 @property NSMutableArray *wall;
 @property NSArray *beacons;
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;
@@ -540,7 +544,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)dealloc
 {
-    [self.ref removeObserverWithHandle:self.bindToWallHandle];
+    [self.wallRef removeObserverWithHandle:self.bindToWallHandle];
+    [self.userPmListRef removeObserverWithHandle:self.bindToUserPmListHandle];
+    [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -573,18 +580,61 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }];
 }
 
+-(void) bindToUserPmList
+{
+    
+    self.userPmListRef = [[self.owner.ref childByAppendingPath:@"userPmList"] childByAutoId];
+    self.bindToUserPmListHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+   {
+       NSLog(@"added pm user");
+       
+       if ([snapshot.value isKindOfClass:[NSDictionary class]])
+       {
+
+           NSDictionary *userDict = snapshot.value;
+           
+           //here are my keys
+           NSString *userId = [userDict objectForKey:@"withUserId"];
+           NSString *userColor = [userDict objectForKey:@"userColor"];
+           NSString *icon = [userDict objectForKey:@"userIcon"];
+           
+           
+
+           
+       }
+   }];
+    
+    self.removeFromUserPmListHandle = [self.wallRef observeEventType:FEventTypeChildRemoved withBlock:^(FDataSnapshot *snapshot)
+    {
+        
+        NSLog(@"removed pm user");
+        
+       if ([snapshot.value isKindOfClass:[NSDictionary class]])
+       {
+           
+           NSDictionary *userDict = snapshot.value;
+           
+           //here are my keys
+           NSString *userId = [userDict objectForKey:@"withUserId"];
+           NSString *userColor = [userDict objectForKey:@"userColor"];
+           NSString *icon = [userDict objectForKey:@"userIcon"];
+           
+           
+       }
+    }];
+}
+
 - (void)bindToWall
 {
-    self.ref = [self.owner.ref childByAppendingPath:@"wall"];
+    self.wallRef = [self.owner.ref childByAppendingPath:@"wall"];
     // Watch for changes
     
     __weak typeof(self) weakSelf = self;
-    self.bindToWallHandle = [self.ref observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+
+    
+    self.bindToWallHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
-//        for (int i = 0; i < 1; i++)
-//        {
-        
-//            NSLog(@"GOT MESSAGE!");
+
         
             if ([snapshot.value isKindOfClass:[NSDictionary class]])
             {
@@ -626,7 +676,32 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }];
 }
 
+#pragma mark - custom Table View delegate methods
+-(void)tableView:(UITableView*)tV didLongPressCellAtIndexPath:(NSIndexPath*)indexPath
+{
+    if (tV == self.tableView)
+    {
+        NSLog(@"definitely long press on %@", indexPath);
+        [self startPmWithWallMessage:indexPath.row];
+    }
+}
+-(void)tableView:(UITableView *)tV didDoubleTapCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tV == self.tableView)
+    {
+        NSLog(@"definitely double tap on  press on %@", indexPath);
+        [self startPmWithWallMessage:indexPath.row];
+    }
+}
+
+-(void)startPmWithWallMessage:(NSInteger)index
+{
+    id someMessageObject = [self.wall objectAtIndex:index];
+    
+}
+
 #pragma mark - Table view data source
+
 
 -(void)didSelectPmWithUserAtIndex:(NSNumber*)indexNumber
 {
@@ -709,6 +784,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             }
             
             [cell initializeLongPress];
+            [cell initializeDoubleTap];
             
             
             
