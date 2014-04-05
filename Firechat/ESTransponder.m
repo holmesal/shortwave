@@ -14,7 +14,7 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL YES
+#define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON YES
 #define DEBUG_USERS NO
