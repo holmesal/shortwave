@@ -702,19 +702,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             [cell setMessage:message];
             
             // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
-            cell.ownerID = message.ownerID;
-            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+#warning github issue fading cells
+//            cell.ownerID = message.ownerID;
+//            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+//            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+//            
+//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+//
+//            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
+//            
+//            FCUser *me = [FCUser owner];
+//            NSString *myId = me.id;
+//            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
             
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-
-            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
-            
-            FCUser *me = [FCUser owner];
-            NSString *myId = me.id;
-            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
-            
-            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
+            BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
             
 
             
@@ -786,19 +787,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             [cell setMessage:message];
             
             // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
-            cell.ownerID = message.ownerID;
-            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+#warning github issue fade cell
+//            cell.ownerID = message.ownerID;
+//            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
+//            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
+//            
+//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
+//            
+//            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
+//            
+//            FCUser *me = [FCUser owner];
+//            NSString *myId = me.id;
+//            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
             
-            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-            
-            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
-            
-            FCUser *me = [FCUser owner];
-            NSString *myId = me.id;
-            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
-            
-            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
+            BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
             
             
             

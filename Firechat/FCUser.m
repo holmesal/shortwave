@@ -83,8 +83,8 @@ static FCUser *currentUser;
     self.icon = icon;
 
     [[self.ref childByAppendingPath:@"userId"] setValue:userId];
-    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
-    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
+//    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
+//    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
     [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
     
     // Set via mixpanel
@@ -224,8 +224,8 @@ static FCUser *currentUser;
     // Major/minor
 //    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
 //    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
-    [prefs setValue:self.major forKey:@"major"];
-    [prefs setValue:self.minor forKey:@"minor"];
+//    [prefs setValue:self.major forKey:@"major"];
+//    [prefs setValue:self.minor forKey:@"minor"];
     
     [prefs setValue:self.id forKey:@"id"];
     
@@ -243,13 +243,13 @@ static FCUser *currentUser;
     // Icon
     self.icon = [prefs valueForKey:@"icon"];
     // Major/minor
-    self.major = [prefs valueForKey:@"major"];
-    self.minor = [prefs valueForKey:@"minor"];
+//    self.major = [prefs valueForKey:@"major"];
+//    self.minor = [prefs valueForKey:@"minor"];
     // id
     self.id = [prefs valueForKey:@"id"];
     
     NSLog(@"COLOR IS %@",self.color);
-    NSLog(@"Got id: %@:%@",self.major,self.minor);
+//    NSLog(@"Got id: %@:%@",self.major,self.minor);
 }
 
 -(void)setColor:(NSString *)clr
@@ -314,11 +314,14 @@ static FCUser *currentUser;
 - (void) generateIds
 {
     // Generate an id
-    self.major = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-    //    self.major = [self formatValue:self.major forDigits:@4[self.major length]]
-    self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-    self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
+//    self.major = [[NSNumber alloc] initWithInt:arc4random() % 65535];
+//    //    self.major = [self formatValue:self.major forDigits:@4[self.major length]]
+//    self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
+//    self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
     
+    NSInteger idInt = esRandomNumberIn(0, 99999999);
+    
+    self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];
 }
 -(void)postHello:(NSString *)message

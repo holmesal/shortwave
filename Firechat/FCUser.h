@@ -26,8 +26,8 @@
 //@property NSString *description;
 @property NSString *id;
 //@property NSString *thirdPartyId;
-@property NSNumber *major;
-@property NSNumber *minor;
+//@property NSNumber *major;
+//@property NSNumber *minor;
 @property NSString *deviceToken;
 
 @property (nonatomic) ESTransponder *beacon;
