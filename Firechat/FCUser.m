@@ -133,7 +133,7 @@ static FCUser *currentUser;
         // Init the beacon
 //        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
         // Init the transponder class
-        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id];
+        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:@"https://earshot.firebaseio.com/"];
         
         // Listen for beacon discover events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:@"earshotDiscover" object:nil];

@@ -93,17 +93,16 @@
 # pragma mark - posting a message
 - (void)postMessage:(NSDictionary *)message
 {
-    // Grab the current list of iBeacons
-    NSArray *beaconIds = [self.owner.beacon getUsersInRange];
+    NSArray *earshotIds = [self.owner.beacon.earshotUsers allKeys];
     
     // Loop through and post to the firebase of every beacon in range
-    for (NSString *beaconId in beaconIds)
+    for (NSString *earshotId in earshotIds)
     {
         // Post to the firebase wall of this beacon
-        Firebase *otherPersonMessageRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
+        Firebase *otherPersonMessageRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
         [otherPersonMessageRef setValue:message];
         [self setTimestampAsNow:otherPersonMessageRef];
-        NSLog(@"Beacon loop says: %@",beaconId);
+        NSLog(@"Beacon loop says: %@",earshotId);
     }
     
     // Also post to yourself

@@ -52,21 +52,20 @@
                                         @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
                                     }
                               };
-    // Grab the current list of iBeacons
-    NSArray *beaconIds = [owner.beacon getUsersInRange];
-    
+    // Grab the current list of earshot users
+    NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
     
     // Loop through and post to the firebase of every beacon in range
-    for (NSString *beaconId in beaconIds)
+    for (NSString *earshotId in earshotIds)
     {
-        NSLog(@"Posting message to %@",beaconId);
+        NSLog(@"Posting message to %@",earshotId);
         // Post to the firebase wall of this beacon
-        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"wall"] childByAutoId];
+        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
         [otherPersonMessageRef setValue:message];
         [self setTimestampAsNow:otherPersonMessageRef];
         
         // Send a push notification to this user
-        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"deviceToken"];
+        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
         [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
             // Make the push notification
             NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
@@ -86,7 +85,7 @@
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"Message Sent" properties:@{
                                                  @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy},
-                                                 @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[beaconIds count]]}];
+                                                 @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]]}];
     
 
 }

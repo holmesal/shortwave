@@ -1001,7 +1001,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     
     FCUser *owner = [FCUser owner];
-    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon getUsersInRange].count;
+    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon earshotUsers].count;
     
     NSInteger returnValue = numberOfBecons + 1;//change this value for now
     

@@ -7,6 +7,7 @@
 //
 
 #import "ESTransponder.h"
+#import <Firebase/Firebase.h>
 
 // Extensions
 #import "CBCentralManager+Ext.h"
@@ -14,10 +15,10 @@
 #import "CBUUID+Ext.h"
 
 #define DEBUG_CENTRAL YES
-#define DEBUG_PERIPHERAL NO
+#define DEBUG_PERIPHERAL YES
 #define DEBUG_BEACON NO
-#define DEBUG_USERS NO
-#define USE_PHONE_NAMES NO
+#define DEBUG_USERS YES
+
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define NUM_BEACONS 20
@@ -28,6 +29,7 @@
 @property (strong, nonatomic) CBCentralManager *centralManager;
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) NSDictionary *bluetoothAdvertisingData;
+@property (strong, nonatomic) NSMutableDictionary *bluetoothUsers;
 
 // Beacon broadcasting
 @property NSInteger flipCount;
@@ -38,65 +40,63 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSMutableArray *regions;
 
+// Firebase-synced users array
+@property (strong, nonatomic) Firebase *rootRef;
+@property (strong, nonatomic) Firebase *earshotUsersRef;
+//@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
+
 @end
 
 @implementation ESTransponder
 @synthesize earshotID;
 @synthesize peripheralManagerIsRunning;
 
-- (id)init
+- (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL
 {
     if ((self = [super init])) {
+        self.earshotID = userID;
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
-        self.earshotUsers = [[NSMutableDictionary alloc] init];
+        self.bluetoothUsers = [[NSMutableDictionary alloc] init];
         // Start off NOT flipping between beacons/bluetooth
         self.isAdvertisingAsBeacon = NO;
         // Setup beacon monitoring for regions
         [self setupBeaconRegions];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
-        // Listen for chirpBeacon notifications
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:@"chirpBeacon" object:nil];
     }
     return self;
 }
+//
+//- (void)setEarshotID:(NSString *)earshitId
+//{
+//    earshotID = earshitId;
+//    // Set up firebase
+//    //    [self initFirebase];
+//}
 
-- (id)initWithEarshotID:(NSString *)someID
-{
-    NSLog(@"INIT WITH ID");
-    if ((self = [self init])) {
-        self.earshotID = someID;
-    }
-    return self;
-}
-
-- (void)setEarshotID:(NSString *)earshitId
-{
-    earshotID = earshitId;
-}
-
-- (NSArray *)getUsersInRange
-{
-    NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
-    // Loop through the current users and add any in-range users, killing dupes
-    for(NSMutableDictionary *userBeaconKey in self.earshotUsers)
-    {
-        NSMutableDictionary *userBeacon = [self.earshotUsers objectForKey:userBeaconKey];
-        if ([userBeacon valueForKey:@"earshotID"] != [NSNull null])
-        {
-            if (![usersInRange containsObject:[userBeacon valueForKey:@"earshotID"]])
-            {
-                [usersInRange addObject:[userBeacon valueForKey:@"earshotID"]];
-            } else{
-                if (DEBUG_USERS) {NSLog(@"NOT ADDING - DUPE");}
-            }
-        } else{
-            if (DEBUG_USERS){NSLog(@"NOT ADDING - EMPTY");}
-        }
-    }
-    if (DEBUG_USERS) NSLog(@"user array - %@",usersInRange);
-    return [[NSArray alloc] initWithArray:usersInRange];
-}
+//# pragma mark - user management
+//- (NSArray *)getUsersInRange
+//{
+//    NSMutableArray *usersInRange = [[NSMutableArray alloc] init];
+//    // Loop through the current users and add any in-range users, killing dupes
+//    for(NSMutableDictionary *userBeaconKey in self.bluetoothUsers)
+//    {
+//        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
+//        if ([userBeacon valueForKey:@"earshotID"] != [NSNull null])
+//        {
+//            if (![usersInRange containsObject:[userBeacon valueForKey:@"earshotID"]])
+//            {
+//                [usersInRange addObject:[userBeacon valueForKey:@"earshotID"]];
+//            } else{
+//                if (DEBUG_USERS) {NSLog(@"NOT ADDING - DUPE");}
+//            }
+//        } else{
+//            if (DEBUG_USERS){NSLog(@"NOT ADDING - EMPTY");}
+//        }
+//    }
+//    if (DEBUG_USERS) NSLog(@"user array - %@",usersInRange);
+//    return [[NSArray alloc] initWithArray:usersInRange];
+//}
 
 - (void)pruneUsers
 {
@@ -105,24 +105,103 @@
     // WHATTIMEISITRIGHTNOW.COM
     NSDate *now = [[NSDate alloc] init];
     // Check every user
-    for(NSString *userBeaconKey in [self.earshotUsers.allKeys copy])
+    for(NSString *userBeaconKey in [self.bluetoothUsers.allKeys copy])
     {
-        NSMutableDictionary *userBeacon = [self.earshotUsers objectForKey:userBeaconKey];
+        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
         // How long ago was this?
         float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
         if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
         // If it's longer than 20 seconds, they're probs gone
         if (lastSeen > 20.0) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
-            [self.earshotUsers removeObjectForKey:userBeaconKey];
+            // Remove from earshotUsers
+            [self removeUser:[userBeacon objectForKey:@"earshotID"]];
+            // Remove from bluetooth users
+            [self.bluetoothUsers removeObjectForKey:userBeaconKey];
         } else {
             if (DEBUG_USERS) NSLog(@"Not removing user: %@",userBeacon);
         }
     }
-    // Update the users in range
-    [self getUsersInRange];
     
 }
+
+- (void)initFirebase:(NSString *)baseURL
+{
+    self.earshotUsers = [[NSMutableDictionary alloc] init];
+    self.rootRef = [[Firebase alloc] initWithUrl:baseURL];
+    self.earshotUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"tracking"];
+    [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+        // Update the locally-stored earshotUsers array
+        NSLog(@"Got data from firebase");
+        NSLog(@"%@",snapshot.value);
+        if (snapshot.value != [NSNull null]){
+            self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
+        }
+    }];
+}
+
+// Takes in a bluetooth user and adds it to earshotUsers
+- (void)addUser:(NSString *)userID
+{
+    // Add the user for yourself
+    [[self.earshotUsersRef childByAppendingPath:userID] setValue:@"true"];
+    // Add yourself for the user
+    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:@"true"];
+}
+
+- (void)removeUser:(NSString *)userID
+{
+#warning not sure this is the right way to handle removing users...
+    // Remove the user for yourself
+    [[self.earshotUsersRef childByAppendingPath:userID] removeValue];
+    // Remove yourself for the user
+    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] removeValue];
+}
+
+//// Syncs the users currently in earshotUsers to firebase for both this user and the other users
+//- (void)syncOtherUserToFirebase:(NSString *)target
+//{
+//    // Fake a bluetooth dictionary
+//    [self.earshotUsersRef setValue:self.earshotUsers];
+//}
+//- (void)syncDiscoveredUserToFirebase:(NSString *)userID
+//{
+////    NSLog(@"Syncing user %@ to firebase", userID);
+//    // Is this user already in the array?
+//    NSDictionary *existingUser = [self.earshotUsers objectForKey:userID];
+//    if ([existingUser count] == 0) {
+//        NSLog(@"No existing user");
+//        NSDictionary *trackingUser = @{@"place":@"holder"};
+//        [self.earshotUsers setObject:trackingUser forKey:userID];
+//        // Update!
+//        [self.earshotUsersRef setValue:self.earshotUsers];
+//        // Now go tell the other person
+//        Firebase *otherPersonRef = [[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID];
+//        [otherPersonRef setValue:trackingUser];
+//    } else{
+//        NSLog(@"Existing user found!");
+//    }
+////    NSLog(@"Existing user looks like %@",userString);
+//
+//}
+//
+//- (void)removeLostUserFromFirebase:(NSString *)userID
+//{
+//    NSLog(@"Removing user %@ from firebase",userID);
+//    [self.earshotUsers removeObjectForKey:userID];
+//    // Update!
+//    [self.earshotUsersRef setValue:self.earshotUsers];
+//    NSLog(@"Firebase users -- %@",self.earshotUsers);
+////    NSDictionary *existingUser = [self.earshotUsers objectForKey:userID];
+////    if ([existingUser count] == 0) {
+////        NSLog(@"Removing user %@ from firebase",userID);
+////    } else{
+////        NSLog(@"Removing user!");
+////        [self.earshotUsers removeObjectForKey:userID];
+////        // Update!
+////        [self.earshotUsersRef setValue:self.earshotUsers];
+////    }
+//}
 
 # pragma mark - core bluetooth
 
@@ -193,13 +272,13 @@
     }
     
     // Create a user if there isn't one
-    NSMutableDictionary *existingUser = [self.earshotUsers objectForKey:[peripheral.identifier UUIDString]];
+    NSMutableDictionary *existingUser = [self.bluetoothUsers objectForKey:[peripheral.identifier UUIDString]];
     if ([existingUser count] == 0) {
         // No user yet, make one
         NSMutableDictionary *newUser = [[NSMutableDictionary alloc] initWithDictionary:@{@"lastSeen": [[NSDate alloc] init],
                                                                                          @"earshotID": [NSNull null]}];
         // Insert
-        [self.earshotUsers setObject:newUser forKey:[peripheral.identifier UUIDString]];
+        [self.bluetoothUsers setObject:newUser forKey:[peripheral.identifier UUIDString]];
         
         // Alias
         existingUser = newUser;
@@ -215,39 +294,42 @@
     NSString *localName = [advertisementData valueForKey:@"kCBAdvDataLocalName"];
     if (localName){
         [existingUser setValue:localName forKey:@"earshotID"];
+        // Add to earshot users
+        [self addUser:localName];
     }
     
-    if (DEBUG_CENTRAL) NSLog(@"%@",self.earshotUsers);
+    if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
     
     // Notify peeps that an earshot user was discovered
     [[NSNotificationCenter defaultCenter] postNotificationName:@"earshotDiscover"
                                                         object:self
                                                       userInfo:@{@"user":existingUser,
-                                                                 @"identifiedUsers":[self getUsersInRange],
-                                                                 @"earshotUsers":self.earshotUsers}];
+                                                                 @"identifiedUsers":self.earshotUsers,
+                                                                 @"bluetoothUsers":self.bluetoothUsers}];
     
 }
 
 - (void)centralManagerDidUpdateState:(CBCentralManager *)central
 {
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
+    
+    /*CBPeripheralManagerStateUnknown = 0,
+     CBPeripheralManagerStateResetting,
+     CBPeripheralManagerStateUnsupported,
+     CBPeripheralManagerStateUnauthorized,
+     CBPeripheralManagerStatePoweredOff,
+     CBPeripheralManagerStatePoweredOn
+     */
+    if (DEBUG_CENTRAL) NSLog(@"\n");
     switch (central.state) {
-        case CBPeripheralManagerStatePoweredOn:
-        {
-            self.peripheralManagerIsRunning = YES;
-            [self blueToothStackIsActive];
-            [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(startScanning) userInfo:nil repeats:NO];
-            //            [self startScanning];
-        }
-            break;
         case CBPeripheralManagerStateUnknown:
         {
-            NSLog(@"CBPeripheralManagerStateUnknown");
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnknown");
         }
             break;
         case CBPeripheralManagerStateResetting:
         {
-            NSLog(@"CBPeripheralManagerStateResetting");
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateResetting");
         }
             break;
         case CBPeripheralManagerStateUnsupported:
@@ -259,10 +341,10 @@
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
                 [alert show];
                 self.peripheralManagerIsRunning = NO;
-                NSLog(@"CBPeripheralManagerStateUnsupported");
+                if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnsupported");
             } else
             {
-                NSLog(@"FAKE CBPeripheralManagerStateUnauthorized");
+                if (DEBUG_CENTRAL) NSLog(@"FAKE CBPeripheralManagerStateUnauthorized");
                 self.peripheralManagerIsRunning = NO;
                 
                 [self blueToothStackNeedsUserToActivateMessage];
@@ -271,7 +353,7 @@
             break;
         case CBPeripheralManagerStateUnauthorized:
         {
-            NSLog(@"CBPeripheralManagerStateUnauthorized");
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnauthorized");
             self.peripheralManagerIsRunning = NO;
             
             [self blueToothStackNeedsUserToActivateMessage];
@@ -280,14 +362,22 @@
             break;
         case CBPeripheralManagerStatePoweredOff:
         {
-            NSLog(@"CBPeripheralManagerStatePoweredOff");
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOff");
             self.peripheralManagerIsRunning = NO;
             
             [self blueToothStackNeedsUserToActivateMessage];
             
         }
             break;
+        case CBPeripheralManagerStatePoweredOn:
+        {
+            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOn");
+            [self startScanning];
+        }
+            break;
     }
+    if (DEBUG_CENTRAL) NSLog(@"\n");
+    
 }
 
 #pragma mark - CBPeripheralManagerDelegate
@@ -478,7 +568,8 @@
     }
 }
 
-#pragma mark - bluetooth stack reporting
+
+# pragma mark - auth and status
 -(void)blueToothStackIsActive
 {
     self.peripheralManagerIsRunning = YES;
@@ -522,6 +613,42 @@
 {
     return self.locationManager.location;
 }
+
+-(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
+{
+    // Check for supported devices
+    switch ([CLLocationManager authorizationStatus])
+    {
+        case kCLAuthorizationStatusRestricted:
+        {
+            NSLog(@"kCLAuthorizationStatusRestricted");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusDenied:
+        {
+            NSLog(@"kCLAuthorizationStatusDenied");
+            [self blueToothStackNeedsUserToActivateMessage];
+        }
+            break;
+            
+        case kCLAuthorizationStatusAuthorized:
+        {
+            NSLog(@"kCLAuthorizationStatusAuthorized");
+            [self blueToothStackIsActive];
+        }
+            break;
+            
+        case kCLAuthorizationStatusNotDetermined:
+        {
+            NSLog(@"kCLAuthorizationStatusNotDetermined");//user has not yet said yes or no
+        }
+            break;
+    }
+}
+
+
 
 
 @end

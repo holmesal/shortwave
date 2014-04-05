@@ -23,11 +23,14 @@
 @property (nonatomic, readonly) BOOL isBroadcasting;
 @property (nonatomic) BOOL peripheralManagerIsRunning;
 
-// Sets the earshot id, and starts advertising it.
-//- (void)setEarshotID:(NSString *)earshotID;
+// Init with an earshotID and a firebase URL
+- (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL;
 
-// Init the earshot ID
-- (id)initWithEarshotID:(NSString *)someID;
+// Init the firebase with a base URL
+- (void)initFirebase:(NSString *)baseURL;
+
+// Sets the earshot id, and starts advertising it.
+- (void)setEarshotID:(NSString *)earshotID;
 
 // Starts detecting core bluetooth peripherals (service method)
 - (void)startDetecting;
@@ -43,15 +46,15 @@
 - (void)resetBluetooth;
 
 // Gets an array of earshot ids, one for each user currently in-range
-- (NSArray *)getUsersInRange;
+//- (NSArray *)getUsersInRange;
 
-// Get the user's current location
--(CLLocation *)getLocation;
+// Gets the current location
+- (CLLocation *)getLocation;
 
 // Events API
 /*
-    earshotDiscover - fired when a CoreBluetooth user is discovered. The user may or may not have a earshotID yet. Data contains the user that was just discovered, as well as a list of all the users that have been discovered so far
+ earshotDiscover - fired when a CoreBluetooth user is discovered. The user may or may not have a earshotID yet. Data contains the user that was just discovered, as well as a list of all the users that have been discovered so far
  
-*/
+ */
 
 @end

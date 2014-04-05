@@ -5,7 +5,7 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>2A8E6BA2-43E8-4E50-89B5-64CE4386E3A9</string>
+	<string>D5B97161-C9AB-4D9E-9C2F-E2666296B45C</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Firechat</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
@@ -17,8 +17,6 @@
 	<string>Firechat.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1848EAB0-4A7E-4354-BF1A-32F9DC73E38C</key>
-		<string>../../../beacons/transponder</string>
 		<key>9579A83A-974B-43CB-AA52-B2D473F960F2</key>
 		<string>..</string>
 	</dict>
@@ -37,14 +35,6 @@
 			<string>9579A83A-974B-43CB-AA52-B2D473F960F2</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Firechat</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1848EAB0-4A7E-4354-BF1A-32F9DC73E38C</string>
-			<key>IDESourceControlWCCName</key>
-			<string>transponder</string>
 		</dict>
 	</array>
 </dict>
