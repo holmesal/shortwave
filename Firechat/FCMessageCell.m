@@ -12,6 +12,7 @@
 
 @property (nonatomic) CALayer *coloredCircleLayer;
 @property (weak, nonatomic) IBOutlet UIView *sneakyView; //the view bhind the image view holds the coloredCircleLayer
+@property (nonatomic) UILongPressGestureRecognizer *longPress;
 
 @end
 
@@ -26,6 +27,20 @@
         
     }
     return self;
+}
+
+-(void)initializeLongPress
+{
+    if (self.longPress) return;
+    self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressSelector)];
+}
+-(void)longPressSelector
+{
+    UITableView *tableView = (UITableView*)(self.superview.superview);
+    if ([tableView.delegate respondsToSelector:@selector(tableView:didLongPressOnCellAtIndex:)])
+    {
+        [tableView.delegate performSelector:@selector(tableView:didLongPressOnCellAtIndex:) withObject:tableView withObject:[NSNumber numberWithInt:self.tag] ];
+    }
 }
 
 -(CALayer*)coloredCircleLayer
