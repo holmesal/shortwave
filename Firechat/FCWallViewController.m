@@ -413,7 +413,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     self.pmListContainerView.frame = CGRectMake(self.view.frame.size.width-WIDTH_OF_PM_LIST, 0, WIDTH_OF_PM_LIST, self.view.frame.size.height);
     // Set the PM view to use user's current ID color as background. That color can be grabbed from the shadeview for the title bar.
-    [self.pmListContainerView setBackgroundColor:self.shadeView.backgroundColor];
+    CGFloat h;
+    CGFloat s;
+    CGFloat b;
+    CGFloat a;
+    [self.shadeView.backgroundColor getHue:&h saturation:&s brightness:&b alpha:&a];
+    UIColor *pmListColor = [UIColor colorWithHue:h saturation:(s*0.15) brightness:(b*0.9) alpha:a];
+    [self.pmListContainerView setBackgroundColor:pmListColor];
     //[self.pmListContainerView setBackgroundColor:[UIColor grayColor]];
     
     self.pmUsersTableView.frame = self.pmListContainerView.bounds;
@@ -458,8 +464,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [self.pmTableView setDelegate:self];
         [self.pmTableView setDataSource:self];
 
-        [self.pmTableView setBackgroundColor:[UIColor purpleColor]];
-        [self.pmTableViewContainer setBackgroundColor:[UIColor greenColor]];
+        [self.pmTableView setBackgroundColor:[UIColor clearColor]];
+        [self.pmTableViewContainer setBackgroundColor:[UIColor clearColor]];
     }
     
     //tableView setup goes on here!

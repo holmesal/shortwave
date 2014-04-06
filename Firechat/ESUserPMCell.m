@@ -124,7 +124,7 @@
     {
         NSLog(@"selected cell at %d", self.tag);
         
-        [self.circleView startGlowingWithColor:circleColor fromIntensity:0.3 toIntensity:1.0 repeat:YES ];
+        [self.circleView startGlowingWithColor:[UIColor whiteColor] fromIntensity:0.3 toIntensity:5.0 repeat:YES ];
         
 //        [UIView animateWithDuration:0.3 delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
 //        {
