@@ -319,12 +319,7 @@ static FCUser *currentUser;
 - (void) generateIds
 {
     // Generate an id
-//    self.major = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-//    //    self.major = [self formatValue:self.major forDigits:@4[self.major length]]
-//    self.minor = [[NSNumber alloc] initWithInt:arc4random() % 65535];
-//    self.id = [NSString stringWithFormat:@"%@:%@", self.major, self.minor];
-    
-    NSInteger idInt = esRandomNumberIn(0, 99999999);
+    NSInteger idInt = esRandomNumberIn(0, 100000000);
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];

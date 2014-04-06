@@ -566,7 +566,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.wallRef removeObserverWithHandle:self.bindToWallHandle];
     [self.userPmListRef removeObserverWithHandle:self.bindToUserPmListHandle];
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
-    
+    [self.trackingRef removeAllObservers];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -587,17 +587,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)bindToTracking
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
-    
-    __weak typeof (self) weakSelf = self;
-    
-    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-    {
-        if ([snapshot value])
-        {
+    __weak typeof(self) weakSelf = self;
+    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+        if ([snapshot value] && [snapshot value] != [NSNull null]) {
             NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
             [weakSelf updatePeopleNearby:[snapshot.value count]];
-        } else
-        {
+        } else{
             NSLog(@"Count is nothing!");
             [weakSelf updatePeopleNearby:0];
         }
@@ -613,7 +608,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     NSLog(@"self.userPmListRf = %@", self.userPmListRef);
     
     __weak typeof(self) weakSelf = self;
-    
     self.bindToUserPmListHandle = [self.userPmListRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
    {
        NSLog(@"added pm user");
@@ -628,7 +622,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
            NSString *userColor = [userDict objectForKey:@"theirColor"];
            NSString *icon = [userDict objectForKey:@"theirIcon"];
            
-           NSInteger indexOfPmUser = [userPmList indexOfObject:userDict];
+           NSInteger indexOfPmUser = [weakSelf.userPmList indexOfObject:userDict];
            
            NSLog(@"indexOfPmUser = %d", indexOfPmUser);
            NSLog(@"%@", (indexOfPmUser == NSNotFound ? @"not found" : @"found"));
@@ -639,9 +633,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
            {
                [weakSelf.pmUsersTableView beginUpdates];
 
-               [userPmList addObject:userDict];
+               [weakSelf.userPmList addObject:userDict];
                
-               NSIndexPath *indexPath = [NSIndexPath indexPathForRow:userPmList.count-1 inSection:0];
+               NSIndexPath *indexPath = [NSIndexPath indexPathForRow:weakSelf.userPmList.count-1 inSection:0];
                [weakSelf.pmUsersTableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
                [weakSelf.pmUsersTableView endUpdates];
            }
@@ -652,7 +646,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
            {
                weakSelf.justAddPmWithUserId = nil;
                
-               [weakSelf didSelectPmWithUserAtIndex:[NSNumber numberWithInt:userPmList.count-1]];
+               [weakSelf didSelectPmWithUserAtIndex:[NSNumber numberWithInt:weakSelf.userPmList.count-1]];
            }
        }
    }];
@@ -687,8 +681,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     self.bindToWallHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
-
-        
             if ([snapshot.value isKindOfClass:[NSDictionary class]])
             {
             
@@ -904,12 +896,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 [cell initializeDoubleTap];
             }
             
-
-            
-            
-            
-
-            // [cell setBackgroundColor:[UIColor yellowColor]];
             
             // Flip the cell 180 degrees
             cell.transform = CGAffineTransformMakeRotation(M_PI);
@@ -1012,9 +998,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
             }
             
-            
-            
-            
             // [cell setBackgroundColor:[UIColor yellowColor]];
             
             // Flip the cell 180 degrees
@@ -1041,10 +1024,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
             
-            
-            
             [cell setFaded:isFaded animated:NO];
-            
             
             return cell;
         }  else
