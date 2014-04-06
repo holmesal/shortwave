@@ -1139,7 +1139,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     
     
-    
     NSDictionary* userInfo = [notification userInfo];
     
     NSTimeInterval duration;
@@ -1155,13 +1154,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (startFrame.origin.y < 0 || startFrame.origin.x < 0 || endFrame.origin.y < 0 || endFrame.origin.x < 0)
         signCorrection = -1;
     
-    
     CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
     CGFloat heightChange = (endFrame.origin.y - startFrame.origin.y) * signCorrection;
     
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
-    //ethan did some stuff here.  Needs revision if support multiple orientation!
     keyboardIsVisible = (sizeChange < 0);
     keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     
@@ -1190,6 +1187,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                          [[self composeBarView] setFrame:newComposeBarFrame];
                     }
                      completion:NULL];
+    
+    // If the keyboard is coming up, broadcast as an iBeacon to sync surrounding users
+    if (heightChange < 0) {
+        [self.owner.beacon chirpBeacon];
+    }
+    
 }
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView {
     NSLog(@"Utility button pressed");

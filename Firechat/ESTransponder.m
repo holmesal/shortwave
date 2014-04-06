@@ -16,7 +16,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
@@ -34,6 +34,7 @@
 // Beacon broadcasting
 @property NSInteger flipCount;
 @property BOOL isAdvertisingAsBeacon;
+@property BOOL currentlyChirping;
 @property (strong, nonatomic) CLBeaconRegion *beaconBroadcastRegion;
 
 // Beacon monitoring
@@ -61,6 +62,7 @@
         [self initFirebase:firebaseURL];
         // Start off NOT flipping between beacons/bluetooth
         self.isAdvertisingAsBeacon = NO;
+        self.currentlyChirping = @NO;
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
         // Listen for chirpBeacon events
@@ -425,41 +427,49 @@
     
     if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
     
-    // Build an array to sort
-    NSMutableArray *fucker = [[NSMutableArray alloc] init];
-    
-    for (NSNumber *isInside in self.regions) {
-        NSDictionary *bullshit = @{@"some": [[NSDate alloc] init],@"isInside":isInside};
-        [fucker addObject:bullshit];
+    // Don't do anything if you're already chirping
+    if (self.currentlyChirping == @YES) {
+        NSLog(@"Currently chirping, not doing anything");
+    } else{
+        self.currentlyChirping = @YES;
+        // Build an array to sort
+        NSMutableArray *fucker = [[NSMutableArray alloc] init];
+        
+        for (NSNumber *isInside in self.regions) {
+            NSDictionary *bullshit = @{@"some": [[NSDate alloc] init],@"isInside":isInside};
+            [fucker addObject:bullshit];
+        }
+        
+        // Preticate - filter self.regions
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
+        NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
+        if ([availableNos count])
+        {
+            NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
+            id aNo = [availableNos objectAtIndex:randomChoice];
+            
+            int minor = [availableNos indexOfObject:aNo];
+            
+            if (DEBUG_BEACON) NSLog(@"Creating a new beacon broadcast region in slot number %d",minor);
+            self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+                                                                                 major:0
+                                                                                 minor:minor
+                                                                            identifier:[NSString stringWithFormat:@"Broadcast region %d",minor]];
+            // Reset the flip count
+            self.flipCount = 0;
+            // Flip!
+            [self flipState];
+        } else
+        {
+            int timeoutSeconds = 10;
+            NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
+                [self chirpBeacon];
+            });
+        }
     }
     
-    // Preticate - filter self.regions
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
-    NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
-    if ([availableNos count])
-    {
-        NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
-        id aNo = [availableNos objectAtIndex:randomChoice];
-        
-        int minor = [availableNos indexOfObject:aNo];
-        
-        if (DEBUG_BEACON) NSLog(@"Creating a new beacon broadcast region in slot number %d",minor);
-        self.beaconBroadcastRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                             major:0
-                                                                             minor:minor
-                                                                        identifier:[NSString stringWithFormat:@"Broadcast region %d",minor]];
-        // Reset the flip count
-        self.flipCount = 0;
-        // Flip!
-        [self flipState];
-    } else
-    {
-        int timeoutSeconds = 10;
-        NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
-            [self chirpBeacon];
-        });
-    }
+    
 }
 
 - (void)flipState
@@ -487,6 +497,7 @@
         
     } else
     {
+        self.currentlyChirping = @NO;
         [self resetBluetooth];
     }
     
