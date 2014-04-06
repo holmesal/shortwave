@@ -447,7 +447,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [self.pmTableViewContainer setFrame:CGRectMake(WIDTH_OF_PM_LIST, 0, self.view.frame.size.width-WIDTH_OF_PM_LIST, self.view.frame.size.height)];
         [self.pmTableViewContainer setClipsToBounds:YES];//CGRectMake(WIDTH_OF_PM_LIST+900, 100, 50,50)];// 5, self.view.frame.size.height)]
 
-        [self.pmTableView setFrame:self.pmTableViewContainer.bounds];
+        CGRect tvRect = self.pmTableViewContainer.bounds;
+        tvRect.size.width -=2;
+        [self.pmTableView setFrame:tvRect];
         [self.pmUsersTableView setContentInset:UIEdgeInsetsMake(14, 0, 0, 0)];
         [self.view insertSubview:self.pmTableViewContainer atIndex:0];
         [self.pmTableView setSeparatorColor:[UIColor redColor]];
@@ -455,6 +457,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [self.pmTableView setDelegate:self];
         [self.pmTableView setDataSource:self];
 
+        [self.pmTableView setBackgroundColor:[UIColor purpleColor]];
         [self.pmTableViewContainer setBackgroundColor:[UIColor greenColor]];
     }
     
@@ -739,25 +742,37 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 //setter automatically deslects the last selectd index
--(void)selectedUserPmIndex:(int)index
-{
-    if (selectedUserPmIndex != -1)
-    {//stop glowing last cell
-        ESUserPMCell *lastSelectedCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
-        if (lastSelectedCell)
-        {
-            [lastSelectedCell mySetSelected:NO];
-        }
-    }
-    selectedUserPmIndex = index;
-}
+//-(void)selectedUserPmIndex:(int)index
+//{
+//    
+//    if (selectedUserPmIndex != -1)
+//    {//stop glowing last cell
+//        ESUserPMCell *lastSelectedCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
+//        if (lastSelectedCell)
+//        {
+//            [lastSelectedCell mySetSelected:NO];
+//        }
+//    }
+//    selectedUserPmIndex = index;
+//}
 
 
 -(void)startPmWithWallMessage:(NSInteger)index
 {
     FCMessage *fcMessage = [self.wall objectAtIndex:index];
     
+//    if (selectedUserPmIndex != -1)
+//    {//stop glowing last cell
+//        ESUserPMCell *lastSelectedCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
+//        if (lastSelectedCell)
+//        {
+//            [lastSelectedCell mySetSelected:NO];
+//        }
+//    }
+//    selectedUserPmIndex = index;
+
     self.selectedUserPmIndex = index;
+    
     
     NSAssert( [fcMessage isKindOfClass:[FCMessage class]], @"someMessageObject needs to be FCMessage, %@", fcMessage);
     
@@ -787,7 +802,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     NSLog(@"selected user %@", indexNumber);
     
-    
+    if (selectedUserPmIndex != -1)
+    {//stop glowing last cell
+        ESUserPMCell *lastSelectedCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
+        if (lastSelectedCell)
+        {
+            [lastSelectedCell mySetSelected:NO];
+        }
+    }
+//    selectedUserPmIndex = indexNumber.intValue;
     self.selectedUserPmIndex = indexNumber.intValue;//also does deselect the last one
     ESUserPMCell *userPMCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
     if (userPMCell)

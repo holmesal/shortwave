@@ -85,8 +85,8 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
 - (void) startGlowingWithColor:(UIColor*)color fromIntensity:(CGFloat)fromIntensity toIntensity:(CGFloat)toIntensity repeat:(BOOL)repeat {
     
     // If we're already glowing, don't bother
-//    if ([self glowView])
-//        return;
+    if ([self glowView])
+        return;
     
     // The glow image is taken from the current view's appearance.
     // As a side effect, if the view's content, size or shape changes, 
