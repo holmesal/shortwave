@@ -407,13 +407,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.view addGestureRecognizer:panLeftGesture];
     
 
-    
     self.contentView.frame = self.view.bounds;
     [self.contentView setClipsToBounds:YES];
     [self.contentView setBackgroundColor:[UIColor clearColor]];
     
     self.pmListContainerView.frame = CGRectMake(self.view.frame.size.width-WIDTH_OF_PM_LIST, 0, WIDTH_OF_PM_LIST, self.view.frame.size.height);
-    [self.pmListContainerView setBackgroundColor:[UIColor grayColor]];
+    // Set the PM view to use user's current ID color as background. That color can be grabbed from the shadeview for the title bar.
+    [self.pmListContainerView setBackgroundColor:self.shadeView.backgroundColor];
+    //[self.pmListContainerView setBackgroundColor:[UIColor grayColor]];
     
     self.pmUsersTableView.frame = self.pmListContainerView.bounds;
     [self.pmUsersTableView setSeparatorColor:[UIColor clearColor]];
@@ -463,10 +464,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     //tableView setup goes on here!
     {
-    
+        CGFloat bottomEdgeInset = 40;
         self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         //table view is upsid down, so insets beware
-        self.tableView.contentInset = UIEdgeInsetsMake(40, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+        self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+        
+        if (self.view.frame.size.height == 480)
+        {
+            // fix for the fact that the 3.5" screen is 88px shorter than the 4"
+            self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset+88, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+        }
         
         //setup tableViewMask, remember tableView is upside down
         if (NO) //(!tableViewMask)
