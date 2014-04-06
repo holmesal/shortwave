@@ -67,14 +67,14 @@
 {
     if (!coloredCircleLayer)
     {
-        CGFloat radius = 16;
+        CGFloat radius = 15;
         coloredCircleLayer = [CALayer layer];
         [coloredCircleLayer setBackgroundColor:[UIColor blackColor].CGColor];
         [coloredCircleLayer setBorderColor:[UIColor clearColor].CGColor];
         [coloredCircleLayer setCornerRadius:radius];
         
         
-        CGRect frame = CGRectMake(-0.0f, -0.0f, radius*2, radius*2);
+        CGRect frame = CGRectMake(-0.5f, -0.0f, radius*2+1, radius*2+1);
         frame.origin.x += (self.sneakyView.frame.size.width-frame.size.width)*0.5f;
         frame.origin.y += (self.sneakyView.frame.size.height-frame.size.height)*0.5f;
         [coloredCircleLayer setFrame:frame];
@@ -107,7 +107,7 @@
     UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",icon]];
     self.profilePhoto.image = img;
     // Set the color
-    [self.profilePhoto setBackgroundColor:[UIColor clearColor]];
+    //[self.profilePhoto setBackgroundColor:[UIColor redColor]];
     
     
 //    self.profilePhoto.backgroundColor = [UIColor colorWithHexString:color];

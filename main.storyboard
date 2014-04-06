@@ -274,7 +274,7 @@
                                             <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MessageCell" rowHeight="75" id="aqm-zp-aBv" customClass="FCMessageCell">
                                                 <rect key="frame" x="0.0" y="22" width="320" height="75"/>
                                                 <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aqm-zp-aBv" id="wNA-VD-qQo">
+                                                <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aqm-zp-aBv" id="wNA-VD-qQo">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
@@ -287,16 +287,16 @@
                                                                 <constraint firstAttribute="height" constant="41" id="gpU-k5-EC1"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1s7-CE-E9b">
-                                                            <rect key="frame" x="28" y="15" width="20" height="20"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1s7-CE-E9b">
+                                                            <rect key="frame" x="27" y="14" width="20" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="Ibg-mc-JGS"/>
                                                                 <constraint firstAttribute="height" constant="20" id="z0H-ye-VAV"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="900" verticalHuggingPriority="900" horizontalCompressionResistancePriority="900" verticalCompressionResistancePriority="900" text="This is some text" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="225" translatesAutoresizingMaskIntoConstraints="NO" id="sR9-7Q-T6Q">
-                                                            <rect key="frame" x="75" y="14" width="225" height="21"/>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="900" verticalHuggingPriority="900" horizontalCompressionResistancePriority="900" verticalCompressionResistancePriority="900" text="This is some text" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="226" translatesAutoresizingMaskIntoConstraints="NO" id="sR9-7Q-T6Q">
+                                                            <rect key="frame" x="74" y="14" width="226" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="21" id="D20-2d-RvI"/>
@@ -320,7 +320,7 @@
                                                         <constraint firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" constant="13" id="TF4-sx-R9r"/>
                                                         <constraint firstItem="hNe-T6-fzo" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="17" id="Ueu-LU-RCT"/>
                                                         <constraint firstItem="hNe-T6-fzo" firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" id="cAY-0P-TsR"/>
-                                                        <constraint firstItem="1s7-CE-E9b" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="28" id="uhE-IF-i1n"/>
+                                                        <constraint firstItem="1s7-CE-E9b" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="27" id="uhE-IF-i1n"/>
                                                         <constraint firstItem="sR9-7Q-T6Q" firstAttribute="leading" secondItem="1s7-CE-E9b" secondAttribute="trailing" constant="27" id="xep-NS-c5F"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
@@ -380,7 +380,7 @@
                                             <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OwnerMessageCell" rowHeight="75" id="tJY-HB-gJy" customClass="FCOwnerMessageCell">
                                                 <rect key="frame" x="0.0" y="147" width="320" height="75"/>
                                                 <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tJY-HB-gJy" id="P8y-Mj-0Gx">
+                                                <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tJY-HB-gJy" id="P8y-Mj-0Gx">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
@@ -393,8 +393,8 @@
                                                                 <constraint firstAttribute="width" constant="41" id="feW-hf-dPw"/>
                                                             </constraints>
                                                         </view>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2z7-YA-O5S">
-                                                            <rect key="frame" x="272" y="14" width="20" height="20"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2z7-YA-O5S">
+                                                            <rect key="frame" x="272" y="16" width="20" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="irg-sr-Ydl"/>

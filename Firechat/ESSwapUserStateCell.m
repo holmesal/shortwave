@@ -38,7 +38,7 @@
 
 -(void)initialize
 {
-    CGFloat radius = 16;
+    CGFloat radius = 15;
     
     [self.fromImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.toImageView setContentMode:UIViewContentModeScaleAspectFit];
@@ -53,7 +53,7 @@
     [toCircle setBorderColor:[UIColor clearColor].CGColor];
     [toCircle setCornerRadius:radius];
     
-    CGRect frame = CGRectMake(-0.0f, -0.0f, radius*2, radius*2);
+    CGRect frame = CGRectMake(-0.0f, -0.0f, radius*2+1, radius*2+1);
     frame.origin.x += (self.fromView.frame.size.width-frame.size.width)*0.5f;
     frame.origin.y += (self.fromView.frame.size.height-frame.size.height)*0.5f;
     [fromCircle setFrame:frame];
@@ -92,7 +92,9 @@
     UIImage *toIcon = [UIImage imageNamed:toIcn];
     
     [self.fromImageView setImage:fromIcon];
+    //[self.fromImageView setBackgroundColor:[UIColor redColor]];
     [self.toImageView setImage:toIcon];
+    //[self.toImageView setBackgroundColor:[UIColor redColor]];
     
     
 }

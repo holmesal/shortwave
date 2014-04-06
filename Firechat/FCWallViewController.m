@@ -262,7 +262,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        NSLog(@"rectOfZeroCell = %@", NSStringFromCGRect(rectOfZeroCell));
         
         UIBezierPath *linePath = [UIBezierPath bezierPath];
-        CGFloat x = self.tableView.frame.size.width - (20 + 35/2.0f);
+        CGFloat x = self.tableView.frame.size.width - (19.5 + 35/2.0f);
         CGFloat ystart = rectOfZeroCell.origin.y+rectOfZeroCell.size.height - (7+35/2.0f);
         CGFloat bottomOfScreen = self.tableView.contentOffset.y;
         
@@ -587,13 +587,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)bindToTracking
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
-    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        if ([snapshot value]) {
+    
+    __weak typeof (self) weakSelf = self;
+    
+    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        if ([snapshot value])
+        {
             NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
-            [self updatePeopleNearby:[snapshot.value count]];
-        } else{
+            [weakSelf updatePeopleNearby:[snapshot.value count]];
+        } else
+        {
             NSLog(@"Count is nothing!");
-            [self updatePeopleNearby:0];
+            [weakSelf updatePeopleNearby:0];
         }
         
     }];
