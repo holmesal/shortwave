@@ -284,8 +284,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     peopleNearbyLabel.font = [UIFont systemFontOfSize:15];
     [peopleNearbyLabel setTextColor:[UIColor whiteColor]];
     [peopleNearbyLabel setClipsToBounds:YES];
-    //begin observing "Beacons Updated" event
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsUpdated:) name:@"earshotDiscover" object:nil];
+
+    // Start off with 0 people
     [self updatePeopleNearby:0];
 
     [self.shadeView insertSubview:peopleNearbyLabel belowSubview:self.iconButton];
@@ -562,7 +562,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
     [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-        NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
+        if ([snapshot value]) {
+            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
+            [self updatePeopleNearby:[snapshot.value count]];
+        } else{
+            NSLog(@"Count is nothing!");
+            [self updatePeopleNearby:0];
+        }
+        
     }];
 }
 
