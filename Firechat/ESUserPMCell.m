@@ -7,6 +7,7 @@
 //
 
 #import "ESUserPMCell.h"
+#import "UIView+Glow.h"
 
 @interface ESUserPMCell ()
 
@@ -17,11 +18,23 @@
 
 @property (nonatomic) CALayer *circleLayer;
 
+//@property (nonatomic) UIView *glowView;
+
+@end
+
+
+@interface ESUserPMCell ()
+
+
+@property (nonatomic) UIColor *circleColor;
 @end
 
 @implementation ESUserPMCell
+@synthesize circleColor;
 @synthesize circleLayer;
 @synthesize button;
+
+
 -(void)awakeFromNib
 {
     [self initialize];
@@ -52,8 +65,17 @@
     [button addTarget:self action:@selector(select) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:button];
     
-    
+    [self.circleView setClipsToBounds:NO];
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    
+//    self.glowView = [[UIView alloc] initWithFrame:self.circleView.frame];
+//    [self.glowView setBackgroundColor:[UIColor clearColor]];
+//    NSLog(@"self.glowView = %@", self.glowView);
+//    [self.glowView setClipsToBounds:NO];
+//    [self.glowView setOpaque:NO];
+    
+    
+//    [self.circleView.superview insertSubview:self.glowView belowSubview:self.circleView];
     
 }
 
@@ -70,7 +92,8 @@
 
 -(void)setColor:(NSString*)color andImage:(NSString*)image
 {
-    [self.circleLayer setBackgroundColor:[UIColor colorWithHexString:color].CGColor];
+    circleColor = [UIColor colorWithHexString:color];
+    [self.circleLayer setBackgroundColor:circleColor.CGColor];
     [self.profileIcon setImage:[UIImage imageNamed:image]];
 }
 
@@ -94,5 +117,20 @@
         self.profileIcon = secondImageView;
     }];
 }
+
+-(void)mySetSelected:(BOOL)selected
+{
+    //glow view
+    if (selected)
+    {
+        NSLog(@"selected cell at %d", self.tag);
+        [self.circleView startGlowingWithColor:circleColor fromIntensity:0.5 toIntensity:1.0 repeat:YES ];
+    } else
+    {
+        [self.circleView stopGlowing];
+    }
+}
+
+
 
 @end

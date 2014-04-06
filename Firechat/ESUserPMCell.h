@@ -13,4 +13,6 @@
 -(void)setColor:(NSString*)color andImage:(NSString*)image;
 -(void)transitionToColor:(NSString*)color andImage:(NSString*)image;
 
+-(void)mySetSelected:(BOOL)selected;
+
 @end

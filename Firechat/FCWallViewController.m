@@ -34,10 +34,15 @@ typedef enum
     
 } WallState;
 
+
+@property (nonatomic ) NSString *justAddPmWithUserId;
 @property (nonatomic) WallState wallState;
 //firebase handles
 
 
+
+@property (nonatomic) NSInteger selectedUserPmIndex;
+@property (nonatomic) NSMutableArray *userPmList;
 @property (nonatomic) NSMutableArray *currentPrivateMessages;
 
 @property (nonatomic) IBOutlet UIView *contentView;
@@ -83,7 +88,6 @@ typedef enum
 
 @property Firebase *trackingRef;
 
-
 @property (weak, nonatomic) IBOutlet UICollectionView *whoIsHereCollectionView;
 @property (nonatomic) CGRect originalRectOfIcon;
 
@@ -102,6 +106,8 @@ typedef enum
 
 @implementation FCWallViewController
 
+
+@synthesize selectedUserPmIndex;
 @synthesize buttonImageInset;
 @synthesize peopleNearbyLabel;
 @synthesize lastNumberOfPeopleInCollectionView;
@@ -123,6 +129,7 @@ typedef enum
 @synthesize contentView;
 
 @synthesize currentPrivateMessages;
+@synthesize userPmList;
 
 
 static CGFloat HeightOfGradient = 60;
@@ -138,6 +145,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.currentPrivateMessages = self.wall;
         self.beacons = [[NSArray alloc] init];
         
+        self.userPmList = [[NSMutableArray alloc] init];
+        
 
     }
     return self;
@@ -148,6 +157,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     
 
     
@@ -267,10 +277,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidLoad];
     
+    
     //actually just have currentPrivateMessages == wall
 //    currentPrivateMessages = [[NSMutableArray alloc] init];
     
     wallState = WallStateGlobal;
+    selectedUserPmIndex = -1;// no selected UserPm
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"shouldPostSwapUserMessageWhenStateChange"];
     
@@ -359,6 +371,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's wall
     [self bindToWall];
     
+    // Bind to the owner's userPmList
+    [self bindToUserPmList];
+    
     // Bind to the owner's tracking
     [self bindToTracking];
     
@@ -389,7 +404,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //pm stuff setup
     
     panLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-//    [self.view addGestureRecognizer:panLeftGesture];
+    [self.view addGestureRecognizer:panLeftGesture];
     
 
     
@@ -419,6 +434,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)viewWillLayoutSubviews
 {
     [self.tableView setTransform:CGAffineTransformMakeRotation(-M_PI)];
+    [self.pmTableView setTransform:CGAffineTransformMakeRotation(-M_PI)];
     
     //stuff here!lol ok!
     
@@ -580,11 +596,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }];
 }
 
+//handles adding users to the pmUserList for displayed on the right panel.
 -(void) bindToUserPmList
 {
     
-    self.userPmListRef = [[self.owner.ref childByAppendingPath:@"userPmList"] childByAutoId];
-    self.bindToUserPmListHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+    self.userPmListRef = [self.owner.ref childByAppendingPath:@"userPmList"];
+    NSLog(@"self.userPmListRf = %@", self.userPmListRef);
+    
+    __weak typeof(self) weakSelf = self;
+    
+    self.bindToUserPmListHandle = [self.userPmListRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
    {
        NSLog(@"added pm user");
        
@@ -594,17 +615,40 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
            NSDictionary *userDict = snapshot.value;
            
            //here are my keys
-           NSString *userId = [userDict objectForKey:@"withUserId"];
-           NSString *userColor = [userDict objectForKey:@"userColor"];
-           NSString *icon = [userDict objectForKey:@"userIcon"];
+           NSString *userId = [userDict objectForKey:@"theirUserId"];
+           NSString *userColor = [userDict objectForKey:@"theirColor"];
+           NSString *icon = [userDict objectForKey:@"theirIcon"];
+           
+           NSInteger indexOfPmUser = [userPmList indexOfObject:userDict];
+           
+           NSLog(@"indexOfPmUser = %d", indexOfPmUser);
+           NSLog(@"%@", (indexOfPmUser == NSNotFound ? @"not found" : @"found"));
            
            
+           //animate an insert in this tableView
+           if (indexOfPmUser == NSNotFound)
+           {
+               [weakSelf.pmUsersTableView beginUpdates];
 
+               [userPmList addObject:userDict];
+               
+               NSIndexPath *indexPath = [NSIndexPath indexPathForRow:userPmList.count-1 inSection:0];
+               [weakSelf.pmUsersTableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+               [weakSelf.pmUsersTableView endUpdates];
+           }
            
+           
+           //maybe this is occuring because I just tapped on a user, if that's the case justAddPmWithUserId is not nil
+           if (weakSelf.justAddPmWithUserId && [weakSelf.justAddPmWithUserId isEqualToString:userId])
+           {
+               weakSelf.justAddPmWithUserId = nil;
+               
+               [weakSelf didSelectPmWithUserAtIndex:[NSNumber numberWithInt:userPmList.count-1]];
+           }
        }
    }];
     
-    self.removeFromUserPmListHandle = [self.wallRef observeEventType:FEventTypeChildRemoved withBlock:^(FDataSnapshot *snapshot)
+    self.removeFromUserPmListHandle = [self.userPmListRef observeEventType:FEventTypeChildRemoved withBlock:^(FDataSnapshot *snapshot)
     {
         
         NSLog(@"removed pm user");
@@ -694,9 +738,45 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }
 }
 
+//setter automatically deslects the last selectd index
+-(void)selectedUserPmIndex:(int)index
+{
+    if (selectedUserPmIndex != -1)
+    {//stop glowing last cell
+        ESUserPMCell *lastSelectedCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
+        if (lastSelectedCell)
+        {
+            [lastSelectedCell mySetSelected:NO];
+        }
+    }
+    selectedUserPmIndex = index;
+}
+
+
 -(void)startPmWithWallMessage:(NSInteger)index
 {
-    id someMessageObject = [self.wall objectAtIndex:index];
+    FCMessage *fcMessage = [self.wall objectAtIndex:index];
+    
+    self.selectedUserPmIndex = index;
+    
+    NSAssert( [fcMessage isKindOfClass:[FCMessage class]], @"someMessageObject needs to be FCMessage, %@", fcMessage);
+    
+    NSString *theirId = fcMessage.ownerID;
+    self.justAddPmWithUserId = theirId; //listen for the callback on self.userPmListRef childAdded event
+    NSString *theirIcon = fcMessage.icon;
+    NSString *theirColor = fcMessage.color;
+    
+    
+    /*
+     theirUserId: userId,
+     theirColor: color,
+     theirIcon: icon,
+     */
+    NSDictionary *newPmUserDict = @{@"theirUserId": theirId,
+                                    @"theirIcon": theirIcon,
+                                    @"theirColor": theirColor};
+    
+    [ [self.userPmListRef childByAutoId] setValue:newPmUserDict];
     
 }
 
@@ -706,6 +786,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)didSelectPmWithUserAtIndex:(NSNumber*)indexNumber
 {
     NSLog(@"selected user %@", indexNumber);
+    
+    
+    self.selectedUserPmIndex = indexNumber.intValue;//also does deselect the last one
+    ESUserPMCell *userPMCell = (ESUserPMCell *)[self.pmUsersTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:selectedUserPmIndex inSection:0]];
+    if (userPMCell)
+    {
+        [userPMCell mySetSelected:YES];
+    }
+    
+    
     self.wallState = WallStatePM;
     
     [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.6f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
@@ -750,7 +840,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     } else
     if (tV == self.pmUsersTableView)
     {
-        return 5;
+        return [userPmList count];
     } else
     if (tV == self.pmTableView)
     {
@@ -771,7 +861,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             FCMessage *message = unknownTypeOfMessage;
             
             static NSString *CellIdentifier = @"MessageCell";
-            static NSString *ownerCellIdentifire = @"MessageCell";//@"OwnerMessageCell";
+            static NSString *ownerCellIdentifire = @"OwnerMessageCell";
             
             
             FCMessageCell *cell;
@@ -781,10 +871,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             } else
             {
                 cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+                [cell initializeLongPress];
+                [cell initializeDoubleTap];
             }
             
-            [cell initializeLongPress];
-            [cell initializeDoubleTap];
+
             
             
             
@@ -848,6 +939,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (self.pmUsersTableView == tV)
     {
         ESUserPMCell *pmCell = [self.pmUsersTableView dequeueReusableCellWithIdentifier:@"pm"];
+        
+        NSDictionary *pmUserData = [self.userPmList objectAtIndex:indexPath.row];
+        NSString *theirId = [pmUserData objectForKey:@"theirUserId"];
+        NSString *theirColor = [pmUserData objectForKey:@"theirColor"];
+        NSString *theirIcon = [pmUserData objectForKey:@"theirIcon"];
+        
+        
+        //set their color
+        [pmCell setColor:theirColor andImage:theirIcon];
+        pmCell.tag = indexPath.row;
+        
+        //glow to the color if it is selected, else do not
+        if (indexPath.row == self.selectedUserPmIndex)
+        {
+            [pmCell mySetSelected:YES];
+        } else
+        {
+            [pmCell mySetSelected:NO];
+        }
+        
+
         return pmCell;
     } else
     if (self.pmTableView == tV)
@@ -962,6 +1074,30 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (tV == self.pmUsersTableView)
     {
         return WIDTH_OF_PM_LIST;
+    } else
+    if (tV == self.pmTableView)
+    {
+        if (indexPath.row >= self.currentPrivateMessages.count)
+        {
+            return 0.0f;
+        }
+        id unknownType = [self.currentPrivateMessages objectAtIndex:indexPath.row];
+        
+        if ([unknownType isKindOfClass:[FCMessage class]])
+        {
+            
+            FCMessage *message = [self.wall objectAtIndex:indexPath.row];
+            
+            UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+            CGSize constraintSize = {225.0f, 700};
+            CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
+            CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
+            return height;
+        } else
+        if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
+        {
+            return 50;
+        }
     }
     return 0;
 
@@ -1364,6 +1500,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
              {
                  //ready!
                  self.wallState = WallStateGlobal;
+                 self.selectedUserPmIndex = -1;
                   self.isPanAnimating = NO;
              }];
         }

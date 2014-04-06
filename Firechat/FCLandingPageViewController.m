@@ -772,7 +772,7 @@ typedef enum
             if (PanGestureDirectionUp == panDirection || PanGestureDirectionDown == panDirection)
             {
                 //up is negative, down is positive
-                int direction = (percent < 0 ? -1 : 1);//fabsf(percent)/percent;
+//                int direction = (percent < 0 ? -1 : 1);//fabsf(percent)/percent;
                 
                 CGFloat y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
                 
@@ -782,13 +782,7 @@ typedef enum
                     NSLog(@"reshuffle bottom to top");
                     id lastObject = [self.icons lastObject];
                     
-                    
-//                    id lastAttrib = [self.iconAttributions lastObject];
-//                    NSMutableArray *iconAttribsMutable = [NSMutableArray arrayWithArray:self.iconAttributions];
-//                    [iconAttribsMutable removeLastObject];
-//                    [iconAttribsMutable insertObject:lastAttrib atIndex:0];
-//                    self.iconAttributions = [NSArray arrayWithArray:iconAttribsMutable];
-                    
+  
                     
                     
                     NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
@@ -812,13 +806,7 @@ typedef enum
                     NSLog(@"reshuffle top to bottom");
                     //reshuffle top to bottom
                     id firstObject = [self.icons objectAtIndex:0];
-                    
-//                    id firstAttrib = [self.iconAttributions objectAtIndex:0];
-//                    NSMutableArray *iconAttribsMutable = [NSMutableArray arrayWithArray:self.iconAttributions];
-//                    [iconAttribsMutable removeObject:firstAttrib];
-//                    [iconAttribsMutable addObject:firstAttrib];
-//                    self.iconAttributions = [NSArray arrayWithArray:iconAttribsMutable];
-                    
+
                     
                     NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
                     [iconNamesMutable removeObject:firstObject];

@@ -110,7 +110,7 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
     // point as ourself. Overlay it over ourself.
     UIView* glowView = [[UIImageView alloc] initWithImage:image];
     glowView.center = self.center;
-    [self.superview insertSubview:glowView aboveSubview:self];
+    [self.superview insertSubview:glowView belowSubview:self];
     
     // We don't want to show the image, but rather a shadow created by
     // Core Animation. By setting the shadow to white and the shadow radius to 
