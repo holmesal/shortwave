@@ -77,6 +77,8 @@ typedef enum
 @property (weak, nonatomic) IBOutlet UIImageView *bgImage;
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 
+@property Firebase *trackingRef;
+
 
 @property (weak, nonatomic) IBOutlet UICollectionView *whoIsHereCollectionView;
 @property (nonatomic) CGRect originalRectOfIcon;
@@ -353,6 +355,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's wall
     [self bindToWall];
     
+    // Bind to the owner's tracking
+    [self bindToTracking];
+    
 #warning should not retain
     // Bind to keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -552,6 +557,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 # pragma mark - firebase
+
+- (void)bindToTracking
+{
+    self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
+    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+        NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
+    }];
+}
 
 - (void)bindToWall
 {
