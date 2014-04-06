@@ -464,7 +464,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     //tableView setup goes on here!
     {
-        CGFloat bottomEdgeInset = 40;
+        CGFloat bottomEdgeInset = 50;
         self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         //table view is upsid down, so insets beware
         self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
