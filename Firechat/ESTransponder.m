@@ -14,14 +14,15 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL YES
+#define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
-#define DEBUG_USERS NO
+#define DEBUG_BEACON YES
+#define DEBUG_USERS YES
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define NUM_BEACONS 20
+#define TIMEOUT 120.0
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 // Bluetooth / main class stuff
@@ -116,7 +117,7 @@
         float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
         if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
         // If it's longer than 20 seconds, they're probs gone
-        if (lastSeen > 120.0) {
+        if (lastSeen > TIMEOUT) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
             // Remove from earshotUsers, if it's actually in there
             if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
@@ -142,17 +143,55 @@
         NSLog(@"%@",snapshot.value);
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
+            // Filter the users based on timeout
+            [self filterFirebaseUsers];
         }
     }];
+}
+
+- (void)filterFirebaseUsers
+{
+    // Store the current time
+    NSDate *currentDate = [NSDate date];
+    for (NSString *userKey in self.earshotUsers) {
+        // If the timeout is too old, clear it out
+        NSNumber *timestampNumber = [self.earshotUsers objectForKey:userKey];
+        long timestamp = [timestampNumber longValue];
+        
+        NSDate *beforeDate = [[NSDate alloc] initWithTimeIntervalSince1970:timestamp];
+        
+        NSTimeInterval interval = [currentDate timeIntervalSinceDate:beforeDate];
+        
+        NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
+        
+        if (interval > TIMEOUT * 10.0) {
+            NSLog(@"REMOVING USER %@ - has been too long",userKey);
+            // Remove the user
+            [self removeUser:userKey];
+        }
+    }
 }
 
 // Takes in a bluetooth user and adds it to earshotUsers
 - (void)addUser:(NSString *)userID
 {
     // Add the user for yourself
-    [[self.earshotUsersRef childByAppendingPath:userID] setValue:@"true"];
+    uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
+//    NSLog(@"Rounded time is %d",rounded);
+//    NSTimeInterval secs = [[[NSDate alloc] init] timeIntervalSince1970];
+//    NSDictionary *val = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%f",secs]};
+//    NSDictionary *trackingData = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%f",secs]};
+    [[self.earshotUsersRef childByAppendingPath:userID] setValue:[NSNumber numberWithInteger:rounded]];
     // Add yourself for the user
-    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:@"true"];
+    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[NSNumber numberWithInteger:rounded]];
+}
+
+- (uint)roundTime:(NSTimeInterval)time
+{
+    // Round to the nearest 5 seconds
+//    NSLog(@"time = %f", time);
+    double rounded = TIMEOUT * floor((time/TIMEOUT)+0.5);
+    return rounded;
 }
 
 - (void)removeUser:(NSString *)userID
