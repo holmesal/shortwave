@@ -14,7 +14,7 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL NO
+#define DEBUG_CENTRAL YES
 #define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON YES
 #define DEBUG_USERS NO
@@ -291,6 +291,9 @@
         
         // Send the new (anonymous) user notification
         [[NSNotificationCenter defaultCenter] postNotificationName:@"newUserDiscovered" object:self userInfo:@{@"user":existingUser}];
+        
+        // Chirp the beacon!
+        [self chirpBeacon];
     } else{
         // Update the time last seen
         [existingUser setObject:[[NSDate alloc] init] forKey:@"lastSeen"];
