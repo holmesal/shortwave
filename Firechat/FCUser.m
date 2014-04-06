@@ -20,6 +20,7 @@ typedef void (^CompletionBlockType)(id);
 
 @interface FCUser ()
 @property (nonatomic, copy) CompletionBlockType completionBlock;
+@property (strong, nonatomic) Firebase *wall;
 @end
 
 @implementation FCUser
@@ -155,6 +156,9 @@ static FCUser *currentUser;
 {
     self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    
+    // Start listening to the wall, just to see if it persists better
+    self.wall = [self.ref childByAppendingPath:@"wall"];
 
 }
 
