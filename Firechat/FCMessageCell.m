@@ -15,6 +15,8 @@
 @property (nonatomic) UILongPressGestureRecognizer *longPress;
 @property (nonatomic) UITapGestureRecognizer *doubleTap;
 
+@property (nonatomic) UITapGestureRecognizer *debugTap;
+
 @end
 
 @implementation FCMessageCell
@@ -134,6 +136,23 @@
         self.profilePhoto.alpha = targetAlpha;
         self.messageText.alpha  = targetAlpha;
     }
+}
+
+
+-(void)addTapDebugGestureIfNecessary
+{
+    if (!self.debugTap)
+    {
+        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
+        [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
+        [self addGestureRecognizer:self.debugTap];
+    }
+}
+
+-(void)debugTapGesture:(UITapGestureRecognizer*)tap
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Debug" message:self.ownerID delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+    [alertView show];
 }
 
 @end

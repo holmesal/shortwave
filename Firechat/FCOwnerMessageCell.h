@@ -25,4 +25,7 @@
 - (void)setMessage:(FCMessage *)message;
 
 -(void)setFaded:(BOOL)faded animated:(BOOL)animated;
+
+-(void)addTapDebugGestureIfNecessary;
+
 @end

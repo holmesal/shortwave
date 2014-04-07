@@ -13,6 +13,8 @@
 @property (weak, nonatomic) IBOutlet UIView *sneakyView;
 @property (nonatomic) CALayer *coloredCircleLayer;
 
+@property (nonatomic) UITapGestureRecognizer *debugTap;
+
 @end
 
 @implementation FCOwnerMessageCell
@@ -91,4 +93,20 @@
         self.messageText.alpha  = targetAlpha;
     }
 }
+
+-(void)addTapDebugGestureIfNecessary
+{
+    if (!self.debugTap)
+    {
+        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
+        [self addGestureRecognizer:self.debugTap];
+    }
+}
+
+-(void)debugTapGesture:(UITapGestureRecognizer*)tap
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Debug" message:self.ownerID delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+    [alertView show];
+}
+
 @end

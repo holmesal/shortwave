@@ -595,76 +595,48 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pick an icon and a color." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBA-4v-7A5">
-                                <rect key="frame" x="25" y="32" width="270" height="48"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PBA-4v-7A5">
+                                <rect key="frame" x="25" y="40" width="270" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="270" id="dWj-El-tC6"/>
                                     <constraint firstAttribute="height" constant="48" id="srA-Jp-X4h"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="21"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WhS-ge-gYJ">
-                                <rect key="frame" x="37" y="360" width="241" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="JbU-nw-FVQ"/>
-                                    <constraint firstAttribute="width" constant="241" id="VHY-tH-FbU"/>
-                                </constraints>
                                 <attributedString key="attributedText">
-                                    <fragment content="Swipe ">
+                                    <fragment content="Pick an ">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Thin"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                            <font key="NSFont" size="21" name="HelveticaNeue-Thin"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
                                     </fragment>
-                                    <fragment content="up/down">
+                                    <fragment content="icon">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Medium"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                            <font key="NSFont" size="21" name="HelveticaNeue-Medium"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
                                     </fragment>
-                                    <fragment content=" to change icon.">
+                                    <fragment content=" and a ">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Thin"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                            <font key="NSFont" size="21" name="HelveticaNeue-Thin"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
                                     </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2c-Tr-HbX">
-                                <rect key="frame" x="37" y="389" width="241" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="241" id="BuY-vo-zpY"/>
-                                    <constraint firstAttribute="height" constant="21" id="KX0-zT-wH1"/>
-                                </constraints>
-                                <attributedString key="attributedText">
-                                    <fragment content="Swipe ">
+                                    <fragment content="color">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Thin"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                            <font key="NSFont" size="21" name="HelveticaNeue-Medium"/>
+                                            <font key="NSOriginalFont" size="21" name="HelveticaNeue-Medium"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
                                     </fragment>
-                                    <fragment content="left/right">
+                                    <fragment content=".">
                                         <attributes>
                                             <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Medium"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                        </attributes>
-                                    </fragment>
-                                    <fragment content=" to change color.">
-                                        <attributes>
-                                            <color key="NSColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <font key="NSFont" size="17" name="HelveticaNeue-Thin"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                            <font key="NSFont" size="21" name="HelveticaNeue-Thin"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
                                         </attributes>
                                     </fragment>
                                 </attributedString>
@@ -688,22 +660,24 @@
                                     <constraint firstAttribute="width" constant="247" id="yia-iI-hhf"/>
                                 </constraints>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="spinner" translatesAutoresizingMaskIntoConstraints="NO" id="wYh-G0-bJ6">
+                                <rect key="frame" x="80" y="205" width="160" height="160"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="J1u-tk-hdc"/>
+                                    <constraint firstAttribute="height" constant="160" id="JX9-D9-Ucx"/>
+                                </constraints>
+                            </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4nl-Dd-943">
-                                <rect key="frame" x="80" y="135" width="160" height="160"/>
+                                <rect key="frame" x="80" y="205" width="160" height="160"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="spinner" translatesAutoresizingMaskIntoConstraints="NO" id="wYh-G0-bJ6">
-                                        <rect key="frame" x="0.0" y="0.0" width="160" height="160"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    </imageView>
-                                </subviews>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="Hi1-dJ-Jvj"/>
                                     <constraint firstAttribute="height" constant="160" id="yPR-Nm-uy0"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hs1-Gq-bzV">
-                                <rect key="frame" x="0.0" y="161" width="319" height="246"/>
+                                <rect key="frame" x="320" y="161" width="319" height="246"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dyl-rh-dhX" customClass="FCLiveBlurButton">
@@ -737,7 +711,7 @@
                                 </subviews>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MJE-dD-ubb">
-                                <rect key="frame" x="80" y="88" width="160" height="39"/>
+                                <rect key="frame" x="80" y="88" width="160" height="111"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
@@ -745,19 +719,11 @@
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iZj-kB-r2B">
-                                <rect key="frame" x="80" y="303" width="160" height="49"/>
+                                <rect key="frame" x="80" y="374" width="160" height="119"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="160" id="7fV-Nu-BhH"/>
-                                </constraints>
-                            </view>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Q1-2B-nCl">
-                                <rect key="frame" x="80" y="418" width="160" height="68"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="160" id="SHc-4F-rC2"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="attribution label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WjN-UH-haZ">
@@ -773,22 +739,18 @@
                             <constraint firstAttribute="centerX" secondItem="PBA-4v-7A5" secondAttribute="centerX" id="0lV-ZW-fBa"/>
                             <constraint firstItem="Sw9-Ok-iHz" firstAttribute="top" secondItem="X2a-HY-yRh" secondAttribute="bottom" constant="41" id="4Ek-ga-K93"/>
                             <constraint firstAttribute="centerX" secondItem="4nl-Dd-943" secondAttribute="centerX" id="CKZ-iT-o5f"/>
-                            <constraint firstItem="iZj-kB-r2B" firstAttribute="height" secondItem="MJE-dD-ubb" secondAttribute="height" constant="10" id="IaH-dR-TwC"/>
-                            <constraint firstAttribute="centerX" secondItem="f2c-Tr-HbX" secondAttribute="centerX" constant="2.5" id="Jb1-oE-lqj"/>
-                            <constraint firstItem="f2c-Tr-HbX" firstAttribute="top" secondItem="WhS-ge-gYJ" secondAttribute="bottom" constant="8" id="Rey-d1-u3x"/>
-                            <constraint firstItem="iZj-kB-r2B" firstAttribute="height" secondItem="9Q1-2B-nCl" secondAttribute="height" constant="-19" id="Utj-zi-dUL"/>
-                            <constraint firstItem="iZj-kB-r2B" firstAttribute="top" secondItem="4nl-Dd-943" secondAttribute="bottom" constant="8" id="Xx5-6N-deA"/>
+                            <constraint firstItem="iZj-kB-r2B" firstAttribute="height" secondItem="MJE-dD-ubb" secondAttribute="height" constant="8" id="IaH-dR-TwC"/>
+                            <constraint firstItem="iZj-kB-r2B" firstAttribute="bottom" secondItem="X2a-HY-yRh" secondAttribute="bottom" constant="-34" id="InT-6a-A4h"/>
+                            <constraint firstItem="4nl-Dd-943" firstAttribute="centerY" secondItem="wYh-G0-bJ6" secondAttribute="centerY" id="Os7-KZ-CDO"/>
+                            <constraint firstItem="iZj-kB-r2B" firstAttribute="top" secondItem="4nl-Dd-943" secondAttribute="bottom" constant="9" id="Xx5-6N-deA"/>
                             <constraint firstAttribute="centerX" secondItem="iZj-kB-r2B" secondAttribute="centerX" id="Xy1-NT-Z8s"/>
-                            <constraint firstAttribute="centerX" secondItem="WhS-ge-gYJ" secondAttribute="centerX" constant="2.5" id="d7g-Qg-cuO"/>
+                            <constraint firstItem="4nl-Dd-943" firstAttribute="centerX" secondItem="wYh-G0-bJ6" secondAttribute="centerX" id="YqX-bi-l8L"/>
                             <constraint firstAttribute="centerX" secondItem="X2a-HY-yRh" secondAttribute="centerX" constant="-0.5" id="ewr-bI-23M"/>
-                            <constraint firstItem="X2a-HY-yRh" firstAttribute="top" secondItem="9Q1-2B-nCl" secondAttribute="bottom" id="fUg-g8-IZA"/>
-                            <constraint firstItem="4nl-Dd-943" firstAttribute="top" secondItem="MJE-dD-ubb" secondAttribute="bottom" constant="8" id="fgu-ks-c7Z"/>
-                            <constraint firstItem="MJE-dD-ubb" firstAttribute="top" secondItem="PBA-4v-7A5" secondAttribute="bottom" constant="8" id="iTj-r7-LaS"/>
-                            <constraint firstItem="WhS-ge-gYJ" firstAttribute="top" secondItem="iZj-kB-r2B" secondAttribute="bottom" constant="8" id="nCX-s5-yjX"/>
-                            <constraint firstAttribute="centerX" secondItem="9Q1-2B-nCl" secondAttribute="centerX" id="o25-zr-JxS"/>
+                            <constraint firstItem="4nl-Dd-943" firstAttribute="top" secondItem="MJE-dD-ubb" secondAttribute="bottom" constant="6" id="fgu-ks-c7Z"/>
+                            <constraint firstItem="MJE-dD-ubb" firstAttribute="top" secondItem="PBA-4v-7A5" secondAttribute="bottom" id="iTj-r7-LaS"/>
                             <constraint firstAttribute="centerX" secondItem="MJE-dD-ubb" secondAttribute="centerX" id="ssp-St-SZ8"/>
-                            <constraint firstItem="9Q1-2B-nCl" firstAttribute="top" secondItem="f2c-Tr-HbX" secondAttribute="bottom" constant="8" id="tl6-Xt-iCG"/>
-                            <constraint firstItem="PBA-4v-7A5" firstAttribute="top" secondItem="MgY-ok-uYN" secondAttribute="bottom" constant="12" id="xwW-Qo-usD"/>
+                            <constraint firstItem="iZj-kB-r2B" firstAttribute="height" secondItem="MJE-dD-ubb" secondAttribute="height" constant="8" id="xa3-WD-ZiQ"/>
+                            <constraint firstItem="PBA-4v-7A5" firstAttribute="top" secondItem="MgY-ok-uYN" secondAttribute="bottom" constant="20" id="xwW-Qo-usD"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="iTQ-ZQ-ekq"/>

@@ -12,6 +12,8 @@
 #import "FCWallViewController.h"
 #import <Mixpanel/Mixpanel.h>
 #import "ESSwapUserStateMessage.h"
+#import "UIImage+Resize.h"
+
 typedef enum
 {
     PanGestureDirectionNone,
@@ -120,8 +122,6 @@ typedef enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-//    [self reanimate];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -144,8 +144,6 @@ typedef enum
     }
     
     colors = [NSArray arrayWithArray:colorsMutable];
-
-    
     
  
     self.icons = @[@{@"name":@"1", @"attribution":@"FIND THIS1"}, //cloud
@@ -180,7 +178,11 @@ typedef enum
     NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
     [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
-    iconTableView = [[UITableView alloc] initWithFrame:self.iconContainerView.bounds style:UITableViewStylePlain];
+    CGFloat heightOfFadedArea = 0;//self.cellHeight;//self.cellHeight; //180;
+    CGRect rect = self.iconContainerView.bounds;
+    rect.origin.y -= heightOfFadedArea;
+    rect.size.height += 2*heightOfFadedArea;
+    iconTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     [iconTableView setBackgroundColor:[UIColor clearColor]];
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
@@ -189,13 +191,44 @@ typedef enum
     [iconTableView setContentOffset:CGPointMake(0, self.iconIndex*self.cellHeight)];
     
     {
+        //create my mask layer
+        
         CALayer *layer = [CALayer layer];
-        [layer setFrame:self.iconContainerView.bounds];
+        [layer setBackgroundColor:[UIColor clearColor].CGColor];
+        layer.frame = self.iconTableView.frame;
         
-        [layer setCornerRadius:self.iconContainerView.bounds.size.height/2];
-        [layer setBackgroundColor:[UIColor whiteColor].CGColor];
         
-        [self.iconContainerView.layer setMask:layer];
+            CALayer *centerSqr = [CALayer layer];
+            [centerSqr setBackgroundColor:[UIColor whiteColor].CGColor];
+            CGRect centerRct = self.iconContainerView.bounds;
+            centerRct.origin.y += heightOfFadedArea;
+            centerSqr.frame = centerRct;
+            [layer addSublayer:centerSqr];
+            
+            //image layer
+            CALayer *topFade = [CALayer layer];
+            [topFade setFrame:CGRectMake(0, 0, centerSqr.frame.size.width, heightOfFadedArea)];
+            UIImage *image = [UIImage imageNamed:@"icongradient.png"];
+            UIImage *scaledImg = [image scaleToSize:CGSizeMake(topFade.frame.size.width, topFade.frame.size.height)];
+            [topFade setContentsScale:[UIScreen mainScreen].scale];
+            [topFade setContents:(id)scaledImg.CGImage];
+            [topFade setTransform:CATransform3DMakeRotation(M_PI, 0, 0, 1)];
+            [layer addSublayer:topFade];
+
+            
+            CALayer *bottomFade = [CALayer layer];
+            [bottomFade setFrame:CGRectMake(0, heightOfFadedArea+centerSqr.frame.size.height, centerSqr.frame.size.width, heightOfFadedArea)];
+            [bottomFade setTransform:CATransform3DMakeRotation(0, 0, 0, 1)];
+            [bottomFade setContentsScale:[UIScreen mainScreen].scale];
+            [bottomFade setContents:(id)scaledImg.CGImage];
+            
+            
+            [layer addSublayer:bottomFade];
+        
+        
+
+        self.iconContainerView.layer.mask = layer;
+    
     }
     
     
@@ -203,6 +236,7 @@ typedef enum
     iconTableView.dataSource = self;
     
     [self.iconContainerView addSubview:iconTableView];
+    [self.iconContainerView setClipsToBounds:NO];
 
     colorIndex = 0;//esRandomNumberIn(0, self.colors.count);
     
@@ -232,6 +266,8 @@ typedef enum
 
 
 }
+
+
 
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
@@ -282,12 +318,11 @@ typedef enum
 -(void)continueWithDonBlurButtonAction
 {
     //extract current icon
-    self.selectedIconIndex = (iconTableView.contentOffset.y/self.cellHeight);
+    self.selectedIconIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
     
     FCUser *owner = [FCUser owner];
     
     NSString *iconIndexStr = [[icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
-    //    FCAppDelegate *appDel = (FCAppDelegate *)[UIApplication sharedApplication].delegate;
     
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldPostSwapUserMessageWhenStateChange"])
@@ -801,7 +836,7 @@ typedef enum
                     
                     
                 } else
-                if (y > self.cellHeight*(self.icons.count-1))
+                if (y > self.cellHeight*(self.icons.count-3))
                 {
                     NSLog(@"reshuffle top to bottom");
                     //reshuffle top to bottom
@@ -815,7 +850,7 @@ typedef enum
                     [self.iconTableView reloadData];
                     
                     //move tableView
-                    CGPoint offset = {0, self.cellHeight*(self.icons.count-1)-self.cellHeight};
+                    CGPoint offset = {0, self.cellHeight*(self.icons.count-3)-self.cellHeight};
                     
                     self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
                     
@@ -1028,7 +1063,7 @@ typedef enum
 
 -(CGFloat)cellHeight
 {
-    return self.iconContainerView.bounds.size.height;
+    return self.iconContainerView.bounds.size.height*0.79f;
 }
 
 

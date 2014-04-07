@@ -26,4 +26,7 @@
 
 -(void)initializeDoubleTap;
 -(void)initializeLongPress;
+
+-(void)addTapDebugGestureIfNecessary;
+
 @end

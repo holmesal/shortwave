@@ -21,6 +21,8 @@
 
 #define WIDTH_OF_PM_LIST 75.0f
 
+#define DEBUG_SHOW_USER_ID_SINGLE_TAP YES
+
 
 
 
@@ -35,8 +37,13 @@ typedef enum
 } WallState;
 
 
+
+@property (nonatomic) UITapGestureRecognizer *singleTapDebugGesture;
+
 @property (nonatomic ) NSString *justAddPmWithUserId;
 @property (nonatomic) WallState wallState;
+
+@property (nonatomic) NSArray *tracking;
 //firebase handles
 
 
@@ -107,6 +114,7 @@ typedef enum
 @implementation FCWallViewController
 
 
+@synthesize tracking;
 @synthesize selectedUserPmIndex;
 @synthesize buttonImageInset;
 @synthesize peopleNearbyLabel;
@@ -246,6 +254,24 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [notifyingStr endEditing];
     
     peopleNearbyLabel.attributedText = notifyingStr;
+
+    if (DEBUG_SHOW_USER_ID_SINGLE_TAP)
+    {
+        
+        static dispatch_once_t once;
+        dispatch_once(&once,
+         ^{//only run this once
+          
+            [self.shadeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showUsersNearby:)]];
+         });
+    }
+}
+-(void)showUsersNearby:(UITapGestureRecognizer*)tapGesture
+{
+    NSString *string = [NSString stringWithFormat:@"%@", self.tracking];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"DEBUG" message:string delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
+    [alertView show];
 }
 
 -(void)updateLine
@@ -374,7 +400,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's userPmList
     [self bindToUserPmList];
     
-    // Bind to the owner's tracking
+    // Bind to the owner's tracking, updates UI cells
     [self bindToTracking];
     
 #warning should not retain
@@ -601,17 +627,56 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
     __weak typeof(self) weakSelf = self;
-    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        NSLog(@"tracking users update!");
         if ([snapshot value] && [snapshot value] != [NSNull null])
         {
             NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
             [weakSelf updatePeopleNearby:[snapshot.value count]];
-        } else{
+            
+            //setter for tracking updates UI
+            self.tracking = [snapshot.value allKeys];
+            
+        } else
+        {
             NSLog(@"Count is nothing! %@", snapshot.value);
             [weakSelf updatePeopleNearby:0];
+            
+            self.tracking = @[ ];
         }
-        
     }];
+    
+    
+}
+
+//this setter expects an array of user ids.  It is used to fade in/out messages based on whether that userId is in range (i.e., in tracking array).  this setter updates UI.
+-(void)setTracking:(NSArray *)Tracking
+{
+    tracking = Tracking;
+    
+    for (UITableViewCell *messageCell in tableView.visibleCells)
+    {
+        if ([messageCell isKindOfClass:[FCMessageCell class]])
+        {
+            FCMessageCell *fcMssageCell = (FCMessageCell*)messageCell;
+            BOOL isTracked = [self isUserBeingTracked:fcMssageCell.ownerID];
+            
+            [fcMssageCell setFaded:!isTracked animated:YES];
+        }
+    }
+}
+
+//uses tracking array to determine if the current user is being tracked.  Also, it returns YES for ids that are yourself / the welcome bot
+-(BOOL)isUserBeingTracked:(NSString*)userId
+{
+    if ([[FCUser owner].id isEqualToString:userId] || [userId isEqualToString:@"Welcome:Bot"])
+        return YES;
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF == %@)", userId];
+    NSArray *results = [tracking filteredArrayUsingPredicate:predicate];
+    
+    return results.count;
 }
 
 //handles adding users to the pmUserList for displayed on the right panel.
@@ -716,7 +781,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                     
                 } else
                 {//implies type isEqual "ESMessage" or no type exists
-                
+                    
                     FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
                     // Init a new message
                     [weakSelf.wall insertObject:message atIndex:0];
@@ -910,6 +975,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 [cell initializeDoubleTap];
             }
             
+            if (DEBUG_SHOW_USER_ID_SINGLE_TAP)
+            {//setup a single tap alert, who does this message belong to?
+                [cell addTapDebugGestureIfNecessary];
+            }
+            
             
             // Flip the cell 180 degrees
             cell.transform = CGAffineTransformMakeRotation(M_PI);
@@ -919,27 +989,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             // Set message cell values
             [cell setMessage:message];
             
-            // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
-#warning github issue fading cells
-//            cell.ownerID = message.ownerID;
-//            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-//            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
-//            
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-//
-//            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
-//            
-//            FCUser *me = [FCUser owner];
-//            NSString *myId = me.id;
-//            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
+            //associate cells with owners, to fade out owners who are not in range when cell is served or tracking changes!
+            cell.ownerID = message.ownerID;
             
-            BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
             
+            //check tracking for this person b4 serving cell to the tableview
+            BOOL userIsInTracking = [self isUserBeingTracked:cell.ownerID];
+            
+            [cell setFaded:!userIsInTracking animated:NO];
 
-            
-            [cell setFaded:isFaded animated:NO];
-
-            
             return cell;
         } else
         if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
@@ -1066,6 +1124,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         }
     }
     return nil;
+}
+
+-(void)singleTapDebugGestureAction:(UITapGestureRecognizer*)tapGesture
+{
+    NSLog(@"DEBUG TAP %@ ", tapGesture);
+    
 }
 
 - (CGFloat) tableView:(UITableView *)tV heightForRowAtIndexPath:(NSIndexPath *)indexPath
