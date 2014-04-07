@@ -14,10 +14,10 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL NO
+#define DEBUG_CENTRAL YES
 #define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON YES
-#define DEBUG_USERS YES
+#define DEBUG_USERS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
@@ -144,7 +144,7 @@
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
             // Filter the users based on timeout
-            [self filterFirebaseUsers];
+//            [self filterFirebaseUsers];
         }
     }];
 }
@@ -181,9 +181,9 @@
 //    NSTimeInterval secs = [[[NSDate alloc] init] timeIntervalSince1970];
 //    NSDictionary *val = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%f",secs]};
 //    NSDictionary *trackingData = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%f",secs]};
-    [[self.earshotUsersRef childByAppendingPath:userID] setValue:[NSNumber numberWithInteger:rounded]];
+    [[self.earshotUsersRef childByAppendingPath:userID] setValue:@"true"];
     // Add yourself for the user
-    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[NSNumber numberWithInteger:rounded]];
+    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:@"true"];
 }
 
 - (uint)roundTime:(NSTimeInterval)time
@@ -248,6 +248,40 @@
 ////        [self.earshotUsersRef setValue:self.earshotUsers];
 ////    }
 //}
+
+# pragma mark - push notifications
+- (void)wakeup
+{
+    // Only do this if the app is in the background
+//    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app applicationState] == UIApplicationStateBackground) {
+        NSLog(@"App is in the background!");
+        // If there aren't any user notifications, add a new earshot notification
+        NSArray *notificationArray = [app scheduledLocalNotifications];
+        NSLog(@"notificationArray count is %@", [notificationArray count]);
+//        if ([notificationArray count] != 0) {
+//            // Delete all the existing notifications
+//            NSLog(@"Deleting local notifications");
+//            [app cancelAllLocalNotifications];
+////            for (UILocalNotification *toDelete in notificationArray) {
+////                app cancelAllLocalNotifications
+////            }
+//        }
+//        [app cancelAllLocalNotifications];
+        // Add a new notifications
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = [NSString stringWithFormat:@"Earshot users nearby."];
+        notice.alertAction = @"Converse";
+        [app scheduleLocalNotification:notice];
+    } else
+    {
+        NSLog(@"App is not in the background - ignoring wakeup call.");
+    }
+    // If there aren't any user notifications, add a new earshot notification
+    // TODO - check if there are already notifications
+    // If there are currently notifications, add this one and then delete it right away
+}
 
 # pragma mark - core bluetooth
 
@@ -611,7 +645,12 @@
     //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
+            // Update the beacon regions dictionary
             [self.regions replaceObjectAtIndex:[minor intValue] withObject:@YES];
+            // Can we just start scanning here?
+//            [self resetBluetooth];
+//            [self startScanning];
+//            [self wakeup];
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
                 UILocalNotification *notice = [[UILocalNotification alloc] init];
