@@ -16,15 +16,10 @@
 #import "ESSwapUserStateMessage.h"
 #import "ESSwapUserStateCell.h"
 #import "ESUserPMCell.h"
-
 #import "FCLandingPageViewController.h"
 
 #define WIDTH_OF_PM_LIST 75.0f
-
 #define DEBUG_SHOW_USER_ID_SINGLE_TAP YES
-
-
-
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
@@ -1428,7 +1423,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     resetIconFrame.size.width += 2*buttonImageInset;
     resetIconFrame.size.height += 2*buttonImageInset;
     
-    
     [self.iconButton setFrame:frame];
     self.originalRectOfIcon = resetIconFrame;
     [self.iconButton setImage:image forState:UIControlStateNormal];
@@ -1465,7 +1459,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
     
-    [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:10.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
          CGRect frame = self.iconButton.frame;
          frame.origin.x = (self.view.frame.size.width - frame.size.width)*0.5f;
@@ -1476,7 +1470,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
      } completion:^(BOOL finished)
      {
-         [UIView animateWithDuration:1.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+         [UIView animateWithDuration:0.7f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
          {
              
              [self.shadeView setFrame:self.view.bounds];

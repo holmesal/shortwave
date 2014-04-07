@@ -27,6 +27,11 @@ typedef enum
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 
+@property (strong, nonatomic) CALayer *rightCircleLayer;;
+@property (strong, nonatomic) CALayer *leftCircleLayer;
+@property (weak, nonatomic)  IBOutlet UIView *leftCircleColorView;
+@property (weak, nonatomic)  IBOutlet UIView *rightCircleColorView;
+
 
 @property (weak, nonatomic) IBOutlet UILabel *attributionLabel;
 @property (nonatomic) CGRect originalFrameForIcon;
@@ -45,7 +50,7 @@ typedef enum
 @property (weak, nonatomic) IBOutlet UIImageView *spinnerImageView;
 
 @property (nonatomic) UITableView *iconTableView;
-@property (weak, nonatomic) IBOutlet UIView *iconContainerView;
+@property (strong, nonatomic) UIView *iconContainerView;
 @property (nonatomic) NSInteger iconIndex;
 
 @property (nonatomic) NSArray *icons;
@@ -114,14 +119,51 @@ typedef enum
     animation.autoreverses    = NO;
     animation.repeatCount     = HUGE_VALF;
     animation.keyPath = @"transform.rotation.z";
-    
+
     [[self.spinnerImageView layer] addAnimation:animation forKey:@"transform.rotation.z"];
-    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //initialize the circle things
+    {
+        
+        CGRect circleFrame = self.rightCircleColorView.bounds;
+//        circleFrame.origin.x += circleFrame.size.width*0.5f;
+//        circleFrame.origin.y += circleFrame.size.width*0.5f;
+        
+        self.leftCircleLayer = [CALayer layer];
+        [self.leftCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
+        [self.leftCircleLayer setBorderColor:[UIColor whiteColor].CGColor];
+        [self.leftCircleLayer setBorderWidth:1.0f];
+        [self.leftCircleLayer setCornerRadius:self.leftCircleColorView.frame.size.width*0.5f];
+        [self.leftCircleLayer setFrame:circleFrame];
+        
+        [self.leftCircleColorView.layer addSublayer:self.leftCircleLayer];
+        
+        
+        
+        self.rightCircleLayer = [CALayer layer];
+        [self.rightCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
+        [self.rightCircleLayer setBorderColor:[UIColor whiteColor].CGColor];
+        [self.rightCircleLayer setBorderWidth:1.0f];
+        [self.rightCircleLayer setCornerRadius:self.rightCircleColorView.frame.size.width*0.5f];
+        [self.rightCircleLayer setFrame:circleFrame];
+        [self.rightCircleColorView.layer addSublayer:self.rightCircleLayer];
+        
+        [self.leftCircleColorView setBackgroundColor:[UIColor clearColor]];
+        [self.rightCircleColorView setBackgroundColor:[UIColor clearColor]];
+        [self.leftCircleColorView setClipsToBounds:NO];
+        [self.rightCircleColorView setClipsToBounds:NO];
+        
+    }
+    
+    CGSize sizeOfIcon = {160.0f, 160.0f};
+    self.iconContainerView = [[UIView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - sizeOfIcon.width)*0.5f, (self.view.frame.size.height-sizeOfIcon.height)*0.5f, sizeOfIcon.width, sizeOfIcon.height)];
+    [self.view addSubview:self.iconContainerView];
+    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -160,7 +202,7 @@ typedef enum
     // Mixpanel init
     [self.mixpanel track:@"Icon/color select screen loaded" properties:@{@"loggedIn": ([self userIsLoggedIn]?@"true":@"false") }];
     
-    int randIcon = esRandomNumberIn(0, icons.count);
+    int randIcon = 0;//esRandomNumberIn(0, icons.count);
     
     if ([self userIsLoggedIn])
     {
@@ -178,12 +220,14 @@ typedef enum
     NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
     [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
-    CGFloat heightOfFadedArea = 0;//self.cellHeight;//self.cellHeight; //180;
+    CGFloat heightOfFadedArea = self.cellHeight;//self.cellHeight;//self.cellHeight; //180;
     CGRect rect = self.iconContainerView.bounds;
-    rect.origin.y -= heightOfFadedArea;
-    rect.size.height += 2*heightOfFadedArea;
+    rect.origin.y -= self.cellHeight;
+    rect.size.height += 2*self.cellHeight;//2*heightOfFadedArea;
     iconTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStylePlain];
     [iconTableView setBackgroundColor:[UIColor clearColor]];
+    [self.iconContainerView setClipsToBounds:NO];
+    [self.iconContainerView setBackgroundColor:[UIColor clearColor]];
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
     [iconTableView setUserInteractionEnabled:NO];
@@ -198,35 +242,35 @@ typedef enum
         layer.frame = self.iconTableView.frame;
         
         
-            CALayer *centerSqr = [CALayer layer];
-            [centerSqr setBackgroundColor:[UIColor whiteColor].CGColor];
-            CGRect centerRct = self.iconContainerView.bounds;
-            centerRct.origin.y += heightOfFadedArea;
-            centerSqr.frame = centerRct;
-            [layer addSublayer:centerSqr];
-            
-            //image layer
-            CALayer *topFade = [CALayer layer];
-            [topFade setFrame:CGRectMake(0, 0, centerSqr.frame.size.width, heightOfFadedArea)];
-            UIImage *image = [UIImage imageNamed:@"icongradient.png"];
-            UIImage *scaledImg = [image scaleToSize:CGSizeMake(topFade.frame.size.width, topFade.frame.size.height)];
-            [topFade setContentsScale:[UIScreen mainScreen].scale];
-            [topFade setContents:(id)scaledImg.CGImage];
-            [topFade setTransform:CATransform3DMakeRotation(M_PI, 0, 0, 1)];
-            [layer addSublayer:topFade];
+        CALayer *centerSqr = [CALayer layer];
+        [centerSqr setBackgroundColor:[UIColor whiteColor].CGColor];
+        CGRect centerRct = self.spinnerImageView.bounds;
+        centerRct.origin.y += heightOfFadedArea;
+        centerSqr.frame = centerRct;
+        [layer addSublayer:centerSqr];
+        
+        //image layer
+        CALayer *topFade = [CALayer layer];
+        [topFade setFrame:CGRectMake(0, 0, centerSqr.frame.size.width, heightOfFadedArea)];
+        UIImage *image = [UIImage imageNamed:@"icongradient.png"];
+        UIImage *scaledImg = [image scaleToSize:CGSizeMake(topFade.frame.size.width, topFade.frame.size.height)];
+        [topFade setContentsScale:[UIScreen mainScreen].scale];
+        [topFade setContents:(id)scaledImg.CGImage];
+        [topFade setTransform:CATransform3DMakeRotation(M_PI, 0, 0, 1)];
+        [layer addSublayer:topFade];
 
-            
-            CALayer *bottomFade = [CALayer layer];
-            [bottomFade setFrame:CGRectMake(0, heightOfFadedArea+centerSqr.frame.size.height, centerSqr.frame.size.width, heightOfFadedArea)];
-            [bottomFade setTransform:CATransform3DMakeRotation(0, 0, 0, 1)];
-            [bottomFade setContentsScale:[UIScreen mainScreen].scale];
-            [bottomFade setContents:(id)scaledImg.CGImage];
-            
-            
-            [layer addSublayer:bottomFade];
+        
+        CALayer *bottomFade = [CALayer layer];
+        [bottomFade setFrame:CGRectMake(0, heightOfFadedArea+centerSqr.frame.size.height, centerSqr.frame.size.width, heightOfFadedArea)];
+        [bottomFade setTransform:CATransform3DMakeRotation(0, 0, 0, 1)];
+        [bottomFade setContentsScale:[UIScreen mainScreen].scale];
+        [bottomFade setContents:(id)scaledImg.CGImage];
         
         
-
+        [layer addSublayer:bottomFade];
+        
+        
+//        [self.iconContainerView.layer addSublayer:layer];
         self.iconContainerView.layer.mask = layer;
     
     }
@@ -272,7 +316,7 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
-    
+    NSLog(@"tableView offset = %f", self.iconTableView.contentOffset.y);
 //    FCUser *owner =  [FCUser owner];
     
     [self continueWithDonBlurButtonAction];
@@ -684,12 +728,9 @@ typedef enum
             //determine what kind of swipe, up down left or right
         case UIGestureRecognizerStateBegan:
         {
-            NSLog(@"UIGestureRecognizerStateBegan");
+//            NSLog(@"UIGestureRecognizerStateBegan");
             self.stateChanged = NO;
             
-//            NSLog(@"velocity = %@", NSStringFromCGPoint(velocity));
-//            NSLog(@"location = %@", NSStringFromCGPoint(location));
-//            NSLog(@"translation = %@", NSStringFromCGPoint(translation));
             if (fabsf(velocity.x) > fabsf(velocity.y))
             {
                 if (velocity.x < 0)
@@ -719,7 +760,7 @@ typedef enum
         break;
         case UIGestureRecognizerStateChanged:
         {
-            NSLog(@"UIGestureRecognizerStateChanged translation.x = %f", translation.x);
+//            NSLog(@"UIGestureRecognizerStateChanged translation.x = %f", translation.x);
             self.stateChanged = YES;
             
             CGFloat percent = 0;
@@ -731,31 +772,31 @@ typedef enum
                 {
 
                     percent = translation.x/swipeWidth;
-                    NSLog(@"PanGestureDirectionLeft %f", percent);
+//                    NSLog(@"PanGestureDirectionLeft %f", percent);
                 }
                 break;
                 case PanGestureDirectionRight:
                 {
-                    NSLog(@"PanGestureDirectionRight");
+//                    NSLog(@"PanGestureDirectionRight");
                     percent = translation.x/swipeWidth;
-                    NSLog(@"PanGestureDirectionLeft %f", percent);
+//                    NSLog(@"PanGestureDirectionLeft %f", percent);
                 }
                 break;
                 case PanGestureDirectionUp:
                 {
-                    NSLog(@"PanGestureDirectionUp");
+//                    NSLog(@"PanGestureDirectionUp");
                     percent = translation.y/swipeHeight;
                 }
                 break;
                 case PanGestureDirectionDown:
                 {
-                    NSLog(@"PanGestureDirectionDown");
+//                    NSLog(@"PanGestureDirectionDown");
                     percent = translation.y/swipeHeight;
                 }
                 break;
                 case PanGestureDirectionNone:
                 {
-                    NSLog(@"PanGestureDirectionNone on state changed! WARNING!");
+//                    NSLog(@"PanGestureDirectionNone on state changed! WARNING!");
                 }
                 break;
             }
@@ -825,7 +866,7 @@ typedef enum
                     [iconNamesMutable insertObject:lastObject atIndex:0];
                     self.icons = [NSArray arrayWithArray:iconNamesMutable];
                     [self.iconTableView reloadData];
-                
+                    
                     //move tableView
                     CGPoint offset = {0, self.cellHeight};
                     
@@ -859,6 +900,7 @@ typedef enum
                     
                 }
                 
+                NSLog(@"y = %f", y);
                 [self.iconTableView setContentOffset:CGPointMake(0, y)];
                 
             }
@@ -866,7 +908,7 @@ typedef enum
         break;
         case UIGestureRecognizerStateEnded:
         {
-            NSLog(@"UIGestureRecognizerStateEnded");
+//            NSLog(@"UIGestureRecognizerStateEnded");
             if (!self.stateChanged)
             {
                 return;
@@ -1019,6 +1061,19 @@ typedef enum
     }
     
     colorIndex = newColorIndex%colors.count;
+    
+    //update left and right circles!
+    
+//    int left = colorIndex-1;
+//    int right = colorIndex+1;
+//    
+//    if (left < 0)
+//        left = colors.count-1;
+//    if (right == colors.count)
+//        right = 0;
+//    
+//    [self.leftCircleLayer setBackgroundColor:((UIColor*)[colors objectAtIndex:left]).CGColor];
+//    [self.rightCircleLayer setBackgroundColor:((UIColor*)[colors objectAtIndex:right]).CGColor];
 }
 
 #pragma mark iconTableView delegate callback
@@ -1044,6 +1099,7 @@ typedef enum
         [imageView setBackgroundColor:[UIColor clearColor]];
         
         [iconCell.contentView addSubview:imageView];
+//        [iconCell setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.5f]];
     }
     
     
@@ -1063,7 +1119,9 @@ typedef enum
 
 -(CGFloat)cellHeight
 {
-    return self.iconContainerView.bounds.size.height*0.79f;
+    CGFloat scaledHeight = self.spinnerImageView.bounds.size.height*0.75f;
+//    NSLog(@"scaledHeight = %f", scaledHeight);
+    return scaledHeight;
 }
 
 
@@ -1093,9 +1151,20 @@ typedef enum
 //redraw the view as if it were the first time.
 -(void)resetAsNewAnimated
 {
+    [self.view setUserInteractionEnabled:NO];
+    
     [self setUserIsLoggedIn:NO];
     [self.view addGestureRecognizer:self.panGesture];
-    [self.iconTableView reloadData];
+    
+    CGFloat expectedOffset = (self.selectedIconIndex-1)*self.cellHeight;
+    
+    [self.iconTableView setContentOffset:CGPointMake(self.iconTableView.contentOffset.x, expectedOffset)];
+    
+    UITableViewCell *iconCell = [self.iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIconIndex inSection:0]];
+    UIImageView *imageView = (UIImageView*)[iconCell viewWithTag:5];
+    [imageView setHidden:NO];
+
+    
     self.extractedImageViewOnDone.frame = self.originalFrameForIcon;
     
     for (UIView *view in self.view.subviews)
@@ -1116,7 +1185,11 @@ typedef enum
     } completion:^(BOOL finished)
     {
         [self.extractedImageViewOnDone removeFromSuperview];
+        [self.view setUserInteractionEnabled:YES];
+        
     }];
+    
+    NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
 }
 
 -(void)pushErrorScreen:(NSNotification*)notification

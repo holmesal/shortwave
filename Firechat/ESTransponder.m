@@ -14,12 +14,12 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
-#define DEBUG_CENTRAL YES
+#define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
 
-#define IS_RUNNING_ON_SIMULATOR NO
+#define IS_RUNNING_ON_SIMULATOR YES
 
 #define NUM_BEACONS 20
 #define TIMEOUT 120.0
@@ -139,8 +139,8 @@
     self.earshotUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"tracking"];
     [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
         // Update the locally-stored earshotUsers array
-        NSLog(@"Got data from firebase");
-        NSLog(@"%@",snapshot.value);
+//        NSLog(@"Got data from firebase");
+//        NSLog(@"%@",snapshot.value);
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
             // Filter the users based on timeout
@@ -151,6 +151,7 @@
 
 - (void)filterFirebaseUsers
 {
+
     // Store the current time
     NSDate *currentDate = [NSDate date];
     for (NSString *userKey in self.earshotUsers) {
@@ -159,7 +160,6 @@
         long timestamp = [timestampNumber longValue];
         
         NSDate *beforeDate = [[NSDate alloc] initWithTimeIntervalSince1970:timestamp];
-        
         NSTimeInterval interval = [currentDate timeIntervalSinceDate:beforeDate];
         
         NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
@@ -538,7 +538,8 @@
         } else
         {
             int timeoutSeconds = 10;
-            NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
+            if (!IS_RUNNING_ON_SIMULATOR)
+                NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
                 [self chirpBeacon];
             });

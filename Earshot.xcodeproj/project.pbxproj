@@ -18,6 +18,7 @@
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */; };
+		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
@@ -104,6 +105,8 @@
 		AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCOwnerMessageCell.h; sourceTree = "<group>"; };
 		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOwnerMessageCell.m; sourceTree = "<group>"; };
 		AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
+		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
@@ -166,8 +169,8 @@
 		C02CE3F11868D1A500305FC9 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
 		C057427C187BA5FE002509DB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		C057427E187BA603002509DB /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
-		C05742E518831F73002509DB /* FCBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCBeacon.h; sourceTree = "<group>"; };
-		C05742E618831F73002509DB /* FCBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCBeacon.m; sourceTree = "<group>"; };
+		C05742E518831F73002509DB /* FCBeacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCBeacon.h; path = Firechat/FCBeacon.h; sourceTree = "<group>"; };
+		C05742E618831F73002509DB /* FCBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCBeacon.m; path = Firechat/FCBeacon.m; sourceTree = "<group>"; };
 		C05742EB188394C8002509DB /* FCSurroundingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCSurroundingsTableViewController.h; path = Firechat/FCSurroundingsTableViewController.h; sourceTree = "<group>"; };
 		C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCSurroundingsTableViewController.m; path = Firechat/FCSurroundingsTableViewController.m; sourceTree = "<group>"; };
 		C05E1249186D3B3600BA89EA /* FCPostMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCPostMessageViewController.h; path = Firechat/FCPostMessageViewController.h; sourceTree = "<group>"; };
@@ -229,6 +232,8 @@
 		AA0B651A18C3CC7000600108 /* unused  */ = {
 			isa = PBXGroup;
 			children = (
+				C05742E518831F73002509DB /* FCBeacon.h */,
+				C05742E618831F73002509DB /* FCBeacon.m */,
 				AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */,
 				AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */,
 				C02CE3A7186808B000305FC9 /* FCViewController.m */,
@@ -256,10 +261,6 @@
 			children = (
 				C05E124C186D3D5F00BA89EA /* FCUser.h */,
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
-				C05742E518831F73002509DB /* FCBeacon.h */,
-				C05742E618831F73002509DB /* FCBeacon.m */,
-				C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */,
-				C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */,
 				C02CE3D9186814A700305FC9 /* FCMessage.h */,
 				C02CE3DA186814A700305FC9 /* FCMessage.m */,
 				AA6BB86C18ED141E00EE6CF5 /* ESSwapUserStateMessage.h */,
@@ -319,6 +320,17 @@
 				AAF40AC218F12FD6000526BE /* UIImage+Resize.m */,
 			);
 			name = extensions;
+			sourceTree = "<group>";
+		};
+		AA9A9A0118F3166800A01BB3 /* services */ = {
+			isa = PBXGroup;
+			children = (
+				AA9A9A0518F3184B00A01BB3 /* Reachability.h */,
+				AA9A9A0618F3184B00A01BB3 /* Reachability.m */,
+				C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */,
+				C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */,
+			);
+			name = services;
 			sourceTree = "<group>";
 		};
 		AAE3743818DC052C006A9C82 /* Core Data */ = {
@@ -385,6 +397,7 @@
 		C02CE397186808B000305FC9 /* Firechat */ = {
 			isa = PBXGroup;
 			children = (
+				AA9A9A0118F3166800A01BB3 /* services */,
 				AAE3743818DC052C006A9C82 /* Core Data */,
 				AA8EC98B18C5039500A8C4DC /* extensions */,
 				AA1F2DF018C3D92D0087AAF7 /* viewcontrollers */,
@@ -589,6 +602,7 @@
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
 				AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */,
+				AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */,
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
@@ -768,7 +782,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Earshot;
-				PROVISIONING_PROFILE = "14BF8B9A-5FB0-480E-91CC-8C70EA7E2B55";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -799,7 +813,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Earshot;
-				PROVISIONING_PROFILE = "9C087FCD-DC6E-4191-AB3E-06DFE7D42401";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

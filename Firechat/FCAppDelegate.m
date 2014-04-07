@@ -19,10 +19,15 @@
 #import "Beacon.h" //NSManagedObject (core data)
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
 #import <Mixpanel/Mixpanel.h>
+#import "Reachability.h"
 
 @interface FCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
+
+@property (nonatomic) Reachability *hostReachability;
+@property (nonatomic) Reachability *internetReachability;
+@property (nonatomic) Reachability *wifiReachability;
 
 @end
 
@@ -38,6 +43,29 @@
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
+
+    
+    //generates notifications kReachabilityChangedNotification
+    {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetChangeEvent:) name:kReachabilityChangedNotification object:nil];
+
+        //generates notifications kReachabilityChangedNotification
+        {
+//            //Change the host name here to change the server you want to monitor.
+//            NSString *remoteHostName = @"www.apple.com";
+//            
+//            self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
+//            [self.hostReachability startNotifier];
+            
+            self.internetReachability = [Reachability reachabilityForInternetConnection];
+            [self.internetReachability startNotifier];
+            
+            self.wifiReachability = [Reachability reachabilityForLocalWiFi];
+            [self.wifiReachability startNotifier];
+        }
+    }
+        
+    
     UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     if (localNotification) {
         
@@ -49,31 +77,12 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsDiscovered:) name:@"Beacons Added" object:nil];
     
-    // Set navigation bar style
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor clearColor]]; // 0x00CF69   more green -> 0x56BD54
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-//    [[UINavigationBar appearance] setTitleTextAttributes:@{
-//                                                          NSForegroundColorAttributeName: UIColorFromRGB(0xffffff)
-//                                                          }];
     
     // Register for push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     
-    // Skip the login flow if this isn't the first run
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    NSString *username = [prefs stringForKey:@"username"];
-//    if (self.owner.id) {
-//        UIViewController *wallController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCWallViewController"];
-//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:wallController];
-//        self.window.rootViewController = navController;
-//    } else {
-//        FCSignupViewController *signupController=[[UIStoryboard storyboardWithName:@"main" bundle:nil] instantiateViewControllerWithIdentifier:@"FCSignupViewController"];
-//        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:signupController];
-//        self.window.rootViewController = navController;
-//    }
-    
+
     
     // Add mixpanel
     #define MIXPANEL_TOKEN @"8a3d5ae8ce286cefdff58b462b124250"
@@ -208,60 +217,34 @@
 #pragma mark custom touches captured end
 
 
-//#pragma mark discover beacons
-////this code is not actually ever used
-//-(void)beaconsDiscovered:(NSNotification*)notification
-//{
-//    NSArray *newBeacons = notification.object;
-//    
-//    NSManagedObjectContext *managedObjectContext = [[ESCoreDataController sharedInstance] masterManagedObjectContext];
-//    
-//    [managedObjectContext performBlock:^
-//    {
-//        BOOL hasEncounteredNewBeacon = NO;
-//        for (CLBeacon *beacon in newBeacons)
-//        {
-//            NSString *majorMinor = [NSString stringWithFormat:@"%d:%d", beacon.major.intValue, beacon.minor.intValue];
-//            NSFetchRequest *fetch = [NSFetchRequest fetchRequestWithEntityName:@"Beacon"];
-//            fetch.predicate = [NSPredicate predicateWithFormat:@"(SELF.identifier == %@)", majorMinor];
-//            
-//            NSError *error = nil;
-//            NSArray *fetchedResults = [managedObjectContext executeFetchRequest:fetch error:&error];
-//            if (error)
-//            {
-//                NSLog(@"fetch beacon request error: %@", error.localizedDescription);
-//            }
-//            
-//            //if I have encountered this beacon, nevermind...  else add the beacon and flag hasEncounteredNewBeacon
-//            if (!fetchedResults.count)
-//            {
-//                hasEncounteredNewBeacon = YES;
-//                Beacon *beacon = [NSEntityDescription insertNewObjectForEntityForName:@"Beacon" inManagedObjectContext:managedObjectContext];
-//                beacon.identifier = majorMinor;
-//            }
-//            
-//        }
-//        
-//        NSLog(@"it is %@a new beacon", (hasEncounteredNewBeacon?@" ": @"NOT " ));
-//        
-//        //Change this bellow to see new people
-//        if (hasEncounteredNewBeacon || kAlwaysLocalUpdateWhenEncounteringAnyBeacon) //|| YES)
-//        {
-//            //now it is time to do a local notification!
-//            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-//            
-//            localNotification.fireDate = [NSDate date];
-//            localNotification.alertBody = @"A new person is nearby!";
-//            localNotification.timeZone = [NSTimeZone defaultTimeZone];
-//            
-//            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-//            
-//            [managedObjectContext save:nil];
-//        }
-//        
-//        
-//    }];
-//    
-//}
-//#pragma mark discover beacons end
+#pragma mark reachability callback (internte availability)
+-(void)internetChangeEvent:(NSNotification*)notification
+{
+    
+    Reachability* curReach = [notification object];
+    switch (curReach.currentReachabilityStatus)
+    {
+        case NotReachable:
+        {
+            NSLog(@"NotReachable");
+        }
+        break;
+            
+        case ReachableViaWiFi:
+        {
+            NSLog(@"ReachableViaWiFi");
+        }
+        break;
+            
+        case ReachableViaWWAN:
+        {
+            NSLog(@"ReachableViaWWAN");
+        }
+        break;
+    }
+}
+
+
+
+
 @end
