@@ -19,7 +19,7 @@
 #define DEBUG_BEACON YES
 #define DEBUG_USERS YES
 
-#define IS_RUNNING_ON_SIMULATOR NO
+#define IS_RUNNING_ON_SIMULATOR YES
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
 #define TIMEOUT 10.0 // How old should a user be before I consider them gone?

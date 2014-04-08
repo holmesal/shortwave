@@ -37,6 +37,7 @@ static inline float esRandomFloatIn(float min, float max)
  */
 static inline void esDecomposeIdToMajorMinor(uint32_t identifier, uint16_t *major, uint16_t *minor)
 {
+
     unsigned char byte4 = (uint)(identifier>>24);
     unsigned char byte3 = (uint)(identifier>>16);
     unsigned char byte2 = (uint)(identifier>>8);

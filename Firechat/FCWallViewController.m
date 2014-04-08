@@ -39,6 +39,9 @@ typedef enum
 @property (nonatomic) WallState wallState;
 
 @property (nonatomic) NSArray *tracking;
+@property (nonatomic) BOOL topBarHasGesture;
+
+
 //firebase handles
 
 
@@ -253,12 +256,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (DEBUG_SHOW_USER_ID_SINGLE_TAP)
     {
         
-        static dispatch_once_t once;
-        dispatch_once(&once,
-         ^{//only run this once
-          
+        if (!self.topBarHasGesture)
+        {
+            self.topBarHasGesture = YES;
             [self.shadeView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showUsersNearby:)]];
-         });
+        }
     }
 }
 -(void)showUsersNearby:(UITapGestureRecognizer*)tapGesture
@@ -622,25 +624,24 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
     __weak typeof(self) weakSelf = self;
-    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-    {
-        NSLog(@"tracking users update!");
-        if ([snapshot value] && [snapshot value] != [NSNull null])
-        {
-            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
-            [weakSelf updatePeopleNearby:[snapshot.value count]];
-            
-            //setter for tracking updates UI
-            self.tracking = [snapshot.value allKeys];
-            
-        } else
-        {
-            NSLog(@"Count is nothing! %@", snapshot.value);
-            [weakSelf updatePeopleNearby:0];
-            
-            self.tracking = @[ ];
-        }
-    }];
+//    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+//    {
+//        NSLog(@"tracking users update!");
+//        if ([snapshot value] && [snapshot value] != [NSNull null])
+//        {
+//            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
+////            [weakSelf updatePeopleNearby:[snapshot.value count]];
+//            
+//            //setter for tracking updates UI
+////            weakSelf.tracking = [snapshot.value allKeys];
+//            
+//        } else
+//        {
+//            NSLog(@"Count is nothing! %@", snapshot.value);
+////            [weakSelf updatePeopleNearby:0];
+//            
+////            weakSelf.tracking = @[ ];
+//        }  //    }];
     
     
 }
