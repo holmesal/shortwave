@@ -319,7 +319,7 @@ static FCUser *currentUser;
 - (void) generateIds
 {
     // Generate an id
-    NSInteger idInt = esRandomNumberIn(0, 65535+1);
+    NSInteger idInt = esRandomNumberIn(0, 65535);
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];

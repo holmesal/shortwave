@@ -24,7 +24,6 @@
 @interface FCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
-
 @property (nonatomic) Reachability *hostReachability;
 @property (nonatomic) Reachability *internetReachability;
 @property (nonatomic) Reachability *wifiReachability;
@@ -40,6 +39,82 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //clear local notifications
+    
+    //EThan was testing the Identifiers
+    BOOL noConflicts = YES;
+    uint32_t max = 4294967295; //== 2^32
+
+    
+    
+//    for (uint32_t i = 0; i <= max; i+= 1)
+//    {
+//        unsigned char byte1, byte2, byte3, byte4;
+//        esDecomposeIntToMajorMinor(i, &byte1, &byte2, &byte3, &byte4);
+//        
+//        uint32_t value;
+//        esRecomposeMajorMinorToInt(byte1, byte2, byte3, byte4, &value);
+//
+//        
+//        if (value != i)
+//        {
+//            NSLog(@"WARNING!");
+//            noConflicts = NO;
+//            NSLog(@"decomposing %d", i);
+//            NSLog(@"%d\t%d\t%d\t%d", byte1, byte2, byte3, byte4);
+//            NSLog(@"recompose = %d", value);
+//            NSLog(@"\n");
+//        }
+//        
+//        if (!(i%10000))
+//        {
+//            NSLog(@"decomposing %d", i);
+//            NSLog(@"%d\t%d\t%d\t%d", byte1, byte2, byte3, byte4);
+//            NSLog(@"recompose = %d", value);
+//            NSLog(@"\n");
+//        }
+//    }
+//    
+//    NSLog(@"noConflicts ? %@", (noConflicts ? @"None!" : @"CONFCLIT!"));
+    
+
+    //ok
+    for (uint32_t identifier = 2000000000; identifier <= max; identifier+= 1)
+    {
+        uint16_t major, minor;
+        esDecomposeIdToMajorMinor(identifier, &major, &minor);
+        
+        
+        uint32_t value;
+        esRecomposeMajorMinorToId(major, minor, &value);
+        
+        
+        if (value != identifier)
+        {
+            NSLog(@"WARNING!");
+            noConflicts = NO;
+            NSLog(@"decomposing %d", identifier);
+            NSLog(@"%d\t%d", major, minor);
+            NSLog(@"recompose = %d", value);
+            NSLog(@"\n");
+        }
+
+        if (!(identifier%100000000))
+        {
+            NSLog(@"decomposing %d", identifier);
+            NSLog(@"%d\t%d", major, minor);
+            NSLog(@"recompose = %d", value);
+            NSLog(@"\n");
+        }
+    }
+    
+    NSLog(@"noConflicts ? %@", (noConflicts ? @"None!" : @"CONFCLIT!"));
+
+    
+    
+
+    
+    
+    
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
