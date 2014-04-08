@@ -22,7 +22,7 @@
 #define IS_RUNNING_ON_SIMULATOR YES
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
-#define TIMEOUT 10.0 // How old should a user be before I consider them gone?
+#define TIMEOUT 20.0 // How old should a user be before I consider them gone?
 #define REPORTING_INTERVAL 10.0 // How often to report to firebase
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 
@@ -160,7 +160,7 @@
             
             NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
             
-            if (interval > TIMEOUT * 10.0) {
+            if (interval > TIMEOUT) {
                 NSLog(@"REMOVING USER %@ - has been too long",userKey);
                 // Remove the user
                 [self removeUser:userKey];
@@ -370,6 +370,11 @@
         [existingUser setValue:localName forKey:@"earshotID"];
         // Add to earshot users
         [self addUser:localName];
+    }
+    
+    // If it has a local name (whether just set or actively being broadcast), call addUser
+    if ([existingUser objectForKey:@"earshotID"] != [NSNull null]) {
+        [self addUser:[existingUser objectForKey:@"earshotID"]];
     }
     
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
