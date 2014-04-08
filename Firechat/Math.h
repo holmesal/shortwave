@@ -67,7 +67,7 @@ static inline void esRecomposeMajorMinorToId(uint16_t major, uint16_t minor, uin
     unsigned char byte4 = minor>>8;
     unsigned char byte3 = minor>>0;
     
-    *identifier = byte1 + (byte2<<8) + (byte3<<16) + (bc vcxz vadsfgd,.yte4<<24);
+    *identifier = byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
 }
 
 ////helper functions
