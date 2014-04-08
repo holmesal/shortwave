@@ -77,37 +77,37 @@
 //    NSLog(@"noConflicts ? %@", (noConflicts ? @"None!" : @"CONFCLIT!"));
     
 
-    //ok
-    for (uint32_t identifier = 2000000000; identifier <= max; identifier+= 1)
-    {
-        uint16_t major, minor;
-        esDecomposeIdToMajorMinor(identifier, &major, &minor);
-        
-        
-        uint32_t value;
-        esRecomposeMajorMinorToId(major, minor, &value);
-        
-        
-        if (value != identifier)
-        {
-            NSLog(@"WARNING!");
-            noConflicts = NO;
-            NSLog(@"decomposing %d", identifier);
-            NSLog(@"%d\t%d", major, minor);
-            NSLog(@"recompose = %d", value);
-            NSLog(@"\n");
-        }
-
-        if (!(identifier%100000000))
-        {
-            NSLog(@"decomposing %d", identifier);
-            NSLog(@"%d\t%d", major, minor);
-            NSLog(@"recompose = %d", value);
-            NSLog(@"\n");
-        }
-    }
-    
-    NSLog(@"noConflicts ? %@", (noConflicts ? @"None!" : @"CONFCLIT!"));
+//    //ok
+//    for (uint32_t identifier = 2000000000; identifier <= max; identifier+= 1)
+//    {
+//        uint16_t major, minor;
+//        esDecomposeIdToMajorMinor(identifier, &major, &minor);
+//        
+//        
+//        uint32_t value;
+//        esRecomposeMajorMinorToId(major, minor, &value);
+//        
+//        
+//        if (value != identifier)
+//        {
+//            NSLog(@"WARNING!");
+//            noConflicts = NO;
+//            NSLog(@"decomposing %d", identifier);
+//            NSLog(@"%d\t%d", major, minor);
+//            NSLog(@"recompose = %d", value);
+//            NSLog(@"\n");
+//        }
+//
+//        if (!(identifier%100000000))
+//        {
+//            NSLog(@"decomposing %d", identifier);
+//            NSLog(@"%d\t%d", major, minor);
+//            NSLog(@"recompose = %d", value);
+//            NSLog(@"\n");
+//        }
+//    }
+//    
+//    NSLog(@"noConflicts ? %@", (noConflicts ? @"None!" : @"CONFCLIT!"));
 
     
     
