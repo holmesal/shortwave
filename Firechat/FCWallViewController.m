@@ -624,24 +624,25 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
     __weak typeof(self) weakSelf = self;
-//    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-//    {
-//        NSLog(@"tracking users update!");
-//        if ([snapshot value] && [snapshot value] != [NSNull null])
-//        {
-//            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
-////            [weakSelf updatePeopleNearby:[snapshot.value count]];
-//            
-//            //setter for tracking updates UI
-////            weakSelf.tracking = [snapshot.value allKeys];
-//            
-//        } else
-//        {
-//            NSLog(@"Count is nothing! %@", snapshot.value);
-////            [weakSelf updatePeopleNearby:0];
-//            
-////            weakSelf.tracking = @[ ];
-//        }  //    }];
+    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        NSLog(@"tracking users update!");
+        if ([snapshot value] && [snapshot value] != [NSNull null])
+        {
+            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
+            [weakSelf updatePeopleNearby:[snapshot.value count]];
+            
+            //setter for tracking updates UI
+            weakSelf.tracking = [snapshot.value allKeys];
+            
+        } else
+        {
+            NSLog(@"Count is nothing! %@", snapshot.value);
+            [weakSelf updatePeopleNearby:0];
+            
+            weakSelf.tracking = @[ ];
+        }
+    }];
     
     
 }

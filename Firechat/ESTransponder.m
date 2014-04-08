@@ -369,8 +369,7 @@
     if (localName){
         [existingUser setValue:localName forKey:@"earshotID"];
         // Add to earshot users
-# warning - this is turned off! turn it back on ya fool!
-//        [self addUser:localName];
+        [self addUser:localName];
     }
     
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
