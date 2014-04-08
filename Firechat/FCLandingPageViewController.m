@@ -733,6 +733,7 @@ typedef enum
             
             if (fabsf(velocity.x) > fabsf(velocity.y))
             {
+                NSLog(@"velocity.x = %f", velocity.x);
                 if (velocity.x < 0)
                 {
                  
@@ -838,6 +839,34 @@ typedef enum
                     end = tempStart;
                     percent += 1.0f;
                 }
+                
+                //apply a transform to the dots
+//                {
+//                    CGFloat dist = translation.x*0.15f;
+//                    if (self.panDirection == PanGestureDirectionRight)
+//                    {
+//                        NSLog(@"moveLeft");
+//                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(dist, 0);
+////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
+////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
+//                    } else
+//                    if (self.panDirection == PanGestureDirectionLeft)
+//                    {
+//                        dist *= -1;
+////                        NSLog(@"moveRight");
+//                                                self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
+////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
+////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
+//                        
+//                    } else
+//                    {
+//                        dist = 0;
+//                    }
+//                    
+////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
+////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(dist, 0);
+//                    
+//                }
                 
 //                NSLog(@"3. start, end -> %ld, %ld", start, end);
                 //percent always positive here
@@ -948,6 +977,21 @@ typedef enum
                 break;
             }
             int direction = (percent < 0 ? -1 : 1) ;//fabsf(percent)/percent;
+            
+            //dots snap back
+            {
+//                int direction = 1;
+//                CGFloat dist = translation.x * 0.25f;
+//                CGFloat velocity = 0;//dist;
+//                [UIView animateWithDuration:0.2f delay:0.0f usingSpringWithDamping:0.7f initialSpringVelocity:velocity options:UIViewAnimationOptionCurveLinear animations:^
+//                {
+////                    self.leftCircleColorView.transform = CGAffineTransformIdentity;
+////                    self.rightCircleColorView.transform = CGAffineTransformIdentity;
+//                } completion:^(BOOL finished)
+//                {
+//                
+//                }];
+            }
             
             if (PanGestureDirectionLeft == panDirection || PanGestureDirectionRight == panDirection )
             {//Left Right color change END

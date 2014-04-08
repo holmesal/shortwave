@@ -737,27 +737,27 @@
             NSLog(@"kCLAuthorizationStatusRestricted");
             [self blueToothStackNeedsUserToActivateMessage];
         }
-            break;
+        break;
             
         case kCLAuthorizationStatusDenied:
         {
             NSLog(@"kCLAuthorizationStatusDenied");
             [self blueToothStackNeedsUserToActivateMessage];
         }
-            break;
+        break;
             
         case kCLAuthorizationStatusAuthorized:
         {
             NSLog(@"kCLAuthorizationStatusAuthorized");
             [self blueToothStackIsActive];
         }
-            break;
+        break;
             
         case kCLAuthorizationStatusNotDetermined:
         {
             NSLog(@"kCLAuthorizationStatusNotDetermined");//user has not yet said yes or no
         }
-            break;
+        break;
     }
 }
 
