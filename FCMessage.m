@@ -52,6 +52,12 @@
                                         @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
                                     }
                               };
+    
+    // Post the message TO YOUR OWN WALL FIRST (faster?)
+    Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
+    [ownerMessageRef setValue:message];
+    [self setTimestampAsNow:ownerMessageRef];
+    
     // Grab the current list of earshot users
     NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
     
@@ -75,11 +81,6 @@
             [pushQueueRef setValue:pushNotification];
         }];
     }
-    
-//    // Also post to yourself
-    Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
-    [ownerMessageRef setValue:message];
-    [self setTimestampAsNow:ownerMessageRef];
     
     // Finally, log the message
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
