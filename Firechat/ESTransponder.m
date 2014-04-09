@@ -138,6 +138,8 @@
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
             // Filter the users based on timeout
             [self filterFirebaseUsers];
+        } else {
+            self.earshotUsers = [[NSMutableDictionary alloc] init];
         }
     }];
 }
