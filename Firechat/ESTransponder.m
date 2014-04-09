@@ -185,12 +185,10 @@
 - (void)addUser:(NSString *)userID
 {
     NSLog(@"Adding user to firebase: %@",userID);
-    // Add the user for yourself
+    // Get the rounded date/time
     uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
     NSLog(@"Rounded time is %d",rounded);
-//    NSTimeInterval secs = [[[NSDate alloc] init] timeIntervalSince1970];
-//    NSDictionary *val = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%f",secs]};
-//    NSDictionary *trackingData = @{@"lastSeen": [[NSString alloc] initWithFormat:@"%u",rounded]};
+    // Add the user for yourself
     [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:rounded]];
     // Add yourself for the user
     [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:rounded]];
@@ -369,7 +367,6 @@
     if (localName){
         [existingUser setValue:localName forKey:@"earshotID"];
         // Add to earshot users
-        [self addUser:localName];
     }
     
     // If it has a local name (whether just set or actively being broadcast), call addUser
