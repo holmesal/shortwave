@@ -135,7 +135,7 @@ static FCUser *currentUser;
         // Init the beacon
 //        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
         // Init the transponder class
-        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:@"https://earshot.firebaseio.com/"];
+        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:FIREBASE_ROOT_URL];
         
         // Listen for beacon discover events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:@"earshotDiscover" object:nil];
@@ -154,7 +154,7 @@ static FCUser *currentUser;
 // Set up the firebase reference
 - (void) initFirebase:(NSString *)id
 {
-    self.rootRef = [[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"];
+    self.rootRef = [[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL];
     self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
     
     // Start listening to the wall, just to see if it persists better
@@ -326,7 +326,7 @@ static FCUser *currentUser;
 }
 -(void)postHello:(NSString *)message
 {
-    Firebase *wall = [[[[Firebase alloc] initWithUrl:@"https://earshot.firebaseio.com/"] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+    Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
     Firebase *post = [[wall childByAppendingPath:@"wall"] childByAutoId];
     [post setValue:[self generateFirstPost:message]];
     [[post childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
