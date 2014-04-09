@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FCLEErrorViewController : UIViewController
+@interface FCLEErrorViewController : ESViewController
 
 @end

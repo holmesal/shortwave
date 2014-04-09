@@ -16,6 +16,7 @@
 
 
 
+
 @property (nonatomic) UILabel *label;
 
 @property (nonatomic) UIButton *button;
@@ -84,6 +85,14 @@
     } completion:^(BOOL finished){}];
 }
 
+-(void)setRadius:(CGFloat)radius
+{
+//    self.cornerRadius = radius;
+    [frameLayer setCornerRadius:radius];
+    [pressedLayer setCornerRadius:radius];
+    [self invalidatePressedLayer];
+}
+
 -(void)drawRim
 {
     frameLayer = [CALayer layer];
@@ -115,10 +124,6 @@
     [self setHidden:YES];
     UIGraphicsBeginImageContextWithOptions(self.superview.bounds.size, NO, self.window.screen.scale);    // Still slow.
     
-//    if ( [AIMAppDelegate isOniOS7OrNewer] )
-//        [self drawViewHierarchyInRect:self.frame afterScreenUpdates:YES]; // Doesn't work!
-//    else
-//        [self.layer renderInContext:UIGraphicsGetCurrentContext()];     // Works!
     [self.superview drawViewHierarchyInRect:self.superview.bounds afterScreenUpdates:NO];
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
@@ -135,12 +140,13 @@
     
     pressedLayer = [CALayer layer];
     [pressedLayer setFrame:self.bounds];
+    [pressedLayer setCornerRadius:frameLayer.cornerRadius];
 
     image = [image applyBlurWithRadius:10.0f tintColor:[UIColor colorWithWhite:1.0f alpha:0.6f] saturationDeltaFactor:1 maskImage:nil];//[image applyExtraLightEffect ];
     pressedLayer.contents = (id)image.CGImage;
     
     CALayer *mask = [CALayer layer];
-    [mask setCornerRadius:2.0f];
+    [mask setCornerRadius:frameLayer.cornerRadius];
     [mask setBorderColor:[UIColor whiteColor].CGColor];
     [mask setBackgroundColor:[UIColor whiteColor].CGColor];
     [mask setFrame:self.bounds];
@@ -154,6 +160,9 @@
 
     
 }
+
+
+
 
 
 /*

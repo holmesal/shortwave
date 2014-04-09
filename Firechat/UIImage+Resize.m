@@ -10,7 +10,8 @@
 
 @implementation UIImage(Resize)
 
-- (UIImage *)scaleToSize:(CGSize)size {
+- (UIImage *)scaleToSize:(CGSize)size
+{
     // Scalling selected image to targeted size
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     CGContextRef context = CGBitmapContextCreate(NULL, size.width, size.height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast);

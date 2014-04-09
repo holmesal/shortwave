@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FCLandingPageViewController : UIViewController
 
+@interface FCLandingPageViewController : ESViewController
+
+//get the position of the icon currently selected!
 -(CGRect)getOriginalRect;
 
 @end

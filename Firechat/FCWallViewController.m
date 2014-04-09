@@ -100,7 +100,6 @@ typedef enum
 //pm stuff
 @property (nonatomic) BOOL isPanAnimating;
 @property (nonatomic) UIPanGestureRecognizer *panLeftGesture;
-//@property (nonatomic) UIPanGestureRecognizer *panRightGesture;
 
 
 
@@ -580,21 +579,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     // Style the compose bar view
 
-//    self.composeBarView.textView.keyboardAppearance = UIKeyboardAppearanceDark;
-//    self.composeBarView.buttonTintColor = [UIColor whiteColor];
-//    self.composeBarView.textView.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.1];
-//    [self.composeBarView setBackgroundColor:UIColor clearColor];
-    // Add subview
     [self.contentView addSubview:self.composeBarView];
     
-    // Style the "utility button", a phrase which here means "profile photo"
-//    self.composeBarView.utilityButton.imageView.layer.masksToBounds = YES;
-//    self.composeBarView.utilityButton.imageView.layer.cornerRadius = self.composeBarView.utilityButton.imageView.frame.size.width/2;
-//    // TODO - replace this with the owner's actual color
-//    self.composeBarView.utilityButton.imageView.backgroundColor = self.owner.displayColor;
-//    
-//    // Style the image
-//    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"profilepic"]];
 }
 
 - (void)dealloc

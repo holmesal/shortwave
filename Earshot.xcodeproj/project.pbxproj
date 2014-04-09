@@ -21,6 +21,7 @@
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
+		AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AADAB29918F5F1AA00E61579 /* ESViewController.m */; };
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
@@ -110,6 +111,8 @@
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
+		AADAB29818F5F1AA00E61579 /* ESViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESViewController.h; sourceTree = "<group>"; };
+		AADAB29918F5F1AA00E61579 /* ESViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESViewController.m; sourceTree = "<group>"; };
 		AADE168F18C52C8100F70F75 /* ESApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESApplication.h; sourceTree = "<group>"; };
 		AADE169018C52C8100F70F75 /* ESApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESApplication.m; sourceTree = "<group>"; };
 		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileCollectionViewCell.h; path = Firechat/ProfileCollectionViewCell.h; sourceTree = "<group>"; };
@@ -319,6 +322,8 @@
 				AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */,
 				AAF40AC118F12FD6000526BE /* UIImage+Resize.h */,
 				AAF40AC218F12FD6000526BE /* UIImage+Resize.m */,
+				AADAB29818F5F1AA00E61579 /* ESViewController.h */,
+				AADAB29918F5F1AA00E61579 /* ESViewController.m */,
 			);
 			name = extensions;
 			sourceTree = "<group>";
@@ -634,6 +639,7 @@
 				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */,
+				AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */,
 				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

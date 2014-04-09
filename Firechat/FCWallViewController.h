@@ -11,7 +11,7 @@
 
 
 
-@interface FCWallViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate>
+@interface FCWallViewController : ESViewController <UITableViewDelegate, UITableViewDataSource, PHFComposeBarViewDelegate>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView;
 

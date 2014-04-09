@@ -127,12 +127,12 @@ typedef enum
 {
     [super viewDidLoad];
     
+
+    
     //initialize the circle things
     {
         
         CGRect circleFrame = self.rightCircleColorView.bounds;
-//        circleFrame.origin.x += circleFrame.size.width*0.5f;
-//        circleFrame.origin.y += circleFrame.size.width*0.5f;
         
         self.leftCircleLayer = [CALayer layer];
         [self.leftCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
@@ -160,9 +160,17 @@ typedef enum
         
     }
     
-    CGSize sizeOfIcon = {160.0f, 160.0f};
-    self.iconContainerView = [[UIView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - sizeOfIcon.width)*0.5f, (self.view.frame.size.height-sizeOfIcon.height)*0.5f, sizeOfIcon.width, sizeOfIcon.height)];
+//    CGSize sizeOfIcon = {160.0f, 160.0f};
+    CGRect iconContainerViewRect = self.spinnerImageView.frame;//CGRectMake((self.view.frame.size.width - sizeOfIcon.width)*0.5f, (self.view.frame.size.height-sizeOfIcon.height)*0.5f, sizeOfIcon.width, sizeOfIcon.height);
+    CGFloat topInset = 25+30-20;
+    CGFloat bottomInset = 568-467;
+    iconContainerViewRect.origin.y = (([UIScreen mainScreen].bounds.size.height - topInset - bottomInset) - iconContainerViewRect.size.height)*0.5f;
+    iconContainerViewRect.origin.y += topInset;
+    
+    
+    self.iconContainerView = [[UIView alloc] initWithFrame:iconContainerViewRect];
     [self.view addSubview:self.iconContainerView];
+    
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -231,6 +239,8 @@ typedef enum
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
     [iconTableView setUserInteractionEnabled:NO];
+    
+//    [iconTableView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
     
     [iconTableView setContentOffset:CGPointMake(0, self.iconIndex*self.cellHeight)];
     
@@ -305,6 +315,7 @@ typedef enum
     
     
     [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.doneBlurButton setRadius:self.doneBlurButton.frame.size.height/2];
     
     
 
@@ -592,12 +603,10 @@ typedef enum
 -(void)viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
-//    [super viewWillLayoutSubviews];
-//    [self skipIfLoggedIn];
 }
 -(void)viewDidLayoutSubviews
 {
-    NSLog(@"viewDidLayoutSubviews");
+    [super viewDidLayoutSubviews];
 }
 
 
@@ -1201,7 +1210,6 @@ typedef enum
     [self.view addGestureRecognizer:self.panGesture];
     
     CGFloat expectedOffset = (self.selectedIconIndex-1)*self.cellHeight;
-    
     [self.iconTableView setContentOffset:CGPointMake(self.iconTableView.contentOffset.x, expectedOffset)];
     
     UITableViewCell *iconCell = [self.iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIconIndex inSection:0]];

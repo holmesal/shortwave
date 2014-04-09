@@ -19,5 +19,6 @@
     #import <Foundation/Foundation.h>
     #import "AsyncImageView.h"
     #import "UIColor+HexString.h"
+    #import "ESViewController.h"
 
 #endif

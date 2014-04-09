@@ -14,4 +14,6 @@
 
 -(void)addTarget:(id)target action:(SEL)selector forControlEvents:(UIControlEvents)controlEvents;
 
+-(void)setRadius:(CGFloat)radius;
+
 @end
