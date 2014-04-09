@@ -22,7 +22,7 @@
 #define IS_RUNNING_ON_SIMULATOR YES
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
-#define TIMEOUT 20.0 // How old should a user be before I consider them gone?
+#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
 #define REPORTING_INTERVAL 10.0 // How often to report to firebase
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 
