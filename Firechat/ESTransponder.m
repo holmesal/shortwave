@@ -16,7 +16,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
@@ -38,6 +38,7 @@
 @property NSInteger flipCount;
 @property BOOL currentlyChirping;
 @property BOOL flippingBreaker;
+@property BOOL isFlipping;
 @property (strong, nonatomic) CLBeaconRegion *chirpBeaconRegion;
 @property (strong, nonatomic) NSDictionary *chirpBeaconData;
 @property (strong, nonatomic) NSDictionary *identityBeaconData;
@@ -238,7 +239,8 @@
     // Start ranging beacons in Region 19
     [self.locationManager startRangingBeaconsInRegion:self.rangingRegion];
     // Start flipping between an iBeacon and a BLE peripheral
-    [self startFlipping];
+    // If you aren't already
+    if (!self.isFlipping) [self startFlipping];
     // Chirp the discovery iBeacon for a few seconds
     [self chirpBeacon];
 }
@@ -571,6 +573,7 @@
 
 - (void)startFlipping
 {
+    self.isFlipping = YES;
     self.broadcastMode = 0;
     self.flippingBreaker = NO;
     [self flipState];
@@ -578,6 +581,8 @@
 
 - (void)stopFlipping
 {
+    // Set the flag
+    self.isFlipping = NO;
     // Stop flipState from continuing to flip
     self.flippingBreaker = YES;
     // Reset the bluetooth right now to broadcast BLE
