@@ -596,7 +596,6 @@ typedef enum
     [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     
-//    [self skipIfLoggedIn];
     
 }
 
@@ -1210,6 +1209,7 @@ typedef enum
     [self.view addGestureRecognizer:self.panGesture];
     
     CGFloat expectedOffset = (self.selectedIconIndex-1)*self.cellHeight;
+    [self.iconTableView reloadData];
     [self.iconTableView setContentOffset:CGPointMake(self.iconTableView.contentOffset.x, expectedOffset)];
     
     UITableViewCell *iconCell = [self.iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForItem:self.selectedIconIndex inSection:0]];

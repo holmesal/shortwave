@@ -16,10 +16,10 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
-#define DEBUG_USERS YES
+#define DEBUG_BEACON NO
+#define DEBUG_USERS NO
 
-#define IS_RUNNING_ON_SIMULATOR YES
+#define IS_RUNNING_ON_SIMULATOR NO
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
 #define TIMEOUT 30.0 // How old should a user be before I consider them gone?
@@ -36,7 +36,6 @@
 
 // Beacon broadcasting
 @property NSInteger flipCount;
-//@property BOOL isAdvertisingAsBeacon;
 @property BOOL currentlyChirping;
 @property BOOL flippingBreaker;
 @property (strong, nonatomic) CLBeaconRegion *chirpBeaconRegion;
@@ -575,6 +574,8 @@
 
 - (void)flipState
 {
+    if (IS_RUNNING_ON_SIMULATOR)
+        return;
     
     // There are three states:
     // State 0: Broadcasting using normal BLE
@@ -777,8 +778,8 @@
 
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    NSLog(@"Ranged beacons from region 19!");
-    NSLog(@"%@",beacons);
+//    NSLog(@"Ranged beacons from region 19!");
+//    NSLog(@"%@",beacons);
     for (CLBeacon *beacon in beacons) {
         NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
         [self addUser:userID];

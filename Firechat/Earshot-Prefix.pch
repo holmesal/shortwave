@@ -20,5 +20,6 @@
     #import "AsyncImageView.h"
     #import "UIColor+HexString.h"
     #import "ESViewController.h"
+    #import "UIImage+Resize.h"
 
 #endif

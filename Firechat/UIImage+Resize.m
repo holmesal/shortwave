@@ -35,5 +35,13 @@
     
     return image;
 }
+- (UIImage *)scaleByFactor:(CGFloat)factor
+{
+    CGSize size = self.size;
+    size.height *= factor;
+    size.width *= factor;
+    
+    return [self scaleToSize:size];
+}
 
 @end

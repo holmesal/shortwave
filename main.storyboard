@@ -391,7 +391,7 @@
                                                             </constraints>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2z7-YA-O5S">
-                                                            <rect key="frame" x="269" y="29" width="20" height="20"/>
+                                                            <rect key="frame" x="269" y="28" width="20" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="irg-sr-Ydl"/>

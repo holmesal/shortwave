@@ -22,6 +22,9 @@
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AADAB29918F5F1AA00E61579 /* ESViewController.m */; };
+		AADAB29E18F62C5F00E61579 /* Phone-cord-export-02.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29B18F62C5F00E61579 /* Phone-cord-export-02.png */; };
+		AADAB29F18F62C5F00E61579 /* Phone-cord-export-03.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29C18F62C5F00E61579 /* Phone-cord-export-03.png */; };
+		AADAB2A018F62C5F00E61579 /* Phone-cord-export-04.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29D18F62C5F00E61579 /* Phone-cord-export-04.png */; };
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
@@ -113,6 +116,9 @@
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
 		AADAB29818F5F1AA00E61579 /* ESViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESViewController.h; sourceTree = "<group>"; };
 		AADAB29918F5F1AA00E61579 /* ESViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESViewController.m; sourceTree = "<group>"; };
+		AADAB29B18F62C5F00E61579 /* Phone-cord-export-02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-cord-export-02.png"; sourceTree = "<group>"; };
+		AADAB29C18F62C5F00E61579 /* Phone-cord-export-03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-cord-export-03.png"; sourceTree = "<group>"; };
+		AADAB29D18F62C5F00E61579 /* Phone-cord-export-04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-cord-export-04.png"; sourceTree = "<group>"; };
 		AADE168F18C52C8100F70F75 /* ESApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESApplication.h; sourceTree = "<group>"; };
 		AADE169018C52C8100F70F75 /* ESApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESApplication.m; sourceTree = "<group>"; };
 		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileCollectionViewCell.h; path = Firechat/ProfileCollectionViewCell.h; sourceTree = "<group>"; };
@@ -357,6 +363,9 @@
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,
 				AAF40AC818F149FB000526BE /* icongradient.png */,
+				AADAB29B18F62C5F00E61579 /* Phone-cord-export-02.png */,
+				AADAB29C18F62C5F00E61579 /* Phone-cord-export-03.png */,
+				AADAB29D18F62C5F00E61579 /* Phone-cord-export-04.png */,
 				C02CE397186808B000305FC9 /* Firechat */,
 				C02CE3BB186808B000305FC9 /* FirechatTests */,
 				C02CE38C186808B000305FC9 /* Frameworks */,
@@ -547,10 +556,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AADAB29E18F62C5F00E61579 /* Phone-cord-export-02.png in Resources */,
 				C02CE3D218680A5F00305FC9 /* main.storyboard in Resources */,
+				AADAB2A018F62C5F00E61579 /* Phone-cord-export-04.png in Resources */,
 				C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */,
 				C02CE3AD186808B000305FC9 /* FCViewController.xib in Resources */,
 				C02CE39C186808B000305FC9 /* InfoPlist.strings in Resources */,
+				AADAB29F18F62C5F00E61579 /* Phone-cord-export-03.png in Resources */,
 				AAF40AC918F149FB000526BE /* icongradient.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "FCUser.h"
 #import "ESApplication.h"
-
+#import "Reachability.h"
 @interface FCAppDelegate : UIResponder <ESApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+-(NetworkStatus)getNetworkStatus;
 
 @end

@@ -11,5 +11,6 @@
 @interface UIImage(Resize)
 
 - (UIImage *)scaleToSize:(CGSize)size ;
+- (UIImage *)scaleByFactor:(CGFloat)factor;
 
 @end

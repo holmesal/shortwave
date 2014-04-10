@@ -24,9 +24,9 @@
 @interface FCAppDelegate () <UIAlertViewDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
-@property (nonatomic) Reachability *hostReachability;
+//@property (nonatomic) Reachability *hostReachability;
 @property (nonatomic) Reachability *internetReachability;
-@property (nonatomic) Reachability *wifiReachability;
+//@property (nonatomic) Reachability *wifiReachability;
 
 @end
 
@@ -46,25 +46,11 @@
     
 
     
-    //generates notifications kReachabilityChangedNotification
-    {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetChangeEvent:) name:kReachabilityChangedNotification object:nil];
+    //notifications for when internet changes, handld in ESViewController, superclass to all UIViewControllers these days
+    self.internetReachability = [Reachability reachabilityForInternetConnection];
+    [self.internetReachability startNotifier];
+    
 
-        //generates notifications kReachabilityChangedNotification
-        {
-//            //Change the host name here to change the server you want to monitor.
-//            NSString *remoteHostName = @"www.apple.com";
-//            
-//            self.hostReachability = [Reachability reachabilityWithHostName:remoteHostName];
-//            [self.hostReachability startNotifier];
-            
-            self.internetReachability = [Reachability reachabilityForInternetConnection];
-            [self.internetReachability startNotifier];
-            
-            self.wifiReachability = [Reachability reachabilityForLocalWiFi];
-            [self.wifiReachability startNotifier];
-        }
-    }
         
     
     UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
@@ -117,13 +103,12 @@
         [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
             if (error != nil)
             {
-                NSLog(@"loginAnonymouslywithCompletionBlock%@", error.localizedDescription);
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
-                [alert show];
-                // There was an error logging in to this account
+                //wait for internet and try again!
+                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetStateChanged:) name:kReachabilityChangedNotification object:nil];
+                
+                
             } else
             {
-                
                 owner.fuser = user; // We are now logged in
             }
         }];
@@ -216,34 +201,28 @@
 }
 #pragma mark custom touches captured end
 
-
-#pragma mark reachability callback (internte availability)
--(void)internetChangeEvent:(NSNotification*)notification
+-(NetworkStatus)getNetworkStatus
 {
-    
-    Reachability* curReach = [notification object];
-    switch (curReach.currentReachabilityStatus)
+    return self.internetReachability.currentReachabilityStatus;
+}
+//called right away, to make sure they are logged in correctly
+-(void)internetStateChanged:(NSNotification*)notif
+{
+    Reachability *reachability = notif.object;
+    FCUser *user = [FCUser owner];
+    if (reachability.currentReachabilityStatus != NotReachable && !user.fuser)
     {
-        case NotReachable:
-        {
-            NSLog(@"NotReachable");
-        }
-        break;
-            
-        case ReachableViaWiFi:
-        {
-            NSLog(@"ReachableViaWiFi");
-        }
-        break;
-            
-        case ReachableViaWWAN:
-        {
-            NSLog(@"ReachableViaWWAN");
-        }
-        break;
+        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
+            if (error != nil)
+            {
+                NSLog(@"failed to log user in again!");
+            } else
+            {
+                [FCUser owner].fuser = user; // We are now logged in
+            }
+        }];
     }
 }
-
 
 
 

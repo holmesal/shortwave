@@ -105,7 +105,6 @@ typedef enum
 
 
 
-@property PHFComposeBarView *composeBarView;
 @end
 
 @implementation FCWallViewController
@@ -590,6 +589,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
     [self.trackingRef removeAllObservers];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [self esDealloc]; //usually dont call this, but today FCwallViewController extends ESViewController
 }
 
 
@@ -1292,10 +1292,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         [self updateLine];
         //disable animations, then move the tableViewMask layer
-        [CATransaction begin];
-        [CATransaction setDisableActions:YES];
+//        [CATransaction begin];
+//        [CATransaction setDisableActions:YES];
         tableViewMask.position = CGPointMake(0, scrollView.contentOffset.y);
-        [CATransaction commit];
+//        [CATransaction commit];
+        
+        [self cancelDialUpSceneIfNecessary];
     }
 }
 
@@ -1495,40 +1497,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 
-#pragma mark NSNotificationCenter beaconsUpdated start
--(void)beaconsUpdated:(NSNotification*)notification
-{
-//    self.beacons = notification.object;
+//#pragma mark NSNotificationCenter beaconsUpdated start
+//-(void)beaconsUpdated:(NSNotification*)notification
+//{
 //
-//    for (FCMessageCell *mssgCell in tableView.visibleCells)
-//    {
-//        
-//        if ([mssgCell isKindOfClass:[FCMessageCell class]])
-//        {
-//            NSNumber *major = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-//            NSNumber *minor = [NSNumber numberWithInt: [[[mssgCell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
-//        
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-//            
-//            id obj = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject];
-//            BOOL beaconFound = obj ? YES : NO;
-//            
-//            FCUser *me = [FCUser owner];
-//            
-//            NSString *myId = me.id;
-//            BOOL messageBelongsToMe = [myId isEqualToString:mssgCell.ownerID];
-//            
-//            BOOL isFaded = !beaconFound && !messageBelongsToMe && ![mssgCell.ownerID isEqualToString:@"Welcome:Bot"];
-//#warning somthing is wrong here
-//            
-//            [mssgCell setFaded:isFaded animated:YES];
-//        }
-//    }
-#warning Ethan - need to update the above code
-//    NSLog(@"People nearby: %lu",(unsigned long)[[notification.userInfo objectForKey:@"identifiedUsers"] count]);
-    [self updatePeopleNearby:[[notification.userInfo objectForKey:@"identifiedUsers"] count]];
-}
-#pragma mark NSNotificationCenter beaconsUpdated end
+//#warning Ethan - need to update the above code
+////    NSLog(@"People nearby: %lu",(unsigned long)[[notification.userInfo objectForKey:@"identifiedUsers"] count]);
+//    [self updatePeopleNearby:[[notification.userInfo objectForKey:@"identifiedUsers"] count]];
+//}
+//#pragma mark NSNotificationCenter beaconsUpdated end
 
 
 -(void)handlePan:(UIPanGestureRecognizer*)panGesture
