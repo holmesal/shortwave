@@ -268,7 +268,7 @@ typedef enum
         UIButton *invisiButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [invisiButton setFrame:noInternetLabel.frame];
         [invisiButton setBackgroundColor:[UIColor clearColor]];
-        [invisiButton addTarget:self action:@selector(openNoInternetAlert:) forControlEvents:UIControlEventTouchUpInside];
+//        [invisiButton addTarget:self action:@selector(openNoInternetAlert:) forControlEvents:UIControlEventTouchUpInside];
         [noInternetView addSubview:invisiButton];
         
         
@@ -420,7 +420,7 @@ typedef enum
     [coordScene setMask:fullCoordMask];
     
     self.dialUpPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dialUpPan:)];
-    [self.dialUpView addGestureRecognizer:self.dialUpPanGesture];
+//    [self.dialUpView addGestureRecognizer:self.dialUpPanGesture];
     
     
     return self.dialUpView;
