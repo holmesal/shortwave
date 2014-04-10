@@ -13,5 +13,6 @@
 
 //get the position of the icon currently selected!
 -(CGRect)getOriginalRect;
+-(void)resetAsNewAnimated;
 
 @end

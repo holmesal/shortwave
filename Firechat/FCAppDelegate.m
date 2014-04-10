@@ -12,7 +12,7 @@
 
 #import "FCAppDelegate.h"
 #import <CoreBluetooth/CoreBluetooth.h>
-#import "FCLandingViewController.h"
+#import "FCLandingPageViewController.h"
 #import "FCSignupViewController.h"
 #import <CoreData/CoreData.h>
 #import "ESCoreDataController.h"
@@ -158,6 +158,36 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    
+    FCUser *owner = [FCUser owner];
+    if (owner)
+    {
+        BOOL stackIsActive = owner.beacon.peripheralManagerIsRunning;
+        NSLog(@"%d" ,stackIsActive);
+        
+        if (!stackIsActive)
+        {
+            UINavigationController *navContr = (UINavigationController *)self.window.rootViewController;
+            if (navContr.viewControllers.count > 1)
+            {
+                FCLandingPageViewController *lvc =  (FCLandingPageViewController*)[navContr.viewControllers objectAtIndex:0];
+                [lvc resetAsNewAnimated];
+                [navContr popToRootViewControllerAnimated:NO];
+            }
+        }
+//        if (!owner.beacon.peripheralManagerIsRunning)
+//        {
+//            [owner.beacon startBroadcasting];
+//            [owner.beacon startDetecting];
+//            [[FCUser owner].beacon chirpBeacon];
+//        } else
+//        {
+////            [self continueWithBluetooth:nil];
+//            return;
+//        }
+    }
+    
+    
 //    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderTriggerChirpBeacon object:self];
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 }
