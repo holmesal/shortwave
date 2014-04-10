@@ -53,6 +53,7 @@
 @property (strong, nonatomic) Firebase *earshotUsersRef;
 //@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (strong, nonatomic) NSTimer *filterTimer;
+@property (strong, nonatomic) NSMutableDictionary *lastReported;
 
 // Oscillator
 @property NSInteger broadcastMode;
@@ -69,6 +70,7 @@
         self.earshotID = userID;
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
+        self.lastReported = [[NSMutableDictionary alloc] init];
         // Setup the firebase
         [self initFirebase:firebaseURL];
         // Create the identity iBeacon
@@ -139,6 +141,7 @@
             [self filterFirebaseUsers];
         } else {
             self.earshotUsers = [[NSMutableDictionary alloc] init];
+            self.lastReported = [[NSMutableDictionary alloc] init];
         }
     }];
 }
@@ -162,7 +165,10 @@
             NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
             
             if (interval > TIMEOUT) {
-                NSLog(@"REMOVING USER %@ - has been too long",userKey);
+                NSLog(@"Lost user %@ - has been too long: %f",userKey,interval);
+                // Chirp the beacon to see if you can get them back.
+                [self chirpBeacon];
+                // TODO - add a timeout here to give the beacon a few seconds to work it's magic before removing the user
                 // Remove the user
                 [self removeUser:userKey];
             }
@@ -185,14 +191,24 @@
 // Takes in a bluetooth or iBeacon user and adds it to earshotUsers
 - (void)addUser:(NSString *)userID
 {
-    NSLog(@"Adding user to firebase: %@",userID);
+//    NSLog(@"Adding user to firebase: %@",userID);
     // Get the rounded date/time
-    uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
-    NSLog(@"Rounded time is %d",rounded);
-    // Add the user for yourself
-    [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:rounded]];
-    // Add yourself for the user
-    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:rounded]];
+//    uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
+//    NSLog(@"Rounded time is %d",rounded);
+    double now = [[NSDate date] timeIntervalSince1970];
+    // Make sure it's not the time we already have
+    NSNumber *last = [self.lastReported objectForKey:userID];
+    if(DEBUG_USERS) NSLog(@"Time difference for user %@ is %f",userID,(now - [last doubleValue]));
+    if ((now-[last doubleValue]) > REPORTING_INTERVAL){
+        if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
+        // Add the user for yourself
+        [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
+        // Add yourself for the user
+        [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:now]];
+        [self.lastReported setObject:[[NSNumber alloc] initWithDouble:now] forKey:userID];
+    } else {
+        if(DEBUG_USERS) NSLog(@"Timeout not long enough, doing nothing.");
+    }
 }
 
 - (uint)roundTime:(NSTimeInterval)time
