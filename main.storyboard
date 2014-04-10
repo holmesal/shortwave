@@ -668,8 +668,8 @@
                                     <constraint firstAttribute="height" constant="140" id="tbj-FX-5ca"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hs1-Gq-bzV">
-                                <rect key="frame" x="320" y="161" width="319" height="246"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hs1-Gq-bzV">
+                                <rect key="frame" x="0.0" y="161" width="319" height="246"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dyl-rh-dhX" customClass="FCLiveBlurButton">
@@ -701,6 +701,10 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="319" id="GLq-QB-TL2"/>
+                                    <constraint firstAttribute="height" constant="246" id="VP3-q0-UZS"/>
+                                </constraints>
                             </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="attribution label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WjN-UH-haZ">
                                 <rect key="frame" x="23" y="535" width="275" height="21"/>
@@ -750,6 +754,7 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="hs1-Gq-bzV" secondAttribute="centerX" constant="0.5" id="1qP-Y9-WHx"/>
                             <constraint firstAttribute="centerX" secondItem="WjN-UH-haZ" secondAttribute="centerX" constant="-0.5" id="8Kp-03-VVH"/>
                             <constraint firstItem="Sw9-Ok-iHz" firstAttribute="top" secondItem="X2a-HY-yRh" secondAttribute="bottom" constant="41" id="G7A-Cu-Pe4"/>
                             <constraint firstAttribute="centerX" secondItem="PBA-4v-7A5" secondAttribute="centerX" id="Gry-yR-eNd"/>
@@ -764,6 +769,7 @@
                             <constraint firstItem="X2a-HY-yRh" firstAttribute="top" secondItem="ByA-79-y5Y" secondAttribute="bottom" constant="8" id="bEu-Bh-EwC"/>
                             <constraint firstItem="wYh-G0-bJ6" firstAttribute="centerY" secondItem="SjU-Ue-vZn" secondAttribute="centerY" constant="0.5" id="d1v-zr-mGr"/>
                             <constraint firstAttribute="centerX" secondItem="VwZ-qA-o9g" secondAttribute="centerX" constant="1" id="eR7-xr-6Gu"/>
+                            <constraint firstAttribute="centerY" secondItem="hs1-Gq-bzV" secondAttribute="centerY" id="i3w-VL-x2D"/>
                             <constraint firstAttribute="centerX" secondItem="ByA-79-y5Y" secondAttribute="centerX" constant="-2" id="jKn-tL-xCn"/>
                             <constraint firstItem="wYh-G0-bJ6" firstAttribute="top" secondItem="VwZ-qA-o9g" secondAttribute="bottom" id="jgo-aS-k6k"/>
                             <constraint firstItem="PBA-4v-7A5" firstAttribute="top" secondItem="MgY-ok-uYN" secondAttribute="bottom" constant="11" id="l4R-cZ-iK5"/>

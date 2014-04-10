@@ -65,6 +65,8 @@
 @synthesize earshotID;
 @synthesize peripheralManagerIsRunning;
 
+
+
 - (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL
 {
     if ((self = [super init])) {

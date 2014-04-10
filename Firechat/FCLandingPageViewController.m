@@ -524,6 +524,10 @@ typedef enum
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
         [[FCUser owner].beacon chirpBeacon];
+    } else
+    {
+        [self continueWithBluetooth:nil];
+        return;
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
