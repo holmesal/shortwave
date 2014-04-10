@@ -86,7 +86,7 @@
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
         // Listen for chirpBeacon events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:@"chirpBeacon" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:kTransponderTriggerChirpBeacon object:nil];
         // Listen for app sleep events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground) name:UIApplicationDidBecomeActiveNotification object:nil];
         // Listen for app wakeup events
@@ -354,7 +354,7 @@
         existingUser = newUser;
         
         // Send the new (anonymous) user notification
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"newUserDiscovered" object:self userInfo:@{@"user":existingUser}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
         
         // Chirp the beacon!
 //        [self chirpBeacon];
@@ -378,7 +378,7 @@
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
     
     // Notify peeps that an earshot user was discovered
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"earshotDiscover"
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventEarshotUserDiscovered
                                                         object:self
                                                       userInfo:@{@"user":existingUser,
                                                                  @"identifiedUsers":self.earshotUsers,
@@ -791,7 +791,7 @@
 -(void)blueToothStackIsActive
 {
     self.peripheralManagerIsRunning = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Enabled" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
 }
 -(void)blueToothStackNeedsUserToActivateMessage
 {
@@ -800,7 +800,7 @@
         [self blueToothStackIsActive];
     } else
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
     }
 }
 

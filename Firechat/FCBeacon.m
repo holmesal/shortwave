@@ -8,6 +8,7 @@
 
 #import "FCBeacon.h"
 #define IS_RUNNING_ON_SIMULATOR 1
+#import "ESTransponder.h"
 
 @interface FCBeacon ()
 @property NSUUID *uuid;
@@ -396,7 +397,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 -(void)blueToothStackIsActive
 {
     self.peripheralManagerIsRunning = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Enabled" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
 }
 -(void)blueToothStackNeedsUserToActivateMessage
 {
@@ -405,7 +406,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
         [self blueToothStackIsActive];
     } else
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"Bluetooth Disabled" object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
     }
 }
 

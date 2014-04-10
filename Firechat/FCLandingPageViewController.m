@@ -521,22 +521,20 @@ typedef enum
     
     if (!owner.beacon.peripheralManagerIsRunning)
     {
-//        [owner.beacon start];
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
         [[FCUser owner].beacon chirpBeacon];
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:@"Bluetooth Disabled" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:@"Bluetooth Enabled" object:nil];
-    return;
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
+
     
 }
 
 -(void)removeBluetoothEvents
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Disabled" object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bluetooth Enabled" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothEnabled object:nil];
 }
 
 -(void)continueWithBluetooth:(NSNotification*)notification

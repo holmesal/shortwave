@@ -44,6 +44,8 @@ typedef enum
 
 //firebase handles
 
+@property (nonatomic) CGFloat previousScrollViewYOffset;
+@property (nonatomic) CGFloat scrollSpeed;
 
 
 @property (nonatomic) NSInteger selectedUserPmIndex;
@@ -425,7 +427,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //pm stuff setup
     
     panLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    [self.view addGestureRecognizer:panLeftGesture];
+//    [self.view addGestureRecognizer:panLeftGesture];
     
 
     self.contentView.frame = self.view.bounds;
@@ -1296,6 +1298,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        [CATransaction setDisableActions:YES];
         tableViewMask.position = CGPointMake(0, scrollView.contentOffset.y);
 //        [CATransaction commit];
+        
+//        [tableView setSeparatorInset:UIEdgeInsetsMake(5, 0, 0, 0)];
+        
+        self.scrollSpeed = scrollView.contentOffset.y - self.previousScrollViewYOffset;
+        self.previousScrollViewYOffset = scrollView.contentOffset.y;
         
         [self cancelDialUpSceneIfNecessary];
     }

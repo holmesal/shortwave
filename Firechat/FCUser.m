@@ -138,7 +138,7 @@ static FCUser *currentUser;
         self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:FIREBASE_ROOT_URL];
         
         // Listen for beacon discover events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:@"earshotDiscover" object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:kTransponderEventEarshotUserDiscovered object:nil];
     }
     
     return self;
