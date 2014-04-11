@@ -16,8 +16,9 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
+#define DEBUG_NOTIFICATIONS YES
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
@@ -372,6 +373,9 @@
         
         // Alias
         existingUser = newUser;
+        
+        // Send a local notification to tell the user we discovered a device
+        [self sendDiscoverNotification];
         
         // Send the new (anonymous) user notification
         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
@@ -735,10 +739,10 @@
 }
 
 #pragma mark - CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
-{
-    NSLog(@"AHH DID EENTER REGION");
-}
+//- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+//{
+//    NSLog(@"AHH DID EENTER REGION");
+//}
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
@@ -764,6 +768,9 @@
                 // Actually start the timer
                 [[NSRunLoop mainRunLoop] addTimer:self.rangingTimeout forMode:NSDefaultRunLoopMode];
             }
+            
+            // Send a local notification to tell the user we discovered a device
+            [self sendDiscoverNotification];
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
@@ -903,6 +910,34 @@
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
     NSLog(@"Started monitoring for regino: %@",region);
+}
+
+# pragma mark - local notifications
+- (void)sendDiscoverNotification
+
+{
+    // Only do this if the app is in the background
+    //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app applicationState] == UIApplicationStateBackground) {
+        // If there aren't any user notifications, add a new earshot notification
+        NSArray *notificationArray = [app scheduledLocalNotifications];
+        NSLog(@"notificationArray count is %lu", (unsigned long)[notificationArray count]);
+        if ([notificationArray count] != 0) {
+            // Delete all the existing notifications
+            NSLog(@"Deleting local notifications");
+            [app cancelAllLocalNotifications];
+        }
+        [app cancelAllLocalNotifications];
+        // Add a new notifications
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+        notice.alertAction = @"Converse";
+        [app scheduleLocalNotification:notice];
+    } else
+    {
+        NSLog(@"App is not in the background - ignoring notication call.");
+    }
 }
 
 @end
