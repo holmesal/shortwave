@@ -20,6 +20,8 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    NSString *colorString = [[NSUserDefaults standardUserDefaults] objectForKey:@"color"];
+    self.view.backgroundColor = [UIColor colorWithHexString:colorString];
 }
 
 -(void)viewDidAppear:(BOOL)animated

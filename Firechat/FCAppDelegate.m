@@ -260,14 +260,15 @@
     FCUser *user = [FCUser owner];
     if (reachability.currentReachabilityStatus != NotReachable && !user.fuser)
     {
-        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
-        if (error != nil)
+        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user)
         {
-            NSLog(@"failed to log user in again!");
-        } else
-        {
-            [FCUser owner].fuser = user; // We are now logged in
-        }
+            if (error != nil)
+            {
+                NSLog(@"failed to log user in again!");
+            } else
+            {
+                [FCUser owner].fuser = user; // We are now logged in
+            }
         }];
     }
 }

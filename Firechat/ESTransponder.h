@@ -24,13 +24,21 @@
 //nobody listens to the bellow
 #define kTransponderEventNewUserDiscovered @"newUserDiscovered"
 
+typedef enum
+{
+    ESTransponderStackStateUnknown = 0,
+    ESTransponderStackStateActive,
+    ESTransponderStackStateDisabled
+}ESTransponderStackState;
+
+
 
 @property (strong, nonatomic) NSString *earshotID;
 @property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (nonatomic, readonly) BOOL isDetecting;
 @property (nonatomic, readonly) BOOL isBroadcasting;
 //@property (nonatomic) BOOL peripheralManagerIsRunning;
-@property (assign, readonly) BOOL stackIsRunning;
+@property (assign, readonly) ESTransponderStackState stackIsRunning;
 
 
 // Init with an earshotID and a firebase URL

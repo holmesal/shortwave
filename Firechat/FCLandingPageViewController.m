@@ -544,21 +544,22 @@ typedef enum
 -(void)startTalkingBlurButtonAction
 {
     FCUser *owner = [FCUser owner];
-
     
-    if (!owner.beacon.stackIsRunning)
+    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
         [[FCUser owner].beacon chirpBeacon];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
     } else
     {
         [self continueWithBluetooth:nil];
         return;
     }
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
+
 
     
 }
@@ -1387,14 +1388,14 @@ typedef enum
     NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
 }
 
-//-(void)pushErrorScreen:(NSNotification*)notification
-//{
-//    [self removeBluetoothEvents];
-//    [self performSegueWithIdentifier:@"errorPush" sender:self];
-//}
+-(void)pushErrorScreen:(NSNotification*)notification
+{
+    [self removeBluetoothEvents];
+    [self performSegueWithIdentifier:@"fail" sender:self];
+}
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"errorPush"])
+    if ([segue.identifier isEqualToString:@"fail"])
     {
         UIViewController *viewController = segue.destinationViewController;
         [viewController.view setBackgroundColor:self.view.backgroundColor];

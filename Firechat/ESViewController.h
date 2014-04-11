@@ -17,7 +17,6 @@
 -(void)esDealloc;
 
 -(void)cancelDialUpSceneIfNecessary;
-
 -(void)setComposeBarWithRandomHint;
 
 @end

@@ -58,7 +58,8 @@ typedef enum
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(esTransponderStackFailed:) name:kTransponderEventBluetoothDisabled object:nil];
+//  actually it's ok to not have this.  listen to it on a per-view controller level, when necessary
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(esTransponderStackFailed:) name:kTransponderEventBluetoothDisabled object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated

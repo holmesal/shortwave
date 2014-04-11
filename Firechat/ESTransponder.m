@@ -15,7 +15,7 @@
 #import "CBUUID+Ext.h"
 
 #define DEBUG_CENTRAL NO
-#define DEBUG_PERIPHERAL NO
+#define DEBUG_PERIPHERAL YES
 #define DEBUG_BEACON NO
 #define DEBUG_USERS NO
 #define DEBUG_NOTIFICATIONS YES
@@ -28,6 +28,9 @@
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
+
+@property (nonatomic) BOOL bluetoothWasTried;
+@property (nonatomic) BOOL coreLocationWasTried;
 // Bluetooth / main class stuff
 @property (strong, nonatomic) CBUUID *identifier;
 @property (strong, nonatomic) CBCentralManager *centralManager;
@@ -416,6 +419,7 @@
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
     
     // Emit the state
+    self.bluetoothWasTried = YES;
     [self emitBluetoothState];
     // If powered on, start scanning
     if (central.state == CBCentralManagerStatePoweredOn){
@@ -429,9 +433,11 @@
 {
     if (DEBUG_PERIPHERAL) NSLog(@"-- peripheral state changed: %@", peripheral.stateString);
     // Emit the state
+    self.bluetoothWasTried = YES;
     [self emitBluetoothState];
     // If powered on, start scanning
-    if (peripheral.state == CBPeripheralManagerStatePoweredOn){
+    if (peripheral.state == CBPeripheralManagerStatePoweredOn)
+    {
         [self startAdvertising];
     }
 }
@@ -691,6 +697,7 @@
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
     // Emit that shit!
+    self.coreLocationWasTried = YES;
     [self emitBluetoothState];
 }
 
@@ -766,23 +773,59 @@
     }
 }
 
-- (BOOL)stackIsRunning
+- (ESTransponderStackState)stackIsRunning
 {
-    if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn && self.centralManager.state == CBPeripheralManagerStatePoweredOn && [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
+    if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
-        return YES;
-    } else {
-        return NO;
+        
+        if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn &&/*
+                                                                                 CBPeripheralManagerStateUnknown = 0,
+                                                                                 CBPeripheralManagerStateResetting,
+                                                                                 CBPeripheralManagerStateUnsupported,
+                                                                                 CBPeripheralManagerStateUnauthorized,
+                                                                                 CBPeripheralManagerStatePoweredOff,
+                                                                                 CBPeripheralManagerStatePoweredOn,
+                                                                                 */
+            
+            
+            
+            self.centralManager.state == CBPeripheralManagerStatePoweredOn && /*
+                                                                               CBCentralManagerStateUnknown = 0,
+                                                                               CBCentralManagerStateResetting,
+                                                                               CBCentralManagerStateUnsupported,
+                                                                               CBCentralManagerStateUnauthorized,
+                                                                               CBCentralManagerStatePoweredOff,
+                                                                               CBCentralManagerStatePoweredOn,
+                                                                               */
+            [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
+                                                                        /*
+                                                                            kCLAuthorizationStatusNotDetermined = 0
+                                                                            kCLAuthorizationStatusRestricted
+                                                                            kCLAuthorizationStatusDenied
+                                                                            kCLAuthorizationStatusAuthorized
+                                                                        */
+            
+        {
+            return ESTransponderStackStateActive;
+        } else
+        {
+            return ESTransponderStackStateDisabled;
+        }
     }
+    return ESTransponderStackStateUnknown;
 }
 
 - (void)emitBluetoothState
 {
-    if (self.stackIsRunning)
+    if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
-    } else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
+        if (self.stackIsRunning)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
+        } else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
+        }
     }
 }
 
