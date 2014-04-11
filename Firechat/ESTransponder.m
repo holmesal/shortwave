@@ -98,6 +98,7 @@
         [self startFilterTimer];
         // Start a repeating timer to prune the in-range users, every 10 seconds
         [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
+        // Start a repeating timer to broadcast as an iBeacon, every 30 seconds
         // Listen for chirpBeacon events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:kTransponderTriggerChirpBeacon object:nil];
         // Listen for app sleep events
@@ -110,29 +111,37 @@
 
 - (void)pruneUsers
 {
-    if (DEBUG_USERS) NSLog(@"Pruning users!");
+    // Only do this if you're in the foreground
+    UIApplication *application = [UIApplication sharedApplication];
     
-    // WHATTIMEISITRIGHTNOW.COM
-    NSDate *now = [[NSDate alloc] init];
-    // Check every user
-    for(NSString *userBeaconKey in [self.bluetoothUsers.allKeys copy])
-    {
-        NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
-        // How long ago was this?
-        float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
-        if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
-        // If it's longer than 20 seconds, they're probs gone
-        if (lastSeen > TIMEOUT) {
-            if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
-            // Remove from earshotUsers, if it's actually in there
-//            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
-//                [self removeUser:[userBeacon objectForKey:@"earshotID"]];
-//            }
-            // Remove from bluetooth users
-            [self.bluetoothUsers removeObjectForKey:userBeaconKey];
-        } else {
-            if (DEBUG_USERS) NSLog(@"Not removing user: %@",userBeacon);
+    if (application.applicationState == UIApplicationStateActive) {
+        
+        if (DEBUG_USERS) NSLog(@"Pruning BLE users!");
+        
+        // WHATTIMEISITRIGHTNOW.COM
+        NSDate *now = [[NSDate alloc] init];
+        // Check every user
+        for(NSString *userBeaconKey in [self.bluetoothUsers.allKeys copy])
+        {
+            NSMutableDictionary *userBeacon = [self.bluetoothUsers objectForKey:userBeaconKey];
+            // How long ago was this?
+            float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
+            if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
+            // If it's longer than 20 seconds, they're probs gone
+            if (lastSeen > TIMEOUT) {
+                if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
+                // Remove from earshotUsers, if it's actually in there
+    //            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
+    //                [self removeUser:[userBeacon objectForKey:@"earshotID"]];
+    //            }
+                // Remove from bluetooth users
+                [self.bluetoothUsers removeObjectForKey:userBeaconKey];
+            } else {
+                if (DEBUG_USERS) NSLog(@"Not removing user: %@",userBeacon);
+            }
         }
+    } else {
+        if (DEBUG_USERS) NSLog(@"Not pruning BLE users - app is in the background");
     }
     
 }
@@ -206,7 +215,7 @@
         // set actually remove for the next run through
         self.actuallyRemove = YES;
         // Call this again in a couple of seconds, at which point the user will be actually removed
-        [self performSelector:@selector(filterFirebaseUsers) withObject:nil afterDelay:2.0];
+        [self performSelector:@selector(filterFirebaseUsers) withObject:nil afterDelay:10.0];
     }
 }
 
@@ -243,7 +252,7 @@
         [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
         // Add yourself for the user
         [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:now]];
-        [self.lastReported setObject:[[NSNumber alloc] initWithDouble:now] forKey:userID];
+        [self.lastReported setObject:[[NSNumber alloc] initWithInt:now] forKey:userID];
     } else {
         if(DEBUG_TIMEOUTS) NSLog(@"Timeout not long enough, doing nothing.");
     }
