@@ -574,13 +574,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
-    [self.composeBarView setPlaceholder:@"Say something..."];
+
 //    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
+    [self setComposeBarWithRandomHint];
+    
 
     [self.contentView addSubview:self.composeBarView];
+    
     
 }
 
@@ -782,6 +785,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 [weakSelf.pmTableView reloadData];
             }
 //        }
+    } withCancelBlock:^(NSError *someError)
+    {
+        NSLog(@"error = %@", someError.localizedDescription);
     }];
 }
 

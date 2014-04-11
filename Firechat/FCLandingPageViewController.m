@@ -27,6 +27,14 @@ typedef enum
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 
+@property (nonatomic) BOOL circleIsBouncing;
+
+@property (nonatomic) int alternateBounceCounter;
+@property (nonatomic) NSTimer *circleBounceTimer;
+
+@property (strong, nonatomic) UIButton *leftCircleButton;
+@property (strong, nonatomic) UIButton *rightCircleButton;
+
 @property (strong, nonatomic) CALayer *rightCircleLayer;;
 @property (strong, nonatomic) CALayer *leftCircleLayer;
 @property (weak, nonatomic)  IBOutlet UIView *leftCircleColorView;
@@ -67,6 +75,7 @@ typedef enum
 
 
 @implementation FCLandingPageViewController
+@synthesize circleBounceTimer;
 @synthesize welcomeView2;
 @synthesize startTalkingBlurButton;
 
@@ -81,6 +90,8 @@ typedef enum
 
 @synthesize doneBlurButton;
 @synthesize colors;
+
+@synthesize leftCircleButton, rightCircleButton;
 
 
 -(BOOL)userIsLoggedIn
@@ -132,6 +143,9 @@ typedef enum
     //initialize the circle things
     {
         
+        
+        
+        
         CGRect circleFrame = self.rightCircleColorView.bounds;
         
         self.leftCircleLayer = [CALayer layer];
@@ -144,6 +158,8 @@ typedef enum
         [self.leftCircleColorView.layer addSublayer:self.leftCircleLayer];
         
         
+        [self performSelector:@selector(circleBounceTimerAction:) withObject:nil afterDelay:1.0f];
+//        [self initializeCircleBounceTimerIfNecessary];
         
         self.rightCircleLayer = [CALayer layer];
         [self.rightCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
@@ -320,6 +336,17 @@ typedef enum
     
 
 
+}
+
+-(void)initializeCircleBounceTimerIfNecessary
+{
+    if (circleBounceTimer)
+    {
+        [circleBounceTimer invalidate];
+        circleBounceTimer = nil;
+    }
+    circleBounceTimer = [NSTimer timerWithTimeInterval:6 target:self selector:@selector(circleBounceTimerAction:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:circleBounceTimer forMode:NSDefaultRunLoopMode];
 }
 
 
@@ -529,8 +556,9 @@ typedef enum
         [self continueWithBluetooth:nil];
         return;
     }
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
 
     
 }
@@ -608,8 +636,77 @@ typedef enum
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
+    
+    //buttons setup
+    if (!self.leftCircleButton)
+    {
+        leftCircleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        rightCircleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        
+        leftCircleButton.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f];
+        rightCircleButton.backgroundColor = [UIColor clearColor];//[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f];
+        
+        [leftCircleButton setFrame:CGRectMake(0, 0, 55, 55)];
+        [rightCircleButton setFrame:CGRectMake(0, 0, 55, 55)];
+        
+        [self.leftCircleColorView.superview addSubview:leftCircleButton];
+        [self.rightCircleColorView.superview addSubview:rightCircleButton];
+        
+        
+        CGRect leftFrame = leftCircleButton.frame;
+        CGRect rightFrame = rightCircleButton.frame;
+        
+        leftFrame.origin.x = self.leftCircleColorView.frame.origin.x + ( self.leftCircleColorView.frame.size.width-leftCircleButton.frame.size.width)*0.5f;
+        leftFrame.origin.y = self.leftCircleColorView.frame.origin.y + ( self.leftCircleColorView.frame.size.height-leftCircleButton.frame.size.height)*0.5f;
+        
+        rightFrame.origin.x = self.rightCircleColorView.frame.origin.x;
+        rightFrame.origin.y = self.rightCircleColorView.frame.origin.y;
+        
+        rightFrame.origin.x = self.rightCircleColorView.frame.origin.x + ( self.rightCircleColorView.frame.size.width-rightCircleButton.frame.size.width)*0.5f;
+        rightFrame.origin.y = self.rightCircleColorView.frame.origin.y + ( self.rightCircleColorView.frame.size.height-rightCircleButton.frame.size.height)*0.5f;
+        
+        
+        [leftCircleButton setFrame:leftFrame];
+        [rightCircleButton setFrame:rightFrame];
+        leftCircleButton.tag = 1;
+        rightCircleButton.tag = 0;
+        
+        
+        [leftCircleButton addTarget:self action:@selector(circleTap:) forControlEvents:UIControlEventTouchUpInside];
+        [rightCircleButton addTarget:self action:@selector(circleTap:) forControlEvents:UIControlEventTouchUpInside];
+        
+    }
 }
-
+-(void)circleTap:(UIButton*)button
+{
+    
+    NSInteger index = button.tag;
+    NSInteger direction = (index ? -1 : 1);
+    NSLog(@"direction = %d", direction);
+    
+    [self animateBounceCircle:index];
+    
+    int start = self.colorIndex;
+    int end = self.colorIndex+direction;
+    if (end < 0)
+    {
+        end = colors.count-1;
+    } else
+    if (end >= colors.count)
+    {
+        end = 0;
+    }
+    
+    [UIView animateWithDuration:0.28f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+     {
+         self.view.backgroundColor = [colors objectAtIndex:end];
+         self.colorIndex = end;
+     } completion:^(BOOL finished)
+     {
+         [doneBlurButton invalidatePressedLayer];
+     }];
+    
+}
 
 -(void)skipIfLoggedIn
 {
@@ -726,7 +823,6 @@ typedef enum
 
     
     CGPoint velocity = [panGesture velocityInView:self.view];
-//    CGPoint location = [panGesture locationInView:self.view];
     CGPoint translation = [panGesture translationInView:self.view];
 
     
@@ -738,6 +834,7 @@ typedef enum
             //determine what kind of swipe, up down left or right
         case UIGestureRecognizerStateBegan:
         {
+            [circleBounceTimer invalidate];
 //            NSLog(@"UIGestureRecognizerStateBegan");
             self.stateChanged = NO;
             
@@ -816,7 +913,7 @@ typedef enum
             {//Left Right color change CHANGE
                 int direction =  (percent < 0 ? -1 : 1);
                 
-                NSLog(@"dirction = %d", direction);
+//                NSLog(@"dirction = %d", direction);
                 
                 while (fabsf(percent >= 1))
                 {
@@ -851,32 +948,32 @@ typedef enum
                 }
                 
                 //apply a transform to the dots
-//                {
-//                    CGFloat dist = translation.x*0.15f;
-//                    if (self.panDirection == PanGestureDirectionRight)
-//                    {
+                {
+                    CGFloat dist = translation.x*0.15f;
+                    if (self.panDirection == PanGestureDirectionRight)
+                    {
 //                        NSLog(@"moveLeft");
+                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(dist, 0);
+//                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
+//                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
+                    } else
+                    if (self.panDirection == PanGestureDirectionLeft)
+                    {
+                        dist *= -1;
+//                        NSLog(@"moveRight");
+                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
+//                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
+//                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
+                        
+                    } else
+                    {
+                        dist = 0;
+                    }
+                    
+//                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
 //                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(dist, 0);
-////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
-////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
-//                    } else
-//                    if (self.panDirection == PanGestureDirectionLeft)
-//                    {
-//                        dist *= -1;
-////                        NSLog(@"moveRight");
-//                                                self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
-////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(translation.x*0.25f, 0);
-////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(-translation.x*0.25f, 0);
-//                        
-//                    } else
-//                    {
-//                        dist = 0;
-//                    }
-//                    
-////                        self.rightCircleColorView.transform = CGAffineTransformMakeTranslation(-dist, 0);
-////                        self.leftCircleColorView.transform = CGAffineTransformMakeTranslation(dist, 0);
-//                    
-//                }
+                    
+                }
                 
 //                NSLog(@"3. start, end -> %ld, %ld", start, end);
                 //percent always positive here
@@ -939,7 +1036,6 @@ typedef enum
                     
                 }
                 
-                NSLog(@"y = %f", y);
                 [self.iconTableView setContentOffset:CGPointMake(0, y)];
                 
             }
@@ -992,15 +1088,15 @@ typedef enum
             {
 //                int direction = 1;
 //                CGFloat dist = translation.x * 0.25f;
-//                CGFloat velocity = 0;//dist;
-//                [UIView animateWithDuration:0.2f delay:0.0f usingSpringWithDamping:0.7f initialSpringVelocity:velocity options:UIViewAnimationOptionCurveLinear animations:^
-//                {
-////                    self.leftCircleColorView.transform = CGAffineTransformIdentity;
-////                    self.rightCircleColorView.transform = CGAffineTransformIdentity;
-//                } completion:^(BOOL finished)
-//                {
-//                
-//                }];
+                CGFloat velocity = 0;//dist;
+                [UIView animateWithDuration:0.2f delay:0.0f usingSpringWithDamping:0.7f initialSpringVelocity:velocity options:UIViewAnimationOptionCurveLinear animations:^
+                {
+                    self.leftCircleColorView.transform = CGAffineTransformIdentity;
+                    self.rightCircleColorView.transform = CGAffineTransformIdentity;
+                } completion:^(BOOL finished)
+                {
+                
+                }];
             }
             
             if (PanGestureDirectionLeft == panDirection || PanGestureDirectionRight == panDirection )
@@ -1023,7 +1119,7 @@ typedef enum
                     end = start;
                 }
                 
-                [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+                [UIView animateWithDuration:0.08f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                 {
                     self.view.backgroundColor = [colors objectAtIndex:end];
                     self.colorIndex = end;
@@ -1057,8 +1153,10 @@ typedef enum
                 {
                     
                 }];
-                
             }
+            
+            self.panDirection = PanGestureDirectionNone;
+            [self initializeCircleBounceTimerIfNecessary];
         }
         break;
             
@@ -1066,6 +1164,49 @@ typedef enum
             
     }
     
+}
+
+-(void)animateBounceCircle:(NSInteger)circle
+{
+    CGFloat distance = 5*(circle ? 1 : -1);
+    UIView *circleView = (circle ? self.leftCircleColorView : self.rightCircleColorView);
+    self.circleIsBouncing = YES;
+    [self.circleBounceTimer invalidate];
+    if (self.panDirection == PanGestureDirectionNone)
+    {
+        [UIView animateWithDuration:0.1f delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^
+         {
+             circleView.transform = CGAffineTransformMakeTranslation(distance, 0);
+         } completion:^(BOOL finished)
+         {
+             [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:0.1f initialSpringVelocity:2 options:UIViewAnimationOptionCurveLinear animations:^
+              {
+                  circleView.transform = CGAffineTransformMakeTranslation(0, 0);
+              } completion:^(BOOL finished)
+              {
+                  self.circleIsBouncing = NO;
+                  [self initializeCircleBounceTimerIfNecessary];
+              }];
+         }];
+    }
+}
+
+-(void)circleBounceTimerAction:(NSTimer*)theTimer
+{
+    self.alternateBounceCounter = (self.alternateBounceCounter+1)%2;
+
+    CGFloat distance = 5*(self.alternateBounceCounter ? 1 : -1);
+    UIView *circleView = (self.alternateBounceCounter ? self.leftCircleColorView : self.rightCircleColorView);
+    
+    if (self.panDirection == PanGestureDirectionNone && !self.circleIsBouncing)
+    {
+        [self animateBounceCircle:self.alternateBounceCounter];
+    }
+    
+    if (!theTimer)
+    {
+        [self initializeCircleBounceTimerIfNecessary];
+    }
 }
 
 - (UIColor *)colorLerpFrom:(UIColor *)start to:(UIColor *)end withDuration:(float)t
@@ -1246,11 +1387,11 @@ typedef enum
     NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
 }
 
--(void)pushErrorScreen:(NSNotification*)notification
-{
-    [self removeBluetoothEvents];
-    [self performSegueWithIdentifier:@"errorPush" sender:self];
-}
+//-(void)pushErrorScreen:(NSNotification*)notification
+//{
+//    [self removeBluetoothEvents];
+//    [self performSegueWithIdentifier:@"errorPush" sender:self];
+//}
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"errorPush"])

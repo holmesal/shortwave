@@ -9,7 +9,7 @@
 #import "ESViewController.h"
 #import "Reachability.h"
 #import "FCAppDelegate.h"
-
+#import "ESTransponder.h"
 
 typedef enum
 {
@@ -25,6 +25,7 @@ typedef enum
 @property (nonatomic) NoInternetAlertStatus alertStatus;
 
 //dialup stuff
+@property (nonatomic) UILabel *noInternetLabel;
 @property (nonatomic) BOOL dialUpCoordIsPluggedIn;
 @property (strong, nonatomic) UIPanGestureRecognizer *dialUpPanGesture;
 @property (nonatomic) UIView *dialUpView;
@@ -38,6 +39,7 @@ typedef enum
 @end
 
 @implementation ESViewController
+@synthesize noInternetLabel;
 @synthesize composeBarView;
 @synthesize noInternetView;
 @synthesize alertStatus;
@@ -56,8 +58,7 @@ typedef enum
 {
     [super viewDidLoad];
     
-    //setup event listening
-
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(esTransponderStackFailed:) name:kTransponderEventBluetoothDisabled object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -85,12 +86,18 @@ typedef enum
     composeBarView = cBV;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetChangeEvent:) name:kReachabilityChangedNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appEnteredForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
 
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothDisabled object:nil];
+    
+    
 }
 
 #pragma mark reachability callback (internte availability)
@@ -244,31 +251,33 @@ typedef enum
         noInternetView = [[UIView alloc] initWithFrame:noInternetViewRect];
         
         
-        CGFloat h;
-        CGFloat s;
-        CGFloat b;
-        CGFloat a;
-        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
-        [userColor getHue:&h saturation:&s brightness:&b alpha:&a];
+//        CGFloat h;
+//        CGFloat s;
+//        CGFloat b;
+//        CGFloat a;
+//        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
+//        [userColor getHue:&h saturation:&s brightness:&b alpha:&a];
         
-        CGFloat red, green, blue, alpha;
-        [userColor getRed:&red green:&green blue:&blue alpha:&alpha];
-        UIColor *errorColor = [UIColor colorWithHue:h saturation:(s*0.15) brightness:(b*0.9) alpha:a];
+//        CGFloat red, green, blue, alpha;
+//        [userColor getRed:&red green:&green blue:&blue alpha:&alpha];
+//        UIColor *errorColor = [UIColor colorWithHue:h saturation:(s*0.15) brightness:(b*0.9) alpha:a];
+        
+        UIColor *errorColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
         
         [noInternetView setBackgroundColor:errorColor];
         
         
-        UILabel *noInternetLabel = [[UILabel alloc] initWithFrame:self.composeBarView.bounds];
+        noInternetLabel = [[UILabel alloc] initWithFrame:self.composeBarView.bounds];
         [noInternetLabel setTextAlignment:NSTextAlignmentCenter];
         [noInternetLabel setBackgroundColor:[UIColor clearColor]];
         [noInternetLabel setTextColor:[UIColor whiteColor]];
-        [noInternetLabel setText:@"You have no internets."];
+        [self setNoInternetLabelTextRandomly];
         [noInternetView addSubview:noInternetLabel];
         
         UIButton *invisiButton = [UIButton buttonWithType:UIButtonTypeCustom];
         [invisiButton setFrame:noInternetLabel.frame];
         [invisiButton setBackgroundColor:[UIColor clearColor]];
-//        [invisiButton addTarget:self action:@selector(openNoInternetAlert:) forControlEvents:UIControlEventTouchUpInside];
+        [invisiButton addTarget:self action:@selector(openNoInternetAlert:) forControlEvents:UIControlEventTouchUpInside];
         [noInternetView addSubview:invisiButton];
         
         
@@ -284,10 +293,17 @@ typedef enum
         [dialUpScene setBackgroundColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.05f]];
         [noInternetView addSubview:dialUpScene];
         
-        
     }
     
     return noInternetView;
+}
+
+-(void)setNoInternetLabelTextRandomly
+{
+
+    NSArray *thingsToSay = @[@"You have no internets.", @"You have no interwebs."];
+    int index = esRandomNumberIn(0, thingsToSay.count);
+    [noInternetLabel setText:[thingsToSay objectAtIndex:index]];
 }
 #pragma mark UI callbacks for noInternetView
 -(void)panHandle:(UIPanGestureRecognizer*)pan
@@ -420,8 +436,7 @@ typedef enum
     [coordScene setMask:fullCoordMask];
     
     self.dialUpPanGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dialUpPan:)];
-//    [self.dialUpView addGestureRecognizer:self.dialUpPanGesture];
-    
+    [self.dialUpView addGestureRecognizer:self.dialUpPanGesture];
     
     return self.dialUpView;
     
@@ -520,4 +535,26 @@ typedef enum
          [self.noInternetView setUserInteractionEnabled:YES];
      }];
 }
+
+
+-(void)setComposeBarWithRandomHint
+{
+    FCAppDelegate *appDelegate = (FCAppDelegate*)[UIApplication sharedApplication].delegate;
+    NSString *randomSaying = [appDelegate getRandomMessageInputHint];
+    [self.composeBarView.placeholderLabel setText:randomSaying];
+}
+
+-(void)appEnteredForeground:(NSNotification*)notification
+{
+    [self setComposeBarWithRandomHint];
+}
+
+//callback for when something got disabled in our bluetooth stack
+
+-(void)esTransponderStackFailed:(NSNotification*)notification
+{
+    [self performSegueWithIdentifier:@"fail" sender:self];
+}
+
+
 @end

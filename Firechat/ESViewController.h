@@ -18,4 +18,6 @@
 
 -(void)cancelDialUpSceneIfNecessary;
 
+-(void)setComposeBarWithRandomHint;
+
 @end

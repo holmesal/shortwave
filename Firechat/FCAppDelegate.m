@@ -27,6 +27,7 @@
 //@property (nonatomic) Reachability *hostReachability;
 @property (nonatomic) Reachability *internetReachability;
 //@property (nonatomic) Reachability *wifiReachability;
+@property (nonatomic) NSArray *messageInputHints;
 
 @end
 
@@ -36,11 +37,32 @@
     BOOL _isAdvertising;
 }
 
+-(NSString*)getRandomMessageInputHint
+{
+    if (self.messageInputHints)
+    {
+        int index = esRandomNumberIn(0, self.messageInputHints.count);
+        return [self.messageInputHints objectAtIndex:index];
+    }
+    
+    return @"Say something...";
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     //clear local notifications
     
-
+    Firebase *fetchMessageHints = [[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"messageInputHints"];
+    [fetchMessageHints observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        if (snapshot.value && snapshot.value != [NSNull null] && [snapshot.value isKindOfClass:[NSArray class]])
+        {
+            self.messageInputHints = snapshot.value;
+        }
+    } withCancelBlock:^(NSError *error)
+    {
+        NSLog(@"error = %@", error.localizedDescription);
+    }];
     
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
@@ -195,7 +217,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderTriggerChirpBeacon object:self];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderTriggerChirpBeacon object:self];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -243,13 +265,13 @@
     if (reachability.currentReachabilityStatus != NotReachable && !user.fuser)
     {
         [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
-            if (error != nil)
-            {
-                NSLog(@"failed to log user in again!");
-            } else
-            {
-                [FCUser owner].fuser = user; // We are now logged in
-            }
+        if (error != nil)
+        {
+            NSLog(@"failed to log user in again!");
+        } else
+        {
+            [FCUser owner].fuser = user; // We are now logged in
+        }
         }];
     }
 }

@@ -64,7 +64,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fLG-da-bBc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="45" y="959"/>
+            <point key="canvasLocation" x="285" y="-305"/>
         </scene>
         <!--Wall View Controller - Earshot-->
         <scene sceneID="dP9-ri-AdD">
@@ -374,11 +374,11 @@
                                                     <outlet property="toView" destination="0UP-TB-180" id="wn2-O9-9Ar"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OwnerMessageCell" rowHeight="75" id="tJY-HB-gJy" customClass="FCOwnerMessageCell">
+                                            <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OwnerMessageCell" rowHeight="75" id="tJY-HB-gJy" customClass="FCOwnerMessageCell">
                                                 <rect key="frame" x="0.0" y="147" width="320" height="75"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tJY-HB-gJy" id="P8y-Mj-0Gx">
-                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="287" height="75"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iZg-Tf-z3O">
@@ -391,7 +391,7 @@
                                                             </constraints>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2z7-YA-O5S">
-                                                            <rect key="frame" x="269" y="28" width="20" height="20"/>
+                                                            <rect key="frame" x="269" y="27" width="0.0" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="irg-sr-Ydl"/>
@@ -429,6 +429,7 @@
                                                     <outlet property="messageText" destination="sIZ-iT-bwy" id="dYg-To-lss"/>
                                                     <outlet property="profilePhoto" destination="2z7-YA-O5S" id="BYD-8f-TU1"/>
                                                     <outlet property="sneakyView" destination="iZg-Tf-z3O" id="IgZ-qd-aSP"/>
+                                                    <segue destination="Onb-Ca-k4I" kind="push" identifier="fail" id="I1F-nt-3Va"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
@@ -566,7 +567,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vbF-QV-XMP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1567" y="-871"/>
+            <point key="canvasLocation" x="-1447" y="-839"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="jCK-xL-3iv">
@@ -786,7 +787,7 @@
                         <outlet property="spinnerImageView" destination="wYh-G0-bJ6" id="Z8U-Mz-zCq"/>
                         <outlet property="startTalkingBlurButton" destination="Dyl-rh-dhX" id="7ga-wv-wZw"/>
                         <outlet property="welcomeView2" destination="hs1-Gq-bzV" id="YHR-io-Laa"/>
-                        <segue destination="Onb-Ca-k4I" kind="push" identifier="errorPush" id="6wC-sh-CPZ"/>
+                        <segue destination="Onb-Ca-k4I" kind="push" identifier="fail" id="6wC-sh-CPZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jb4-vV-D5a" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -876,4 +877,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="6wC-sh-CPZ"/>
+    </inferredMetricsTieBreakers>
 </document>

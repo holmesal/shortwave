@@ -20,6 +20,7 @@
 
 // Use the production firebase
 #define FIREBASE_ROOT_URL @"https://earshot.firebaseio.com"
+
 //// Hide NSLogs
 #undef NSLog
 #define NSLog(args, ...)
