@@ -13,6 +13,7 @@
 #import <Mixpanel/Mixpanel.h>
 #import "ESSwapUserStateMessage.h"
 #import "UIImage+Resize.h"
+#import <MessageUI/MessageUI.h>
 
 typedef enum
 {
@@ -46,6 +47,9 @@ typedef enum
 @property (nonatomic) NSInteger selectedIconIndex;
 @property (nonatomic) UIImageView *extractedImageViewOnDone;
 @property (weak, nonatomic) IBOutlet UIView *welcomeView2;
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
+
+
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *startTalkingBlurButton;
 
 @property (nonatomic) PanGestureDirection panDirection;
@@ -199,6 +203,7 @@ typedef enum
     [welcomeView2 setBackgroundColor:[UIColor clearColor]];
     [welcomeView2 setHidden:YES];
     
+    [startTalkingBlurButton setRadius:startTalkingBlurButton.frame.size.width/2.0f];
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 #pragma mark Alonso put colors here
@@ -450,9 +455,7 @@ typedef enum
     [self.extractedImageViewOnDone setImage:[UIImage imageNamed:imageName]];
     [self.view addSubview:self.extractedImageViewOnDone];
     
-    
-    
-    
+
     //welcomeView2 setup centers view unhides and alpha 0 for begin animation
     [welcomeView2 setHidden:NO];
     [welcomeView2 setAlpha:1.0f];//unhide for invalidatePressedLayer on blurButton
@@ -470,7 +473,9 @@ typedef enum
     [welcomeView2 setFrame:tempFrame];
     
     CGRect targetFrameForExtractedImageView = frameForIcon;
-    targetFrameForExtractedImageView.origin.y = welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
+    targetFrameForExtractedImageView.origin.y = (self.welcomeLabel.frame.origin.y-frameForIcon.size.height)*0.5f;
+    
+    //welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
     
     
     
@@ -788,6 +793,20 @@ typedef enum
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    
+//     if([MFMessageComposeViewController canSendText])
+//     {
+//         NSArray *recipents = nil;
+//         NSString *message = @"earhosturl here";
+//         
+//         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+//         messageController.messageComposeDelegate = self;
+//         [messageController setRecipients:recipents];
+//         [messageController setBody:message];
+//         [self presentModalViewController:messageController animated:YES];
+//     }
+    
     
     [self reanimate];
     

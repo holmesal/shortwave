@@ -19,6 +19,7 @@
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */; };
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
+		AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA3779A18F87BBC00B70B00 /* MessageUI.framework */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
 		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AADAB29918F5F1AA00E61579 /* ESViewController.m */; };
@@ -111,6 +112,7 @@
 		AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		AAA3779A18F87BBC00B70B00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
 		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */,
 				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
 				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
 				AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */,
@@ -386,6 +389,7 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAA3779A18F87BBC00B70B00 /* MessageUI.framework */,
 				AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */,
 				AAE3743F18DC098B006A9C82 /* CoreData.framework */,
 				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
