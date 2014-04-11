@@ -184,7 +184,7 @@
     FCUser *owner = [FCUser owner];
     if (owner)
     {
-        BOOL stackIsActive = owner.beacon.peripheralManagerIsRunning;
+        BOOL stackIsActive = owner.beacon.stackIsRunning;
         NSLog(@"%d" ,stackIsActive);
         
         if (!stackIsActive)

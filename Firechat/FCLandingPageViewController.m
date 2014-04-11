@@ -475,7 +475,7 @@ typedef enum
     
     
     //    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
-    BOOL peripheralManagerIsRunning = owner.beacon.peripheralManagerIsRunning;
+    BOOL peripheralManagerIsRunning = owner.beacon.stackIsRunning;
     //    if (peripheralManagerIsRunning)
     //    {
     //        targetFrameForExtractedImageView.origin.y = 20;
@@ -546,7 +546,7 @@ typedef enum
     FCUser *owner = [FCUser owner];
 
     
-    if (!owner.beacon.peripheralManagerIsRunning)
+    if (!owner.beacon.stackIsRunning)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
