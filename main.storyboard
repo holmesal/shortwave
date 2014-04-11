@@ -374,11 +374,11 @@
                                                     <outlet property="toView" destination="0UP-TB-180" id="wn2-O9-9Ar"/>
                                                 </connections>
                                             </tableViewCell>
-                                            <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OwnerMessageCell" rowHeight="75" id="tJY-HB-gJy" customClass="FCOwnerMessageCell">
+                                            <tableViewCell opaque="NO" contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="OwnerMessageCell" rowHeight="75" id="tJY-HB-gJy" customClass="FCOwnerMessageCell">
                                                 <rect key="frame" x="0.0" y="147" width="320" height="75"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="tJY-HB-gJy" id="P8y-Mj-0Gx">
-                                                    <rect key="frame" x="0.0" y="0.0" width="287" height="75"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="75"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iZg-Tf-z3O">
@@ -391,7 +391,7 @@
                                                             </constraints>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2z7-YA-O5S">
-                                                            <rect key="frame" x="269" y="27" width="0.0" height="20"/>
+                                                            <rect key="frame" x="269" y="27" width="33" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="20" id="irg-sr-Ydl"/>
@@ -878,6 +878,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="6wC-sh-CPZ"/>
+        <segue reference="I1F-nt-3Va"/>
     </inferredMetricsTieBreakers>
 </document>
