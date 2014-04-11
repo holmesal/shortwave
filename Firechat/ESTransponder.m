@@ -16,8 +16,9 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
+#define DEBUG_NOTIFICATIONS YES
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
@@ -63,7 +64,8 @@
 
 @implementation ESTransponder
 @synthesize earshotID;
-@synthesize peripheralManagerIsRunning;
+//@synthesize peripheralManagerIsRunning;
+@synthesize stackIsRunning;
 
 
 
@@ -373,6 +375,9 @@
         // Alias
         existingUser = newUser;
         
+        // Send a local notification to tell the user we discovered a device
+        [self sendDiscoverNotification];
+        
         // Send the new (anonymous) user notification
         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
         
@@ -410,71 +415,12 @@
 {
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
     
-    /*CBPeripheralManagerStateUnknown = 0,
-     CBPeripheralManagerStateResetting,
-     CBPeripheralManagerStateUnsupported,
-     CBPeripheralManagerStateUnauthorized,
-     CBPeripheralManagerStatePoweredOff,
-     CBPeripheralManagerStatePoweredOn
-     */
-    if (DEBUG_CENTRAL) NSLog(@"\n");
-    switch (central.state) {
-        case CBPeripheralManagerStateUnknown:
-        {
-            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnknown");
-        }
-            break;
-        case CBPeripheralManagerStateResetting:
-        {
-            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateResetting");
-        }
-            break;
-        case CBPeripheralManagerStateUnsupported:
-        {
-            //just for when I am running on simulator,
-            if (!IS_RUNNING_ON_SIMULATOR)
-            {
-                //unsuported state means the device cannot do bluetooth low energy
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oh noes" message:@"The platform doesn't support the Bluetooth low energy peripheral/server role." delegate:nil cancelButtonTitle:@"Dang!" otherButtonTitles:nil];
-                [alert show];
-                self.peripheralManagerIsRunning = NO;
-                if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnsupported");
-            } else
-            {
-                if (DEBUG_CENTRAL) NSLog(@"FAKE CBPeripheralManagerStateUnauthorized");
-                self.peripheralManagerIsRunning = NO;
-                
-                [self blueToothStackNeedsUserToActivateMessage];
-            }
-        }
-            break;
-        case CBPeripheralManagerStateUnauthorized:
-        {
-            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStateUnauthorized");
-            self.peripheralManagerIsRunning = NO;
-            
-            [self blueToothStackNeedsUserToActivateMessage];
-            
-        }
-            break;
-        case CBPeripheralManagerStatePoweredOff:
-        {
-            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOff");
-            self.peripheralManagerIsRunning = NO;
-            
-            [self blueToothStackNeedsUserToActivateMessage];
-            
-        }
-            break;
-        case CBPeripheralManagerStatePoweredOn:
-        {
-            if (DEBUG_CENTRAL) NSLog(@"CBPeripheralManagerStatePoweredOn");
-            //            self.peripheralManagerIsRunning = YES;
-            [self startScanning];
-        }
-            break;
+    // Emit the state
+    [self emitBluetoothState];
+    // If powered on, start scanning
+    if (central.state == CBCentralManagerStatePoweredOn){
+        [self startScanning];
     }
-    if (DEBUG_CENTRAL) NSLog(@"\n");
     
 }
 
@@ -482,8 +428,10 @@
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
     if (DEBUG_PERIPHERAL) NSLog(@"-- peripheral state changed: %@", peripheral.stateString);
-    
-    if (peripheral.state == CBPeripheralManagerStatePoweredOn) {
+    // Emit the state
+    [self emitBluetoothState];
+    // If powered on, start scanning
+    if (peripheral.state == CBPeripheralManagerStatePoweredOn){
         [self startAdvertising];
     }
 }
@@ -735,9 +683,15 @@
 }
 
 #pragma mark - CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+//- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
+//{
+//    NSLog(@"AHH DID EENTER REGION");
+//}
+
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    NSLog(@"AHH DID EENTER REGION");
+    // Emit that shit!
+    [self emitBluetoothState];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
@@ -764,6 +718,9 @@
                 // Actually start the timer
                 [[NSRunLoop mainRunLoop] addTimer:self.rangingTimeout forMode:NSDefaultRunLoopMode];
             }
+            
+            // Send a local notification to tell the user we discovered a device
+            [self sendDiscoverNotification];
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
@@ -809,84 +766,29 @@
     }
 }
 
-
-# pragma mark - auth and status
--(void)blueToothStackIsActive
+- (BOOL)stackIsRunning
 {
-    self.peripheralManagerIsRunning = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
+    if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn && self.centralManager.state == CBPeripheralManagerStatePoweredOn && [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
+    {
+        return YES;
+    } else {
+        return NO;
+    }
 }
--(void)blueToothStackNeedsUserToActivateMessage
+
+- (void)emitBluetoothState
 {
-    if (IS_RUNNING_ON_SIMULATOR)
+    if (self.stackIsRunning)
     {
-        [self blueToothStackIsActive];
-    } else
-    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
+    } else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
     }
-}
-
--(BOOL)peripheralManagerIsRunning
-{
-    BOOL isOK = NO;
-    switch ([ CLLocationManager authorizationStatus] ) {
-        case kCLAuthorizationStatusAuthorized:
-            isOK = YES;
-            break;
-        case kCLAuthorizationStatusDenied:
-            isOK = NO;
-            break;
-        case kCLAuthorizationStatusNotDetermined:
-            isOK = NO;
-            break;
-        case kCLAuthorizationStatusRestricted:
-            isOK = NO;
-            break;
-            
-    }
-    
-    BOOL val = peripheralManagerIsRunning && isOK;
-    return val;
 }
 
 -(CLLocation*)getLocation
 {
     return self.locationManager.location;
-}
-
--(void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
-    // Check for supported devices
-    switch ([CLLocationManager authorizationStatus])
-    {
-        case kCLAuthorizationStatusRestricted:
-        {
-            NSLog(@"kCLAuthorizationStatusRestricted");
-            [self blueToothStackNeedsUserToActivateMessage];
-        }
-        break;
-            
-        case kCLAuthorizationStatusDenied:
-        {
-            NSLog(@"kCLAuthorizationStatusDenied");
-            [self blueToothStackNeedsUserToActivateMessage];
-        }
-        break;
-            
-        case kCLAuthorizationStatusAuthorized:
-        {
-            NSLog(@"kCLAuthorizationStatusAuthorized");
-            [self blueToothStackIsActive];
-        }
-        break;
-            
-        case kCLAuthorizationStatusNotDetermined:
-        {
-            NSLog(@"kCLAuthorizationStatusNotDetermined");//user has not yet said yes or no
-        }
-        break;
-    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
@@ -902,7 +804,35 @@
 
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
-    NSLog(@"Started monitoring for regino: %@",region);
+    NSLog(@"Started monitoring for region: %@",region);
+}
+
+# pragma mark - local notifications
+- (void)sendDiscoverNotification
+
+{
+    // Only do this if the app is in the background
+    //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
+    UIApplication *app = [UIApplication sharedApplication];
+    if ([app applicationState] == UIApplicationStateBackground) {
+        // If there aren't any user notifications, add a new earshot notification
+        NSArray *notificationArray = [app scheduledLocalNotifications];
+        NSLog(@"notificationArray count is %lu", (unsigned long)[notificationArray count]);
+        if ([notificationArray count] != 0) {
+            // Delete all the existing notifications
+            NSLog(@"Deleting local notifications");
+            [app cancelAllLocalNotifications];
+        }
+        [app cancelAllLocalNotifications];
+        // Add a new notifications
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+        notice.alertAction = @"Converse";
+        [app scheduleLocalNotification:notice];
+    } else
+    {
+        NSLog(@"App is not in the background - ignoring notication call.");
+    }
 }
 
 @end

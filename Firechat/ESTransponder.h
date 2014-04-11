@@ -29,7 +29,8 @@
 @property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (nonatomic, readonly) BOOL isDetecting;
 @property (nonatomic, readonly) BOOL isBroadcasting;
-@property (nonatomic) BOOL peripheralManagerIsRunning;
+//@property (nonatomic) BOOL peripheralManagerIsRunning;
+@property (assign, readonly) BOOL stackIsRunning;
 
 
 // Init with an earshotID and a firebase URL
