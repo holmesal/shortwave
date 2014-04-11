@@ -15,16 +15,18 @@
 #import "CBUUID+Ext.h"
 
 #define DEBUG_CENTRAL NO
-#define DEBUG_PERIPHERAL YES
-#define DEBUG_BEACON NO
-#define DEBUG_USERS NO
-#define DEBUG_NOTIFICATIONS YES
+#define DEBUG_PERIPHERAL NO
+#define DEBUG_BEACON YES
+#define DEBUG_USERS YES
+#define DEBUG_TIMEOUTS NO
+#define DEBUG_NOTIFICATIONS NO
 
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
 #define TIMEOUT 30.0 // How old should a user be before I consider them gone?
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
+#define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
@@ -59,6 +61,7 @@
 //@property (strong, nonatomic) NSMutableDictionary *earshotUsers;
 @property (strong, nonatomic) NSTimer *filterTimer;
 @property (strong, nonatomic) NSMutableDictionary *lastReported;
+@property (assign, nonatomic) BOOL actuallyRemove;
 
 // Oscillator
 @property NSInteger broadcastMode;
@@ -122,9 +125,9 @@
         if (lastSeen > TIMEOUT) {
             if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
             // Remove from earshotUsers, if it's actually in there
-            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
-                [self removeUser:[userBeacon objectForKey:@"earshotID"]];
-            }
+//            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
+//                [self removeUser:[userBeacon objectForKey:@"earshotID"]];
+//            }
             // Remove from bluetooth users
             [self.bluetoothUsers removeObjectForKey:userBeaconKey];
         } else {
@@ -156,9 +159,11 @@
 
 - (void)filterFirebaseUsers
 {
-    if (DEBUG_USERS) NSLog(@"Filtering firebase users!");
+    if (DEBUG_USERS) NSLog(@"Filtering firebase users with actuallyRemove = %hhd",self.actuallyRemove);
     // Store the current time
     NSDate *currentDate = [NSDate date];
+    // Track whether a user to remove was found
+    BOOL removeUserInTheFuture = NO;
     for (NSString *userKey in self.earshotUsers) {
         // If the timeout is too old, clear it out
         NSNumber *timestampNumber = [self.earshotUsers objectForKey:userKey];
@@ -174,16 +179,34 @@
             
             if (interval > TIMEOUT) {
                 NSLog(@"Lost user %@ - has been too long: %f",userKey,interval);
-                // Chirp the beacon to see if you can get them back.
-                [self chirpBeacon];
-                // TODO - add a timeout here to give the beacon a few seconds to work it's magic before removing the user
-                // Remove the user
-                [self removeUser:userKey];
+                if (self.actuallyRemove) {
+                    // Remove the user
+                    [self removeUser:userKey];
+                } else{
+                    // Remove this user the next time through
+                    removeUserInTheFuture = YES;
+                }
+                
             }
         } else {
             // There's a weird value here
             [self removeUser:userKey];
         }
+    }
+    
+    // If we just removed stuff, set actually remove back to NO for the regularly scheduled program
+    if (self.actuallyRemove) {
+        self.actuallyRemove = NO;
+    }
+    
+    // If we found a user to remove, then set an interval for a few seconds from now and set actually remove to true
+    if (removeUserInTheFuture) {
+        // Chirp the beacon to see if you can get dem users back.
+        [self chirpBeacon];
+        // set actually remove for the next run through
+        self.actuallyRemove = YES;
+        // Call this again in a couple of seconds, at which point the user will be actually removed
+        [self performSelector:@selector(filterFirebaseUsers) withObject:nil afterDelay:2.0];
     }
 }
 
@@ -200,14 +223,21 @@
 - (void)addUser:(NSString *)userID
 {
 //    NSLog(@"Adding user to firebase: %@",userID);
-    // Get the rounded date/time
+//    // Get the rounded date/time
 //    uint rounded = [self roundTime:[[NSDate date] timeIntervalSince1970]];
+//    // Add the user for yourself
+//    [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:rounded]];
+//    // Add yourself for the user
+//    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:rounded]];
+//    [self.lastReported setObject:[[NSNumber alloc] initWithDouble:now] forKey:userID];
 //    NSLog(@"Rounded time is %d",rounded);
-    double now = [[NSDate date] timeIntervalSince1970];
+    uint now = [[NSDate date] timeIntervalSince1970];
     // Make sure it's not the time we already have
     NSNumber *last = [self.lastReported objectForKey:userID];
-    if(DEBUG_USERS) NSLog(@"Time difference for user %@ is %f",userID,(now - [last doubleValue]));
-    if ((now-[last doubleValue]) > REPORTING_INTERVAL){
+    uint then = [last intValue];
+    if(DEBUG_TIMEOUTS) NSLog(@"Time difference for user %@ is %u",userID,(now - then));
+    uint howLong = now - then;
+    if (howLong > REPORTING_INTERVAL){
         if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
         // Add the user for yourself
         [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
@@ -215,7 +245,7 @@
         [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:now]];
         [self.lastReported setObject:[[NSNumber alloc] initWithDouble:now] forKey:userID];
     } else {
-        if(DEBUG_USERS) NSLog(@"Timeout not long enough, doing nothing.");
+        if(DEBUG_TIMEOUTS) NSLog(@"Timeout not long enough, doing nothing.");
     }
 }
 
@@ -231,10 +261,15 @@
 {
 #warning not sure this is the right way to handle removing users...
 #warning - add feature to not remove this user if it exists elsewhere in the bluetooth array
-    // Remove the user for yourself
-    [[self.earshotUsersRef childByAppendingPath:userID] removeValue];
+    // Only do this if you're in the foreground
+    UIApplication *application = [UIApplication sharedApplication];
+    
+    if (application.applicationState == UIApplicationStateActive) {
+        // Remove the user for yourself
+        [[self.earshotUsersRef childByAppendingPath:userID] removeValue];
+    }
     // Remove yourself for the user
-    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] removeValue];
+//    [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] removeValue];
 }
 
 
@@ -385,7 +420,7 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
         
         // Chirp the beacon!
-//        [self chirpBeacon];
+        [self chirpBeacon];
     } else{
         // Update the time last seen
         [existingUser setObject:[[NSDate alloc] init] forKey:@"lastSeen"];
@@ -471,53 +506,57 @@
 - (void)chirpBeacon
 {
     
-    if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
+    UIApplication *application = [UIApplication sharedApplication];
+    if ([application applicationState] == UIApplicationStateActive) {
+        if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
 
-    // Don't do anything if you're already chirping
-    if (self.currentlyChirping == YES) {
-        if (DEBUG_BEACON) NSLog(@"Currently chirping, creation CANCELLED");
+        // Don't do anything if you're already chirping
+        if (self.currentlyChirping == YES) {
+            if (DEBUG_BEACON) NSLog(@"Currently chirping, creation CANCELLED");
+        } else{
+            // Build an array to sort
+            NSMutableArray *fucker = [[NSMutableArray alloc] init];
+
+            for (NSNumber *isInside in self.regions) {
+                NSDictionary *bullshit = @{@"some": [[NSDate alloc] init],@"isInside":isInside};
+                [fucker addObject:bullshit];
+            }
+
+            // Preticate - filter self.regions
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
+            NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
+            if ([availableNos count])
+            {
+                NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
+                id aNo = [availableNos objectAtIndex:randomChoice];
+
+                int major = [availableNos indexOfObject:aNo];
+
+                if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %i",major);
+                self.chirpBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
+                                                                                     major:major
+                                                                                     minor:0
+                                                                                identifier:[NSString stringWithFormat:@"Broadcast region %i",major]];
+                self.chirpBeaconData = [self.chirpBeaconRegion peripheralDataWithMeasuredPower:nil];
+
+                // Start chirping
+                self.currentlyChirping = YES;
+                // Stop chirping after 10 seconds
+                [self performSelector:@selector(stopChirping) withObject:nil afterDelay:10.0];
+            } else
+            {
+                int timeoutSeconds = 10;
+                NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
+                    // note - it's okay if this fires in the background
+                    // this only sets the beacon data and the currentlyChirping flag, but it will be overridden by the flippingBreaker flag if the app is in the background
+                    [self chirpBeacon];
+                });
+            }
+        }
     } else{
-        // Build an array to sort
-        NSMutableArray *fucker = [[NSMutableArray alloc] init];
-
-        for (NSNumber *isInside in self.regions) {
-            NSDictionary *bullshit = @{@"some": [[NSDate alloc] init],@"isInside":isInside};
-            [fucker addObject:bullshit];
-        }
-
-        // Preticate - filter self.regions
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
-        NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
-        if ([availableNos count])
-        {
-            NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
-            id aNo = [availableNos objectAtIndex:randomChoice];
-
-            int major = [availableNos indexOfObject:aNo];
-
-            if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %i",major);
-            self.chirpBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                                 major:major
-                                                                                 minor:0
-                                                                            identifier:[NSString stringWithFormat:@"Broadcast region %i",major]];
-            self.chirpBeaconData = [self.chirpBeaconRegion peripheralDataWithMeasuredPower:nil];
-
-            // Start chirping
-            self.currentlyChirping = YES;
-            // Stop chirping after 10 seconds
-            [self performSelector:@selector(stopChirping) withObject:nil afterDelay:10.0];
-        } else
-        {
-            int timeoutSeconds = 10;
-            NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
-                // note - it's okay if this fires in the background
-                // this only sets the beacon data and the currentlyChirping flag, but it will be overridden by the flippingBreaker flag if the app is in the background
-                [self chirpBeacon];
-            });
-        }
+        if (DEBUG_BEACON) NSLog(@"Application isn't in the foreground - not creating a beacon");
     }
-    
     
 }
 
@@ -765,8 +804,10 @@
 
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-//    NSLog(@"Ranged beacons from region 19!");
-//    NSLog(@"%@",beacons);
+    if ([beacons count] != 0){
+        if (DEBUG_BEACON) NSLog(@"Ranged beacons from region 19!");
+        if (DEBUG_BEACON) NSLog(@"%@",beacons);
+    }
     for (CLBeacon *beacon in beacons) {
         NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
         [self addUser:userID];
@@ -861,17 +902,18 @@
         // If there aren't any user notifications, add a new earshot notification
         NSArray *notificationArray = [app scheduledLocalNotifications];
         NSLog(@"notificationArray count is %lu", (unsigned long)[notificationArray count]);
-        if ([notificationArray count] != 0) {
-            // Delete all the existing notifications
-            NSLog(@"Deleting local notifications");
-            [app cancelAllLocalNotifications];
-        }
-        [app cancelAllLocalNotifications];
-        // Add a new notifications
-        UILocalNotification *notice = [[UILocalNotification alloc] init];
-        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
-        notice.alertAction = @"Converse";
-        [app scheduleLocalNotification:notice];
+        NSLog(@"Sending a local discover notification!");
+//        if ([notificationArray count] != 0) {
+//            // Delete all the existing notifications
+//            NSLog(@"Deleting local notifications");
+//            [app cancelAllLocalNotifications];
+//        }
+//        [app cancelAllLocalNotifications];
+//        // Add a new notifications
+//        UILocalNotification *notice = [[UILocalNotification alloc] init];
+//        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+//        notice.alertAction = @"Converse";
+//        [app scheduleLocalNotification:notice];
     } else
     {
         NSLog(@"App is not in the background - ignoring notication call.");
