@@ -24,7 +24,7 @@ typedef enum
     PanGestureDirectionRight
 }PanGestureDirection;
 
-@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 
@@ -214,7 +214,8 @@ typedef enum
     [welcomeView2 setHidden:YES];
     [self.searchingView setHidden:YES];
     [self.searchingView setBackgroundColor:[UIColor clearColor]];
-    
+    [self.composeBlurButton setRadius:self.composeBlurButton.frame.size.width/2];
+    [self.composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
     [startTalkingBlurButton setRadius:startTalkingBlurButton.frame.size.width/2.0f];
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
@@ -353,7 +354,7 @@ typedef enum
     [self.doneBlurButton setRadius:self.doneBlurButton.frame.size.height/2];
     
     
-    self.searchingView.alpha = 0.0f;
+
 
 }
 
@@ -584,12 +585,15 @@ typedef enum
          }];
     } else
     {
+        self.searchingView.alpha = 0.0f;
+        [self.searchingView setHidden:NO];
+        
         [UIView animateWithDuration:1.5f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
         {
             self.welcomeView2.alpha = 0.0f;
         } completion:^(BOOL finished)
         {
-            [UIView animateWithDuration:1.5f delay:0.2f usingSpringWithDamping:1.2f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
+            [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.searchingView.alpha = 1.0f;
              } completion:^(BOOL finished)
@@ -800,19 +804,6 @@ typedef enum
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    
-//     if([MFMessageComposeViewController canSendText])
-//     {
-//         NSArray *recipents = nil;
-//         NSString *message = @"earhosturl here";
-//         
-//         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-//         messageController.messageComposeDelegate = self;
-//         [messageController setRecipients:recipents];
-//         [messageController setBody:message];
-//         [self presentModalViewController:messageController animated:YES];
-//     }
     
     
     [self reanimate];
@@ -1427,5 +1418,28 @@ typedef enum
         [viewController.view setBackgroundColor:self.view.backgroundColor];
     }
 }
+
+-(void)composeBlurButtonAction
+{
+     if([MFMessageComposeViewController canSendText])
+     {
+         NSArray *recipents = nil;
+         NSString *message = @"Heyyyyy.  Forgot what I was going to tell you... OH YEA! Download earshot.";
+
+         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+         messageController.messageComposeDelegate = self;
+         [messageController setRecipients:recipents];
+         [messageController setBody:message];
+//         [self presentModalViewController:messageController animated:YES];
+         [self presentViewController:messageController animated:YES completion:^{}];
+     }
+}
+
+-(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    [controller dismissViewControllerAnimated:YES completion:^{}];
+}
+
+
 
 @end
