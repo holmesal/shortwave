@@ -81,7 +81,7 @@
             [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
                 // Make the push notification
                 NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-                                                   @"alert": text};
+                                                   @"alert": [NSString stringWithFormat:@"\"%@\"",text]};
                 // Set the push notification
                 Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
                 [pushQueueRef setValue:pushNotification];
