@@ -780,10 +780,10 @@
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
-                UILocalNotification *notice = [[UILocalNotification alloc] init];
-                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",major];
-                notice.alertAction = @"Open";
-                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+//                UILocalNotification *notice = [[UILocalNotification alloc] init];
+//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",major];
+//                notice.alertAction = @"Open";
+//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
                 NSLog(@"%@",self.regions);
             }
             break;
