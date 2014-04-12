@@ -913,17 +913,17 @@
         NSArray *notificationArray = [app scheduledLocalNotifications];
         NSLog(@"notificationArray count is %lu", (unsigned long)[notificationArray count]);
         NSLog(@"Sending a local discover notification!");
-//        if ([notificationArray count] != 0) {
-//            // Delete all the existing notifications
-//            NSLog(@"Deleting local notifications");
-//            [app cancelAllLocalNotifications];
-//        }
-//        [app cancelAllLocalNotifications];
-//        // Add a new notifications
-//        UILocalNotification *notice = [[UILocalNotification alloc] init];
-//        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
-//        notice.alertAction = @"Converse";
-//        [app scheduleLocalNotification:notice];
+        if ([notificationArray count] != 0) {
+            // Delete all the existing notifications
+            NSLog(@"Deleting local notifications");
+            [app cancelAllLocalNotifications];
+        }
+        [app cancelAllLocalNotifications];
+        // Add a new notifications
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+        notice.alertAction = @"Converse";
+        [app scheduleLocalNotification:notice];
     } else
     {
         NSLog(@"App is not in the background - ignoring notication call.");

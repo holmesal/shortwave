@@ -738,7 +738,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "9D70C728-EC7A-4F59-9C5B-EC1DD548AA14";
+				PROVISIONING_PROFILE = "F16288E6-66A9-4AE8-8818-3D927A200774";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -760,7 +760,8 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -771,7 +772,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PROVISIONING_PROFILE = "9D70C728-EC7A-4F59-9C5B-EC1DD548AA14";
+				PROVISIONING_PROFILE = "F16288E6-66A9-4AE8-8818-3D927A200774";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -783,8 +784,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
@@ -802,7 +803,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Earshot;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "F16288E6-66A9-4AE8-8818-3D927A200774";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -814,8 +815,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Shared/Firebase/Frameworks,
@@ -833,7 +834,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Earshot;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "F16288E6-66A9-4AE8-8818-3D927A200774";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
