@@ -354,10 +354,7 @@ typedef enum
     [boundsRect setBackgroundColor:[UIColor clearColor]];
     [self.dialUpView addSubview:boundsRect];
     
-    
-//    UIImage *plugImg = [[UIImage imageNamed:@"Phone-cord-export-02.png"] scaleByFactor:graphicScaleRatio*1.1f];
-//    UIImage *coordImg = [[UIImage imageNamed:@"Phone-cord-export-03.png"] scaleByFactor:graphicScaleRatio];
-//    UIImage *mask = [[UIImage imageNamed:@"Phone-cord-export-04.png"] scaleByFactor:graphicScaleRatio*1.1f];
+
     UIImage *_plugImg = [UIImage imageNamed:@"Phone-cord-export-02.png"];
     UIImage *_coordImg = [UIImage imageNamed:@"Phone-cord-export-03.png"];
     UIImage *_mask = [UIImage imageNamed:@"Phone-cord-export-04.png"];
