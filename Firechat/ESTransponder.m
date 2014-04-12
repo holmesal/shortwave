@@ -97,7 +97,7 @@
         // Start the timer to filter the users
         [self startFilterTimer];
         // Start a repeating timer to prune the in-range users, every 10 seconds
-        [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
+//        [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(pruneUsers) userInfo:nil repeats:YES];
         // Start a repeating timer to broadcast as an iBeacon, every 30 seconds
         // Listen for chirpBeacon events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(chirpBeacon) name:kTransponderTriggerChirpBeacon object:nil];
@@ -157,12 +157,12 @@
         NSLog(@"%@",snapshot.value);
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
-            // Filter the users based on timeout
-            [self filterFirebaseUsers];
         } else {
             self.earshotUsers = [[NSMutableDictionary alloc] init];
             self.lastReported = [[NSMutableDictionary alloc] init];
         }
+        // Filter the users based on timeout
+        [self filterFirebaseUsers];
     }];
 }
 
@@ -244,7 +244,7 @@
     // Make sure it's not the time we already have
     NSNumber *last = [self.lastReported objectForKey:userID];
     uint then = [last intValue];
-    if(DEBUG_TIMEOUTS) NSLog(@"Time difference for user %@ is %u",userID,(now - then));
+    NSLog(@"Time difference for user %@ is %u",userID,(now - then));
     uint howLong = now - then;
     if (howLong > REPORTING_INTERVAL){
         if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
@@ -685,9 +685,9 @@
     // Init the region tracker
     self.regions = [[NSMutableArray alloc] init];
     
-    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
-        [self.locationManager stopMonitoringForRegion:monitored];
-    }
+//    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
+//        [self.locationManager stopMonitoringForRegion:monitored];
+//    }
     
     // Regions 0-18 are available for wakeup chirps
     for (int major=0; major< MAX_BEACON; major++) {
@@ -753,6 +753,7 @@
 {
     // What region?
     NSNumber *major = [region valueForKey:@"major"];
+    NSLog(@"Got state %ld for region %@", state, region);
     //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
@@ -779,10 +780,10 @@
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",major];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+                UILocalNotification *notice = [[UILocalNotification alloc] init];
+                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",major];
+                notice.alertAction = @"Open";
+                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
                 NSLog(@"%@",self.regions);
             }
             break;
