@@ -50,6 +50,16 @@ typedef enum
 @property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
 
 
+//vars for searching view
+@property (weak, nonatomic) IBOutlet UIView *searchingView;
+@property (weak, nonatomic) IBOutlet UILabel *searchingLabel;
+@property (weak, nonatomic) IBOutlet UILabel *numberPeopleNearbyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *peopleNearbyGrammarLabel;
+@property (weak, nonatomic) IBOutlet FCLiveBlurButton *composeBlurButton;
+
+
+
+
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *startTalkingBlurButton;
 
 @property (nonatomic) PanGestureDirection panDirection;
@@ -141,7 +151,7 @@ typedef enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
 
     
     //initialize the circle things
@@ -202,6 +212,9 @@ typedef enum
     //hide welcomeVIew2
     [welcomeView2 setBackgroundColor:[UIColor clearColor]];
     [welcomeView2 setHidden:YES];
+    [self.searchingView setHidden:YES];
+    [self.searchingView setBackgroundColor:[UIColor clearColor]];
+    
     
     [startTalkingBlurButton setRadius:startTalkingBlurButton.frame.size.width/2.0f];
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
@@ -335,11 +348,12 @@ typedef enum
     [self.view addGestureRecognizer:self.panGesture];
     
     
+//    [self.doneBlurButton setBackgroundColor:[UIColor clearColor]];
     [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.doneBlurButton setRadius:self.doneBlurButton.frame.size.height/2];
     
     
-
+    self.searchingView.alpha = 0.0f;
 
 }
 
@@ -359,39 +373,7 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
-    NSLog(@"tableView offset = %f", self.iconTableView.contentOffset.y);
-//    FCUser *owner =  [FCUser owner];
-    
-    [self continueWithDonBlurButtonAction];
-//    if (!self.authClient)
-//    {
-//        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:owner.rootRef];
-//    }
-//    
-//    if (!owner.fuser)
-//    {
-//        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
-//            if (error != nil)
-//            {
-//                NSLog(@"oh no an error when loginAnonymouselyWithCompletionBlock! %@", error.localizedDescription);
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
-//                [alert show];
-//                // There was an error logging in to this account
-//            } else
-//            {
-//                
-//                owner.fuser = user;
-//                [self continueWithDonBlurButtonAction];
-//                
-//                // We are now logged in
-//            }
-//        }];
-//    } else
-//    {
-//        
-//    }
-    
-    
+    [self continueWithDoneBlurButtonAction];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -402,7 +384,7 @@ typedef enum
     }
 }
 
--(void)continueWithDonBlurButtonAction
+-(void)continueWithDoneBlurButtonAction
 {
     //extract current icon
     self.selectedIconIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
@@ -424,13 +406,10 @@ typedef enum
         if (![oldColor isEqualToString:newColor] || ![oldIcon isEqualToString:newIcon])
         {
             //post a change message
-            
             ESSwapUserStateMessage *swapStateMessage = [[ESSwapUserStateMessage alloc] initWithOldIcon:oldIcon oldColor:oldColor newIcon:newIcon newColor:newColor];
             [swapStateMessage postMessageAsOwner];
             
         }
-            
-        
     }
     
     
@@ -493,21 +472,27 @@ typedef enum
          
          for (UIView *subview in self.view.subviews)
          {
+             if (subview == self.doneBlurButton)
+             {
+                 
+             } else
              if (subview == welcomeView2)
              {
                  //                tempFrame.origin.y -=5;
                  //                welcomeView2.frame = tempFrame;
                  //                welcomeView2.alpha = 1.0f;
              } else
-                 if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
-                 {
-                     subview.alpha = 0.0f;
-                     subview.transform = CGAffineTransformMakeTranslation(0, -5);
-                 }
+             if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
+             {
+                 subview.alpha = 0.0f;
+                 subview.transform = CGAffineTransformMakeTranslation(0, -2);
+             }
          }
          
      } completion:^(BOOL finished)
-     {}];
+     {
+     
+     }];
     
     
     
@@ -525,6 +510,7 @@ typedef enum
          } else
              //             if (!peripheralManagerIsRunning)
          {
+             self.startTalkingBlurButton.alpha = 0.0f;
              [UIView animateWithDuration:0.4f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
               {
                   tempFrame.origin.y -= 5;
@@ -533,9 +519,9 @@ typedef enum
                   
               } completion:^(BOOL finished)
               {
-                  startTalkingBlurButton.backgroundColor = self.view.backgroundColor;
-//                  [startTalkingBlurButton setBackgroundColor:self.view.backgroundColor];
                   [startTalkingBlurButton invalidatePressedLayer];
+                  self.doneBlurButton.alpha = 0.0f;
+                  self.startTalkingBlurButton.alpha = 1.0f;
               }];
          }
      }];
@@ -577,20 +563,41 @@ typedef enum
 
 -(void)continueWithBluetooth:(NSNotification*)notification
 {
-    [self removeBluetoothEvents];
-    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
-     {
-         for (UIView *subview in self.view.subviews)
+    //after bluetooth stack is active
+    //either you go to the wallviewcontroller or you become "Searching", based on kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN])
+    {
+        [self removeBluetoothEvents];
+        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
          {
-             if (subview != self.extractedImageViewOnDone)
+             for (UIView *subview in self.view.subviews)
              {
-                 subview.alpha = 0.0f;
+                 if (subview != self.extractedImageViewOnDone)
+                 {
+                     subview.alpha = 0.0f;
+                 }
              }
-         }
-     } completion:^(BOOL finsihed)
-     {
-         [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
-     }];
+         } completion:^(BOOL finsihed)
+         {
+             [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+         }];
+    } else
+    {
+        [UIView animateWithDuration:1.5f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
+        {
+            self.welcomeView2.alpha = 0.0f;
+        } completion:^(BOOL finished)
+        {
+            [UIView animateWithDuration:1.5f delay:0.2f usingSpringWithDamping:1.2f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.searchingView.alpha = 1.0f;
+             } completion:^(BOOL finished)
+             {
+                 
+             }];
+        }];
+    }
 }
 
 #pragma mark blurActionButton callbacks end

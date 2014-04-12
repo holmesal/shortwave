@@ -84,9 +84,6 @@
     [self authorizeWithFirebase]; //creates owner
 
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beaconsDiscovered:) name:@"Beacons Added" object:nil];
-    
-    
     // Register for push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
@@ -100,8 +97,6 @@
     // Mixpanel project token, MIXPANEL_TOKEN
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
 
-    
-    
 
     return YES;
 }
