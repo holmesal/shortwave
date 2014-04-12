@@ -28,6 +28,7 @@
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
+#define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 
@@ -62,6 +63,7 @@
 @property (strong, nonatomic) NSTimer *filterTimer;
 @property (strong, nonatomic) NSMutableDictionary *lastReported;
 @property (assign, nonatomic) BOOL actuallyRemove;
+@property (strong, nonatomic) NSDate *lastNotificationEvent;
 
 // Oscillator
 @property NSInteger broadcastMode;
@@ -294,6 +296,8 @@
     if (!self.isFlipping) [self startFlipping];
     // Chirp the discovery iBeacon for a few seconds
     [self chirpBeacon];
+    // Update the date we use for the notification timeout
+    self.lastNotificationEvent = [NSDate date];
 }
 
 - (void)appWillEnterBackground
@@ -909,21 +913,30 @@
     //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
     UIApplication *app = [UIApplication sharedApplication];
     if ([app applicationState] == UIApplicationStateBackground) {
-        // If there aren't any user notifications, add a new earshot notification
+        // If there aren't any existing discover notifications
         NSArray *notificationArray = [app scheduledLocalNotifications];
-        NSLog(@"notificationArray count is %lu", (unsigned long)[notificationArray count]);
-        NSLog(@"Sending a local discover notification!");
-        if ([notificationArray count] != 0) {
-            // Delete all the existing notifications
-            NSLog(@"Deleting local notifications");
-            [app cancelAllLocalNotifications];
+        if ([notificationArray count] == 0) {
+            // If it's been more than 20 minutes since the last notification OR app open
+            NSDate *currentDate = [NSDate date];
+            NSTimeInterval howLong = [currentDate timeIntervalSinceDate:self.lastNotificationEvent];
+            if (howLong > NOTIFICATION_TIMEOUT) {
+                NSLog(@"Sending a local discover notification!");
+                // Cancel all of the existing notifications
+                [app cancelAllLocalNotifications];
+                // Add a new notification
+                UILocalNotification *notice = [[UILocalNotification alloc] init];
+                notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+                notice.alertAction = @"Converse";
+                [app scheduleLocalNotification:notice];
+                // Update the date we use for the notification timeout
+                self.lastNotificationEvent = [NSDate date];
+            } else{
+                NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
+            }
+        } else {
+            NSLog(@"There is already an existing discover notification - ignoring notification call");
         }
-        [app cancelAllLocalNotifications];
-        // Add a new notifications
-        UILocalNotification *notice = [[UILocalNotification alloc] init];
-        notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
-        notice.alertAction = @"Converse";
-        [app scheduleLocalNotification:notice];
+        
     } else
     {
         NSLog(@"App is not in the background - ignoring notication call.");
