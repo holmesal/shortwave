@@ -28,6 +28,9 @@
 # pragma mark - posting a message
 - (void)postText:(NSString *)text asOwner:(FCUser *)owner
 {
+    // Check if it's a special message
+    NSMutableDictionary *results = [self filterMessage:text toOwner:owner];
+    
     // Make the message
     
     NSNumber *accuracy = [NSNumber numberWithDouble:-1];
@@ -58,35 +61,48 @@
     [ownerMessageRef setValue:message];
     [self setTimestampAsNow:ownerMessageRef];
     
-    // Grab the current list of earshot users
-    NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
-    
-    // Loop through and post to the firebase of every beacon in range
-    for (NSString *earshotId in earshotIds)
-    {
-        NSLog(@"Posting message to %@",earshotId);
-        // Post to the firebase wall of this beacon
-        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-        [otherPersonMessageRef setValue:message];
-        [self setTimestampAsNow:otherPersonMessageRef];
+    // Should this message go to other people?
+    if ([[results objectForKey:@"shouldPostToPeers"]  isEqual: @YES]) {
         
-        // Send a push notification to this user
-        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
-        [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-            // Make the push notification
-            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-                                               @"alert": text};
-            // Set the push notification
-            Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
-            [pushQueueRef setValue:pushNotification];
-        }];
+        // Grab the current list of earshot users
+        NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
+        
+        // Loop through and post to the firebase of every beacon in range
+        for (NSString *earshotId in earshotIds)
+        {
+            NSLog(@"Posting message to %@",earshotId);
+            // Post to the firebase wall of this beacon
+            Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
+            [otherPersonMessageRef setValue:message];
+            [self setTimestampAsNow:otherPersonMessageRef];
+            
+            // Send a push notification to this user
+            Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
+            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+                // Make the push notification
+                NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+                                                   @"alert": text};
+                // Set the push notification
+                Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+                [pushQueueRef setValue:pushNotification];
+            }];
+        }
+        
+        // Log the message to mixpanel
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel track:@"Message Sent" properties:@{
+                                                     @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy},
+                                                     @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]]}];
     }
     
-    // Finally, log the message
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel track:@"Message Sent" properties:@{
-                                                 @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy},
-                                                 @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]]}];
+    // Finally, post the contents of the filter message, if they exist
+    NSDictionary *responseMessage = [results objectForKey:@"message"];
+    if ([responseMessage count] != 0) {
+        // Post the message TO YOUR OWN WALL FIRST (faster?)
+        Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
+        [ownerMessageRef setValue:responseMessage];
+        [self setTimestampAsNow:ownerMessageRef];
+    }
     
 
 }
@@ -96,6 +112,26 @@
     // BEWARE - this will cause a value event that will happen AFTER the value event for setting the data.
     // Act appropriately on the wall view controller
     [[ref childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+}
+
+- (NSMutableDictionary *)filterMessage:(NSString *)text toOwner:(FCUser *)owner
+{
+    NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
+    [results setObject:@YES forKey:@"shouldPostToPeers"];
+    if ([text rangeOfString:@"#version"].location != NSNotFound) {
+        // Don't post this to anyone else
+        [results setObject:@NO forKey:@"shouldPostToPeers"];
+        // Post the current version to yourself
+        NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+        NSDictionary *message = @{@"color": @"FFFFFF" ,
+          @"icon":@"nakedicon",
+          @"text":[NSString stringWithFormat:@"%@ iterations of awesomeness so far.",version],
+          @"meta":@{@"ownerID":@"Welcome:Bot"}
+          };
+        // Store that shit
+        [results setObject:message forKey:@"message"];
+    }
+    return results;
 }
 
 @end
