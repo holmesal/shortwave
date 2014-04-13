@@ -19,7 +19,7 @@
 #import "FCLandingPageViewController.h"
 
 #define WIDTH_OF_PM_LIST 75.0f
-#define DEBUG_SHOW_USER_ID_SINGLE_TAP YES
+
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
 
