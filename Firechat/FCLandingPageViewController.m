@@ -1303,20 +1303,23 @@ typedef enum
 
 -(void)circleBounceTimerAction:(NSTimer*)theTimer
 {
-    self.alternateBounceCounter = (self.alternateBounceCounter+1)%2;
-
-    CGFloat distance = 5*(self.alternateBounceCounter ? 1 : -1);
-    UIView *circleView = (self.alternateBounceCounter ? self.leftCircleColorView : self.rightCircleColorView);
-    
+    self.alternateBounceCounter = (self.alternateBounceCounter+1)%2;    
     if (self.panDirection == PanGestureDirectionNone && !self.circleIsBouncing)
     {
         [self animateBounceCircle:self.alternateBounceCounter];
+        
+        NSTimer *timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(bounceTimerQuick) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
     
     if (!theTimer)
     {
         [self initializeCircleBounceTimerIfNecessary];
     }
+}
+-(void)bounceTimerQuick
+{
+    [self animateBounceCircle:(self.alternateBounceCounter+1)%2];
 }
 
 - (UIColor *)colorLerpFrom:(UIColor *)start to:(UIColor *)end withDuration:(float)t
