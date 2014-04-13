@@ -45,6 +45,8 @@
     [self.doubleTap setNumberOfTapsRequired:2];
     [self addGestureRecognizer:self.doubleTap];
 }
+
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
 -(void)longPressSelector
 {
     UITableView *tableView = (UITableView*)(self.superview.superview);

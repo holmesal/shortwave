@@ -13,13 +13,13 @@
 #import "FCAppDelegate.h"
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "FCLandingPageViewController.h"
-#import "FCSignupViewController.h"
 #import <CoreData/CoreData.h>
 #import "ESCoreDataController.h"
-#import "Beacon.h" //NSManagedObject (core data)
+//#import "Beacon.h" //NSManagedObject (core data)
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
 #import <Mixpanel/Mixpanel.h>
 #import "Reachability.h"
+#import "FCWallViewController.h"
 
 @interface FCAppDelegate () <UIAlertViewDelegate>
 
@@ -232,6 +232,7 @@
             viewControllers = ((UINavigationController*)rootContr).viewControllers;
         }
         
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
         for (UIViewController *vc in viewControllers)
         {
             if ([vc respondsToSelector:@selector(receiveTouchEvent:)])

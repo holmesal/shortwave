@@ -501,7 +501,7 @@ typedef enum
 
     CGPoint deltaDirection = {translation.x - lastOffset.x, translation.y - lastOffset.y};
     CGFloat deltaMagnitude = sqrtf(deltaDirection.x*deltaDirection.x + deltaDirection.y*deltaDirection.y);
-    CGPoint deltaDirectionNormalized = {deltaDirection.x/deltaMagnitude, deltaDirection.y/deltaMagnitude};
+//    CGPoint deltaDirectionNormalized = {deltaDirection.x/deltaMagnitude, deltaDirection.y/deltaMagnitude};
     
 
     

@@ -42,13 +42,11 @@
 		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF40AC218F12FD6000526BE /* UIImage+Resize.m */; };
 		AAF40AC918F149FB000526BE /* icongradient.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF40AC818F149FB000526BE /* icongradient.png */; };
-		C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */; };
 		C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */; };
 		C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */; };
 		C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4FC189EFF44001157E3 /* FCWallViewController.m */; };
 		C020259118735B3300883A38 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259018735B3300883A38 /* Accounts.framework */; };
 		C020259318735B3D00883A38 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C020259218735B3D00883A38 /* Social.framework */; };
-		C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C020259818736DC700883A38 /* FCAccountPickerViewController.m */; };
 		C02CE38E186808B000305FC9 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE38D186808B000305FC9 /* Foundation.framework */; };
 		C02CE390186808B000305FC9 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE38F186808B000305FC9 /* CoreGraphics.framework */; };
 		C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C02CE391186808B000305FC9 /* UIKit.framework */; };
@@ -82,7 +80,6 @@
 		C070A20518EF54C3000C9D3C /* CBUUID+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */; };
 		C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
-		C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,8 +149,6 @@
 		AAF40AC118F12FD6000526BE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AAF40AC218F12FD6000526BE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		AAF40AC818F149FB000526BE /* icongradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icongradient.png; sourceTree = "<group>"; };
-		C013C4ED189EB1A3001157E3 /* FCSignupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCSignupViewController.h; path = Firechat/FCSignupViewController.h; sourceTree = "<group>"; };
-		C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCSignupViewController.m; path = Firechat/FCSignupViewController.m; sourceTree = "<group>"; };
 		C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C013C4F8189EF0C1001157E3 /* FCLandingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCLandingViewController.h; path = Firechat/FCLandingViewController.h; sourceTree = "<group>"; };
 		C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCLandingViewController.m; path = Firechat/FCLandingViewController.m; sourceTree = "<group>"; };
@@ -161,8 +156,6 @@
 		C013C4FC189EFF44001157E3 /* FCWallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCWallViewController.m; sourceTree = "<group>"; };
 		C020259018735B3300883A38 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		C020259218735B3D00883A38 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		C020259718736DC700883A38 /* FCAccountPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCAccountPickerViewController.h; path = Firechat/FCAccountPickerViewController.h; sourceTree = "<group>"; };
-		C020259818736DC700883A38 /* FCAccountPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCAccountPickerViewController.m; path = Firechat/FCAccountPickerViewController.m; sourceTree = "<group>"; };
 		C02CE38A186808B000305FC9 /* Earshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Earshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02CE38D186808B000305FC9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C02CE38F186808B000305FC9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -213,8 +206,6 @@
 		C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTransponder.m; sourceTree = "<group>"; };
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
-		C0EE1D3A18A3383300663283 /* FCAnonOverlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCAnonOverlayViewController.h; path = Firechat/FCAnonOverlayViewController.h; sourceTree = "<group>"; };
-		C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCAnonOverlayViewController.m; path = Firechat/FCAnonOverlayViewController.m; sourceTree = "<group>"; };
 		D45A069EAF964C748607E8B9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -272,14 +263,8 @@
 				C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */,
 				C05742EB188394C8002509DB /* FCSurroundingsTableViewController.h */,
 				C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */,
-				C0EE1D3A18A3383300663283 /* FCAnonOverlayViewController.h */,
-				C0EE1D3B18A3383300663283 /* FCAnonOverlayViewController.m */,
-				C013C4ED189EB1A3001157E3 /* FCSignupViewController.h */,
-				C013C4EE189EB1A3001157E3 /* FCSignupViewController.m */,
 				C013C4F8189EF0C1001157E3 /* FCLandingViewController.h */,
 				C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */,
-				C020259718736DC700883A38 /* FCAccountPickerViewController.h */,
-				C020259818736DC700883A38 /* FCAccountPickerViewController.m */,
 			);
 			name = "unused ";
 			sourceTree = "<group>";
@@ -673,7 +658,6 @@
 				AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */,
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
-				C020259918736DC700883A38 /* FCAccountPickerViewController.m in Sources */,
 				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
 				C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */,
 				AAC6506718FA00700010916D /* RadarView.m in Sources */,
@@ -695,14 +679,12 @@
 				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
 				AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
-				C0EE1D3C18A3383300663283 /* FCAnonOverlayViewController.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
 				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */,
 				AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */,
-				C013C4EF189EB1A3001157E3 /* FCSignupViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

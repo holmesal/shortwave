@@ -48,8 +48,7 @@ static NSCache *cacheOfUrlsToColors;
         [cacheOfUrlsToColors setCountLimit:60];
         
         
-#warning NO!  later
-        //            [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:nil context:0];
+
     }
     //when an image is set, i will call this method
     glowColor = [UIColor whiteColor];
@@ -85,7 +84,7 @@ static NSCache *cacheOfUrlsToColors;
 -(void)setImageURL:(NSURL*)url
 {
     [asyncImageView setImageURL:url];
-#warning an interesting idea to bridge cast the @{ } so I lock down the url at the time of the load, incase 1 image does not load next image is set scenario
+//#warning an interesting idea to bridge cast the @{ } so I lock down the url at the time of the load, incase 1 image does not load next image is set scenario
     
     [self observeValueForKeyPath:@"setImage" ofObject:asyncImageView change:@{@"imageURL": url.absoluteString} context:0];
 }
@@ -102,7 +101,7 @@ static NSCache *cacheOfUrlsToColors;
         change)
     {
         
-#warning what if another async image is set before this one loads; then the image will correspond to the incorrect URL?
+//#warning what if another async image is set before this one loads; then the image will correspond to the incorrect URL?
         NSString *theAbsUrl = [change objectForKey:@"imageURL"];
         UIImage *theImage = asyncImageView.image;
         

@@ -14,7 +14,6 @@
 
 @property (nonatomic) PHFComposeBarView *composeBarView;
 @property (nonatomic, strong) UIView *noInternetView;
--(void)esDealloc;
 
 -(void)cancelDialUpSceneIfNecessary;
 -(void)setComposeBarWithRandomHint;

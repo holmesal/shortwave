@@ -77,7 +77,7 @@
 //    [self.circleView.superview insertSubview:self.glowView belowSubview:self.circleView];
     
 }
-
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
 -(void)select
 {
 //    id owner = ((UITableView*)self.superview).dataSource;

@@ -17,4 +17,6 @@
 -(void)buildRoundMaskAtRadius:(CGFloat)radius;
 -(void)animate;
 
+-(void)addAPing;
+
 @end

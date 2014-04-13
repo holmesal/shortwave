@@ -16,7 +16,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS YES
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -346,7 +346,7 @@
         NSLog(@"App is in the background!");
         // If there aren't any user notifications, add a new earshot notification
         NSArray *notificationArray = [app scheduledLocalNotifications];
-        NSLog(@"notificationArray count is %@", [notificationArray count]);
+        NSLog(@"notificationArray count is %d", [notificationArray count]);
         //        if ([notificationArray count] != 0) {
         //            // Delete all the existing notifications
         //            NSLog(@"Deleting local notifications");
