@@ -33,3 +33,7 @@
 
 
 #endif
+
+
+
+#define kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN @"Hands down, boys!"

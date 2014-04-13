@@ -397,7 +397,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 -(void)blueToothStackIsActive
 {
     self.peripheralManagerIsRunning = YES;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderEnabled object:nil];
 }
 -(void)blueToothStackNeedsUserToActivateMessage
 {
@@ -406,7 +406,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
         [self blueToothStackIsActive];
     } else
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderDisabled object:nil];
     }
 }
 

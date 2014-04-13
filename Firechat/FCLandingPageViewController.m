@@ -13,6 +13,8 @@
 #import <Mixpanel/Mixpanel.h>
 #import "ESSwapUserStateMessage.h"
 #import "UIImage+Resize.h"
+#import <MessageUI/MessageUI.h>
+#import "RadarView.h"
 
 typedef enum
 {
@@ -23,10 +25,10 @@ typedef enum
     PanGestureDirectionRight
 }PanGestureDirection;
 
-@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, MFMessageComposeViewControllerDelegate>
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
-
+@property (nonatomic) Firebase *tracking;
 @property (nonatomic) BOOL circleIsBouncing;
 
 @property (nonatomic) int alternateBounceCounter;
@@ -46,6 +48,22 @@ typedef enum
 @property (nonatomic) NSInteger selectedIconIndex;
 @property (nonatomic) UIImageView *extractedImageViewOnDone;
 @property (weak, nonatomic) IBOutlet UIView *welcomeView2;
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
+
+
+//vars for searching view
+@property (weak, nonatomic) IBOutlet UIView *searchingView;
+@property (weak, nonatomic) IBOutlet UILabel *searchingLabel;
+@property (weak, nonatomic) IBOutlet UILabel *numberPeopleNearbyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *peopleNearbyGrammarLabel;
+@property (weak, nonatomic) IBOutlet FCLiveBlurButton *composeBlurButton;
+@property (weak, nonatomic) IBOutlet UILabel *sendEarshotLabel;
+
+
+@property (strong, nonatomic) RadarView *radarView;
+
+
+
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *startTalkingBlurButton;
 
 @property (nonatomic) PanGestureDirection panDirection;
@@ -65,7 +83,7 @@ typedef enum
 @property (nonatomic) NSArray *colors;
 
 @property Mixpanel *mixpanel;
-
+@property (nonatomic) BOOL beganShowingSearchingView;
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
 @property (weak, nonatomic) IBOutlet FCLiveBlurButton *doneBlurButton;
@@ -75,9 +93,13 @@ typedef enum
 
 
 @implementation FCLandingPageViewController
+
+@synthesize tracking;
+@synthesize beganShowingSearchingView;
 @synthesize circleBounceTimer;
 @synthesize welcomeView2;
 @synthesize startTalkingBlurButton;
+@synthesize radarView;
 
 @synthesize hasBeenHereBefore;
 @synthesize colorIndex;
@@ -124,7 +146,7 @@ typedef enum
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
     
     animation.fromValue       = @0.0f;
-    animation.toValue         = @M_PI;
+    animation.toValue         = @(M_PI*2);
     animation.duration        = 40.0f;
     animation.timingFunction  = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     animation.autoreverses    = NO;
@@ -137,7 +159,7 @@ typedef enum
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
 
     
     //initialize the circle things
@@ -178,8 +200,8 @@ typedef enum
     
 //    CGSize sizeOfIcon = {160.0f, 160.0f};
     CGRect iconContainerViewRect = self.spinnerImageView.frame;//CGRectMake((self.view.frame.size.width - sizeOfIcon.width)*0.5f, (self.view.frame.size.height-sizeOfIcon.height)*0.5f, sizeOfIcon.width, sizeOfIcon.height);
-    CGFloat topInset = 25+30-20;
-    CGFloat bottomInset = 568-467;
+    CGFloat topInset = 31+30-20;
+    CGFloat bottomInset = 568-478;
     iconContainerViewRect.origin.y = (([UIScreen mainScreen].bounds.size.height - topInset - bottomInset) - iconContainerViewRect.size.height)*0.5f;
     iconContainerViewRect.origin.y += topInset;
     
@@ -198,7 +220,13 @@ typedef enum
     //hide welcomeVIew2
     [welcomeView2 setBackgroundColor:[UIColor clearColor]];
     [welcomeView2 setHidden:YES];
+    [self.searchingView setHidden:YES];
+    [self.searchingView setBackgroundColor:[UIColor clearColor]];
+    [self.composeBlurButton setBackgroundColor:[UIColor clearColor]];
+    [self.composeBlurButton setRadius:self.composeBlurButton.frame.size.width/2];
+    [self.composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
+    [startTalkingBlurButton setRadius:startTalkingBlurButton.frame.size.width/2.0f];
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 #pragma mark Alonso put colors here
@@ -330,6 +358,7 @@ typedef enum
     [self.view addGestureRecognizer:self.panGesture];
     
     
+//    [self.doneBlurButton setBackgroundColor:[UIColor clearColor]];
     [self.doneBlurButton addTarget:self action:@selector(doneBlurButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.doneBlurButton setRadius:self.doneBlurButton.frame.size.height/2];
     
@@ -354,39 +383,7 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
-    NSLog(@"tableView offset = %f", self.iconTableView.contentOffset.y);
-//    FCUser *owner =  [FCUser owner];
-    
-    [self continueWithDonBlurButtonAction];
-//    if (!self.authClient)
-//    {
-//        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:owner.rootRef];
-//    }
-//    
-//    if (!owner.fuser)
-//    {
-//        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
-//            if (error != nil)
-//            {
-//                NSLog(@"oh no an error when loginAnonymouselyWithCompletionBlock! %@", error.localizedDescription);
-//                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Ahh!" message:error.localizedDescription delegate:self cancelButtonTitle:@"cancel" otherButtonTitles:@"try again", nil];
-//                [alert show];
-//                // There was an error logging in to this account
-//            } else
-//            {
-//                
-//                owner.fuser = user;
-//                [self continueWithDonBlurButtonAction];
-//                
-//                // We are now logged in
-//            }
-//        }];
-//    } else
-//    {
-//        
-//    }
-    
-    
+    [self continueWithDoneBlurButtonAction];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -397,7 +394,7 @@ typedef enum
     }
 }
 
--(void)continueWithDonBlurButtonAction
+-(void)continueWithDoneBlurButtonAction
 {
     //extract current icon
     self.selectedIconIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
@@ -419,13 +416,10 @@ typedef enum
         if (![oldColor isEqualToString:newColor] || ![oldIcon isEqualToString:newIcon])
         {
             //post a change message
-            
             ESSwapUserStateMessage *swapStateMessage = [[ESSwapUserStateMessage alloc] initWithOldIcon:oldIcon oldColor:oldColor newIcon:newIcon newColor:newColor];
             [swapStateMessage postMessageAsOwner];
             
         }
-            
-        
     }
     
     
@@ -450,9 +444,7 @@ typedef enum
     [self.extractedImageViewOnDone setImage:[UIImage imageNamed:imageName]];
     [self.view addSubview:self.extractedImageViewOnDone];
     
-    
-    
-    
+
     //welcomeView2 setup centers view unhides and alpha 0 for begin animation
     [welcomeView2 setHidden:NO];
     [welcomeView2 setAlpha:1.0f];//unhide for invalidatePressedLayer on blurButton
@@ -470,7 +462,9 @@ typedef enum
     [welcomeView2 setFrame:tempFrame];
     
     CGRect targetFrameForExtractedImageView = frameForIcon;
-    targetFrameForExtractedImageView.origin.y = welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
+    targetFrameForExtractedImageView.origin.y = (self.welcomeLabel.frame.origin.y-frameForIcon.size.height)*0.5f;
+    
+    //welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
     
     
     
@@ -488,21 +482,27 @@ typedef enum
          
          for (UIView *subview in self.view.subviews)
          {
+             if (subview == self.doneBlurButton)
+             {
+                 
+             } else
              if (subview == welcomeView2)
              {
                  //                tempFrame.origin.y -=5;
                  //                welcomeView2.frame = tempFrame;
                  //                welcomeView2.alpha = 1.0f;
              } else
-                 if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
-                 {
-                     subview.alpha = 0.0f;
-                     subview.transform = CGAffineTransformMakeTranslation(0, -5);
-                 }
+             if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
+             {
+                 subview.alpha = 0.0f;
+                 subview.transform = CGAffineTransformMakeTranslation(0, -2);
+             }
          }
          
      } completion:^(BOOL finished)
-     {}];
+     {
+     
+     }];
     
     
     
@@ -520,7 +520,8 @@ typedef enum
          } else
              //             if (!peripheralManagerIsRunning)
          {
-             [UIView animateWithDuration:0.4f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+             self.startTalkingBlurButton.alpha = 0.0f;
+             [UIView animateWithDuration:1.4f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
               {
                   tempFrame.origin.y -= 5;
                   welcomeView2.frame = tempFrame;
@@ -528,9 +529,9 @@ typedef enum
                   
               } completion:^(BOOL finished)
               {
-                  startTalkingBlurButton.backgroundColor = self.view.backgroundColor;
-//                  [startTalkingBlurButton setBackgroundColor:self.view.backgroundColor];
                   [startTalkingBlurButton invalidatePressedLayer];
+                  self.doneBlurButton.alpha = 0.0f;
+                  self.startTalkingBlurButton.alpha = 1.0f;
               }];
          }
      }];
@@ -551,12 +552,11 @@ typedef enum
         [owner.beacon startDetecting];
         [[FCUser owner].beacon chirpBeacon];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventBluetoothDisabled object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventBluetoothEnabled object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventTransponderDisabled object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventTransponderEnabled object:nil];
     } else
     {
         [self continueWithBluetooth:nil];
-        return;
     }
     
 
@@ -566,26 +566,134 @@ typedef enum
 
 -(void)removeBluetoothEvents
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothDisabled object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothEnabled object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderEnabled object:nil];
 }
 
 -(void)continueWithBluetooth:(NSNotification*)notification
 {
     [self removeBluetoothEvents];
-    [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
-     {
-         for (UIView *subview in self.view.subviews)
+    //after bluetooth stack is active
+    //either you go to the wallviewcontroller or you become "Searching", based on kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN])
+    {
+        [self removeBluetoothEvents];
+        [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
          {
-             if (subview != self.extractedImageViewOnDone)
+             for (UIView *subview in self.view.subviews)
              {
-                 subview.alpha = 0.0f;
+                 if (subview != self.extractedImageViewOnDone)
+                 {
+                     subview.alpha = 0.0f;
+                 }
              }
-         }
-     } completion:^(BOOL finsihed)
-     {
-         [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
-     }];
+         } completion:^(BOOL finsihed)
+         {
+             [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+         }];
+    } else
+    {
+        __block NSTimer *chirpTimer = [NSTimer timerWithTimeInterval:20 target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:chirpTimer forMode:NSDefaultRunLoopMode];
+        
+        tracking = [[FCUser owner].ref childByAppendingPath:@"tracking"];
+        __weak typeof (self) weakSelf = self;
+        
+        NSLog(@"tracking = %@", tracking);
+        __block FirebaseHandle handle = [tracking observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+        {
+            if (snapshot.value != [NSNull null])
+            {
+                [chirpTimer invalidate];
+                
+                [weakSelf.tracking removeObserverWithHandle:handle];
+                weakSelf.tracking = nil;
+                NSDictionary *users = snapshot.value;
+                int numUsers = users.count;
+                if ((!weakSelf.beganShowingSearchingView && numUsers))
+                {//go right on ahead to the app
+                    weakSelf.beganShowingSearchingView = NO;
+                    NSLog(@"interupt!");
+                    [weakSelf.searchingView setHidden:YES];
+                    //and go on
+                    [weakSelf transitionToFCWallViewControllerWithImage:weakSelf.extractedImageViewOnDone.image andFrame:weakSelf.extractedImageViewOnDone.frame andColor:weakSelf.view.backgroundColor];
+                } else
+                {//
+                    weakSelf.tracking = nil;
+                    NSLog(@"found a user! %d", numUsers);
+                    
+                    weakSelf.numberPeopleNearbyLabel.text = [NSString stringWithFormat:@"%d", numUsers];
+                    weakSelf.peopleNearbyGrammarLabel.text = (numUsers == 1 ? @"person nearby": @"people nearby");
+                    if (numUsers)
+                    {//success!
+                        [weakSelf prepareToTransitionDramatically];
+                    }
+                }
+            } else
+            {
+//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+            }
+        }];
+        [self.radarView buildRoundMaskAtRadius:28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
+        [self.radarView animate];
+        
+
+
+        CGPoint point = CGPointMake(
+                                    self.extractedImageViewOnDone.frame.size.width*0.5f+self.extractedImageViewOnDone.frame.origin.x,
+                                    self.extractedImageViewOnDone.frame.size.height*0.5f+self.extractedImageViewOnDone.frame.origin.y);
+        [self.radarView setPosition:point];
+        
+        [self.searchingView addSubview:self.radarView];
+
+        self.searchingView.alpha = 0.0f;
+        [self.searchingView setHidden:NO];
+        
+        [UIView animateWithDuration:0.9f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
+        {
+            self.welcomeView2.alpha = 0.0f;
+        } completion:^(BOOL finished)
+        {
+            beganShowingSearchingView = YES;
+            [UIView animateWithDuration:1.1f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.searchingView.alpha = 1.0f;
+             } completion:^(BOOL finished)
+             {
+                 
+             }];
+        }];
+    }
+}
+
+-(void)prepareToTransitionDramatically
+{
+    [UIView animateWithDuration:0.8f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
+    {
+        self.searchingLabel.alpha = 0.0f;
+        self.composeBlurButton.alpha = 0.0f;
+        self.sendEarshotLabel.alpha = 0.0f;
+        self.radarView.alpha = 0.0f;
+    } completion:^(BOOL finished)
+    {
+        [self performSelector:@selector(continueTransitionDramatically) withObject:nil afterDelay:1];
+    }];
+
+}
+-(void)continueTransitionDramatically
+{
+    NSLog(@"prepareToTransitionDramatically!");
+    [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
+}
+
+-(RadarView*)radarView
+{
+    if (!radarView)
+    {
+        radarView = [[RadarView alloc] initWithDim:150];
+    }
+    return radarView;
 }
 
 #pragma mark blurActionButton callbacks end
@@ -788,6 +896,7 @@ typedef enum
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
     
     [self reanimate];
     
@@ -1194,20 +1303,23 @@ typedef enum
 
 -(void)circleBounceTimerAction:(NSTimer*)theTimer
 {
-    self.alternateBounceCounter = (self.alternateBounceCounter+1)%2;
-
-    CGFloat distance = 5*(self.alternateBounceCounter ? 1 : -1);
-    UIView *circleView = (self.alternateBounceCounter ? self.leftCircleColorView : self.rightCircleColorView);
-    
+    self.alternateBounceCounter = (self.alternateBounceCounter+1)%2;    
     if (self.panDirection == PanGestureDirectionNone && !self.circleIsBouncing)
     {
         [self animateBounceCircle:self.alternateBounceCounter];
+        
+        NSTimer *timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(bounceTimerQuick) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
     
     if (!theTimer)
     {
         [self initializeCircleBounceTimerIfNecessary];
     }
+}
+-(void)bounceTimerQuick
+{
+    [self animateBounceCircle:(self.alternateBounceCounter+1)%2];
 }
 
 - (UIColor *)colorLerpFrom:(UIColor *)start to:(UIColor *)end withDuration:(float)t
@@ -1349,6 +1461,9 @@ typedef enum
 {
     [self.view setUserInteractionEnabled:NO];
     
+    self.welcomeView2.alpha = 0.0f;
+    self.searchingView.alpha = 0.0f;
+    
     [self setUserIsLoggedIn:NO];
     [self.view addGestureRecognizer:self.panGesture];
     
@@ -1373,7 +1488,7 @@ typedef enum
     [UIView animateWithDuration:0.5f delay:0.2f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
         for (UIView *view in self.view.subviews)
         {
-            if (view != self.welcomeView2)
+            if (view != self.welcomeView2 && view != self.searchingView)
             {
                 view.alpha = 1.0f;
             }
@@ -1401,5 +1516,45 @@ typedef enum
         [viewController.view setBackgroundColor:self.view.backgroundColor];
     }
 }
+
+-(void)composeBlurButtonAction
+{
+     if([MFMessageComposeViewController canSendText])
+     {
+         NSArray *recipents = nil;
+         NSString *message = @"Hey! You should check out Earshot - http://tflig.ht/QRiF0Z";
+
+         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+         messageController.messageComposeDelegate = self;
+         [messageController setRecipients:recipents];
+         [messageController setBody:message];
+//         [self presentModalViewController:messageController animated:YES];
+         [self presentViewController:messageController animated:YES completion:^{}];
+     }
+}
+
+-(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    switch (result) {
+        case MessageComposeResultCancelled:
+        {
+            
+        }
+        break;
+        case MessageComposeResultFailed:
+        {
+            
+        }
+        break;
+        case MessageComposeResultSent:
+        {
+            
+        }
+        break;
+    }
+    [controller dismissViewControllerAnimated:YES completion:^{}];
+}
+
+
 
 @end

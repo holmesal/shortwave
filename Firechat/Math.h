@@ -71,18 +71,6 @@ static inline void esRecomposeMajorMinorToId(uint16_t major, uint16_t minor, uin
     *identifier = byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
 }
 
-////helper functions
-//static inline void esDecomposeIntTo4Bytes(uint32_t input, unsigned char *byte1, unsigned char *byte2, unsigned char *byte3, unsigned char *byte4)
-//{
-//    *byte4 = (uint)(input>>24);
-//    *byte3 = (uint)(input>>16);
-//    *byte2 = (uint)(input>>8);
-//    *byte1 = (uint)(input>>0);
-//}
-//
-//static inline void esRecompose4BytesToInt(unsigned char byte1, unsigned char byte2, unsigned char byte3, unsigned char byte4, uint32_t *value)
-//{
-//    *value = byte1 + (byte2<<8) + (byte3<<16) + (byte4<<24);
-//}
+
 
 @end

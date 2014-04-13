@@ -430,7 +430,7 @@
         [self sendDiscoverNotification];
         
         // Send the new (anonymous) user notification
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
         
         // Chirp the beacon!
         [self chirpBeacon];
@@ -454,11 +454,11 @@
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
     
     // Notify peeps that an earshot user was discovered
-    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventEarshotUserDiscovered
-                                                        object:self
-                                                      userInfo:@{@"user":existingUser,
-                                                                 @"identifiedUsers":self.earshotUsers,
-                                                                 @"bluetoothUsers":self.bluetoothUsers}];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventEarshotUserDiscovered
+                                                            object:self
+                                                          userInfo:@{@"user":existingUser,
+                                                                     @"identifiedUsers":self.earshotUsers,
+                                                                     @"bluetoothUsers":self.bluetoothUsers}];
     
 }
 
@@ -466,11 +466,15 @@
 {
     if (DEBUG_CENTRAL) NSLog(@"-- central state changed: %@", self.centralManager.stateString);
     
-    // Emit the state
-    self.bluetoothWasTried = YES;
-    [self emitBluetoothState];
+    // Emit the state, if state != unknown
+    if (central.state)
+    {
+        self.bluetoothWasTried = YES;
+        [self emitBluetoothState];
+    }
     // If powered on, start scanning
-    if (central.state == CBCentralManagerStatePoweredOn){
+    if (central.state == CBCentralManagerStatePoweredOn)
+    {
         [self startScanning];
     }
     
@@ -480,9 +484,12 @@
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral
 {
     if (DEBUG_PERIPHERAL) NSLog(@"-- peripheral state changed: %@", peripheral.stateString);
-    // Emit the state
-    self.bluetoothWasTried = YES;
-    [self emitBluetoothState];
+    // Emit the state if stat is known.
+    if (peripheral.state)
+    {
+        self.bluetoothWasTried = YES;
+        [self emitBluetoothState];
+    }
     // If powered on, start scanning
     if (peripheral.state == CBPeripheralManagerStatePoweredOn)
     {
@@ -748,7 +755,11 @@
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-    // Emit that shit!
+    // Emit that shit, unless underetmined state.
+    if (status == kCLAuthorizationStatusNotDetermined)
+    {
+        return;
+    }
     self.coreLocationWasTried = YES;
     [self emitBluetoothState];
 }
@@ -833,33 +844,9 @@
     if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
         
-        if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn &&/*
-                                                                                 CBPeripheralManagerStateUnknown = 0,
-                                                                                 CBPeripheralManagerStateResetting,
-                                                                                 CBPeripheralManagerStateUnsupported,
-                                                                                 CBPeripheralManagerStateUnauthorized,
-                                                                                 CBPeripheralManagerStatePoweredOff,
-                                                                                 CBPeripheralManagerStatePoweredOn,
-                                                                                 */
-            
-            
-            
-            self.centralManager.state == CBPeripheralManagerStatePoweredOn && /*
-                                                                               CBCentralManagerStateUnknown = 0,
-                                                                               CBCentralManagerStateResetting,
-                                                                               CBCentralManagerStateUnsupported,
-                                                                               CBCentralManagerStateUnauthorized,
-                                                                               CBCentralManagerStatePoweredOff,
-                                                                               CBCentralManagerStatePoweredOn,
-                                                                               */
+        if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn &&
+            self.centralManager.state == CBPeripheralManagerStatePoweredOn &&
             [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
-                                                                        /*
-                                                                            kCLAuthorizationStatusNotDetermined = 0
-                                                                            kCLAuthorizationStatusRestricted
-                                                                            kCLAuthorizationStatusDenied
-                                                                            kCLAuthorizationStatusAuthorized
-                                                                        */
-            
         {
             return ESTransponderStackStateActive;
         } else
@@ -874,12 +861,14 @@
 {
     if (self.coreLocationWasTried && self.bluetoothWasTried)
     {
-        if (self.stackIsRunning)
+        if (self.peripheralManager.state == CBPeripheralManagerStatePoweredOn &&
+            self.centralManager.state == CBPeripheralManagerStatePoweredOn &&
+            [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
         {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothEnabled object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderEnabled object:nil];
         } else
         {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventBluetoothDisabled object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderDisabled object:nil];
         }
     }
 }

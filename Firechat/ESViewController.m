@@ -34,6 +34,7 @@ typedef enum
 @property (nonatomic) CALayer *plug;
 @property (nonatomic) CALayer *fullCoordMask;
 @property (nonatomic) CGPoint lastOffset;
+@property (nonatomic) CALayer *maskOfCoord;
 @property (assign) CGPoint movementVector;
 
 @end
@@ -53,6 +54,7 @@ typedef enum
 @synthesize plug;
 @synthesize movementVector;
 @synthesize fullCoordMask;
+@synthesize maskOfCoord;
 
 - (void)viewDidLoad
 {
@@ -96,7 +98,7 @@ typedef enum
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventBluetoothDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderDisabled object:nil];
     
     
 }
@@ -224,6 +226,7 @@ typedef enum
             {
                 CGPoint xy = {169.08543, -98.268471};//{225.42157, -131.0097};
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
+                self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
             } completion:^(BOOL finished)
             {
                 [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
@@ -233,6 +236,7 @@ typedef enum
                  {
                      [self.noInternetView setUserInteractionEnabled:YES];
                      self.coord.transform = CATransform3DMakeTranslation(0,0, 0);
+                     self.maskOfCoord.transform = CATransform3DMakeTranslation(0,0,0);
                  }];
             }];
         }
@@ -338,7 +342,7 @@ typedef enum
     
     //425, 235 - wxh ratio
     CGSize expectedSize = {425, 245};//235};//185};//235};//285};
-    CGFloat graphicScaleRatio = 1/5.0f;
+    CGFloat graphicScaleRatio = 1/2.0f;
     
     CGPoint expectedDirection = {expectedSize.width, expectedSize.height+2};
     CGFloat magnitude = sqrtf(expectedDirection.x*expectedDirection.x + expectedDirection.y*expectedDirection.y);
@@ -354,16 +358,25 @@ typedef enum
     [boundsRect setBackgroundColor:[UIColor clearColor]];
     [self.dialUpView addSubview:boundsRect];
     
-    
-    UIImage *plugImg = [[UIImage imageNamed:@"Phone-cord-export-02.png"] scaleByFactor:graphicScaleRatio*1.1f];
-    UIImage *coordImg = [[UIImage imageNamed:@"Phone-cord-export-03.png"] scaleByFactor:graphicScaleRatio];
-    UIImage *mask = [[UIImage imageNamed:@"Phone-cord-export-04.png"] scaleByFactor:graphicScaleRatio*1.1f];
+
+    UIImage *_plugImg = [UIImage imageNamed:@"plug.png"];//[UIImage imageNamed:@"Phone-cord-export-02.png"];
+    UIImage *_coordImg = [UIImage imageNamed:@"cord.png"];//[UIImage imageNamed:@"Phone-cord-export-03.png"];
+    UIImage *_mask = [UIImage imageNamed:@"plugmask.png"];//[UIImage imageNamed:@"Phone-cord-export-04.png"];
+    UIImage *_coordMask = [UIImage imageNamed:@"cordmask.png"];
+
+//    CGSize plugImageSize = {_plugImg.size.width*graphicScaleRatio*1.1f, _plugImg.size.height*graphicScaleRatio*1.1f};
+    CGSize plugImageSize = {_plugImg.size.width*graphicScaleRatio, _plugImg.size.height*graphicScaleRatio};
+    CGSize coordImageSize = {_coordImg.size.width*graphicScaleRatio, _coordImg.size.height*graphicScaleRatio};
+//    CGSize maskImageSize = {_mask.size.width*graphicScaleRatio*1.1f, _mask.size.height*graphicScaleRatio*1.1f};
+    CGSize maskImageSize = {_mask.size.width*graphicScaleRatio, _mask.size.height*graphicScaleRatio};
+    CGSize coordMaskImageSize = {_coordMask.size.width*graphicScaleRatio, _coordMask.size.height*graphicScaleRatio};
     
     
     plug = [CALayer layer];
+    [plug setContentsGravity:kCAGravityResizeAspectFill];
     plug.contentsScale = [UIScreen mainScreen].scale;
-    plug.contents = (id)plugImg.CGImage;
-    CGRect plugFrame = CGRectMake(0, 0, plugImg.size.width, plugImg.size.height);
+    plug.contents = (id)_plugImg.CGImage;
+    CGRect plugFrame = CGRectMake(0, 0, plugImageSize.width, plugImageSize.height);
     plugFrame.origin.x = (sceneRect.origin.x+sceneRect.size.width) - plugFrame.size.width*0.5f;
     plugFrame.origin.y = (sceneRect.origin.y) - plugFrame.size.height*0.5f;//upper right
     plug.frame = plugFrame;
@@ -373,15 +386,53 @@ typedef enum
     [coordScene setFrame:dialUpView.bounds];
     
     coord = [CALayer layer];
-    coord.contents = (id)coordImg.CGImage;
+    [coord setContentsGravity:kCAGravityResizeAspectFill];
     coord.contentsScale = [UIScreen mainScreen].scale;
-    CGRect coordFrame = CGRectMake(0, 0, coordImg.size.width, coordImg.size.height);
+    coord.contents = (id)_coordImg.CGImage;
+    CGRect coordFrame = CGRectMake(0, 0, coordImageSize.width, coordImageSize.height);
     coordFrame.origin.x = sceneRect.origin.x - coordFrame.size.width;
     coordFrame.origin.y = sceneRect.origin.y + sceneRect.size.height;
-    CGPoint offsetFromUpperRightCorner = CGPointMake(248*graphicScaleRatio, 210*graphicScaleRatio);
+    CGPoint offsetFromUpperRightCorner = CGPointMake(94*0.5f, 84*0.5f);//CGPointMake(248*graphicScaleRatio, 210*graphicScaleRatio);
     coordFrame.origin.x += offsetFromUpperRightCorner.x;
     coordFrame.origin.y -= offsetFromUpperRightCorner.y;
     coord.frame = coordFrame;
+    
+    
+    maskOfCoord = [CALayer layer];
+    [maskOfCoord setContentsGravity:kCAGravityResizeAspectFill];
+    maskOfCoord.contentsScale = [UIScreen mainScreen].scale;
+    maskOfCoord.contents = (id)_coordMask.CGImage;
+    CGRect maskOfCoordFrame = CGRectMake(0, 0, coordMaskImageSize.width, coordMaskImageSize.height);
+    maskOfCoordFrame.origin.x = sceneRect.origin.x - maskOfCoordFrame.size.width;
+    maskOfCoordFrame.origin.y = sceneRect.origin.y + sceneRect.size.height;
+    CGPoint offsetFromUpperRightCornerMask = CGPointMake(94*0.5f, 84*0.5f);//CGPointMake(248*graphicScaleRatio, 210*graphicScaleRatio);
+    
+    maskOfCoordFrame.origin.x += offsetFromUpperRightCornerMask.x;
+    maskOfCoordFrame.origin.y -= offsetFromUpperRightCornerMask.y;
+    
+    maskOfCoordFrame.origin.x -= plugFrame.origin.x;
+    maskOfCoordFrame.origin.y -= plugFrame.origin.y;
+    
+//    maskOfCoordFrame.origin.x += -2;
+//    maskOfCoordFrame.origin.y -= -2;
+    
+    //add walls to the maskOfCoord
+    {
+        CGFloat targetWidth = 250;
+        CGFloat targetHeight = 150;
+        CALayer *upper = [CALayer layer];
+        [upper setBackgroundColor:[UIColor blackColor].CGColor];
+        upper.frame = CGRectMake(maskOfCoordFrame.size.width-targetWidth, -targetHeight, targetWidth, targetHeight);
+        [maskOfCoord addSublayer:upper];
+        
+        CALayer *right = [CALayer layer];
+        [right setBackgroundColor:[UIColor blackColor].CGColor];
+        right.frame = CGRectMake(maskOfCoordFrame.size.width, -targetHeight, targetWidth, targetHeight*2);
+        [maskOfCoord addSublayer:right];
+    }
+    
+    maskOfCoord.frame = maskOfCoordFrame;
+//    [plug setMask:maskOfCoord];
     
     
     
@@ -395,9 +446,10 @@ typedef enum
     
     
     CALayer *coordMask = [CALayer layer];
-    coordMask.contents = (id)mask.CGImage;
+    [coordMask setContentsGravity:kCAGravityResizeAspectFill];
+    coordMask.contents = (id)_mask.CGImage;
     coordMask.contentsScale = [UIScreen mainScreen].scale;
-    CGRect coordMaskFrame = {0,0,mask.size.width, mask.size.height};
+    CGRect coordMaskFrame = {0,0,maskImageSize.width, maskImageSize.height};
     coordMaskFrame.origin.x = plug.frame.origin.x + plug.superlayer.frame.origin.x;
     coordMaskFrame.origin.y = plug.frame.origin.y + plug.superlayer.frame.origin.y;
     coordMask.frame = coordMaskFrame;
@@ -477,10 +529,12 @@ typedef enum
             if (xy.x >= 165 && !self.dialUpCoordIsPluggedIn)
             {
                 self.dialUpCoordIsPluggedIn = YES;
+                self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 //oh ok.  just this onc tho
             } else
             {
+                self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
             }
             [CATransaction commit];
@@ -502,6 +556,7 @@ typedef enum
                      //                [CATransaction begin];
                      //                [CATransaction setDisableActions:YES];
                      self.coord.transform = CATransform3DMakeTranslation(0,0,0);
+                     self.maskOfCoord.transform = CATransform3DMakeTranslation(0,0,0);
                      //                [CATransaction commit];
                  } completion:^(BOOL finished)
                  {
@@ -530,6 +585,7 @@ typedef enum
          //                [CATransaction begin];
          //                [CATransaction setDisableActions:YES];
          self.coord.transform = CATransform3DMakeTranslation(0,0,0);
+         self.maskOfCoord.transform = CATransform3DMakeTranslation(0,0,0);
          //                [CATransaction commit];
      } completion:^(BOOL finished)
      {
