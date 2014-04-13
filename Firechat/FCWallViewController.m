@@ -962,8 +962,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             } else
             {
                 cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-                [cell initializeLongPress];
-                [cell initializeDoubleTap];
+//                [cell initializeLongPress];
+//                [cell initializeDoubleTap];
             }
             
             if (DEBUG_SHOW_USER_ID_SINGLE_TAP)
