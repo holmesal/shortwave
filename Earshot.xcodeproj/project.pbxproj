@@ -350,7 +350,7 @@
 			name = services;
 			sourceTree = "<group>";
 		};
-		AAC6507418FA1E420010916D /* no internet */ = {
+		AAC6507418FA1E420010916D /* no internet assets */ = {
 			isa = PBXGroup;
 			children = (
 				AAC6507518FA1E6B0010916D /* old */,
@@ -359,7 +359,7 @@
 				AAC6506E18FA1E3D0010916D /* plug.png */,
 				AAC6506F18FA1E3D0010916D /* plugmask.png */,
 			);
-			name = "no internet";
+			name = "no internet assets";
 			sourceTree = "<group>";
 		};
 		AAC6507518FA1E6B0010916D /* old */ = {
@@ -387,7 +387,7 @@
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
-				AAC6507418FA1E420010916D /* no internet */,
+				AAC6507418FA1E420010916D /* no internet assets */,
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,
 				AAC6506818FA15F60010916D /* message.png */,
