@@ -13,6 +13,7 @@
 @property (nonatomic) CALayer *pressedLayer;
 @property (nonatomic) CALayer *frameLayer;
 @property (nonatomic) UIColor *originalColorText;
+@property (nonatomic) CFTimeInterval touchDownTime;
 
 
 
@@ -22,6 +23,7 @@
 @property (nonatomic) UIButton *button;
 
 
+
 @end
 
 @implementation FCLiveBlurButton
@@ -29,8 +31,11 @@
 @synthesize frameLayer;
 @synthesize theButton;
 
+@synthesize touchDownTime;
+
 - (id)initWithFrame:(CGRect)frame
 {
+
     self = [super initWithFrame:frame];
     if (self)
     {
@@ -78,11 +83,12 @@
 //         
 //         self.pressedLayer.opacity = 0.0f;
 //     } completion:^(BOOL finished){}];
-    
+    CFTimeInterval now = CACurrentMediaTime();
+    CFTimeInterval dt = now - touchDownTime;
     CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
     flash.fromValue = @1;
     flash.toValue = @0;
-    flash.duration = 1.2;
+    flash.duration = dt;
     flash.autoreverses = NO;    // Back
     flash.repeatCount = 0;       // Or whatever
     flash.fillMode = kCAFillModeForwards;
@@ -109,7 +115,7 @@
     flash.removedOnCompletion = NO;
     
     [self.pressedLayer addAnimation:flash forKey:@"flashAnimation"];
-    
+    touchDownTime = CACurrentMediaTime();
 }
 
 -(void)setRadius:(CGFloat)radius

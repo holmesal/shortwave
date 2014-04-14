@@ -648,8 +648,8 @@ typedef enum
 {
     FCUser *owner = [FCUser owner];
 
-#warning REMOVE THIS BEFORE DEPLOY
-    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive && NO)
+//#warning REMOVE THIS BEFORE DEPLOY
+    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)// && NO)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
@@ -735,8 +735,8 @@ typedef enum
                 }
             } else
             {
-#warning REMOVE THIS BEFORE DEPLOY
-                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+//#warning REMOVE THIS BEFORE DEPLOY
+//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
         [self.radarView buildRoundMaskAtRadius:28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
