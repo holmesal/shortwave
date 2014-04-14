@@ -94,7 +94,7 @@
     flash.fillMode = kCAFillModeForwards;
     flash.removedOnCompletion = NO;
     
-    [self.pressedLayer addAnimation:flash forKey:@"sizzle"];
+    [pressedLayer addAnimation:flash forKey:@"sizzle"];
     
 }
 -(void)touchBegan

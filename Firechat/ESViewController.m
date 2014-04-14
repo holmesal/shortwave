@@ -194,7 +194,18 @@ typedef enum
     {
         if (usersAlertStatus != NoUsersStatusNone)
         {
-            self.usersAlertStatus = NoUsersStatusNone;
+            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 0.0f;
+//                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
+                 self.noUsersNearbyPopup.alpha = 0.0f;
+             } completion:^(BOOL finished)
+             {
+                 self.noUsersNearbyPopup.alpha = 1.0f;
+                 [self.fadedOverView removeFromSuperview];
+                 [self.noUsersNearbyPopup removeFromSuperview];
+             }];
+            usersAlertStatus = NoUsersStatusNone;
         }
     }
     
@@ -344,8 +355,7 @@ typedef enum
         [smsImageView setImage:[UIImage imageNamed:@"message.png"]];
         [composeBlurButton addSubview:smsImageView];
         [composeBlurButton setRadius:buttonDim*0.5f];
-        [composeBlurButton invalidatePressedLayer];
-        
+        [composeBlurButton performSelector:@selector(invalidatePressedLayer) withObject:nil afterDelay:0.5];
         [composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
         
         [noUsersNearbyPopup addSubview:composeBlurButton];
@@ -861,6 +871,10 @@ typedef enum
     }
     
     usersAlertStatus = newUsersAlertStatus;
+    if (usersAlertStatus != NoUsersStatusNone)
+    {
+        [self.composeBarView.textView resignFirstResponder];
+    }
 }
 
 //text message compose
@@ -951,5 +965,6 @@ typedef enum
         }
     }
 }
+
 
 @end
