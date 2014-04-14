@@ -318,7 +318,6 @@ typedef enum
         UIButton *invisibutton = [UIButton buttonWithType:UIButtonTypeCustom];
         [invisibutton setFrame:noUsersLabel.frame];
         [invisibutton addTarget:self action:@selector(searchingForOthersButtonAction:) forControlEvents:UIControlEventTouchUpInside];
-        [invisibutton setBackgroundColor:[UIColor redColor]];
         [noUsersNearbyPopup addSubview:invisibutton];
         
         UIView *darkUnderLayer = [[UIView alloc] initWithFrame:CGRectMake(
@@ -338,7 +337,7 @@ typedef enum
         [composeBlurButton invalidatePressedLayer];
         [composeBlurButton setRadius:buttonDim*0.5f];
         
-        CGFloat iconDim = 70*0.5f;
+        CGFloat iconDim = 31;
         UIImageView *smsImageView = [[UIImageView alloc] initWithFrame:CGRectMake((buttonDim-iconDim)*0.5f, (buttonDim-iconDim)*0.5f, iconDim, iconDim)];
         [smsImageView setContentMode:UIViewContentModeScaleAspectFit];
         [smsImageView setImage:[UIImage imageNamed:@"message.png"]];
@@ -347,6 +346,12 @@ typedef enum
         [composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
         
         [noUsersNearbyPopup addSubview:composeBlurButton];
+        
+        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, noUsersNearbyPopup.frame.size.height-12, noUsersNearbyPopup.frame.size.width, 12)];
+        [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
+        [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
+        [sendEarshotToFriend setText:@"Send Earshot to a Friend?"];
+        [noUsersNearbyPopup addSubview:sendEarshotToFriend];
     }
     return noUsersNearbyPopup;
 }
@@ -800,28 +805,22 @@ typedef enum
         if (newUsersAlertStatus == NoUsersStatusFull)
         {
             //order of conditions is important, ...must have noUsersNearbyPopup AFTER composeBarView is set
-            if ( self.composeBarView.superview && !self.noUsersNearbyPopup.superview)
-            {
-                
-                [self.composeBarView.superview addSubview:self.fadedOverView];
-                self.fadedOverView.alpha = 0.0f;
-                NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
-                [self.composeBarView.superview addSubview:noUsersNearbyPopup];
-                ///wait please
-                
-                [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -noUsersLabel.frame.size.height)];
-                [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
-                 {
-                     self.fadedOverView.alpha = 1.0f;
-                     [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
-                 } completion:^(BOOL finished)
-                 {
-                     [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
-                 }];
-            } else{//invalid, just return do not assign
-                return;
-            }
             
+            [self.composeBarView.superview addSubview:self.fadedOverView];
+            self.fadedOverView.alpha = 0.0f;
+            NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
+            [self.composeBarView.superview addSubview:noUsersNearbyPopup];
+            ///wait please
+            
+            [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -noUsersLabel.frame.size.height)];
+            [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 1.0f;
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
+             } completion:^(BOOL finished)
+             {
+                 [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
+             }];
         }
     }
     
