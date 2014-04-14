@@ -197,7 +197,7 @@ typedef enum
             [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.fadedOverView.alpha = 0.0f;
-//                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
+//                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarViewFrame.size.height)];
                  self.noUsersNearbyPopup.alpha = 0.0f;
              } completion:^(BOOL finished)
              {
@@ -215,7 +215,7 @@ typedef enum
         if (newAlertStatus == NoInternetAlertStatusPeeking)
         {
             [self.composeBarView.superview addSubview:self.noInternetView];
-            [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
+            [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarViewFrame.size.height)];
             
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
             {
@@ -235,7 +235,7 @@ typedef enum
             [self.composeBarView.superview addSubview:self.noInternetView];
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
-                 [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
+                 [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarViewFrame.size.height)];
              } completion:^(BOOL finished)
              {
                 [self.noInternetView setUserInteractionEnabled:YES];
@@ -250,7 +250,7 @@ typedef enum
             [self.composeBarView.superview addSubview:self.noInternetView];
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
-                 [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, -self.noInternetView.frame.size.height+self.composeBarView.frame.size.height+20)];
+                 [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, -self.noInternetView.frame.size.height+self.composeBarViewFrame.size.height+20)];
                  self.fadedOverView.alpha = 1.0f;
              } completion:^(BOOL finished)
              {
@@ -288,7 +288,7 @@ typedef enum
                 [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                  {
                      self.fadedOverView.alpha = 0.0f;
-                     [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
+                     [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarViewFrame.size.height)];
                  } completion:^(BOOL finished)
                  {
                      [self.fadedOverView removeFromSuperview];
@@ -316,7 +316,7 @@ typedef enum
 {
     if (!noUsersNearbyPopup)
     {
-        CGRect noUsersNearbyPopupRect = self.composeBarView.frame;
+        CGRect noUsersNearbyPopupRect = self.composeBarViewFrame;
         noUsersNearbyPopupRect.size.height += 141;
         noUsersNearbyPopup = [[UIView alloc] initWithFrame:noUsersNearbyPopupRect];
     
@@ -331,6 +331,9 @@ typedef enum
         [invisibutton setFrame:noUsersLabel.frame];
         [invisibutton addTarget:self action:@selector(searchingForOthersButtonAction:) forControlEvents:UIControlEventTouchUpInside];
         [noUsersNearbyPopup addSubview:invisibutton];
+        
+        UIPanGestureRecognizer *panUserAlertDown = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panHandleUsersAlert:)];
+        [noUsersNearbyPopup addGestureRecognizer:panUserAlertDown];
         
         UIView *darkUnderLayer = [[UIView alloc] initWithFrame:CGRectMake(
                                                                           0,
@@ -389,7 +392,7 @@ typedef enum
 {
     if (!noInternetView)
     {
-        CGRect noInternetViewRect = self.composeBarView.frame;
+        CGRect noInternetViewRect = self.composeBarViewFrame;
         noInternetViewRect.size.height += 178+40;
         noInternetView = [[UIView alloc] initWithFrame:noInternetViewRect];
         
@@ -449,6 +452,18 @@ typedef enum
     [noInternetLabel setText:[thingsToSay objectAtIndex:index]];
 }
 #pragma mark UI callbacks for noInternetView
+
+-(void)panHandleUsersAlert:(UIPanGestureRecognizer*)pan
+{
+    CGFloat yVelocity = [pan velocityInView:self.noUsersNearbyPopup].y;
+    if (yVelocity < 0)
+    {
+        [self setUsersAlertStatus:NoUsersStatusFull];
+    } else
+    {
+        [self setUsersAlertStatus:NoUsersStatusPeeking];
+    }
+}
 -(void)panHandle:(UIPanGestureRecognizer*)pan
 {
     CGFloat yVelocity = [pan velocityInView:self.noInternetView].y;
@@ -789,7 +804,7 @@ typedef enum
                 [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                  {
                      self.fadedOverView.alpha = 1.0f;
-                     [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
+                     [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarViewFrame.size.height+20)];
                  } completion:^(BOOL finished)
                  {
                      [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
@@ -808,7 +823,7 @@ typedef enum
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.fadedOverView.alpha = 0.0f;
-                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarViewFrame.size.height)];
                  
              } completion:^(BOOL finished)
              {
@@ -823,7 +838,6 @@ typedef enum
             
             [self.composeBarView.superview addSubview:self.fadedOverView];
             self.fadedOverView.alpha = 0.0f;
-            NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
             [self.composeBarView.superview addSubview:noUsersNearbyPopup];
             ///wait please
             
@@ -831,7 +845,7 @@ typedef enum
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.fadedOverView.alpha = 1.0f;
-                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarViewFrame.size.height+20)];
              } completion:^(BOOL finished)
              {
                  [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
@@ -843,10 +857,10 @@ typedef enum
     {
         if (newUsersAlertStatus == NoUsersStatusNone)
         {
-            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+            [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.fadedOverView.alpha = 0.0f;
-                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, self.composeBarViewFrame.size.height)];
 
              } completion:^(BOOL finished)
              {
@@ -857,7 +871,7 @@ typedef enum
         
         if (newUsersAlertStatus == NoUsersStatusPeeking)
         {
-            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+            [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, 0)];
                  self.fadedOverView.alpha = 0.0f;
@@ -945,13 +959,14 @@ typedef enum
 -(void)fadedOverViewPanAction:(UIPanGestureRecognizer*)pan
 {
     CGPoint vel = [pan velocityInView:fadedOverView];
+    NSLog(@"pan! vel.y = %f", vel.y);
     if (vel.y > 0)
     {
         if (self.internetAlertStatus == NoInternetAlertStatusFull)
         {
             self.internetAlertStatus = NoInternetAlertStatusPeeking;
         }
-        else
+//        else
         if (self.usersAlertStatus == NoUsersStatusFull)
         {
             self.usersAlertStatus = NoUsersStatusPeeking;
@@ -961,6 +976,7 @@ typedef enum
 }
 -(void)fadedOverViewTapAction:(UITapGestureRecognizer*)tap
 {
+    NSLog(@"tap!");
     if (tap.state == UIGestureRecognizerStateEnded)
     {
         if (self.internetAlertStatus == NoInternetAlertStatusFull)
@@ -973,6 +989,15 @@ typedef enum
             self.usersAlertStatus = NoUsersStatusPeeking;
         }
     }
+}
+
+-(CGRect)composeBarViewFrame
+{
+//    CGRect rect = self.composeBarView.frame;
+//    NSLog(@"composeBarViewFrame = %@", NSStringFromCGRect(rect));
+
+    CGRect rect = CGRectMake(0, [UIScreen mainScreen].bounds.size.height-44, [UIScreen mainScreen].bounds.size.width, 44);
+    return rect;
 }
 
 
