@@ -13,7 +13,6 @@
 #import <Mixpanel/Mixpanel.h>
 #import "ESSwapUserStateMessage.h"
 #import "UIImage+Resize.h"
-#import <MessageUI/MessageUI.h>
 #import "RadarView.h"
 #import "UIImage+ImageEffects.h"
 #import "UIImage+Resize.h"
@@ -27,7 +26,7 @@ typedef enum
     PanGestureDirectionRight
 }PanGestureDirection;
 
-@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, MFMessageComposeViewControllerDelegate, UIGestureRecognizerDelegate>
+@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 @property (nonatomic) Firebase *tracking;
@@ -649,7 +648,8 @@ typedef enum
 {
     FCUser *owner = [FCUser owner];
 
-    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)
+#warning REMOVE THIS BEFORE DEPLOY
+    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive && NO)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
@@ -735,7 +735,8 @@ typedef enum
                 }
             } else
             {
-//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+#warning REMOVE THIS BEFORE DEPLOY
+                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
         [self.radarView buildRoundMaskAtRadius:28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
@@ -1639,43 +1640,7 @@ typedef enum
     }
 }
 
--(void)composeBlurButtonAction
-{
-     if([MFMessageComposeViewController canSendText])
-     {
-         NSArray *recipents = nil;
-         NSString *message = @"Hey! You should check out Earshot - http://tflig.ht/QRiF0Z";
 
-         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-         messageController.messageComposeDelegate = self;
-         [messageController setRecipients:recipents];
-         [messageController setBody:message];
-//         [self presentModalViewController:messageController animated:YES];
-         [self presentViewController:messageController animated:YES completion:^{}];
-     }
-}
-
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    switch (result) {
-        case MessageComposeResultCancelled:
-        {
-            
-        }
-        break;
-        case MessageComposeResultFailed:
-        {
-            
-        }
-        break;
-        case MessageComposeResultSent:
-        {
-            
-        }
-        break;
-    }
-    [controller dismissViewControllerAnimated:YES completion:^{}];
-}
 
 #pragma mark PanGestureRecognizer delegate callbacks to enable button press while pan
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {

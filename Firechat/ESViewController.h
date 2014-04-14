@@ -15,7 +15,10 @@
 @property (nonatomic) PHFComposeBarView *composeBarView;
 @property (nonatomic, strong) UIView *noInternetView;
 
--(void)cancelDialUpSceneIfNecessary;
+//-(void)cancelDialUpSceneIfNecessary;
 -(void)setComposeBarWithRandomHint;
+
+//compose a text message
+-(void)composeBlurButtonAction;
 
 @end
