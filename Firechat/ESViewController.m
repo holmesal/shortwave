@@ -103,14 +103,6 @@ typedef enum
 //    self.alertStatus = [appDelegate getNetworkStatus];
     
     [self updateNetworkStatus:[appDelegate getNetworkStatus]];
-
-//    if (![FCUser owner].beacon.earshotUsers.count)
-//    {
-//        [self noUsersNearbyEvent:nil];
-//    } else
-//    {
-//        [self usersNearbyEvent:nil];
-//    }
 }
 
 
@@ -236,6 +228,7 @@ typedef enum
              } completion:^(BOOL finished)
              {
                 [self.noInternetView setUserInteractionEnabled:YES];
+                [self checkOnUsersNearbyUpdateUI];
              }];
         }
         
@@ -291,6 +284,7 @@ typedef enum
                      [self.noInternetView setUserInteractionEnabled:YES];
                      self.coord.transform = CATransform3DMakeTranslation(0,0, 0);
                      self.maskOfCoord.transform = CATransform3DMakeTranslation(0,0,0);
+                     [self checkOnUsersNearbyUpdateUI];
                  }];
             }];
         }
@@ -299,6 +293,13 @@ typedef enum
     internetAlertStatus = newAlertStatus;
 }
 
+-(void)checkOnUsersNearbyUpdateUI
+{
+    if (![FCUser owner].beacon.earshotUsers.count)
+    {
+        self.usersAlertStatus = NoUsersStatusFull;
+    }
+}
 
 -(UIView*)noUsersNearbyPopup
 {
@@ -329,28 +330,31 @@ typedef enum
         [noUsersNearbyPopup addSubview:darkUnderLayer];
         
         
-        CGFloat buttonDim = 142*0.5f;
+        CGFloat buttonDim = 130*0.5f;//142*0.5f;
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
                                                       noUsersLabel.frame.size.height+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
                                                       buttonDim,buttonDim)];
-        [composeBlurButton invalidatePressedLayer];
-        [composeBlurButton setRadius:buttonDim*0.5f];
+        
+
         
         CGFloat iconDim = 31;
         UIImageView *smsImageView = [[UIImageView alloc] initWithFrame:CGRectMake((buttonDim-iconDim)*0.5f, (buttonDim-iconDim)*0.5f, iconDim, iconDim)];
         [smsImageView setContentMode:UIViewContentModeScaleAspectFit];
         [smsImageView setImage:[UIImage imageNamed:@"message.png"]];
         [composeBlurButton addSubview:smsImageView];
+        [composeBlurButton setRadius:buttonDim*0.5f];
+        [composeBlurButton invalidatePressedLayer];
         
         [composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
         
         [noUsersNearbyPopup addSubview:composeBlurButton];
         
-        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, noUsersNearbyPopup.frame.size.height-12, noUsersNearbyPopup.frame.size.width, 12)];
+        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+16, noUsersNearbyPopup.frame.size.width, 12)];
         [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
         [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
         [sendEarshotToFriend setText:@"Send Earshot to a Friend?"];
+//        [sendEarshotToFriend setFont:[UIFont fontWithName:@"" size:<#(CGFloat)#>]];
         [noUsersNearbyPopup addSubview:sendEarshotToFriend];
     }
     return noUsersNearbyPopup;
@@ -464,7 +468,6 @@ typedef enum
 
 #pragma mark DialUp scene
 -(UIView*)setupDialUpSceneWithDistance:(CGFloat)distance containingSize:(CGSize)containingSize
-
 {
     
     self.dialUpView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, containingSize.width, containingSize.height)];
@@ -794,10 +797,12 @@ typedef enum
         {
             [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
+                 self.fadedOverView.alpha = 0.0f;
                  [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
                  
              } completion:^(BOOL finished)
              {
+                 [self.fadedOverView removeFromSuperview];
                  [self.noUsersNearbyPopup removeFromSuperview];
              }];
         }
@@ -830,10 +835,12 @@ typedef enum
         {
             [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
+                 self.fadedOverView.alpha = 0.0f;
                  [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
 
              } completion:^(BOOL finished)
              {
+                 [self.fadedOverView removeFromSuperview];
                  [noUsersNearbyPopup removeFromSuperview];
              }];
         }

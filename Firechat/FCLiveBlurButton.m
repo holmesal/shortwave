@@ -68,7 +68,6 @@
     
     [self addSubview:self.button];
     
-    
 }
 -(void)touchEnd
 {
