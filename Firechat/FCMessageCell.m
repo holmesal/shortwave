@@ -144,7 +144,8 @@
     if (!self.debugTap)
     {
         self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
-        [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
+        if (self.doubleTap)
+            [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
         [self addGestureRecognizer:self.debugTap];
     }
 }
