@@ -805,7 +805,7 @@ typedef enum
     {
         if (newUsersAlertStatus == NoUsersStatusNone)
         {
-            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+            [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.fadedOverView.alpha = 0.0f;
                  [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
