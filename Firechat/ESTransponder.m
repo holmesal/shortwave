@@ -29,6 +29,7 @@
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
 #define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
+#define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 
@@ -558,6 +559,7 @@
     UIApplication *application = [UIApplication sharedApplication];
     if ([application applicationState] == UIApplicationStateActive) {
         if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
+        if (DEBUG_BEACON) NSLog(@"Current regions: %@",self.regions);
 
         // Don't do anything if you're already chirping
         if (self.currentlyChirping == YES) {
@@ -579,12 +581,11 @@
                 NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
                 id aNo = [availableNos objectAtIndex:randomChoice];
 
-                int chosenIndex = [availableNos indexOfObject:aNo];
+                NSUInteger chosenIndex = [availableNos indexOfObject:aNo];
                 
                 NSString *regionUUID = [self.regionUUIDS objectAtIndex:chosenIndex];
 
-#warning we might be missing an opportunity to transmit the major and minor here, though we do it on 19 anyways...
-                if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %i -> ",chosenIndex, regionUUID);
+                if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %lu -> %@",(unsigned long)chosenIndex, regionUUID);
                 self.chirpBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: regionUUID]
                                                                                      major:0
                                                                                      minor:0
@@ -594,7 +595,9 @@
                 // Start chirping
                 self.currentlyChirping = YES;
                 // Stop chirping after 10 seconds
-                [self performSelector:@selector(stopChirping) withObject:nil afterDelay:10.0];
+                [self performSelector:@selector(stopChirping) withObject:nil afterDelay:CHIRP_LENGTH];
+                // This region should be off-limits for a bit
+                [self disallowRegion:chosenIndex];
             } else
             {
                 int timeoutSeconds = 10;
@@ -616,6 +619,20 @@
 {
     if (DEBUG_BEACON) NSLog(@"Stopping chirping!");
     self.currentlyChirping = NO;
+}
+
+- (void)disallowRegion:(NSUInteger)regionNumber
+{
+    if (DEBUG_BEACON) NSLog(@"Disallowing region %lu",(unsigned long)regionNumber);
+    [self.regions replaceObjectAtIndex:regionNumber withObject:@YES];
+    // In a while, re-allow the region
+    [self performSelector:@selector(allowRegion:) withObject:[NSNumber numberWithInteger:regionNumber] afterDelay:30];
+}
+
+- (void)allowRegion:(NSNumber *)regionNumber
+{
+    if (DEBUG_BEACON) NSLog(@"Re-enabling region %@",regionNumber);
+    [self.regions replaceObjectAtIndex:[regionNumber integerValue] withObject:@NO];
 }
 
 - (void)startFlipping
