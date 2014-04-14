@@ -53,6 +53,7 @@
 // Beacon monitoring
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSMutableArray *regions;
+@property (strong, nonatomic) NSArray *regionUUIDS;
 @property (strong, nonatomic) CLBeaconRegion *rangingRegion;
 @property (strong, nonatomic) NSTimer *rangingTimeout;
 
@@ -84,6 +85,27 @@
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
         self.lastReported = [[NSMutableDictionary alloc] init];
+        // Set up the allowed beacon regions
+        // What are the uuids?
+        self.regionUUIDS = @[      @"DDE6C09F-345B-4FC2-80C1-C27977EB35A6",
+                                   @"E20DF868-0B06-4361-85DE-EE57A57CAA5F",
+                                   @"BCEA644E-3B51-4E6C-8B72-ED204EC5FA36",
+                                   @"9CA603ED-7A5D-4F2F-BBB6-70AAC0050C7E",
+                                   @"A97C54AA-A7B8-4AED-8542-12BCF12D97DD",
+                                   @"6B6ABB05-46D1-4466-BCAC-D6F70CBE1348",
+                                   @"F1229A67-42EB-40CB-83F0-32385074F705",
+                                   @"259CB377-2CB2-476B-B59A-326CB3315B47",
+                                   @"C0A151D2-EC1D-4547-87D8-4C73E94252D3",
+                                   @"D64BB228-C3C1-4A16-A1A5-C84785DAAD7B",
+                                   @"2DC4D09C-5846-463D-9FFC-BDFE414417BF",
+                                   @"5AAFB50C-F795-4818-9433-7197C517B1E0",
+                                   @"155E22AE-AE03-4A65-B665-71D9E417146A",
+                                   @"19D0C85F-B85E-4DE1-9449-498F62E443FD",
+                                   @"554EBF21-D361-41F0-8B93-34E40ABB090B",
+                                   @"B8F2B4F6-2771-4B05-BB8B-CBA06A08CC74",
+                                   @"43AF147A-2EC5-4357-AD56-AB36B145C2F5",
+                                   @"A7CF1269-E65C-4BED-9395-183761DE02DB",
+                                   @"9C9FA6DD-B314-429E-A587-37EAA0C5D6B7"];
         // Setup the firebase
         [self initFirebase:firebaseURL];
         // Create the identity iBeacon
@@ -513,9 +535,16 @@
 // Setup the beacon responsible for communicating the user's earshot ID
 - (void)initIdentityBeacon:(NSString *)userID
 {
-    CLBeaconRegion *identityBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                         major:19
-                                                                         minor:[userID intValue]
+    
+    // Convert the userID into a major and minor value to transmit
+    NSLog(@"Decomposing UUID %@",userID);
+    uint16_t major, minor;
+    esDecomposeIdToMajorMinor([userID intValue], &major, &minor);
+    NSLog(@"Got major: %hu and minor:%hu",major,minor);
+    
+    CLBeaconRegion *identityBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IDENTITY_BEACON_UUID]
+                                                                         major:major
+                                                                         minor:minor
                                                                     identifier:[NSString stringWithFormat:@"Broadcast region %d",19]];
     self.identityBeaconData = [identityBeaconRegion peripheralDataWithMeasuredPower:nil];
     
@@ -550,13 +579,16 @@
                 NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
                 id aNo = [availableNos objectAtIndex:randomChoice];
 
-                int major = [availableNos indexOfObject:aNo];
+                int chosenIndex = [availableNos indexOfObject:aNo];
+                
+                NSString *regionUUID = [self.regionUUIDS objectAtIndex:chosenIndex];
 
-                if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %i",major);
-                self.chirpBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                                     major:major
+#warning we might be missing an opportunity to transmit the major and minor here, though we do it on 19 anyways...
+                if (DEBUG_BEACON) NSLog(@"Creating a new chirping beacon broadcast region in slot number %i -> ",chosenIndex, regionUUID);
+                self.chirpBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: regionUUID]
+                                                                                     major:0
                                                                                      minor:0
-                                                                                identifier:[NSString stringWithFormat:@"Broadcast region %i",major]];
+                                                                                identifier:[NSString stringWithFormat:@"Broadcast region %@",regionUUID]];
                 self.chirpBeaconData = [self.chirpBeaconRegion peripheralDataWithMeasuredPower:nil];
 
                 // Start chirping
@@ -691,7 +723,7 @@
     // Set the delegate
     self.locationManager.delegate = self;
     
-    BOOL what = [CLLocationManager isMonitoringAvailableForClass:[CLBeacon class]];
+//    BOOL what = [CLLocationManager isMonitoringAvailableForClass:[CLBeacon class]];
 //    int [CLLocationManager] auth
     // Init the region tracker
     self.regions = [[NSMutableArray alloc] init];
@@ -702,13 +734,13 @@
     
     // Regions 0-18 are available for wakeup chirps
     for (int major=0; major< MAX_BEACON; major++) {
-        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %i",major);
+        NSString *regionUUID = [self.regionUUIDS objectAtIndex:major];
+        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",regionUUID);
         // Start outside the region
         [self.regions addObject:@NO];
         // Create a region with this minor
-        CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                         major:major
-                                                                    identifier:[NSString stringWithFormat:@"Listen region major:%i",major]];
+        CLBeaconRegion *region = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: regionUUID]
+                                                                    identifier:[NSString stringWithFormat:@"Listen region %@",regionUUID]];
         // Wake up the app when you enter this region
 //        region.notifyEntryStateOnDisplay = YES;
         region.notifyOnEntry = YES;
@@ -722,10 +754,9 @@
     
     // Region 19 is available for ranging - totally separate
     // This might look like duplicate code, but it's way easier to understand if this gets set up as a separate region
-    if (DEBUG_BEACON) NSLog(@"Setting up the mystical region 19");
-    self.rangingRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
-                                                                 major:19
-                                                            identifier:[NSString stringWithFormat:@"Minor mod region:%d",19]];
+    if (DEBUG_BEACON) NSLog(@"Setting up the mystical region %@",IDENTITY_BEACON_UUID);
+    self.rangingRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IDENTITY_BEACON_UUID]
+                                                            identifier:[NSString stringWithFormat:@"Identity region %@",IDENTITY_BEACON_UUID]];
 //    self.rangingRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString: IBEACON_UUID]
 //                                                            identifier:[NSString stringWithFormat:@"Minor mod region:%d",19]];
     // Why not also wake up when we enter this region
@@ -764,17 +795,19 @@
     [self emitBluetoothState];
 }
 
-- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLBeaconRegion *)region
 {
     // What region?
-    NSNumber *major = [region valueForKey:@"major"];
-    NSLog(@"Got state %ld for region %@", state, region);
+    NSUUID *uuidVal = [region proximityUUID];
+    NSString *uuid = [uuidVal UUIDString];
+    NSUInteger indexOfThisRegion = [self.regionUUIDS indexOfObject:uuid];
+    NSLog(@"Got state %ld for region %lu", state, (unsigned long)indexOfThisRegion);
     //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             // Update the beacon regions dictionary if it's not Region 19
-            if (![major  isEqual: @19]) {
-                [self.regions replaceObjectAtIndex:[major intValue] withObject:@YES];
+            if (![uuid  isEqual: IDENTITY_BEACON_UUID]) {
+                [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@YES];
             }
             // Regardless, start ranging on Region 19
             [self.locationManager startRangingBeaconsInRegion:self.rangingRegion];
@@ -803,8 +836,8 @@
             }
             break;
         case CLRegionStateOutside:
-            if (![major  isEqual: @19]) {
-                [self.regions replaceObjectAtIndex:[major intValue] withObject:@NO];
+            if (![uuid  isEqual: IDENTITY_BEACON_UUID]) {
+                [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@NO];
             }
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
@@ -816,7 +849,7 @@
             }
             break;
         case CLRegionStateUnknown:
-            if (DEBUG_BEACON) NSLog(@"Region %@ in unknown state - doing nothing...",major);
+            if (DEBUG_BEACON) NSLog(@"Region %@ in unknown state - doing nothing...",uuid);
             break;
         default:
             NSLog(@"This is never supposed to happen.");
@@ -830,11 +863,18 @@
 -(void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
     if ([beacons count] != 0){
-        if (DEBUG_BEACON) NSLog(@"Ranged beacons from region 19!");
+        if (DEBUG_BEACON) NSLog(@"Ranged beacons from identity region!");
         if (DEBUG_BEACON) NSLog(@"%@",beacons);
     }
     for (CLBeacon *beacon in beacons) {
-        NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
+//        NSString *userID = [NSString stringWithFormat:@"%@",beacon.minor];
+        
+        uint32_t recomposed;
+        esRecomposeMajorMinorToId([beacon.major intValue], [beacon.minor intValue], &recomposed);
+        NSLog(@"Recomposed major: %@ and minor:%@   ->   %d",beacon.major,beacon.minor,recomposed);
+        
+        NSString *userID = [NSString stringWithFormat:@"%u",recomposed];
+        
         [self addUser:userID];
     }
 }
