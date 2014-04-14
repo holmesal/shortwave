@@ -12,6 +12,7 @@
 #import "ESTransponder.h"
 #import "FCLiveBlurButton.h"
 #import <MessageUI/MessageUI.h>
+#define CHIRP_BEACON_TIME 10.0f
 
 typedef enum
 {
@@ -29,7 +30,7 @@ typedef enum
 
 @interface ESViewController () <MFMessageComposeViewControllerDelegate>
 
-
+@property (nonatomic) NSTimer *chirpBeaconTimer;
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
 @property (nonatomic) NoInternetAlertStatus internetAlertStatus;
 @property (nonatomic) NoUsersStatus usersAlertStatus;
@@ -83,8 +84,7 @@ typedef enum
 @synthesize composeBlurButton;
 
 @synthesize fadedOverView;
-
-
+@synthesize chirpBeaconTimer;
 
 - (void)viewDidLoad
 {
@@ -870,10 +870,19 @@ typedef enum
         }
     }
     
+    //setup chirpbeacon timer 10 seconds if necessary
     usersAlertStatus = newUsersAlertStatus;
     if (usersAlertStatus != NoUsersStatusNone)
     {
         [self.composeBarView.textView resignFirstResponder];
+        if (!self.chirpBeaconTimer.isValid)
+        {
+            chirpBeaconTimer = [NSTimer timerWithTimeInterval:CHIRP_BEACON_TIME target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:NO];
+            [[NSRunLoop mainRunLoop] addTimer:chirpBeaconTimer forMode:NSDefaultRunLoopMode];
+        }
+    } else
+    {
+        [chirpBeaconTimer invalidate];
     }
 }
 
