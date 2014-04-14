@@ -13,4 +13,6 @@
 - (UIImage *)scaleToSize:(CGSize)size ;
 - (UIImage *)scaleByFactor:(CGFloat)factor;
 
+
+- (UIImage *)transparentBorderImage:(NSUInteger)borderSize;
 @end

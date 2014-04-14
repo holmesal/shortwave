@@ -16,7 +16,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS YES
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -176,13 +176,15 @@
     self.earshotUsers = [[NSMutableDictionary alloc] init];
     self.rootRef = [[Firebase alloc] initWithUrl:baseURL];
     self.earshotUsersRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"tracking"];
-    [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+    [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
         // Update the locally-stored earshotUsers array
         NSLog(@"Got data from firebase");
         NSLog(@"%@",snapshot.value);
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
-        } else {
+        } else
+        {
             self.earshotUsers = [[NSMutableDictionary alloc] init];
             self.lastReported = [[NSMutableDictionary alloc] init];
         }
@@ -211,7 +213,8 @@
             
             NSLog(@"Long filter timeout for user %@ --> %f",userKey,interval);
             
-            if (interval > TIMEOUT) {
+            if (interval > TIMEOUT)
+            {
                 NSLog(@"Lost user %@ - has been too long: %f",userKey,interval);
                 if (self.actuallyRemove) {
                     // Remove the user
@@ -269,7 +272,7 @@
     // Make sure it's not the time we already have
     NSNumber *last = [self.lastReported objectForKey:userID];
     uint then = [last intValue];
-    NSLog(@"Time difference for user %@ is %u",userID,(now - then));
+//    NSLog(@"Time difference for user %@ is %u",userID,(now - then));
     uint howLong = now - then;
     if (howLong > REPORTING_INTERVAL){
         if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
@@ -346,7 +349,7 @@
         NSLog(@"App is in the background!");
         // If there aren't any user notifications, add a new earshot notification
         NSArray *notificationArray = [app scheduledLocalNotifications];
-        NSLog(@"notificationArray count is %@", [notificationArray count]);
+        NSLog(@"notificationArray count is %d", [notificationArray count]);
         //        if ([notificationArray count] != 0) {
         //            // Delete all the existing notifications
         //            NSLog(@"Deleting local notifications");

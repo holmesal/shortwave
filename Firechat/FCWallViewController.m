@@ -241,6 +241,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         notifyingStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %d people nearby.", numPeople] ];
     }
     
+    if ( numPeople == 0)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingNoUsersNearbyNotification object:nil];
+    } else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingUsersNearbyNotification object:nil];
+    }
+    
 
     
 
@@ -273,11 +281,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)updateLine
 {
-    //thing is flipped btw!
-//    NSArray *visibleIndexPaths = [self.tableView visibleCells];
-    
-    
-    CGFloat heightForZeroPath = [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] ];
+    //table view is flipped keep in mind
     
     if (self.wall.count)
     {
@@ -400,7 +404,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's tracking, updates UI cells
     [self bindToTracking];
     
-#warning should not retain
     // Bind to keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillToggle:)
@@ -412,7 +415,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                                object:nil];
     
     // Hide the keyboard on taps
-#warning should not retain
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -686,8 +688,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
            
            //here are my keys
            NSString *userId = [userDict objectForKey:@"theirUserId"];
-           NSString *userColor = [userDict objectForKey:@"theirColor"];
-           NSString *icon = [userDict objectForKey:@"theirIcon"];
+//           NSString *userColor = [userDict objectForKey:@"theirColor"];
+//           NSString *icon = [userDict objectForKey:@"theirIcon"];
            
            NSInteger indexOfPmUser = [weakSelf.userPmList indexOfObject:userDict];
            
@@ -726,12 +728,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
        if ([snapshot.value isKindOfClass:[NSDictionary class]])
        {
            
-           NSDictionary *userDict = snapshot.value;
+//           NSDictionary *userDict = snapshot.value;
            
            //here are my keys
-           NSString *userId = [userDict objectForKey:@"withUserId"];
-           NSString *userColor = [userDict objectForKey:@"userColor"];
-           NSString *icon = [userDict objectForKey:@"userIcon"];
+//           NSString *userId = [userDict objectForKey:@"withUserId"];
+//           NSString *userColor = [userDict objectForKey:@"userColor"];
+//           NSString *icon = [userDict objectForKey:@"userIcon"];
            
            
        }
@@ -1019,7 +1021,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         ESUserPMCell *pmCell = [self.pmUsersTableView dequeueReusableCellWithIdentifier:@"pm"];
         
         NSDictionary *pmUserData = [self.userPmList objectAtIndex:indexPath.row];
-        NSString *theirId = [pmUserData objectForKey:@"theirUserId"];
+//        NSString *theirId = [pmUserData objectForKey:@"theirUserId"];
         NSString *theirColor = [pmUserData objectForKey:@"theirColor"];
         NSString *theirIcon = [pmUserData objectForKey:@"theirIcon"];
         
@@ -1070,20 +1072,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             // Set message cell values
             [cell setMessage:message];
-            
-            // This message tracks whether it's owner is in range or not, and fade out if appropriate via the NSNotification @"Beacon update"
-#warning github issue fade cell
-//            cell.ownerID = message.ownerID;
-//            NSNumber *major = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:0] integerValue] ];
-//            NSNumber *minor = [NSNumber numberWithInt: [[[cell.ownerID componentsSeparatedByString:@":"] objectAtIndex:1] integerValue] ];
-//            
-//            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.major == %@ AND SELF.minor == %@)", major, minor];
-//            
-//            BOOL beaconFound = [[self.beacons filteredArrayUsingPredicate:predicate] lastObject] ? YES : NO;
-//            
-//            FCUser *me = [FCUser owner];
-//            NSString *myId = me.id;
-//            BOOL messageBelongsToMe = [myId isEqualToString:message.ownerID];
             
             BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
             
@@ -1310,7 +1298,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.scrollSpeed = scrollView.contentOffset.y - self.previousScrollViewYOffset;
         self.previousScrollViewYOffset = scrollView.contentOffset.y;
         
-        [self cancelDialUpSceneIfNecessary];
     }
 }
 

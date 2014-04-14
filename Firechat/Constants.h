@@ -34,6 +34,10 @@
 
 #endif
 
-
-
+//events
+#define kTrackingUsersNearbyNotification @"Sussess!"
+#define kTrackingNoUsersNearbyNotification @"Where you at?"
+//user default keys
 #define kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN @"Hands down, boys!"
+#define kNSUSER_DEFAULTS_COLOR @"color"
+#define kNSUSER_DEFAULTS_ICON @"icon"

@@ -38,11 +38,11 @@
 
 - (void)sendProviderDeviceToken:(NSData *)bytes;
 
-- (id) initWithSnapshot:(NSDictionary *)snapshot;
-- (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id;
+//- (id) initWithSnapshot:(NSDictionary *)snapshot;
+//- (id) initWithSnapshot:(NSDictionary *)snapshot andID:(NSString *)id;
 //- (id) initWithTwitter:(FAUser *)twitterUser;
 //- (void) setupWithTwitter:(FAUser *)twitterUser withCompletionBlock:(void (^)(NSError* error))block;
-- (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image;
+//- (void) signupWithUsername:(NSString *)username andImage:(UIImage *)image;
 - (id) initAsOwner;
 
 +(FCUser*)owner;

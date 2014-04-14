@@ -13,6 +13,7 @@
 @property (nonatomic) CALayer *pressedLayer;
 @property (nonatomic) CALayer *frameLayer;
 @property (nonatomic) UIColor *originalColorText;
+@property (nonatomic) CFTimeInterval touchDownTime;
 
 
 
@@ -22,17 +23,24 @@
 @property (nonatomic) UIButton *button;
 
 
+
 @end
 
 @implementation FCLiveBlurButton
 @synthesize pressedLayer;
 @synthesize frameLayer;
+@synthesize theButton;
+
+@synthesize touchDownTime;
 
 - (id)initWithFrame:(CGRect)frame
 {
+
     self = [super initWithFrame:frame];
-    if (self) {
+    if (self)
+    {
         // Initialization code
+        [self initialize];
     }
     return self;
 }
@@ -65,24 +73,49 @@
     
     [self addSubview:self.button];
     
-    
 }
 -(void)touchEnd
 {
-    [UIView animateWithDuration:5.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-     {
-#warning this is fucked
-//         self.label.textColor = self.originalColorText;
-         self.pressedLayer.opacity = 0.0f;
-     } completion:^(BOOL finished){}];
+//    [UIView animateWithDuration:5.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+//     {
+//#warning this is fucked
+////         self.label.textColor = self.originalColorText;
+//         
+//         self.pressedLayer.opacity = 0.0f;
+//     } completion:^(BOOL finished){}];
+    CFTimeInterval now = CACurrentMediaTime();
+    CFTimeInterval dt = now - touchDownTime;
+    CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    flash.fromValue = @1;
+    flash.toValue = @0;
+    flash.duration = dt;
+    flash.autoreverses = NO;    // Back
+    flash.repeatCount = 0;       // Or whatever
+    flash.fillMode = kCAFillModeForwards;
+    flash.removedOnCompletion = NO;
+    
+    [pressedLayer addAnimation:flash forKey:@"sizzle"];
+    
 }
 -(void)touchBegan
 {
-    [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-    {
-
-        self.pressedLayer.opacity = 1.0f;
-    } completion:^(BOOL finished){}];
+//    [UIView animateWithDuration:0.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+//    {
+//
+//        self.pressedLayer.opacity = 1.0f;
+//    } completion:^(BOOL finished){}];
+    
+    CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    flash.fromValue = @0;
+    flash.toValue = @1;
+    flash.duration = 0.2;
+    flash.autoreverses = NO;    // Back
+    flash.repeatCount = 0;       // Or whatever
+    flash.fillMode = kCAFillModeForwards;
+    flash.removedOnCompletion = NO;
+    
+    [self.pressedLayer addAnimation:flash forKey:@"flashAnimation"];
+    touchDownTime = CACurrentMediaTime();
 }
 
 -(void)setRadius:(CGFloat)radius
@@ -161,6 +194,10 @@
     
 }
 
+-(UIButton*)theButton
+{
+    return self.button;
+}
 
 
 

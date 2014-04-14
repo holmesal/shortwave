@@ -13,8 +13,9 @@
 #import <Mixpanel/Mixpanel.h>
 #import "ESSwapUserStateMessage.h"
 #import "UIImage+Resize.h"
-#import <MessageUI/MessageUI.h>
 #import "RadarView.h"
+#import "UIImage+ImageEffects.h"
+#import "UIImage+Resize.h"
 
 typedef enum
 {
@@ -25,7 +26,7 @@ typedef enum
     PanGestureDirectionRight
 }PanGestureDirection;
 
-@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, MFMessageComposeViewControllerDelegate>
+@interface FCLandingPageViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic) BOOL hasBeenHereBefore;////this is to fade in the view after splash screen is gone
 @property (nonatomic) Firebase *tracking;
@@ -263,7 +264,7 @@ typedef enum
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.name == %@", icon];
         id theObject = [[self.icons filteredArrayUsingPredicate:predicate] lastObject];
         
-        int index = [self.icons indexOfObject:theObject];
+        int index = (int)[self.icons indexOfObject:theObject];
         self.selectedIconIndex = index;
         randIcon = index;
     }
@@ -282,7 +283,50 @@ typedef enum
     [self.iconContainerView setBackgroundColor:[UIColor clearColor]];
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
+//    [iconTableView setScrollEnabled:NO]
     [iconTableView setUserInteractionEnabled:NO];
+    
+
+    UIButton *top = [UIButton buttonWithType:UIButtonTypeCustom];
+
+    [top setFrame:CGRectMake(
+                             self.iconContainerView.frame.origin.x,
+                             self.iconContainerView.frame.origin.y-self.cellHeight,
+                             iconTableView.frame.size.width,
+                             self.cellHeight)];
+    [self.view insertSubview:top aboveSubview:self.iconContainerView];
+    
+    UIButton *mid = [UIButton buttonWithType:UIButtonTypeCustom];
+
+    [mid setFrame:CGRectMake(
+                             self.iconContainerView.frame.origin.x,
+                             self.iconContainerView.frame.origin.y,
+                             iconTableView.frame.size.width,
+                             self.cellHeight)];
+    [self.view insertSubview:mid aboveSubview:self.iconContainerView];
+    
+    UIButton *bottom = [UIButton buttonWithType:UIButtonTypeCustom];
+    
+    [bottom setFrame:CGRectMake(
+                             self.iconContainerView.frame.origin.x,
+                             self.iconContainerView.frame.origin.y+self.cellHeight,
+                             iconTableView.frame.size.width,
+                             self.cellHeight)];
+    [self.view insertSubview:bottom aboveSubview:self.iconContainerView];
+    
+//    [top setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
+//    [mid setBackgroundColor:[UIColor colorWithRed:0 green:1 blue:0 alpha:0.2f]];
+//    [bottom setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:1 alpha:0.2f]];
+    
+    
+    top.tag = -1;
+    mid.tag = 0;
+    bottom.tag = 1;
+    [top addTarget:self action:@selector(tapIcon:) forControlEvents:UIControlEventTouchUpInside];
+    [mid addTarget:self action:@selector(tapIcon:) forControlEvents:UIControlEventTouchUpInside];
+    [bottom addTarget:self action:@selector(tapIcon:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.searchingView setUserInteractionEnabled:NO];
     
 //    [iconTableView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
     
@@ -342,19 +386,23 @@ typedef enum
     {
         NSString *color = [[NSUserDefaults  standardUserDefaults] objectForKey:@"color"];
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF == %@)", color];
-        id theColor = [[colorsHex filteredArrayUsingPredicate:predicate] lastObject];
-        int colorIndexActually = [colorsHex indexOfObject:theColor];
+//        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF == %@)", color];
+//        id theColor = [[colorsHex filteredArrayUsingPredicate:predicate] lastObject];
+//        int colorIndexActually = [colorsHex indexOfObject:theColor];
+//
+//        colorIndex = colorIndexActually;
+        UIColor *clr = [UIColor colorWithHexString:color];
+        [self.view setBackgroundColor:clr];
         
-        
-        
-        colorIndex = colorIndexActually;
+    } else
+    {
+        [self.view setBackgroundColor:[colors objectAtIndex:colorIndex] ];
     }
     
-    [self.view setBackgroundColor:[colors objectAtIndex:colorIndex] ];
     
     //add gesture listener pan left right
     self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.panGesture setDelegate:self];
     [self.view addGestureRecognizer:self.panGesture];
     
     
@@ -366,7 +414,59 @@ typedef enum
 
 
 }
-
+-(void)tapIcon:(UIButton*)button
+{
+    NSInteger tag = button.tag*-1;
+    int currentIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
+    
+    int touchedIndex = currentIndex+tag;
+    
+    UITableViewCell *cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:touchedIndex inSection:0]];
+    UIView *underView = [cell viewWithTag:4];
+    underView.alpha = 1.0f;
+    
+    [UIView animateWithDuration:0.5f delay:0.0f options:UIViewAnimationOptionCurveEaseIn animations:^
+    {
+        underView.alpha = 0.0f;
+    } completion:^(BOOL finished){}];
+    
+    //scroll to this one
+//    if (tag)
+//    {
+//        int direction = tag;//fabsf(percent)/percent;
+//        
+//        int numberOfWraps = 1;//abs((int)percent);
+//        numberOfWraps = MAX(1, numberOfWraps);
+//        
+//        
+//        __block CGFloat y = self.iconTableView.contentOffset.y - direction*self.cellHeight;
+//        
+//        
+////        
+////        [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+////         {
+////             
+////
+////             [self reshuffleTableViewForOffset:y andPercent:direction];
+//////             [self.iconTableView setContentOffset:CGPointMake(0, y)];
+////
+////             int index = y/self.cellHeight;
+//////             NSDictionary *dc = [self.icons objectAtIndex:index];
+//////             NSString *attribution = [dc objectForKey:@"attribution"];
+//////             [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];
+////             self.iconIndex = iconIndex - numberOfWraps;
+////             
+////         } completion:^(BOOL finished)
+////         {
+////             
+////         }];
+//    }
+    
+    
+    //end
+//    NSLog(@"tag = %d", tag);
+//    NSLog(@"currently %d touching index %d", currentIndex, touchedIndex);
+}
 -(void)initializeCircleBounceTimerIfNecessary
 {
     if (circleBounceTimer)
@@ -495,13 +595,15 @@ typedef enum
              if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
              {
                  subview.alpha = 0.0f;
-                 subview.transform = CGAffineTransformMakeTranslation(0, -2);
+                 subview.transform = CGAffineTransformMakeTranslation(0, 0);
              }
          }
          
+         [self.iconContainerView setTransform:CGAffineTransformMakeScale(0.7, 0.7)];
+         
      } completion:^(BOOL finished)
      {
-     
+         [self.iconContainerView setTransform:CGAffineTransformIdentity];
      }];
     
     
@@ -545,8 +647,9 @@ typedef enum
 -(void)startTalkingBlurButtonAction
 {
     FCUser *owner = [FCUser owner];
-    
-    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)
+
+//#warning REMOVE THIS BEFORE DEPLOY
+    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)// && NO)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
@@ -632,6 +735,7 @@ typedef enum
                 }
             } else
             {
+//#warning REMOVE THIS BEFORE DEPLOY
 //                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
@@ -661,7 +765,7 @@ typedef enum
                  self.searchingView.alpha = 1.0f;
              } completion:^(BOOL finished)
              {
-                 
+                 [self.searchingView setUserInteractionEnabled:YES];
              }];
         }];
     }
@@ -795,7 +899,7 @@ typedef enum
     
     [self animateBounceCircle:index];
     
-    int start = self.colorIndex;
+//    int start = self.colorIndex;
     int end = self.colorIndex+direction;
     if (end < 0)
     {
@@ -1099,53 +1203,7 @@ typedef enum
                 CGFloat y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
                 
                 //following if else clause will appear to loop the tableview, aka: no top nor bottom.
-                if (y < 0)
-                {
-                    NSLog(@"reshuffle bottom to top");
-                    id lastObject = [self.icons lastObject];
-                    
-  
-                    
-                    
-                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
-                    [iconNamesMutable removeLastObject];
-                    [iconNamesMutable insertObject:lastObject atIndex:0];
-                    self.icons = [NSArray arrayWithArray:iconNamesMutable];
-                    [self.iconTableView reloadData];
-                    
-                    //move tableView
-                    CGPoint offset = {0, self.cellHeight};
-                    
-                    self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
-                    
-                    y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
-                    
-                    
-                    
-                } else
-                if (y > self.cellHeight*(self.icons.count-3))
-                {
-                    NSLog(@"reshuffle top to bottom");
-                    //reshuffle top to bottom
-                    id firstObject = [self.icons objectAtIndex:0];
-
-                    
-                    NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
-                    [iconNamesMutable removeObject:firstObject];
-                    [iconNamesMutable addObject:firstObject];
-                    self.icons = [NSArray arrayWithArray:iconNamesMutable];
-                    [self.iconTableView reloadData];
-                    
-                    //move tableView
-                    CGPoint offset = {0, self.cellHeight*(self.icons.count-3)-self.cellHeight};
-                    
-                    self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
-                    
-                    y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
-
-                    
-                }
-                
+                y = [self reshuffleTableViewForOffset:y andPercent:percent];
                 [self.iconTableView setContentOffset:CGPointMake(0, y)];
                 
             }
@@ -1270,10 +1328,59 @@ typedef enum
         }
         break;
             
-            
-            
     }
     
+}
+
+-(CGFloat)reshuffleTableViewForOffset:(CGFloat)y andPercent:(CGFloat)percent
+{
+    if (y < 0)
+    {
+        NSLog(@"reshuffle bottom to top");
+        id lastObject = [self.icons lastObject];
+        
+        
+        
+        
+        NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
+        [iconNamesMutable removeLastObject];
+        [iconNamesMutable insertObject:lastObject atIndex:0];
+        self.icons = [NSArray arrayWithArray:iconNamesMutable];
+        [self.iconTableView reloadData];
+        
+        //move tableView
+        CGPoint offset = {0, self.cellHeight};
+        
+        self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
+        
+        y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
+        
+        
+        
+    } else
+    if (y > self.cellHeight*(self.icons.count-3))
+    {
+        NSLog(@"reshuffle top to bottom");
+        //reshuffle top to bottom
+        id firstObject = [self.icons objectAtIndex:0];
+        
+        
+        NSMutableArray *iconNamesMutable = [NSMutableArray arrayWithArray:self.icons];
+        [iconNamesMutable removeObject:firstObject];
+        [iconNamesMutable addObject:firstObject];
+        self.icons = [NSArray arrayWithArray:iconNamesMutable];
+        [self.iconTableView reloadData];
+        
+        //move tableView
+        CGPoint offset = {0, self.cellHeight*(self.icons.count-3)-self.cellHeight};
+        
+        self.offsetOfTableViewAtStartOfVertical = offset; //{0, self.offsetOfTableViewAtStartOfVertical.y + self.cellHeight};
+        
+        y = self.offsetOfTableViewAtStartOfVertical.y - percent*self.cellHeight;
+        
+        
+    }
+    return y;
 }
 
 -(void)animateBounceCircle:(NSInteger)circle
@@ -1308,7 +1415,7 @@ typedef enum
     {
         [self animateBounceCircle:self.alternateBounceCounter];
         
-        NSTimer *timer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(bounceTimerQuick) userInfo:nil repeats:NO];
+        NSTimer *timer = [NSTimer timerWithTimeInterval:0.07f target:self selector:@selector(bounceTimerQuick) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
     }
     
@@ -1406,6 +1513,16 @@ typedef enum
         imageView.tag = 5;
         [imageView setBackgroundColor:[UIColor clearColor]];
         
+        
+        CGFloat border = 10;
+        CGSize underViewSize = {border+50, border+50};
+        UIImageView *underView = [[UIImageView alloc] initWithFrame:CGRectMake((self.iconContainerView.bounds.size.width-underViewSize.width)*0.5, (self.iconContainerView.bounds.size.height-underViewSize.height)*0.5, underViewSize.width, underViewSize.height)];
+        [underView setContentMode:UIViewContentModeScaleAspectFit];
+        underView.tag = 4;
+        [underView setBackgroundColor:[UIColor clearColor]];
+        underView.alpha = 0.0f;
+        
+        [iconCell.contentView addSubview:underView];
         [iconCell.contentView addSubview:imageView];
 //        [iconCell setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.5f]];
     }
@@ -1413,10 +1530,16 @@ typedef enum
     
     
     UIImageView *imageView = (UIImageView*)[iconCell viewWithTag:5];
+    UIImageView *underView = (UIImageView*)[iconCell viewWithTag:4];
+    
     [imageView setHidden:NO];
     [imageView setImage:[UIImage imageNamed: [ [icons objectAtIndex:indexPath.row] objectForKey:@"name"] ] ];
-//    [iconCell setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
-
+    
+    UIImage *image = [imageView.image transparentBorderImage:5];
+    
+    underView.image = [image applyBlurWithRadius:5 tintColor:[UIColor clearColor] saturationDeltaFactor:1 maskImage:nil];
+    
+    
     return iconCell;
 }
 
@@ -1517,44 +1640,16 @@ typedef enum
     }
 }
 
--(void)composeBlurButtonAction
-{
-     if([MFMessageComposeViewController canSendText])
-     {
-         NSArray *recipents = nil;
-         NSString *message = @"Hey! You should check out Earshot - http://tflig.ht/QRiF0Z";
 
-         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
-         messageController.messageComposeDelegate = self;
-         [messageController setRecipients:recipents];
-         [messageController setBody:message];
-//         [self presentModalViewController:messageController animated:YES];
-         [self presentViewController:messageController animated:YES completion:^{}];
-     }
-}
 
--(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
-{
-    switch (result) {
-        case MessageComposeResultCancelled:
-        {
-            
-        }
-        break;
-        case MessageComposeResultFailed:
-        {
-            
-        }
-        break;
-        case MessageComposeResultSent:
-        {
-            
-        }
-        break;
+#pragma mark PanGestureRecognizer delegate callbacks to enable button press while pan
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    if (touch.view == self.doneBlurButton.theButton)
+    {
+        return NO; // ignore the touch
     }
-    [controller dismissViewControllerAnimated:YES completion:^{}];
+    NSLog(@"//handle the touch");
+    return YES; // handle the touch
 }
-
-
 
 @end

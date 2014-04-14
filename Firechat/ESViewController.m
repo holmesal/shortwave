@@ -10,19 +10,29 @@
 #import "Reachability.h"
 #import "FCAppDelegate.h"
 #import "ESTransponder.h"
+#import "FCLiveBlurButton.h"
+#import <MessageUI/MessageUI.h>
 
 typedef enum
 {
     NoInternetAlertStatusNone,
     NoInternetAlertStatusPeeking,
     NoInternetAlertStatusFull
-}NoInternetAlertStatus;
+} NoInternetAlertStatus;
 
-@interface ESViewController ()
+typedef enum
+{
+    NoUsersStatusNone,
+    NoUsersStatusPeeking,
+    NoUsersStatusFull
+} NoUsersStatus;
+
+@interface ESViewController () <MFMessageComposeViewControllerDelegate>
 
 
 @property (nonatomic) UIPanGestureRecognizer *panGesture;
-@property (nonatomic) NoInternetAlertStatus alertStatus;
+@property (nonatomic) NoInternetAlertStatus internetAlertStatus;
+@property (nonatomic) NoUsersStatus usersAlertStatus;
 
 //dialup stuff
 @property (nonatomic) UILabel *noInternetLabel;
@@ -36,6 +46,14 @@ typedef enum
 @property (nonatomic) CGPoint lastOffset;
 @property (nonatomic) CALayer *maskOfCoord;
 @property (assign) CGPoint movementVector;
+@property (strong, nonatomic) UIView *fadedOverView;
+@property (strong, nonatomic) UIPanGestureRecognizer *fadedOverViewPan;
+@property (strong, nonatomic) UITapGestureRecognizer *fadedOverViewTap;
+
+//no users nearby stuff
+@property (nonatomic, strong) UIView *noUsersNearbyPopup;
+@property (nonatomic) UILabel *noUsersLabel;
+@property (nonatomic) FCLiveBlurButton *composeBlurButton;
 
 @end
 
@@ -43,9 +61,12 @@ typedef enum
 @synthesize noInternetLabel;
 @synthesize composeBarView;
 @synthesize noInternetView;
-@synthesize alertStatus;
+@synthesize usersAlertStatus;
+@synthesize internetAlertStatus;
 @synthesize panGesture;
 @synthesize lastOffset;
+@synthesize fadedOverViewPan;
+@synthesize fadedOverViewTap;
 
 //dialup stuff
 @synthesize dialUpView;
@@ -56,12 +77,22 @@ typedef enum
 @synthesize fullCoordMask;
 @synthesize maskOfCoord;
 
+//no users nearby stuff
+@synthesize noUsersNearbyPopup;
+@synthesize noUsersLabel;
+@synthesize composeBlurButton;
+
+@synthesize fadedOverView;
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
 //  actually it's ok to not have this.  listen to it on a per-view controller level, when necessary
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(esTransponderStackFailed:) name:kTransponderEventBluetoothDisabled object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noUsersNearbyEvent:) name:kTrackingNoUsersNearbyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usersNearbyEvent:) name:kTrackingUsersNearbyNotification object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -89,7 +120,6 @@ typedef enum
     composeBarView = cBV;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetChangeEvent:) name:kReachabilityChangedNotification object:nil];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appEnteredForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 
@@ -100,10 +130,10 @@ typedef enum
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderDisabled object:nil];
     
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackingNoUsersNearbyNotification object:nil];
 }
 
-#pragma mark reachability callback (internte availability)
+#pragma mark reachability callback (internet availability)
 -(void)internetChangeEvent:(NSNotification*)notification
 {
     
@@ -114,9 +144,9 @@ typedef enum
 
 -(void)cancelDialUpSceneIfNecessary
 {
-    if (alertStatus == NoInternetAlertStatusFull)
+    if (internetAlertStatus == NoInternetAlertStatusFull)
     {
-        self.alertStatus = NoInternetAlertStatusPeeking;
+        self.internetAlertStatus = NoInternetAlertStatusPeeking;
     }
 }
 
@@ -129,7 +159,7 @@ typedef enum
             NSLog(@"NotReachable");
             //if no internet
             
-            [self setAlertStatus:NoInternetAlertStatusPeeking];
+            [self setInternetAlertStatus:NoInternetAlertStatusPeeking];
             
         }
             break;
@@ -137,14 +167,14 @@ typedef enum
         case ReachableViaWiFi:
         {
             NSLog(@"ReachableViaWiFi");
-            [self setAlertStatus:NoInternetAlertStatusNone];
+            [self setInternetAlertStatus:NoInternetAlertStatusNone];
         }
             break;
             
         case ReachableViaWWAN:
         {
             NSLog(@"ReachableViaWWAN");
-            [self setAlertStatus:NoInternetAlertStatusNone];
+            [self setInternetAlertStatus:NoInternetAlertStatusNone];
         }
             break;
     }
@@ -153,15 +183,34 @@ typedef enum
 
 
 
--(void)setAlertStatus:(NoInternetAlertStatus)newAlertStatus
+-(void)setInternetAlertStatus:(NoInternetAlertStatus)newAlertStatus
 {
     if (self.dialUpCoordIsPluggedIn)
         return;
     
     [self.composeBarView setUserInteractionEnabled:(newAlertStatus == NoInternetAlertStatusNone)];
     
+    if (newAlertStatus != NoInternetAlertStatusNone)
+    {
+        if (usersAlertStatus != NoUsersStatusNone)
+        {
+            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 0.0f;
+//                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
+                 self.noUsersNearbyPopup.alpha = 0.0f;
+             } completion:^(BOOL finished)
+             {
+                 self.noUsersNearbyPopup.alpha = 1.0f;
+                 [self.fadedOverView removeFromSuperview];
+                 [self.noUsersNearbyPopup removeFromSuperview];
+             }];
+            usersAlertStatus = NoUsersStatusNone;
+        }
+    }
+    
     [self.noInternetView setUserInteractionEnabled:NO];
-    if (alertStatus == NoInternetAlertStatusNone)
+    if (internetAlertStatus == NoInternetAlertStatusNone)
     {
         if (newAlertStatus == NoInternetAlertStatusPeeking)
         {
@@ -178,7 +227,7 @@ typedef enum
         }
     }
     
-    if (alertStatus == NoInternetAlertStatusPeeking)
+    if (internetAlertStatus == NoInternetAlertStatusPeeking )
     {
         if (newAlertStatus == NoInternetAlertStatusNone)
         {
@@ -190,15 +239,19 @@ typedef enum
              } completion:^(BOOL finished)
              {
                 [self.noInternetView setUserInteractionEnabled:YES];
+                [self checkOnUsersNearbyUpdateUI];
              }];
         }
         
         if (newAlertStatus == NoInternetAlertStatusFull)
         {
+            [self.composeBarView.superview addSubview:self.fadedOverView];
+            self.fadedOverView.alpha = 0.0f;
             [self.composeBarView.superview addSubview:self.noInternetView];
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, -self.noInternetView.frame.size.height+self.composeBarView.frame.size.height+20)];
+                 self.fadedOverView.alpha = 1.0f;
              } completion:^(BOOL finished)
              {
                 [self.noInternetView setUserInteractionEnabled:YES];
@@ -206,16 +259,18 @@ typedef enum
         }
     }
     
-    if (alertStatus == NoInternetAlertStatusFull)
+    if (internetAlertStatus == NoInternetAlertStatusFull)
     {
         if (newAlertStatus == NoInternetAlertStatusPeeking)
         {
             [self.composeBarView.superview addSubview:self.noInternetView];
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
+                 self.fadedOverView.alpha = 0.0f;
                  [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, 0)];
              } completion:^(BOOL finished)
              {
+                 [self.fadedOverView removeFromSuperview];
                  [self.noInternetView setUserInteractionEnabled:YES];
              }];
         }
@@ -224,6 +279,7 @@ typedef enum
         {
             [UIView animateWithDuration:1.2 delay:0.0f usingSpringWithDamping:0.8 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
             {
+                
                 CGPoint xy = {169.08543, -98.268471};//{225.42157, -131.0097};
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
@@ -231,20 +287,102 @@ typedef enum
             {
                 [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                  {
+                     self.fadedOverView.alpha = 0.0f;
                      [self.noInternetView setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
                  } completion:^(BOOL finished)
                  {
+                     [self.fadedOverView removeFromSuperview];
                      [self.noInternetView setUserInteractionEnabled:YES];
                      self.coord.transform = CATransform3DMakeTranslation(0,0, 0);
                      self.maskOfCoord.transform = CATransform3DMakeTranslation(0,0,0);
+                     [self checkOnUsersNearbyUpdateUI];
                  }];
             }];
         }
     }
     
-    alertStatus = newAlertStatus;
+    internetAlertStatus = newAlertStatus;
 }
 
+-(void)checkOnUsersNearbyUpdateUI
+{
+    if (![FCUser owner].beacon.earshotUsers.count)
+    {
+        self.usersAlertStatus = NoUsersStatusFull;
+    }
+}
+
+-(UIView*)noUsersNearbyPopup
+{
+    if (!noUsersNearbyPopup)
+    {
+        CGRect noUsersNearbyPopupRect = self.composeBarView.frame;
+        noUsersNearbyPopupRect.size.height += 141;
+        noUsersNearbyPopup = [[UIView alloc] initWithFrame:noUsersNearbyPopupRect];
+    
+        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
+        [noUsersNearbyPopup setBackgroundColor:userColor];
+        
+        noUsersLabel = [self generateATopLabel];
+        [noUsersLabel setText:@"Searching for others.."];
+        [noUsersNearbyPopup addSubview:noUsersLabel];
+        
+        UIButton *invisibutton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [invisibutton setFrame:noUsersLabel.frame];
+        [invisibutton addTarget:self action:@selector(searchingForOthersButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [noUsersNearbyPopup addSubview:invisibutton];
+        
+        UIView *darkUnderLayer = [[UIView alloc] initWithFrame:CGRectMake(
+                                                                          0,
+                                                                          noUsersLabel.frame.size.height,
+                                                                          noUsersNearbyPopup.frame.size.width,
+                                                                          -noUsersLabel.frame.size.height+noUsersNearbyPopup.frame.size.height)];
+        [darkUnderLayer setBackgroundColor:self.darkOpacity];
+        [noUsersNearbyPopup addSubview:darkUnderLayer];
+        
+        
+        CGFloat buttonDim = 130*0.5f;//142*0.5f;
+        composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
+                                                      (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
+                                                      noUsersLabel.frame.size.height+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
+                                                      buttonDim,buttonDim)];
+        
+
+        
+        CGFloat iconDim = 31;
+        UIImageView *smsImageView = [[UIImageView alloc] initWithFrame:CGRectMake((buttonDim-iconDim)*0.5f, (buttonDim-iconDim)*0.5f, iconDim, iconDim)];
+        [smsImageView setContentMode:UIViewContentModeScaleAspectFit];
+        [smsImageView setImage:[UIImage imageNamed:@"message.png"]];
+        [composeBlurButton addSubview:smsImageView];
+        [composeBlurButton setRadius:buttonDim*0.5f];
+        [composeBlurButton performSelector:@selector(invalidatePressedLayer) withObject:nil afterDelay:0.5];
+        [composeBlurButton addTarget:self action:@selector(composeBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        [noUsersNearbyPopup addSubview:composeBlurButton];
+        
+        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+16, noUsersNearbyPopup.frame.size.width, 12)];
+        [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
+        [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
+        [sendEarshotToFriend setText:@"Send Earshot to a Friend?"];
+//        [sendEarshotToFriend setFont:[UIFont fontWithName:@"" size:<#(CGFloat)#>]];
+        [noUsersNearbyPopup addSubview:sendEarshotToFriend];
+    }
+    return noUsersNearbyPopup;
+}
+-(void)searchingForOthersButtonAction:(UIButton*)button
+{
+    if (internetAlertStatus == NoInternetAlertStatusNone)
+    {
+        if (usersAlertStatus == NoUsersStatusFull)
+        {
+            self.usersAlertStatus = NoUsersStatusPeeking;
+        } else
+        if (usersAlertStatus == NoUsersStatusPeeking)
+        {
+            self.usersAlertStatus = NoUsersStatusFull;
+        }
+    }
+}
 
 #pragma mark noInternetView creation methods
 -(UIView*)noInternetView
@@ -256,26 +394,14 @@ typedef enum
         noInternetView = [[UIView alloc] initWithFrame:noInternetViewRect];
         
         
-//        CGFloat h;
-//        CGFloat s;
-//        CGFloat b;
-//        CGFloat a;
-//        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
-//        [userColor getHue:&h saturation:&s brightness:&b alpha:&a];
-        
-//        CGFloat red, green, blue, alpha;
-//        [userColor getRed:&red green:&green blue:&blue alpha:&alpha];
-//        UIColor *errorColor = [UIColor colorWithHue:h saturation:(s*0.15) brightness:(b*0.9) alpha:a];
-        
-        UIColor *errorColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
-        
-        [noInternetView setBackgroundColor:errorColor];
+        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
+        [noInternetView setBackgroundColor:userColor];
         
         
-        noInternetLabel = [[UILabel alloc] initWithFrame:self.composeBarView.bounds];
-        [noInternetLabel setTextAlignment:NSTextAlignmentCenter];
-        [noInternetLabel setBackgroundColor:[UIColor clearColor]];
-        [noInternetLabel setTextColor:[UIColor whiteColor]];
+        noInternetLabel = [self generateATopLabel];
+//        [noInternetLabel setTextAlignment:NSTextAlignmentCenter];
+//        [noInternetLabel setBackgroundColor:[UIColor clearColor]];
+//        [noInternetLabel setTextColor:[UIColor whiteColor]];
         [self setNoInternetLabelTextRandomly];
         [noInternetView addSubview:noInternetLabel];
         
@@ -295,12 +421,24 @@ typedef enum
         CGRect dialUpSceneRect = dialUpScene.frame;
         dialUpSceneRect.origin.y = noInternetLabel.frame.origin.y+noInternetLabel.frame.size.height;
         [dialUpScene setFrame:dialUpSceneRect];
-        [dialUpScene setBackgroundColor:[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.05f]];
+        [dialUpScene setBackgroundColor:self.darkOpacity];
         [noInternetView addSubview:dialUpScene];
         
     }
     
     return noInternetView;
+}
+-(UIColor*)darkOpacity
+{
+    return [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.15f];//[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.05f];
+}
+-(UILabel*)generateATopLabel
+{
+    UILabel *aLabel = [[UILabel alloc] initWithFrame:self.composeBarView.bounds];
+    [aLabel setTextAlignment:NSTextAlignmentCenter];
+    [aLabel setBackgroundColor:[UIColor clearColor]];
+    [aLabel setTextColor:[UIColor whiteColor]];
+    return aLabel;
 }
 
 -(void)setNoInternetLabelTextRandomly
@@ -316,26 +454,30 @@ typedef enum
     CGFloat yVelocity = [pan velocityInView:self.noInternetView].y;
     if (yVelocity < 0)
     {
-        self.alertStatus = NoInternetAlertStatusFull;
+        [self setInternetAlertStatus:NoInternetAlertStatusFull];
     } else
     {
-        self.alertStatus = NoInternetAlertStatusPeeking;
+        [self setInternetAlertStatus:NoInternetAlertStatusPeeking];
     }
 }
 -(void)openNoInternetAlert:(UIButton*)button
 {
-    if (alertStatus == NoInternetAlertStatusFull)
+    if (internetAlertStatus == NoInternetAlertStatusFull)
     {
-        self.alertStatus = NoInternetAlertStatusPeeking;
+        [self setInternetAlertStatus:NoInternetAlertStatusPeeking];
     } else
     {
-        self.alertStatus = NoInternetAlertStatusFull;
+        [self setInternetAlertStatus:NoInternetAlertStatusFull];
     }
 }
 
+
+
+
+
+
 #pragma mark DialUp scene
 -(UIView*)setupDialUpSceneWithDistance:(CGFloat)distance containingSize:(CGSize)containingSize
-
 {
     
     self.dialUpView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, containingSize.width, containingSize.height)];
@@ -501,9 +643,6 @@ typedef enum
 
     CGPoint deltaDirection = {translation.x - lastOffset.x, translation.y - lastOffset.y};
     CGFloat deltaMagnitude = sqrtf(deltaDirection.x*deltaDirection.x + deltaDirection.y*deltaDirection.y);
-    CGPoint deltaDirectionNormalized = {deltaDirection.x/deltaMagnitude, deltaDirection.y/deltaMagnitude};
-    
-
     
     switch ((int)pan.state)
     {
@@ -611,6 +750,220 @@ typedef enum
 -(void)esTransponderStackFailed:(NSNotification*)notification
 {
     [self performSegueWithIdentifier:@"fail" sender:self];
+}
+
+
+//when nobody is nearby
+-(void)noUsersNearbyEvent:(NSNotificationCenter*)notification
+{
+    if (internetAlertStatus == NoInternetAlertStatusNone)
+    {
+        [self setUsersAlertStatus:NoUsersStatusFull];
+    }
+}
+-(void)usersNearbyEvent:(NSNotificationCenter*)notification
+{
+    if (usersAlertStatus == NoUsersStatusFull)
+    {
+        [self setUsersAlertStatus:NoUsersStatusNone];
+    }
+}
+
+-(void)setUsersAlertStatus:(NoUsersStatus)newUsersAlertStatus
+{
+    if (usersAlertStatus == NoUsersStatusNone)
+    {
+        if (newUsersAlertStatus == NoUsersStatusFull)
+        {
+            //order of conditions is important, ...must have noUsersNearbyPopup AFTER composeBarView is set
+            if ( self.composeBarView.superview && !self.noUsersNearbyPopup.superview)
+            {
+                
+                [self.composeBarView.superview addSubview:self.fadedOverView];
+                self.fadedOverView.alpha = 0.0f;
+                NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
+                [self.composeBarView.superview addSubview:noUsersNearbyPopup];
+///wait please
+
+                [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -noUsersLabel.frame.size.height)];
+                [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+                 {
+                     self.fadedOverView.alpha = 1.0f;
+                     [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
+                 } completion:^(BOOL finished)
+                 {
+                     [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
+                 }];
+            } else{//invalid, just return do not assign
+                return;
+            }
+            
+        }
+    }
+    
+    if (usersAlertStatus == NoUsersStatusPeeking)
+    {
+        if (newUsersAlertStatus == NoUsersStatusNone)
+        {
+            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 0.0f;
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.composeBarView.frame.size.height)];
+                 
+             } completion:^(BOOL finished)
+             {
+                 [self.fadedOverView removeFromSuperview];
+                 [self.noUsersNearbyPopup removeFromSuperview];
+             }];
+        }
+        
+        if (newUsersAlertStatus == NoUsersStatusFull)
+        {
+            //order of conditions is important, ...must have noUsersNearbyPopup AFTER composeBarView is set
+            
+            [self.composeBarView.superview addSubview:self.fadedOverView];
+            self.fadedOverView.alpha = 0.0f;
+            NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
+            [self.composeBarView.superview addSubview:noUsersNearbyPopup];
+            ///wait please
+            
+            [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -noUsersLabel.frame.size.height)];
+            [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 1.0f;
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, -self.noUsersNearbyPopup.frame.size.height+self.composeBarView.frame.size.height+20)];
+             } completion:^(BOOL finished)
+             {
+                 [self.noUsersNearbyPopup setUserInteractionEnabled:YES];
+             }];
+        }
+    }
+    
+    if (usersAlertStatus == NoUsersStatusFull)
+    {
+        if (newUsersAlertStatus == NoUsersStatusNone)
+        {
+            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 self.fadedOverView.alpha = 0.0f;
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, self.composeBarView.frame.size.height)];
+
+             } completion:^(BOOL finished)
+             {
+                 [self.fadedOverView removeFromSuperview];
+                 [noUsersNearbyPopup removeFromSuperview];
+             }];
+        }
+        
+        if (newUsersAlertStatus == NoUsersStatusPeeking)
+        {
+            [UIView animateWithDuration:0.6f delay:0.7f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+             {
+                 [self.noUsersNearbyPopup setTransform:CGAffineTransformMakeTranslation(0, 0)];
+                 self.fadedOverView.alpha = 0.0f;
+                 
+                 
+             } completion:^(BOOL finished)
+             {
+                 [self.fadedOverView removeFromSuperview];
+             }];
+        }
+    }
+    
+    usersAlertStatus = newUsersAlertStatus;
+    if (usersAlertStatus != NoUsersStatusNone)
+    {
+        [self.composeBarView.textView resignFirstResponder];
+    }
+}
+
+//text message compose
+-(void)composeBlurButtonAction
+{
+    if([MFMessageComposeViewController canSendText])
+    {
+        NSArray *recipents = nil;
+        NSString *message = @"Hey! You should check out Earshot - http://tflig.ht/QRiF0Z";
+        
+        MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
+        messageController.messageComposeDelegate = self;
+        [messageController setRecipients:recipents];
+        [messageController setBody:message];
+        //         [self presentModalViewController:messageController animated:YES];
+        [self presentViewController:messageController animated:YES completion:^{}];
+    }
+}
+
+-(void)messageComposeViewController:(MFMessageComposeViewController *)controller didFinishWithResult:(MessageComposeResult)result
+{
+    switch (result) {
+        case MessageComposeResultCancelled:
+        {
+            
+        }
+            break;
+        case MessageComposeResultFailed:
+        {
+            
+        }
+            break;
+        case MessageComposeResultSent:
+        {
+            
+        }
+            break;
+    }
+    [controller dismissViewControllerAnimated:YES completion:^{}];
+}
+
+-(UIView*)fadedOverView
+{
+    if (!fadedOverView)
+    {
+        fadedOverView = [[UIView alloc] initWithFrame:CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width, [UIScreen mainScreen].bounds.size.height)];
+        [fadedOverView setBackgroundColor:[UIColor colorWithWhite:1.0f alpha:0.8f]];
+        
+        
+        fadedOverViewPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(fadedOverViewPanAction:)];
+        fadedOverViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(fadedOverViewTapAction:)];
+        [fadedOverView addGestureRecognizer:fadedOverViewPan];
+        [fadedOverView addGestureRecognizer:fadedOverViewTap];
+        [fadedOverViewTap requireGestureRecognizerToFail:fadedOverViewPan];
+    }
+    return fadedOverView;
+}
+
+-(void)fadedOverViewPanAction:(UIPanGestureRecognizer*)pan
+{
+    CGPoint vel = [pan velocityInView:fadedOverView];
+    if (vel.y > 0)
+    {
+        if (self.internetAlertStatus == NoInternetAlertStatusFull)
+        {
+            self.internetAlertStatus = NoInternetAlertStatusPeeking;
+        }
+        else
+        if (self.usersAlertStatus == NoUsersStatusFull)
+        {
+            self.usersAlertStatus = NoUsersStatusPeeking;
+        }
+        
+    }
+}
+-(void)fadedOverViewTapAction:(UITapGestureRecognizer*)tap
+{
+    if (tap.state == UIGestureRecognizerStateEnded)
+    {
+        if (self.internetAlertStatus == NoInternetAlertStatusFull)
+        {
+            self.internetAlertStatus = NoInternetAlertStatusPeeking;
+        }
+        else
+        if (self.usersAlertStatus == NoUsersStatusFull)
+        {
+            self.usersAlertStatus = NoUsersStatusPeeking;
+        }
+    }
 }
 
 

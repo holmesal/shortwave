@@ -16,4 +16,5 @@
 
 -(void)setRadius:(CGFloat)radius;
 
+@property (readonly, strong) UIButton *theButton;
 @end
