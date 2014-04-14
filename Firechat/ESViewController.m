@@ -55,6 +55,9 @@ typedef enum
 @property (nonatomic, strong) UIView *noUsersNearbyPopup;
 @property (nonatomic) UILabel *noUsersLabel;
 @property (nonatomic) FCLiveBlurButton *composeBlurButton;
+@property (nonatomic) UILabel *elipseLabel;
+@property (nonatomic, strong) NSTimer *elipseTimer;
+@property (nonatomic) int numberOfElipses;
 
 @end
 
@@ -82,6 +85,9 @@ typedef enum
 @synthesize noUsersNearbyPopup;
 @synthesize noUsersLabel;
 @synthesize composeBlurButton;
+@synthesize numberOfElipses;
+@synthesize elipseTimer;
+@synthesize elipseLabel;
 
 @synthesize fadedOverView;
 @synthesize chirpBeaconTimer;
@@ -312,6 +318,18 @@ typedef enum
     }
 }
 
+-(void)elipseTimerAction
+{
+    NSString *elipses = @"";
+    for (int i = 0; i < numberOfElipses; i++)
+    {
+        elipses = [NSString stringWithFormat:@"%@.", elipses];
+    }
+    
+    [elipseLabel setText:elipses];
+    numberOfElipses = (numberOfElipses+1)%4;
+}
+
 -(UIView*)noUsersNearbyPopup
 {
     if (!noUsersNearbyPopup)
@@ -324,8 +342,23 @@ typedef enum
         [noUsersNearbyPopup setBackgroundColor:userColor];
         
         noUsersLabel = [self generateATopLabel];
-        [noUsersLabel setText:@"Searching for others.."];
+        [noUsersLabel setText:@"Searching for others"];
+        CGFloat height = noUsersLabel.frame.size.height;
+        [noUsersLabel sizeToFit];
+        CGRect newFrame = noUsersLabel.frame;
+        newFrame.size.height = height;
+        newFrame.origin.x = (noUsersNearbyPopup.frame.size.width-newFrame.size.width)*0.5f;
+        [noUsersLabel setFrame:newFrame];
+        
+        elipseLabel = [[UILabel alloc] initWithFrame:CGRectMake(noUsersLabel.frame.size.width+noUsersLabel.frame.origin.x, 0, 50, 44)];
+        [elipseLabel setFont:noUsersLabel.font];
+        [elipseLabel setTextColor:[UIColor whiteColor]];
+        [elipseLabel setText:@""];
+        [elipseLabel setTextAlignment:NSTextAlignmentLeft];
+        
+        
         [noUsersNearbyPopup addSubview:noUsersLabel];
+        [noUsersNearbyPopup addSubview:elipseLabel];
         
         UIButton *invisibutton = [UIButton buttonWithType:UIButtonTypeCustom];
         [invisibutton setFrame:noUsersLabel.frame];
@@ -446,8 +479,22 @@ typedef enum
 
 -(void)setNoInternetLabelTextRandomly
 {
+    [self setNoInternetLabelTextRandomlyWithStill:NO];
+}
+-(void)setNoInternetLabelTextRandomlyWithStill:(BOOL)still
+{
+    NSString *stillString = @"";
+    if (still)
+    {
+        NSArray *modifiers = @[@"really ", @"still ", @"surely ", @"absolutely ", @"kinda "];
+        int modifierIndex = esRandomNumberIn(0, modifiers.count);
+        stillString = [modifiers objectAtIndex:modifierIndex];
+    }
 
-    NSArray *thingsToSay = @[@"You have no internets.", @"You have no interwebs."];
+    NSArray *thingsToSay = @[
+                             [NSString stringWithFormat:@"You %@have no internets.", stillString],
+                             [NSString stringWithFormat:@"You %@have no interwebs.", stillString]
+                            ];
     int index = esRandomNumberIn(0, thingsToSay.count);
     [noInternetLabel setText:[thingsToSay objectAtIndex:index]];
 }
@@ -688,6 +735,7 @@ typedef enum
                 //oh ok.  just this onc tho
             } else
             {
+                self.dialUpCoordIsPluggedIn = NO;
                 self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
             }
@@ -699,6 +747,7 @@ typedef enum
         {
             if (self.dialUpCoordIsPluggedIn)
             {
+                [self.noInternetLabel setText:@"Checking your connection"];
                 //it is stuck now!
                 [self.noInternetView setUserInteractionEnabled:NO];
                 [self performSelector:@selector(unStuckTheDialUpCoord) withObject:nil afterDelay:1.5f];
@@ -714,7 +763,6 @@ typedef enum
                      //                [CATransaction commit];
                  } completion:^(BOOL finished)
                  {
-                     
                  }];
             }
         }
@@ -743,7 +791,8 @@ typedef enum
          //                [CATransaction commit];
      } completion:^(BOOL finished)
      {
-         [self.noInternetView setUserInteractionEnabled:YES];
+        [self.noInternetView setUserInteractionEnabled:YES];
+         [self setNoInternetLabelTextRandomlyWithStill:YES];
      }];
 }
 
@@ -894,9 +943,17 @@ typedef enum
             chirpBeaconTimer = [NSTimer timerWithTimeInterval:CHIRP_BEACON_TIME target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:NO];
             [[NSRunLoop mainRunLoop] addTimer:chirpBeaconTimer forMode:NSDefaultRunLoopMode];
         }
+        if (!self.elipseTimer.isValid)
+        {
+            elipseTimer = [NSTimer timerWithTimeInterval:0.35f target:self selector:@selector(elipseTimerAction) userInfo:nil repeats:YES];
+            [[NSRunLoop mainRunLoop] addTimer:self.elipseTimer forMode:NSDefaultRunLoopMode];
+        }
     } else
     {
+        [elipseTimer invalidate];
         [chirpBeaconTimer invalidate];
+        chirpBeaconTimer = nil;
+        elipseTimer = nil;
     }
 }
 
