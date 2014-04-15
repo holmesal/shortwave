@@ -17,6 +17,7 @@
 #import "ESSwapUserStateCell.h"
 #import "ESUserPMCell.h"
 #import "FCLandingPageViewController.h"
+#import <Mixpanel/Mixpanel.h>
 
 #define WIDTH_OF_PM_LIST 75.0f
 
@@ -104,6 +105,9 @@ typedef enum
 @property (nonatomic) BOOL isPanAnimating;
 @property (nonatomic) UIPanGestureRecognizer *panLeftGesture;
 
+// Mixpanel
+@property (strong,nonatomic) Mixpanel *mixpanel;
+
 
 
 
@@ -154,6 +158,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.beacons = [[NSArray alloc] init];
         
         self.userPmList = [[NSMutableArray alloc] init];
+        
+        self.mixpanel = [Mixpanel sharedInstance];
         
 
     }
@@ -405,6 +411,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     // Bind to the owner's tracking, updates UI cells
     [self bindToTracking];
+    
+    // Log this on mixpanel
+//    [self.mixpanel track:@"Wall Loaded" properties:@{@"inRangeCount":[NSNumber numberWithInt[self.owner.beacon.earshotUsers count]]}];
     
     // Bind to keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self

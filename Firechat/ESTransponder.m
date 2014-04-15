@@ -8,6 +8,7 @@
 
 #import "ESTransponder.h"
 #import <Firebase/Firebase.h>
+#import <Mixpanel/Mixpanel.h>
 
 // Extensions
 #import "CBCentralManager+Ext.h"
@@ -42,6 +43,9 @@
 @property (strong, nonatomic) CBPeripheralManager *peripheralManager;
 @property (strong, nonatomic) NSDictionary *bluetoothAdvertisingData;
 @property (strong, nonatomic) NSMutableDictionary *bluetoothUsers;
+
+// Mixpanel
+@property (strong, nonatomic) Mixpanel *mixpanel;
 
 // Beacon broadcasting
 @property NSInteger flipCount;
@@ -87,6 +91,7 @@
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
         self.lastReported = [[NSMutableDictionary alloc] init];
+        self.mixpanel = [Mixpanel sharedInstance];
         // Set up the allowed beacon regions
         // What are the uuids?
         self.regionUUIDS = @[      @"DDE6C09F-345B-4FC2-80C1-C27977EB35A6",
@@ -833,7 +838,9 @@
         case CLRegionStateInside:
             // Update the beacon regions dictionary if it's not Region 19
             if (![uuid  isEqual: IDENTITY_BEACON_UUID]) {
-                [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@YES];
+                if (indexOfThisRegion != NSNotFound){
+                    [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@YES];
+                }
             }
             // Regardless, start ranging on Region 19
             [self.locationManager startRangingBeaconsInRegion:self.rangingRegion];
@@ -863,7 +870,9 @@
             break;
         case CLRegionStateOutside:
             if (![uuid  isEqual: IDENTITY_BEACON_UUID]) {
-                [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@NO];
+                if (indexOfThisRegion != NSNotFound){
+                    [self.regions replaceObjectAtIndex:indexOfThisRegion withObject:@NO];
+                }
             }
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
@@ -986,6 +995,8 @@
                 [app scheduleLocalNotification:notice];
                 // Update the date we use for the notification timeout
                 self.lastNotificationEvent = [NSDate date];
+                // Track this via mixpanel
+                [self.mixpanel track:@"Notified of user nearby" properties:@{}];
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
             }
