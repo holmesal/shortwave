@@ -20,14 +20,16 @@
 #import <Mixpanel/Mixpanel.h>
 #import "Reachability.h"
 #import "FCWallViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface FCAppDelegate () <UIAlertViewDelegate>
+@interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
 //@property (nonatomic) Reachability *hostReachability;
 @property (nonatomic) Reachability *internetReachability;
 //@property (nonatomic) Reachability *wifiReachability;
 @property (nonatomic) NSArray *messageInputHints;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 
 @end
 
@@ -50,6 +52,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    // Register as a location manager delegate
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
     //clear local notifications
     
     Firebase *fetchMessageHints = [[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"messageInputHints"];
@@ -273,6 +280,13 @@
              [FCUser owner].fuser = user; // We are now logged in
          }
      }];
+}
+
+// Called when a beacon region is entered
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+{
+    NSLog(@"Woke up via app delegate location manager callback");
+    
 }
 
 

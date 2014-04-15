@@ -18,7 +18,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS YES
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -855,9 +855,9 @@
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
 //                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",major];
+//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",uuid];
 //                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+//                [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
                 NSLog(@"%@",self.regions);
             }
             break;
