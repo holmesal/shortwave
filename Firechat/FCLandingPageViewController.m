@@ -672,6 +672,9 @@ typedef enum
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pushErrorScreen:) name:kTransponderEventTransponderDisabled object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(continueWithBluetooth:) name:kTransponderEventTransponderEnabled object:nil];
+        
+        // Log via mixpanel
+        [self.mixpanel track:@"Start talking button clicked"];
     } else
     {
         [self continueWithBluetooth:nil];
@@ -775,6 +778,9 @@ typedef enum
         } completion:^(BOOL finished)
         {
             beganShowingSearchingView = YES;
+            // Log via mixpanel
+            [self.mixpanel track:@"Searching view shown"];
+            // Animate dat shit
             [UIView animateWithDuration:1.1f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
              {
                  self.searchingView.alpha = 1.0f;
