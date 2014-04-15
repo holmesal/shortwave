@@ -35,7 +35,6 @@
 
 
 #define REPORT_FAILURE_IN_STACK_TIMEOUT 2.0f
-
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL bluetoothWasTried;
@@ -918,7 +917,7 @@
         
         NSString *userID = [NSString stringWithFormat:@"%u",recomposed];
         
-        NSLog(@"%@ addUser %@ <locationManager:didRangeBeacons:inRegion:>", [FCUser owner].id, userID);
+        if (DEBUG_BEACON) NSLog(@"%@ addUser %@ <locationManager:didRangeBeacons:inRegion:>", [FCUser owner].id, userID);
         [self addUser:userID];
     }
 }

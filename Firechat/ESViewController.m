@@ -376,7 +376,7 @@ typedef enum
         [noUsersNearbyPopup addSubview:darkUnderLayer];
         
         
-        CGFloat buttonDim = 130*0.5f;//142*0.5f;
+        CGFloat buttonDim = 75.0f;//142*0.5f;
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
                                                       noUsersLabel.frame.size.height+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
@@ -384,8 +384,8 @@ typedef enum
         
 
         
-        CGFloat iconDim = 31;
-        UIImageView *smsImageView = [[UIImageView alloc] initWithFrame:CGRectMake((buttonDim-iconDim)*0.5f, (buttonDim-iconDim)*0.5f, iconDim, iconDim)];
+        CGFloat iconDim = 28;
+        UIImageView *smsImageView = [[UIImageView alloc] initWithFrame:CGRectMake((buttonDim-iconDim)*0.5f, (buttonDim-iconDim)*0.5f+2, iconDim, iconDim)];
         [smsImageView setContentMode:UIViewContentModeScaleAspectFit];
         [smsImageView setImage:[UIImage imageNamed:@"message.png"]];
         [composeBlurButton addSubview:smsImageView];
@@ -395,11 +395,12 @@ typedef enum
         
         [noUsersNearbyPopup addSubview:composeBlurButton];
         
-        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+16, noUsersNearbyPopup.frame.size.width, 12)];
+        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+14, noUsersNearbyPopup.frame.size.width, 12)];
         [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
         [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
-        [sendEarshotToFriend setText:@"Send Earshot to a friend?"];
-//        [sendEarshotToFriend setFont:[UIFont fontWithName:@"" size:<#(CGFloat)#>]];
+        [sendEarshotToFriend setText:@"Send Earshot to a Friend?"];
+        
+        [sendEarshotToFriend setFont:[UIFont systemFontOfSize:12.0f] ];
         [noUsersNearbyPopup addSubview:sendEarshotToFriend];
     }
     return noUsersNearbyPopup;

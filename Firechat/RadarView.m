@@ -347,7 +347,6 @@
         {
             if (rotation == uR)
             {
-                NSLog(@"#WARN!\n\n\n\n");
             } else
             {
                 CGFloat max = 0.08f;

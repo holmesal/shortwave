@@ -206,7 +206,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             self.shadeView.frame = frame;
             
             frame = self.iconButton.frame;
-            frame.origin.y = 20;
+            frame.origin.y = 23;
             frame.size.width = 35;
             frame.size.height = 35;
             
