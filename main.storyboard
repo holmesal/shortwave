@@ -384,7 +384,7 @@
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iZg-Tf-z3O">
                                                             <rect key="frame" x="259" y="17" width="41" height="41"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="41" id="GAa-Pr-hg4"/>
                                                                 <constraint firstAttribute="width" constant="41" id="feW-hf-dPw"/>
