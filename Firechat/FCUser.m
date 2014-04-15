@@ -99,7 +99,7 @@ static FCUser *currentUser;
     {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
         //greeting msesage post to their wall
-        [self postHello:@"Hey! Welcome to Earshot!"];
+        [self postHello:@"Hiya! Welcome to Earshot!"];
         [self postHello:@"You can see how many people are in range above."];
         [self postHello:@"Tap your icon in the upper right to change your icon/color."];
         [self postHello:@"That's it - have fun!"];
