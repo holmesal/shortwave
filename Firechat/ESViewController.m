@@ -284,8 +284,7 @@ typedef enum
         if (newAlertStatus == NoInternetAlertStatusNone)
         {
             [UIView animateWithDuration:1.2 delay:0.0f usingSpringWithDamping:0.8 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-            {
-                
+            {                
                 CGPoint xy = {169.08543, -98.268471};//{225.42157, -131.0097};
                 self.coord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
                 self.maskOfCoord.transform = CATransform3DMakeTranslation(xy.x, xy.y, 0);
@@ -940,7 +939,7 @@ typedef enum
         [self.composeBarView.textView resignFirstResponder];
         if (!self.chirpBeaconTimer.isValid)
         {
-            chirpBeaconTimer = [NSTimer timerWithTimeInterval:CHIRP_BEACON_TIME target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:NO];
+            chirpBeaconTimer = [NSTimer timerWithTimeInterval:CHIRP_BEACON_TIME target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop] addTimer:chirpBeaconTimer forMode:NSDefaultRunLoopMode];
         }
         if (!self.elipseTimer.isValid)

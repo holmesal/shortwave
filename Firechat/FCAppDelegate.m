@@ -176,6 +176,8 @@
 {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
+    [self doAuth];
+    
     FCUser *owner = [FCUser owner];
     if (owner)
     {
@@ -256,17 +258,21 @@
     FCUser *user = [FCUser owner];
     if (reachability.currentReachabilityStatus != NotReachable && !user.fuser)
     {
-        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user)
-        {
-            if (error != nil)
-            {
-                NSLog(@"failed to log user in again!");
-            } else
-            {
-                [FCUser owner].fuser = user; // We are now logged in
-            }
-        }];
+        [self doAuth];
     }
+}
+-(void)doAuth
+{
+    [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user)
+     {
+         if (error != nil)
+         {
+             NSLog(@"failed to log user in again!");
+         } else
+         {
+             [FCUser owner].fuser = user; // We are now logged in
+         }
+     }];
 }
 
 

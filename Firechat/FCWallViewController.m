@@ -57,6 +57,7 @@ typedef enum
 @property (nonatomic) IBOutlet UITableView *pmUsersTableView;
 @property (weak, nonatomic) IBOutlet UITableView *pmTableView;
 @property (weak, nonatomic) IBOutlet UIView *pmTableViewContainer;
+@property (nonatomic, assign) FirebaseHandle trackingHandle;
 
 @property (nonatomic) FirebaseHandle removeFromUserPmListHandle;
 @property (nonatomic) FirebaseHandle bindToUserPmListHandle;
@@ -113,6 +114,7 @@ typedef enum
 
 
 @synthesize tracking;
+@synthesize trackingHandle;
 @synthesize selectedUserPmIndex;
 @synthesize buttonImageInset;
 @synthesize peopleNearbyLabel;
@@ -594,7 +596,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.wallRef removeObserverWithHandle:self.bindToWallHandle];
     [self.userPmListRef removeObserverWithHandle:self.bindToUserPmListHandle];
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
-    [self.trackingRef removeAllObservers];
+    [self.trackingRef removeObserverWithHandle:trackingHandle];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 //    [self esDealloc]; //usually dont call this, but today FCwallViewController extends ESViewController
 }
@@ -617,13 +619,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     self.trackingRef = [self.owner.ref childByAppendingPath:@"tracking"];
     __weak typeof(self) weakSelf = self;
-    [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    trackingHandle = [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
         NSLog(@"tracking users update!");
         if ([snapshot value] && [snapshot value] != [NSNull null])
         {
             NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
-            [weakSelf updatePeopleNearby:[snapshot.value count]];
+            [weakSelf updatePeopleNearby:(int)[snapshot.value count]];
             
             //setter for tracking updates UI
             weakSelf.tracking = [snapshot.value allKeys];

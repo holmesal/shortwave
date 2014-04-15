@@ -14,13 +14,14 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
+#import "FCUser.h"
+
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
 #define DEBUG_BEACON NO
 #define DEBUG_USERS YES
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
-
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
@@ -195,7 +196,7 @@
 
 - (void)filterFirebaseUsers
 {
-    if (DEBUG_USERS) NSLog(@"Filtering firebase users with actuallyRemove = %hhd",self.actuallyRemove);
+    if (DEBUG_USERS) NSLog(@"Filtering firebase users with actuallyRemove = %d",self.actuallyRemove);
     // Store the current time
     NSDate *currentDate = [NSDate date];
     // Track whether a user to remove was found
@@ -473,8 +474,12 @@
     }
     
     // If it has a local name (whether just set or actively being broadcast), call addUser
-    if ([existingUser objectForKey:@"earshotID"] != [NSNull null]) {
-        [self addUser:[existingUser objectForKey:@"earshotID"]];
+    NSString *userID = [existingUser objectForKey:@"earshotID"];
+    if (userID && userID != (NSString*)[NSNull null])
+    {
+//        NSLog(@"%@ addUser %@ <centralManager:didDiscoverPeripheral:advertisementData:RSSI:>", [FCUser owner].id, userID);
+        [self addUser:userID];
+
     }
     
     if (DEBUG_CENTRAL) NSLog(@"%@",self.bluetoothUsers);
@@ -525,7 +530,8 @@
 
 - (void)peripheralManagerDidStartAdvertising:(CBPeripheralManager *)peripheral error:(NSError *)error
 {
-    if (DEBUG_PERIPHERAL) {
+    if (DEBUG_PERIPHERAL)
+    {
         if (error)
             NSLog(@"error starting advertising: %@", [error localizedDescription]);
         else
@@ -558,7 +564,7 @@
 // Below lie the functions for interacting with iBeacon
 - (void)chirpBeacon
 {
-    
+    NSLog(@"chirpBeacon");
     UIApplication *application = [UIApplication sharedApplication];
     if ([application applicationState] == UIApplicationStateActive) {
         if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
@@ -702,7 +708,7 @@
                 // Start broadcasting on a wakeup region
                 break;
             case 2:
-                // Start broadcasting as an iBeacon on region 19
+                // Start broadcasting as an iBeacon on identity beacon
                 if (DEBUG_BEACON) NSLog(@"-- broadcasting as identity iBeacon");
                 [self startBeacon:self.identityBeaconData];
                 break;
@@ -821,8 +827,8 @@
     NSUUID *uuidVal = [region proximityUUID];
     NSString *uuid = [uuidVal UUIDString];
     NSUInteger indexOfThisRegion = [self.regionUUIDS indexOfObject:uuid];
-    NSLog(@"Got state %ld for region %lu", state, (unsigned long)indexOfThisRegion);
-    //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
+//    NSLog(@"Got state %ld for region %lu", state, (unsigned long)indexOfThisRegion);
+//    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
     switch (state) {
         case CLRegionStateInside:
             // Update the beacon regions dictionary if it's not Region 19
@@ -891,10 +897,11 @@
         
         uint32_t recomposed;
         esRecomposeMajorMinorToId([beacon.major intValue], [beacon.minor intValue], &recomposed);
-        NSLog(@"Recomposed major: %@ and minor:%@   ->   %d",beacon.major,beacon.minor,recomposed);
+//        NSLog(@"Recomposed major: %@ and minor:%@   ->   %d",beacon.major,beacon.minor,recomposed);
         
         NSString *userID = [NSString stringWithFormat:@"%u",recomposed];
         
+        NSLog(@"%@ addUser %@ <locationManager:didRangeBeacons:inRegion:>", [FCUser owner].id, userID);
         [self addUser:userID];
     }
 }
