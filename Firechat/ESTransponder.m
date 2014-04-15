@@ -34,7 +34,7 @@
 #define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
 
-#define REPORT_FAILURE_IN_STACK_TIMEOUT 0.0f
+#define REPORT_FAILURE_IN_STACK_TIMEOUT 2.0f
 
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 
