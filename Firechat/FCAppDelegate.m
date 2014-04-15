@@ -285,23 +285,7 @@
 // Called when a beacon region is entered
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
-    UILocalNotification *notification = [[UILocalNotification alloc] init];
-    
-    if(state == CLRegionStateInside)
-    {
-        notification.alertBody = [NSString stringWithFormat:@"You are inside region %@", region.identifier];
-    }
-    else if(state == CLRegionStateOutside)
-    {
-//        notification.alertBody = [NSString stringWithFormat:@"You are outside region %@", region.identifier];
-    }
-    else
-    {
-        return;
-    }
-    
-    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
-    
+    NSLog(@"Woke up via app delegate location manager callback");
     
 }
 
