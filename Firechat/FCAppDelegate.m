@@ -20,14 +20,16 @@
 #import <Mixpanel/Mixpanel.h>
 #import "Reachability.h"
 #import "FCWallViewController.h"
+#import <CoreLocation/CoreLocation.h>
 
-@interface FCAppDelegate () <UIAlertViewDelegate>
+@interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) FirebaseSimpleLogin *authClient;
 //@property (nonatomic) Reachability *hostReachability;
 @property (nonatomic) Reachability *internetReachability;
 //@property (nonatomic) Reachability *wifiReachability;
 @property (nonatomic) NSArray *messageInputHints;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 
 @end
 
@@ -50,6 +52,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    // Register as a location manager delegate
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    
     //clear local notifications
     
     Firebase *fetchMessageHints = [[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"messageInputHints"];
@@ -273,6 +280,29 @@
              [FCUser owner].fuser = user; // We are now logged in
          }
      }];
+}
+
+// Called when a beacon region is entered
+- (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
+{
+    UILocalNotification *notification = [[UILocalNotification alloc] init];
+    
+    if(state == CLRegionStateInside)
+    {
+        notification.alertBody = [NSString stringWithFormat:@"You are inside region %@", region.identifier];
+    }
+    else if(state == CLRegionStateOutside)
+    {
+//        notification.alertBody = [NSString stringWithFormat:@"You are outside region %@", region.identifier];
+    }
+    else
+    {
+        return;
+    }
+    
+    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
+    
+    
 }
 
 
