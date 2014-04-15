@@ -398,7 +398,7 @@ typedef enum
         UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+14, noUsersNearbyPopup.frame.size.width, 12)];
         [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
         [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
-        [sendEarshotToFriend setText:@"Send Earshot to a Friend?"];
+        [sendEarshotToFriend setText:@"Send Earshot to a friend?"];
         
         [sendEarshotToFriend setFont:[UIFont systemFontOfSize:12.0f] ];
         [noUsersNearbyPopup addSubview:sendEarshotToFriend];
