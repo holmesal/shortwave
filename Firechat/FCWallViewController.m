@@ -33,6 +33,8 @@ typedef enum
 } WallState;
 
 
+@property (nonatomic) NSTimer *autoScrollLockTimer;
+
 
 @property (nonatomic) UITapGestureRecognizer *singleTapDebugGesture;
 
@@ -116,6 +118,7 @@ typedef enum
 
 @implementation FCWallViewController
 
+@synthesize autoScrollLockTimer;
 
 @synthesize tracking;
 @synthesize trackingHandle;
@@ -773,14 +776,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                     [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
                     
                     // Scroll to the new message
-                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                    
+                    if (!weakSelf.autoScrollLockTimer)
+                    {
+                        [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    }
                     [weakSelf updateLine];
                     
                     //timer to prform some operation on this cell
                     
                 } else
-                {//implies type isEqual "ESMessage" or no type exists
+                {//implies type isEqual "ESMessage" or no type exists or self message
                     
                     FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
                     // Init a new message
@@ -789,8 +794,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                     [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
                     
                     // Scroll to the new message
-                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                    
+                    if (!weakSelf.autoScrollLockTimer)
+                    {
+                        [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    }
                     [weakSelf updateLine];
                 }
                 
@@ -1297,18 +1304,63 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (scrollView == tableView)
     {
         [self updateLine];
-        //disable animations, then move the tableViewMask layer
-//        [CATransaction begin];
-//        [CATransaction setDisableActions:YES];
-        tableViewMask.position = CGPointMake(0, scrollView.contentOffset.y);
-//        [CATransaction commit];
-        
-//        [tableView setSeparatorInset:UIEdgeInsetsMake(5, 0, 0, 0)];
         
         self.scrollSpeed = scrollView.contentOffset.y - self.previousScrollViewYOffset;
         self.previousScrollViewYOffset = scrollView.contentOffset.y;
         
     }
+}
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
+    
+    if (scrollView == self.tableView && !decelerate)
+    {
+        [self ifTableViewIsNotAtBottomStartATimer];
+    }
+}
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    NSLog(@"scrollViewDidEndDecelerating");
+    [self ifTableViewIsNotAtBottomStartATimer];
+}
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    NSLog(@"scrollViewDidEndScrollingAnimation");
+    if (scrollView == self.tableView)
+    {
+        [self ifTableViewIsNotAtBottomStartATimer];
+    }
+}
+
+-(void)ifTableViewIsNotAtBottomStartATimer
+{
+    NSLog(@"self.tableView = %f", self.tableView.contentOffset.y);
+    NSLog(@"edgeinset top = %f", self.tableView.contentInset.top);
+    
+    if (self.tableView.contentOffset.y + self.tableView.contentInset.top == 0)
+    {
+        NSLog(@"ok we ar at the bottom of the scroll view");
+        [self cleanUpAutoScrollLockTimer:nil];
+        
+    } else
+    {
+        NSLog(@"begin the autoScrollLockTimer");
+        //begin the autoScrollLockTimer
+        if (autoScrollLockTimer)
+        {
+            [autoScrollLockTimer invalidate];
+            autoScrollLockTimer = nil;
+        }
+        autoScrollLockTimer = [NSTimer timerWithTimeInterval:5 target:self selector:@selector(cleanUpAutoScrollLockTimer:) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:autoScrollLockTimer forMode:NSDefaultRunLoopMode];
+    }
+}
+-(void)cleanUpAutoScrollLockTimer:(NSTimer*)theTimr
+{
+    NSLog(@"scroll lock end");
+    [autoScrollLockTimer invalidate];
+    autoScrollLockTimer = nil;
 }
 
 #pragma mark UICollectionViewDelegate, UICollectionViewDataSource start
