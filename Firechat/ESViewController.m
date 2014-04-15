@@ -963,7 +963,7 @@ typedef enum
     if([MFMessageComposeViewController canSendText])
     {
         NSArray *recipents = nil;
-        NSString *message = @"Hey! You should check out Earshot - http://tflig.ht/QRiF0Z";
+        NSString *message = @"Hey! You should check out Earshot - getearshot.com";
         
         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
         messageController.messageComposeDelegate = self;

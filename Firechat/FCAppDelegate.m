@@ -21,6 +21,7 @@
 #import "Reachability.h"
 #import "FCWallViewController.h"
 #import <CoreLocation/CoreLocation.h>
+#import <Crashlytics/Crashlytics.h>
 
 @interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>
 
@@ -103,6 +104,9 @@
     // Initialize the library with your
     // Mixpanel project token, MIXPANEL_TOKEN
     [Mixpanel sharedInstanceWithToken:MIXPANEL_TOKEN];
+    
+    // Start crashlytics
+    [Crashlytics startWithAPIKey:@"4a71d4033d33d194e246ada67acce08c24c06e80"];
 
 
     return YES;
