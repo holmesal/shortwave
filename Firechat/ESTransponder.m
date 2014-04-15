@@ -33,6 +33,9 @@
 #define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
 #define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
+
+#define REPORT_FAILURE_IN_STACK_TIMEOUT 0.0f
+
 @interface ESTransponder() <CBPeripheralManagerDelegate, CBCentralManagerDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic) BOOL bluetoothWasTried;
@@ -72,6 +75,9 @@
 @property (assign, nonatomic) BOOL actuallyRemove;
 @property (strong, nonatomic) NSDate *lastNotificationEvent;
 
+//when timer is up, it fires a failure message for the stack.  This must be interupted if success occurs sooner.
+@property (strong, nonatomic) NSTimer *reportStackFailureTimer;
+
 // Oscillator
 @property NSInteger broadcastMode;
 
@@ -82,6 +88,8 @@
 //@synthesize peripheralManagerIsRunning;
 @synthesize stackIsRunning;
 
+//when timer is up, it fires a failure message for the stack.  This must be interupted if success occurs sooner.
+@synthesize reportStackFailureTimer;
 
 
 - (id)initWithEarshotID:(NSString *)userID andFirebaseRootURL:(NSString *)firebaseURL
@@ -941,12 +949,30 @@
             self.centralManager.state == CBPeripheralManagerStatePoweredOn &&
             [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorized)
         {
+           
+            if (reportStackFailureTimer)
+            {
+                [reportStackFailureTimer invalidate];
+                reportStackFailureTimer = nil;
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderEnabled object:nil];
         } else
         {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderDisabled object:nil];
+            if (!reportStackFailureTimer)
+            {
+                reportStackFailureTimer = [NSTimer timerWithTimeInterval:REPORT_FAILURE_IN_STACK_TIMEOUT target:self selector:@selector(reportStackFailureTimerAction:) userInfo:nil repeats:NO];
+                [[NSRunLoop mainRunLoop] addTimer:reportStackFailureTimer forMode:NSDefaultRunLoopMode];
+            }
         }
     }
+}
+
+-(void)reportStackFailureTimerAction:(NSTimer*)theTimer
+{
+    [reportStackFailureTimer invalidate];
+    reportStackFailureTimer = nil;
+    //emit the failure notification
+    [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventTransponderDisabled object:nil];
 }
 
 -(CLLocation*)getLocation

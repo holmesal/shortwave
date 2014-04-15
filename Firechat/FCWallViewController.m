@@ -1340,12 +1340,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     if (self.tableView.contentOffset.y + self.tableView.contentInset.top == 0)
     {
-        NSLog(@"ok we ar at the bottom of the scroll view");
+//        NSLog(@"ok we ar at the bottom of the scroll view");
         [self cleanUpAutoScrollLockTimer:nil];
         
     } else
     {
-        NSLog(@"begin the autoScrollLockTimer");
+//        NSLog(@"begin the autoScrollLockTimer");
         //begin the autoScrollLockTimer
         if (autoScrollLockTimer)
         {
@@ -1358,7 +1358,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 -(void)cleanUpAutoScrollLockTimer:(NSTimer*)theTimr
 {
-    NSLog(@"scroll lock end");
     [autoScrollLockTimer invalidate];
     autoScrollLockTimer = nil;
 }
