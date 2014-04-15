@@ -241,14 +241,29 @@ typedef enum
     colors = [NSArray arrayWithArray:colorsMutable];
     
  
-    self.icons = @[@{@"name":@"1", @"attribution":@"FIND THIS1"}, //cloud
-                   @{@"name":@"2", @"attribution":@"FIND THIS2"}, //person
-                   @{@"name":@"3", @"attribution":@"FIND THIS3"}, //balloon
-                   @{@"name":@"4", @"attribution":@"FIND THIS4"},
+    self.icons = @[@{@"name":@"1", @"attribution":@"John Caserta"}, //cloud
+                   @{@"name":@"2", @"attribution":@"Jardson A."}, //person
+                   @{@"name":@"3", @"attribution":@"Yuko Iwai"}, //balloon
+                   @{@"name":@"4", @"attribution":@"Mister Pixel"},
                    @{@"name":@"5", @"attribution":@"Edward Boatman"},
                    @{@"name":@"6", @"attribution":@"Antonis Makriyannis"},
-                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"}];//paw
-    // @"5", @"6", @"7"];
+                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"},
+                   @{@"name":@"8", @"attribution":@"Pedro Vidal"}, //sun
+                   @{@"name":@"9", @"attribution":@"Daniel Gamage"}, //stunners
+                   @{@"name":@"10", @"attribution":@"Jacob Thompson"}, //cherries
+                   @{@"name":@"11", @"attribution":@"José Manuel de Laá"}, //diamond
+                   @{@"name":@"12", @"attribution":@"Nick Abrams"}, //lightbulb
+                   @{@"name":@"13", @"attribution":@"Nick Abrams"}, //dish
+                   @{@"name":@"14", @"attribution":@"Christopher T. Howlett"}, //pineapple
+                   @{@"name":@"15", @"attribution":@"Agarunov Oktay-Abraham"}, //burger
+                   @{@"name":@"16", @"attribution":@"José Manuel de Laá"}, //backetball
+                   @{@"name":@"17", @"attribution":@"Kelig Le Luron"}, //moon
+                   @{@"name":@"18", @"attribution":@"Maxim Cherenkovsky"}, //snowflake
+                   @{@"name":@"19", @"attribution":@"Patrick Morrison"}, //chicken leg
+                   @{@"name":@"20", @"attribution":@"Jan-Kanty Pawelski"}, //pacman
+                   @{@"name":@"21", @"attribution":@"Matthew Clarke"}, //chef
+                   @{@"name":@"22", @"attribution":@"Christopher T. Howlett"} //flask
+                   ];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
     
