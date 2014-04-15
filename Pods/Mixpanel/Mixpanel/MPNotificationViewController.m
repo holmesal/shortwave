@@ -327,7 +327,8 @@
 
     // Position body label
     CGSize constraintSize = CGSizeMake(self.view.frame.size.width - MPNotifHeight - 12.5f, CGFLOAT_MAX);
-    CGSize sizeToFit = [_bodyLabel.text sizeWithFont:_bodyLabel.font
+    CGSize sizeToFit = [_bodyLabel.text
+                        sizeWithFont:_bodyLabel.font
                                    constrainedToSize:constraintSize
                                        lineBreakMode:_bodyLabel.lineBreakMode];
 

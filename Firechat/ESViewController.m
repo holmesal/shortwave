@@ -722,7 +722,14 @@ typedef enum
             CGPoint xy = {lastOffset.x + deltaMagnitude*movementVector.x*1.8f,
                           lastOffset.y + deltaMagnitude*movementVector.y*1.8f};
             
-            NSLog(@"xy = %@", NSStringFromCGPoint(xy));
+            
+            CGPoint maxPosition = {184.95949362360801, -107.49410570595572};
+            //{184.95949362360801, -107.49410570595572}
+            if (xy.x >= maxPosition.x)
+            {
+                xy = maxPosition;
+            }
+            
             if (xy.x >= 165 && self.dialUpCoordIsPluggedIn)
             {
                 //apply no transform
