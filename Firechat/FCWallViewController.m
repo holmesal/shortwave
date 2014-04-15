@@ -607,7 +607,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
     [self.trackingRef removeObserverWithHandle:trackingHandle];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-//    [self esDealloc]; //usually dont call this, but today FCwallViewController extends ESViewController
 }
 
 
