@@ -663,9 +663,6 @@ typedef enum
 {
     FCUser *owner = [FCUser owner];
 
-//#warning REMOVE THIS BEFORE DEPLOY
-    BOOL isSim = IS_ON_SIMULATOR;
-    
     if (owner.beacon.stackIsRunning != ESTransponderStackStateActive && !IS_ON_SIMULATOR)
     {
         [owner.beacon startBroadcasting];
