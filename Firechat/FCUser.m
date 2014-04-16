@@ -68,42 +68,48 @@ static FCUser *currentUser;
 }
 +(FCUser*)createOwner
 {
-    currentUser = [[FCUser alloc] initAsOwner];
+    if (![FCUser owner])
+    {
+        currentUser = [[FCUser alloc] initAsOwner];
+    }
     return currentUser;
 }
 
 -(void)setFuser:(FAUser *)bewser
 {
+    
+    if (!fuser)
+    {
+        NSString *userId = bewser.userId;
+        
+    //    NSLog(@"self.ref = %@", self.ref);
+        
+        
+        self.color = color;
+        self.icon = icon;
+
+        [[self.ref childByAppendingPath:@"userId"] setValue:userId];
+        [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
+        
+        // Set via mixpanel
+        Mixpanel *mixpanel = [Mixpanel sharedInstance];
+        [mixpanel identify:self.id];
+        [mixpanel.people set:@{@"userID": self.id}];
+        [mixpanel.people set:@{@"name": self.id}];
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
+        {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
+            //greeting msesage post to their wall
+            [self postHello:@"Hiya! Welcome to Earshot!"];
+            [self postHello:@"You can see how many people are in range above."];
+            [self postHello:@"Tap your icon in the upper right to change your icon/color."];
+            [self postHello:@"That's it - have fun!"];
+        }
+    }
+    
     fuser = bewser;
     
-    NSString *userId = fuser.userId;
-    
-//    NSLog(@"self.ref = %@", self.ref);
-    
-    
-    self.color = color;
-    self.icon = icon;
-
-    [[self.ref childByAppendingPath:@"userId"] setValue:userId];
-//    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
-//    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
-    [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
-    
-    // Set via mixpanel
-    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-    [mixpanel identify:self.id];
-    [mixpanel.people set:@{@"userID": self.id}];
-    [mixpanel.people set:@{@"name": self.id}];
-    
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
-    {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
-        //greeting msesage post to their wall
-        [self postHello:@"Hiya! Welcome to Earshot!"];
-        [self postHello:@"You can see how many people are in range above."];
-        [self postHello:@"Tap your icon in the upper right to change your icon/color."];
-        [self postHello:@"That's it - have fun!"];
-    }
 
 }
 
@@ -123,7 +129,8 @@ static FCUser *currentUser;
     if (self) {
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         self.id = [prefs stringForKey:@"id"];
-        if (self.id) {
+        if (self.id)
+        {
             // Link up with firebase
             [self initFirebase:self.id];
             // Pull from defaults
@@ -322,6 +329,7 @@ static FCUser *currentUser;
     NSInteger idInt = esRandomNumberIn(0, 99999999);
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
+    [[NSUserDefaults standardUserDefaults] setValue:self.id forKey:@"id"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];
 }
 -(void)postHello:(NSString *)message

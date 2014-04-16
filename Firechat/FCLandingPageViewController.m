@@ -431,7 +431,7 @@ typedef enum
 }
 -(void)tapIcon:(UIButton*)button
 {
-    NSInteger tag = button.tag*-1;
+    NSInteger tag = button.tag;
     int currentIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
     
     int touchedIndex = currentIndex+tag;
