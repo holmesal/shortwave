@@ -77,6 +77,11 @@
 //when timer is up, it fires a failure message for the stack.  This must be interupted if success occurs sooner.
 @property (strong, nonatomic) NSTimer *reportStackFailureTimer;
 
+// Location filtering
+@property (assign, nonatomic) BOOL okayToSendAnonymousNotification;
+@property (strong, nonatomic) Firebase *seenRef;
+@property (strong, nonatomic) NSMutableArray *seen;
+
 // Oscillator
 @property NSInteger broadcastMode;
 
@@ -98,6 +103,7 @@
         self.identifier = [CBUUID UUIDWithString:IDENTIFIER_STRING];
         self.bluetoothUsers = [[NSMutableDictionary alloc] init];
         self.lastReported = [[NSMutableDictionary alloc] init];
+        self.seen = [[NSMutableArray alloc] init];
         self.mixpanel = [Mixpanel sharedInstance];
         // Set up the allowed beacon regions
         // What are the uuids?
@@ -126,6 +132,8 @@
         [self initIdentityBeacon:userID];
         // Start off NOT flipping between identity beacon / chirping beacon
         self.currentlyChirping = NO;
+        // Start off okay to send anonymous notificatoins
+        self.okayToSendAnonymousNotification = YES;
         // Start off with a broadcast mode of 0
         self.broadcastMode = 0;
         // Start flipping between the identity beacon and BLE
@@ -204,6 +212,16 @@
         // Filter the users based on timeout
         [self filterFirebaseUsers];
     }];
+    
+//    self.seenRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"seen"];
+//    [self.seenRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+//        if (snapshot.value != [NSNull null]){
+//            self.seen = [NSMutableArray arrayWithArray:snapshot.value];
+//        } else
+//        {
+//            self.seen = [[NSMutableArray alloc] init];
+//        }
+//    }];
 }
 
 - (void)filterFirebaseUsers
@@ -294,9 +312,22 @@
         // Add yourself for the user
         [[[[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:userID] childByAppendingPath:@"tracking"] childByAppendingPath:self.earshotID] setValue:[[NSNumber alloc] initWithInt:now]];
         [self.lastReported setObject:[[NSNumber alloc] initWithInt:now] forKey:userID];
+        
+        
+        // Also add them to the seen array if you haven't before
+        // Only send if we haven't seen this user before
+        NSUInteger index = [self.seen indexOfObject:userID];
+        if ([self.seen indexOfObject:userID] == NSNotFound) {
+            // Add this user as seen
+            [self.seen addObject:userID];
+            // Sync to firebase
+//            [self.seenRef setValue:self.seen];
+        }
     } else {
         if(DEBUG_TIMEOUTS) NSLog(@"Timeout not long enough, doing nothing.");
     }
+    
+    
 }
 
 - (uint)roundTime:(NSTimeInterval)time
@@ -392,6 +423,8 @@
 {
     // Setup beacon monitoring for regions
     [self setupBeaconRegions];
+    // Listen for major location changes
+    [self.locationManager startMonitoringSignificantLocationChanges];
     // Listen for bluetooth LE
     [self startDetectingTransponders];
 }
@@ -466,7 +499,7 @@
         existingUser = newUser;
         
         // Send a local notification to tell the user we discovered a device
-        [self sendDiscoverNotification];
+        [self sendAnonymousNotification];
         
         // Send the new (anonymous) user notification
 //        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventNewUserDiscovered object:self userInfo:@{@"user":existingUser}];
@@ -864,7 +897,7 @@
             }
             
             // Send a local notification to tell the user we discovered a device
-            [self sendDiscoverNotification];
+            [self sendAnonymousNotification];
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
@@ -916,6 +949,9 @@
 //        NSLog(@"Recomposed major: %@ and minor:%@   ->   %d",beacon.major,beacon.minor,recomposed);
         
         NSString *userID = [NSString stringWithFormat:@"%u",recomposed];
+        
+        // Send a non-anonymous notification (or try to, at least)
+        [self sendNonanonymousNotification:userID];
         
         if (DEBUG_BEACON) NSLog(@"%@ addUser %@ <locationManager:didRangeBeacons:inRegion:>", [FCUser owner].id, userID);
         [self addUser:userID];
@@ -993,6 +1029,29 @@
 - (void)locationManager:(CLLocationManager *)manager didStartMonitoringForRegion:(CLRegion *)region
 {
     NSLog(@"Started monitoring for region: %@",region);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    NSLog(@"Did update location significantly!");
+    self.okayToSendAnonymousNotification = YES;
+}
+
+- (void)sendAnonymousNotification
+{
+    if (self.okayToSendAnonymousNotification){
+        [self sendDiscoverNotification];
+        self.okayToSendAnonymousNotification = NO;
+    }
+}
+
+- (void)sendNonanonymousNotification:(NSString *)userID
+{
+    // Only send if we haven't seen this user before
+    if ([self.seen indexOfObject:userID] != NSNotFound) {
+        // Attempt to send the notification
+        [self sendDiscoverNotification];
+    }
 }
 
 # pragma mark - local notifications
