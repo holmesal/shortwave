@@ -664,7 +664,7 @@ typedef enum
     FCUser *owner = [FCUser owner];
 
 //#warning REMOVE THIS BEFORE DEPLOY
-    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive && NO)
+    if (owner.beacon.stackIsRunning != ESTransponderStackStateActive)// && NO)
     {
         [owner.beacon startBroadcasting];
         [owner.beacon startDetecting];
