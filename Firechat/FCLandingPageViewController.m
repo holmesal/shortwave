@@ -661,7 +661,10 @@ typedef enum
 
 -(void)startTalkingBlurButtonAction
 {
+    
     FCUser *owner = [FCUser owner];
+    
+    
 
     if (owner.beacon.stackIsRunning != ESTransponderStackStateActive && !IS_ON_SIMULATOR)
     {
@@ -751,9 +754,10 @@ typedef enum
                     }
                 }
             } else
+            if (IS_ON_SIMULATOR)
             {
 //#warning REMOVE THIS BEFORE DEPLOY
-//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
         [self.radarView buildRoundMaskAtRadius:28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];

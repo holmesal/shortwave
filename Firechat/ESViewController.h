@@ -21,4 +21,7 @@
 //compose a text message
 -(void)composeBlurButtonAction;
 
+//set this to update the alert state;
+@property (nonatomic, assign) NSInteger numberOfPeopleBeingTracked;
+
 @end

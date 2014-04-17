@@ -92,13 +92,15 @@ typedef enum
 @synthesize fadedOverView;
 @synthesize chirpBeaconTimer;
 
+@synthesize numberOfPeopleBeingTracked;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
 //  actually it's ok to not have this.  listen to it on a per-view controller level, when necessary
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noUsersNearbyEvent:) name:kTrackingNoUsersNearbyNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usersNearbyEvent:) name:kTrackingUsersNearbyNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noUsersNearbyEvent:) name:kTrackingNoUsersNearbyNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usersNearbyEvent:) name:kTrackingUsersNearbyNotification object:nil];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -134,9 +136,9 @@ typedef enum
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kReachabilityChangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderDisabled object:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackingNoUsersNearbyNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTransponderEventTransponderDisabled object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:kTrackingNoUsersNearbyNotification object:nil];
 }
 
 #pragma mark reachability callback (internet availability)
@@ -824,21 +826,9 @@ typedef enum
 }
 
 
-//when nobody is nearby
--(void)noUsersNearbyEvent:(NSNotificationCenter*)notification
-{
-    if (internetAlertStatus == NoInternetAlertStatusNone)
-    {
-        [self setUsersAlertStatus:NoUsersStatusFull];
-    }
-}
--(void)usersNearbyEvent:(NSNotificationCenter*)notification
-{
-    if (usersAlertStatus == NoUsersStatusFull)
-    {
-        [self setUsersAlertStatus:NoUsersStatusNone];
-    }
-}
+
+
+
 
 -(void)setUsersAlertStatus:(NoUsersStatus)newUsersAlertStatus
 {
@@ -1067,6 +1057,39 @@ typedef enum
     CGRect rect = CGRectMake(0, [UIScreen mainScreen].bounds.size.height-44, [UIScreen mainScreen].bounds.size.width, 44);
     return rect;
 }
+
+-(void)setNumberOfPeopleBeingTracked:(NSInteger)people
+{
+    if (!people)
+    {
+        if (internetAlertStatus == NoInternetAlertStatusNone)
+        {
+            [self setUsersAlertStatus:NoUsersStatusFull];
+        }
+    } else
+    {
+        if (usersAlertStatus == NoUsersStatusFull)
+        {
+            [self setUsersAlertStatus:NoUsersStatusNone];
+        }
+    }
+    numberOfPeopleBeingTracked = people;
+}
+//when nobody is nearby
+//-(void)noUsersNearbyEvent:(NSNotificationCenter*)notification
+//{
+//    if (internetAlertStatus == NoInternetAlertStatusNone)
+//    {
+//        [self setUsersAlertStatus:NoUsersStatusFull];
+//    }
+//}
+//-(void)usersNearbyEvent:(NSNotificationCenter*)notification
+//{
+//    if (usersAlertStatus == NoUsersStatusFull)
+//    {
+//        [self setUsersAlertStatus:NoUsersStatusNone];
+//    }
+//}
 
 
 @end

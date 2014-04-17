@@ -252,14 +252,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         notifyingStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %d people nearby.", numPeople] ];
     }
     
-    if ( numPeople == 0)
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingNoUsersNearbyNotification object:nil];
-    } else
-    {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingUsersNearbyNotification object:nil];
-    }
-    
+//    if ( numPeople == 0)
+//    {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingNoUsersNearbyNotification object:nil];
+//    } else
+//    {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingUsersNearbyNotification object:nil];
+//    }
+    [self setNumberOfPeopleBeingTracked:numPeople];
 
     
 

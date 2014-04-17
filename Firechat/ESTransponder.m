@@ -553,7 +553,6 @@
     {
         [self startScanning];
     }
-    
 }
 
 #pragma mark - CBPeripheralManagerDelegate
@@ -1040,8 +1039,12 @@
 - (void)sendAnonymousNotification
 {
     if (self.okayToSendAnonymousNotification){
+        NSLog(@"%@ YES", NSStringFromSelector(_cmd));
         [self sendDiscoverNotification];
         self.okayToSendAnonymousNotification = NO;
+    } else
+    {
+        NSLog(@"%@ NO", NSStringFromSelector(_cmd));
     }
 }
 
@@ -1061,10 +1064,12 @@
     // Only do this if the app is in the background
     //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
     UIApplication *app = [UIApplication sharedApplication];
-    if ([app applicationState] == UIApplicationStateBackground) {
+    if ([app applicationState] == UIApplicationStateBackground)
+    {
         // If there aren't any existing discover notifications
         NSArray *notificationArray = [app scheduledLocalNotifications];
-        if ([notificationArray count] == 0) {
+        if ([notificationArray count] == 0)
+        {
             // If it's been more than 20 minutes since the last notification OR app open
             NSDate *currentDate = [NSDate date];
             NSTimeInterval howLong = [currentDate timeIntervalSinceDate:self.lastNotificationEvent];
@@ -1092,6 +1097,11 @@
     {
         NSLog(@"App is not in the background - ignoring notication call.");
     }
+}
+
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
