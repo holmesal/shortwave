@@ -506,13 +506,18 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             }
             elipseTimer2 = [NSTimer timerWithTimeInterval:0.3f target:self selector:@selector(elipseTimerAction2:) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop] addTimer:elipseTimer2 forMode:NSDefaultRunLoopMode];
-//            [[NSRunLoop mainRunLoop] addTimer:timerToShowSearchingText forMode:NSDefaultRunLoopMode];
+            [[NSRunLoop mainRunLoop] addTimer:timerToShowSearchingText forMode:NSDefaultRunLoopMode];
         }
     }
 }
 //callthis to end this nav-bar 'searching' state
 -(void)timerToShowSearchingTextAction:(NSTimer*)trw
 {
+    //if trw is nil it means I called this function manually bcause I see an increase in tracking.count.  it must not return
+    if (!self.numberOfPeopleBeingTracked && trw)
+    {
+        return;
+    }
     [timerToShowSearchingText invalidate];
     timerToShowSearchingText = nil;
     

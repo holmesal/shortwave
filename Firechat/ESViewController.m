@@ -381,7 +381,7 @@ typedef enum
         CGFloat buttonDim = 75.0f;//142*0.5f;
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
-                                                      noUsersLabel.frame.size.height,//+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
+                                                      ((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,//noUsersLabel.frame.size.height + //+25*0.5f,//
                                                       buttonDim,buttonDim)];
         
 
