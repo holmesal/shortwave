@@ -1558,15 +1558,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 
-//#pragma mark NSNotificationCenter beaconsUpdated start
-//-(void)beaconsUpdated:(NSNotification*)notification
-//{
-//
-//#warning Ethan - need to update the above code
-////    NSLog(@"People nearby: %lu",(unsigned long)[[notification.userInfo objectForKey:@"identifiedUsers"] count]);
-//    [self updatePeopleNearby:[[notification.userInfo objectForKey:@"identifiedUsers"] count]];
-//}
-//#pragma mark NSNotificationCenter beaconsUpdated end
 
 
 -(void)handlePan:(UIPanGestureRecognizer*)panGesture

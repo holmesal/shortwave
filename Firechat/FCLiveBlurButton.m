@@ -76,13 +76,7 @@
 }
 -(void)touchEnd
 {
-//    [UIView animateWithDuration:5.8f delay:0.0f usingSpringWithDamping:1.6 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-//     {
-//#warning this is fucked
-////         self.label.textColor = self.originalColorText;
-//         
-//         self.pressedLayer.opacity = 0.0f;
-//     } completion:^(BOOL finished){}];
+
     CFTimeInterval now = CACurrentMediaTime();
     CFTimeInterval dt = now - touchDownTime;
     CABasicAnimation *flash = [CABasicAnimation animationWithKeyPath:@"opacity"];
