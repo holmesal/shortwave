@@ -742,7 +742,7 @@ typedef enum
                     //and go on
                     [weakSelf transitionToFCWallViewControllerWithImage:weakSelf.extractedImageViewOnDone.image andFrame:weakSelf.extractedImageViewOnDone.frame andColor:weakSelf.view.backgroundColor];
                 } else
-                {//
+                {
                     weakSelf.tracking = nil;
                     NSLog(@"found a user! %d", numUsers);
                     

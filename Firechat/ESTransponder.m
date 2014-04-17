@@ -317,7 +317,8 @@
         // Also add them to the seen array if you haven't before
         // Only send if we haven't seen this user before
         NSUInteger index = [self.seen indexOfObject:userID];
-        if ([self.seen indexOfObject:userID] == NSNotFound) {
+        if (index == NSNotFound)
+        {
             // Add this user as seen
             [self.seen addObject:userID];
             // Sync to firebase
