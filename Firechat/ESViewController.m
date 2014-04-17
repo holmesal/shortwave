@@ -101,6 +101,9 @@ typedef enum
 //  actually it's ok to not have this.  listen to it on a per-view controller level, when necessary
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noUsersNearbyEvent:) name:kTrackingNoUsersNearbyNotification object:nil];
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(usersNearbyEvent:) name:kTrackingUsersNearbyNotification object:nil];
+    
+    
+    
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -381,7 +384,7 @@ typedef enum
         CGFloat buttonDim = 75.0f;//142*0.5f;
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
-                                                      ((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,//noUsersLabel.frame.size.height + //+25*0.5f,//
+                                                      ((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height*0.5f + 15,//noUsersLabel.frame.size.height + //+25*0.5f,//
                                                       buttonDim,buttonDim)];
         
 

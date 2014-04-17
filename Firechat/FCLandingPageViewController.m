@@ -756,7 +756,6 @@ typedef enum
             } else
             if (IS_ON_SIMULATOR)
             {
-//#warning REMOVE THIS BEFORE DEPLOY
                 [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
@@ -1573,8 +1572,9 @@ typedef enum
 }
 
 -(CGFloat)cellHeight
-{
-    CGFloat scaledHeight = self.spinnerImageView.bounds.size.height*0.75f;
+{//127
+    
+    CGFloat scaledHeight = 111.0f;//self.spinnerImageView.bounds.size.height*0.75f;
 //    NSLog(@"scaledHeight = %f", scaledHeight);
     return scaledHeight;
 }
