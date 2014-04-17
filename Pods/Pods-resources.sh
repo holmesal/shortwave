@@ -41,6 +41,7 @@ install_resource()
       ;;
   esac
 }
+install_resource "Facebook-iOS-SDK/src/FBUserSettingsViewResources.bundle"
 install_resource "Mixpanel/Mixpanel/MPArrowLeft.png"
 install_resource "Mixpanel/Mixpanel/MPArrowLeft@2x.png"
 install_resource "Mixpanel/Mixpanel/MPArrowRight.png"
