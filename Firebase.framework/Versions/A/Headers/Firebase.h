@@ -558,6 +558,7 @@ Supported events types for all realtime observers are specified in FEventType as
  */
 - (void) unauthWithCompletionBlock:(void (^)(NSError* error))block;
 
+
 /** @name Manual Connection Management */
 
 /**
@@ -598,7 +599,6 @@ Supported events types for all realtime observers are specified in FEventType as
  * Note: Invoking this method will impact all Firebase connections.
  */
 + (void) goOnline;
-
 
 
 /** @name Transactions */
@@ -703,4 +703,5 @@ Supported events types for all realtime observers are specified in FEventType as
 
 + (void) setLoggingEnabled:(BOOL)enabled;
 
++ (void) setOption:(NSString*)option to:(id)value;
 @end

@@ -17,7 +17,6 @@
 		AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
-		AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */; };
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
 		AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA3779A18F87BBC00B70B00 /* MessageUI.framework */; };
 		AAC6506718FA00700010916D /* RadarView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC6506618FA00700010916D /* RadarView.m */; };
@@ -28,7 +27,6 @@
 		AAC6507218FA1E3D0010916D /* plug.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506E18FA1E3D0010916D /* plug.png */; };
 		AAC6507318FA1E3D0010916D /* plugmask.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506F18FA1E3D0010916D /* plugmask.png */; };
 		AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD2449318D777590042A93F /* FCLandingPageViewController.m */; };
-		AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAD7500018C3D07E004BCCA7 /* Firebase.framework */; };
 		AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AADAB29918F5F1AA00E61579 /* ESViewController.m */; };
 		AADAB29E18F62C5F00E61579 /* Phone-cord-export-02.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29B18F62C5F00E61579 /* Phone-cord-export-02.png */; };
 		AADAB29F18F62C5F00E61579 /* Phone-cord-export-03.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29C18F62C5F00E61579 /* Phone-cord-export-03.png */; };
@@ -42,6 +40,11 @@
 		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF40AC218F12FD6000526BE /* UIImage+Resize.m */; };
 		AAF40AC918F149FB000526BE /* icongradient.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF40AC818F149FB000526BE /* icongradient.png */; };
+		C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8318FF857500C8050B /* Firebase.framework */; };
+		C0032A8618FF858800C8050B /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */; };
+		C0032A8A18FF88D400C8050B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8918FF88D400C8050B /* FacebookSDK.framework */; };
+		C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */; };
+		C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8718FF877E00C8050B /* AdSupport.framework */; };
 		C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */; };
 		C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */; };
 		C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4FC189EFF44001157E3 /* FCWallViewController.m */; };
@@ -95,7 +98,6 @@
 
 /* Begin PBXFileReference section */
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Firebase.a"; path = "Pods/build/Debug-iphoneos/libPods-Firebase.a"; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
@@ -114,7 +116,6 @@
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
 		AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCOwnerMessageCell.h; sourceTree = "<group>"; };
 		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOwnerMessageCell.m; sourceTree = "<group>"; };
-		AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		AAA3779A18F87BBC00B70B00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -128,7 +129,6 @@
 		AAC6506F18FA1E3D0010916D /* plugmask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plugmask.png; sourceTree = "<group>"; };
 		AAD2449218D777590042A93F /* FCLandingPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLandingPageViewController.h; sourceTree = "<group>"; };
 		AAD2449318D777590042A93F /* FCLandingPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLandingPageViewController.m; sourceTree = "<group>"; };
-		AAD7500018C3D07E004BCCA7 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
 		AADAB29818F5F1AA00E61579 /* ESViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESViewController.h; sourceTree = "<group>"; };
 		AADAB29918F5F1AA00E61579 /* ESViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESViewController.m; sourceTree = "<group>"; };
 		AADAB29B18F62C5F00E61579 /* Phone-cord-export-02.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-cord-export-02.png"; sourceTree = "<group>"; };
@@ -150,6 +150,11 @@
 		AAF40AC118F12FD6000526BE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AAF40AC218F12FD6000526BE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		AAF40AC818F149FB000526BE /* icongradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icongradient.png; sourceTree = "<group>"; };
+		C0032A8318FF857500C8050B /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
+		C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
+		C0032A8718FF877E00C8050B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		C0032A8918FF88D400C8050B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
+		C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C013C4F8189EF0C1001157E3 /* FCLandingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCLandingViewController.h; path = Firechat/FCLandingViewController.h; sourceTree = "<group>"; };
 		C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCLandingViewController.m; path = Firechat/FCLandingViewController.m; sourceTree = "<group>"; };
@@ -216,25 +221,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */,
+				C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */,
+				C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */,
 				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
-				C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */,
+				C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */,
 				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
+				AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */,
+				C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */,
 				AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */,
+				C0032A8618FF858800C8050B /* FirebaseSimpleLogin.framework in Frameworks */,
 				C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */,
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
 				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
-				AA96104018DF6F1100D37086 /* FirebaseSimpleLogin.framework in Frameworks */,
 				C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */,
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
-				AAD7500118C3D07E004BCCA7 /* Firebase.framework in Frameworks */,
 				C02CE390186808B000305FC9 /* CoreGraphics.framework in Frameworks */,
 				C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */,
 				C02CE38E186808B000305FC9 /* Foundation.framework in Frameworks */,
 				14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */,
+				C0032A8A18FF88D400C8050B /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,12 +424,14 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */,
+				C0032A8918FF88D400C8050B /* FacebookSDK.framework */,
+				C0032A8718FF877E00C8050B /* AdSupport.framework */,
+				C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */,
+				C0032A8318FF857500C8050B /* Firebase.framework */,
 				C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */,
 				AAA3779A18F87BBC00B70B00 /* MessageUI.framework */,
-				AA96103F18DF6F1100D37086 /* FirebaseSimpleLogin.framework */,
 				AAE3743F18DC098B006A9C82 /* CoreData.framework */,
-				AAD7500018C3D07E004BCCA7 /* Firebase.framework */,
-				AA0B651B18C3CE5D00600108 /* libPods-Firebase.a */,
 				C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */,
 				C057427E187BA603002509DB /* CoreBluetooth.framework */,
 				C057427C187BA5FE002509DB /* CoreLocation.framework */,
@@ -836,14 +846,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/Shared/Firebase/Frameworks,
-					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
-					/Users/ethan/Documents/iPhone,
-					workspace/earshot,
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
 				INFOPLIST_FILE = "Firechat/Earshot-Info.plist";
@@ -867,14 +870,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					/Users/Shared/Firebase/Frameworks,
-					/Users/alonsoholmes/developer/ios/Firechat/Firechat,
-					/Users/ethan/Documents/iPhone,
-					workspace/earshot,
-					"$(PROJECT_DIR)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
 				INFOPLIST_FILE = "Firechat/Earshot-Info.plist";
@@ -884,7 +880,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Earshot;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "476A0513-252B-41FA-B052-A022FE78C3AE";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
