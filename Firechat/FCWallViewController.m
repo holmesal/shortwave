@@ -34,8 +34,6 @@ typedef enum
 
 
 @property (nonatomic) NSTimer *autoScrollLockTimer;
-
-
 @property (nonatomic) UITapGestureRecognizer *singleTapDebugGesture;
 
 @property (nonatomic ) NSString *justAddPmWithUserId;
@@ -43,6 +41,13 @@ typedef enum
 
 @property (nonatomic) NSArray *tracking;
 @property (nonatomic) BOOL topBarHasGesture;
+
+@property (nonatomic) NSInteger elipseCount;
+@property (nonatomic) NSTimer *elipseTimer2;
+@property (nonatomic) UIView *searchingLabelView;
+@property (nonatomic) NSDate *dateLastVisible;
+@property (nonatomic) NSTimer *timerToShowSearchingText;
+
 
 
 //firebase handles
@@ -75,8 +80,8 @@ typedef enum
 @property (nonatomic) UIButton *iconButton;
 @property (nonatomic) UIView *labelMaskView;
 
-@property (nonatomic) CAShapeLayer *lineLayer;
 
+@property (nonatomic) CAShapeLayer *lineLayer;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 
@@ -119,6 +124,12 @@ typedef enum
 @implementation FCWallViewController
 
 @synthesize autoScrollLockTimer;
+
+//searching label stuff
+@synthesize elipseCount;
+@synthesize elipseTimer2;
+@synthesize searchingLabelView;
+@synthesize timerToShowSearchingText;
 
 @synthesize tracking;
 @synthesize trackingHandle;
@@ -176,7 +187,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [super viewDidAppear:animated];
     
     
-
+    NSLog(@"self.dateLastVisible = %@", self.dateLastVisible);
     
 
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
@@ -252,13 +263,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         notifyingStr = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"There are %d people nearby.", numPeople] ];
     }
     
-//    if ( numPeople == 0)
-//    {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingNoUsersNearbyNotification object:nil];
-//    } else
-//    {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kTrackingUsersNearbyNotification object:nil];
-//    }
+    //invalidate our 'searching...' navBar message if that is necessary
+    if (numPeople > self.numberOfPeopleBeingTracked && self.timerToShowSearchingText)
+    {
+        [self timerToShowSearchingTextAction:nil];
+    }
     [self setNumberOfPeopleBeingTracked:numPeople];
 
     
@@ -471,11 +480,141 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.view insertSubview:self.pmListContainerView atIndex:0];
     
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(background:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(foreground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+}
+
+-(void)background:(NSNotification*)notification
+{
+    self.dateLastVisible = [NSDate date];
+}
+-(void)foreground:(NSNotification*)notification
+{
+    if (self.dateLastVisible)
+    {
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.dateLastVisible];
+        if (timeInterval > 1)// TIMEOUT about 30 secs
+        {
+            //hide peopleNearbyLabel;
+            [self.peopleNearbyLabel.superview addSubview:self.searchingLabelView];
+            [self.peopleNearbyLabel setHidden:YES];
+            timerToShowSearchingText = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(timerToShowSearchingTextAction:) userInfo:nil repeats:NO];
+            if (elipseTimer2)
+            {//nevr happn
+                [elipseTimer2 invalidate];
+                elipseTimer2 = nil;
+            }
+            elipseTimer2 = [NSTimer timerWithTimeInterval:0.3f target:self selector:@selector(elipseTimerAction2:) userInfo:nil repeats:YES];
+            [[NSRunLoop mainRunLoop] addTimer:elipseTimer2 forMode:NSDefaultRunLoopMode];
+//            [[NSRunLoop mainRunLoop] addTimer:timerToShowSearchingText forMode:NSDefaultRunLoopMode];
+        }
+    }
+}
+//callthis to end this nav-bar 'searching' state
+-(void)timerToShowSearchingTextAction:(NSTimer*)trw
+{
+    [timerToShowSearchingText invalidate];
+    timerToShowSearchingText = nil;
+    
+    [elipseTimer2 invalidate];
+    elipseTimer2 = nil;
+    
+    self.peopleNearbyLabel.alpha = 0.0f;
+    [self.peopleNearbyLabel setHidden:NO];
+    [UIView animateWithDuration:0.2f animations:^
+    {
+        self.searchingLabelView.alpha = 0.0f;
+        
+    } completion:^(BOOL finished)
+    {
+        self.searchingLabelView.alpha = 1.0f;
+        [self.searchingLabelView removeFromSuperview];
+    }];
+    
+    [UIView animateWithDuration:0.2f animations:^
+     {
+         self.peopleNearbyLabel.alpha = 1.0f;
+     } completion:^(BOOL finished)
+     {
+         
+     }];
+}
+//updates the . .. ...
+-(void)elipseTimerAction2:(NSTimer*)timer
+{
+    if (searchingLabelView && searchingLabelView.superview && !searchingLabelView.isHidden)
+    {
+        UILabel *elipseLabel = (UILabel*)[searchingLabelView viewWithTag:2];
+        elipseCount = (elipseCount+1)%4;
+        NSString *elipses = @"";
+        for (int i = 0; i < elipseCount; i++)
+        {
+            elipses = [NSString stringWithFormat:@"%@.", elipses];
+        }
+        
+        [elipseLabel setText:elipses];
+    } else
+    {
+        [elipseTimer2 invalidate];
+        elipseTimer2 = nil;
+    }
+}
+
+-(UIView*)searchingLabelView
+{
+    if (!searchingLabelView)
+    {
+        CGFloat height = self.peopleNearbyLabel.frame.size.height;
+
+        
+        UILabel *searchingLabel = [[UILabel alloc] initWithFrame:self.peopleNearbyLabel.frame];
+        [searchingLabel setText:@"Searching for others"];
+        [searchingLabel sizeToFit];
+        CGRect rect = searchingLabel.frame;
+        rect.size.height = height;
+        [searchingLabel setFrame:rect];
+        
+        [searchingLabel setTextColor:[UIColor whiteColor]];
+       
+        searchingLabel.tag = 1;
+        searchingLabelView = [[UIView alloc] initWithFrame:self.shadeView.bounds];
+//        [searchingLabelView setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
+//        [searchingLabel setBackgroundColor:[UIColor colorWithRed:1 green:0 blue:0 alpha:0.2f]];
+        
+        [searchingLabelView addSubview:searchingLabel];
+        
+        UILabel *elipseLabel = [[UILabel alloc] initWithFrame:CGRectMake(
+                                                                         searchingLabel.frame.origin.x + searchingLabel.frame.size.width,
+                                                                         searchingLabel.frame.origin.y,
+                                                                         100, height)];
+        elipseLabel.tag = 2;
+        [elipseLabel setText:@""];
+        [elipseLabel setFont:searchingLabel.font];
+        [elipseLabel setTextColor:[UIColor whiteColor]];
+        [elipseLabel setBackgroundColor:[UIColor clearColor]];
+        
+        [searchingLabelView addSubview:elipseLabel];
+        
+        
+    }
+    return searchingLabelView;
+}
+
+
+
+
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    
 }
 
 
 //is calld after layout is determined for "tableView" due to constraints and scren size.  If you do this in
 //view did load, you will get incorrect sizes of tableView, necessary because tableview is upside down!
+
+
 
 -(void)viewWillLayoutSubviews
 {

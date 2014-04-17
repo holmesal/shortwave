@@ -55,9 +55,9 @@ typedef enum
 @property (nonatomic, strong) UIView *noUsersNearbyPopup;
 @property (nonatomic) UILabel *noUsersLabel;
 @property (nonatomic) FCLiveBlurButton *composeBlurButton;
-@property (nonatomic) UILabel *elipseLabel;
-@property (nonatomic, strong) NSTimer *elipseTimer;
-@property (nonatomic) int numberOfElipses;
+//@property (nonatomic) UILabel *elipseLabel;
+//@property (nonatomic, strong) NSTimer *elipseTimer;
+//@property (nonatomic) int numberOfElipses;
 
 @end
 
@@ -85,9 +85,9 @@ typedef enum
 @synthesize noUsersNearbyPopup;
 @synthesize noUsersLabel;
 @synthesize composeBlurButton;
-@synthesize numberOfElipses;
-@synthesize elipseTimer;
-@synthesize elipseLabel;
+//@synthesize numberOfElipses;
+//@synthesize elipseTimer;
+//@synthesize elipseLabel;
 
 @synthesize fadedOverView;
 @synthesize chirpBeaconTimer;
@@ -319,17 +319,17 @@ typedef enum
     }
 }
 
--(void)elipseTimerAction
-{
-    NSString *elipses = @"";
-    for (int i = 0; i < numberOfElipses; i++)
-    {
-        elipses = [NSString stringWithFormat:@"%@.", elipses];
-    }
-    
-    [elipseLabel setText:elipses];
-    numberOfElipses = (numberOfElipses+1)%4;
-}
+//-(void)elipseTimerAction
+//{
+//    NSString *elipses = @"";
+//    for (int i = 0; i < numberOfElipses; i++)
+//    {
+//        elipses = [NSString stringWithFormat:@"%@.", elipses];
+//    }
+//    
+//    [elipseLabel setText:elipses];
+//    numberOfElipses = (numberOfElipses+1)%4;
+//}
 
 -(UIView*)noUsersNearbyPopup
 {
@@ -343,7 +343,7 @@ typedef enum
         [noUsersNearbyPopup setBackgroundColor:userColor];
         
         noUsersLabel = [self generateATopLabel];
-        [noUsersLabel setText:@"Searching for others"];
+        [noUsersLabel setText:@"Send Earshot to a friend?"];
         CGFloat height = noUsersLabel.frame.size.height;
         [noUsersLabel sizeToFit];
         CGRect newFrame = noUsersLabel.frame;
@@ -351,15 +351,15 @@ typedef enum
         newFrame.origin.x = (noUsersNearbyPopup.frame.size.width-newFrame.size.width)*0.5f;
         [noUsersLabel setFrame:newFrame];
         
-        elipseLabel = [[UILabel alloc] initWithFrame:CGRectMake(noUsersLabel.frame.size.width+noUsersLabel.frame.origin.x, 0, 50, 44)];
-        [elipseLabel setFont:noUsersLabel.font];
-        [elipseLabel setTextColor:[UIColor whiteColor]];
-        [elipseLabel setText:@""];
-        [elipseLabel setTextAlignment:NSTextAlignmentLeft];
+//        elipseLabel = [[UILabel alloc] initWithFrame:CGRectMake(noUsersLabel.frame.size.width+noUsersLabel.frame.origin.x, 0, 50, 44)];
+//        [elipseLabel setFont:noUsersLabel.font];
+//        [elipseLabel setTextColor:[UIColor whiteColor]];
+//        [elipseLabel setText:@""];
+//        [elipseLabel setTextAlignment:NSTextAlignmentLeft];
         
         
         [noUsersNearbyPopup addSubview:noUsersLabel];
-        [noUsersNearbyPopup addSubview:elipseLabel];
+//        [noUsersNearbyPopup addSubview:elipseLabel];
         
         UIButton *invisibutton = [UIButton buttonWithType:UIButtonTypeCustom];
         [invisibutton setFrame:noUsersLabel.frame];
@@ -381,7 +381,7 @@ typedef enum
         CGFloat buttonDim = 75.0f;//142*0.5f;
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
-                                                      noUsersLabel.frame.size.height+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
+                                                      noUsersLabel.frame.size.height,//+25*0.5f,//((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height,
                                                       buttonDim,buttonDim)];
         
 
@@ -397,13 +397,13 @@ typedef enum
         
         [noUsersNearbyPopup addSubview:composeBlurButton];
         
-        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+14, noUsersNearbyPopup.frame.size.width, 12)];
-        [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
-        [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
-        [sendEarshotToFriend setText:@"Send Earshot to a friend?"];
-        
-        [sendEarshotToFriend setFont:[UIFont systemFontOfSize:12.0f] ];
-        [noUsersNearbyPopup addSubview:sendEarshotToFriend];
+//        UILabel *sendEarshotToFriend = [[UILabel alloc] initWithFrame:CGRectMake(0, composeBlurButton.frame.size.height+composeBlurButton.frame.origin.y+14, noUsersNearbyPopup.frame.size.width, 12)];
+//        [sendEarshotToFriend setTextColor:[UIColor whiteColor]];
+//        [sendEarshotToFriend setTextAlignment:NSTextAlignmentCenter];
+//        [sendEarshotToFriend setText:@"Send Earshot to a friend?"];
+//        
+//        [sendEarshotToFriend setFont:[UIFont systemFontOfSize:12.0f] ];
+//        [noUsersNearbyPopup addSubview:sendEarshotToFriend];
     }
     return noUsersNearbyPopup;
 }
@@ -940,17 +940,17 @@ typedef enum
             chirpBeaconTimer = [NSTimer timerWithTimeInterval:CHIRP_BEACON_TIME target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:YES];
             [[NSRunLoop mainRunLoop] addTimer:chirpBeaconTimer forMode:NSDefaultRunLoopMode];
         }
-        if (!self.elipseTimer.isValid)
-        {
-            elipseTimer = [NSTimer timerWithTimeInterval:0.35f target:self selector:@selector(elipseTimerAction) userInfo:nil repeats:YES];
-            [[NSRunLoop mainRunLoop] addTimer:self.elipseTimer forMode:NSDefaultRunLoopMode];
-        }
+//        if (!self.elipseTimer.isValid)
+//        {
+//            elipseTimer = [NSTimer timerWithTimeInterval:0.35f target:self selector:@selector(elipseTimerAction) userInfo:nil repeats:YES];
+//            [[NSRunLoop mainRunLoop] addTimer:elipseTimer forMode:NSDefaultRunLoopMode];
+//        }
     } else
     {
-        [elipseTimer invalidate];
+//        [elipseTimer invalidate];
         [chirpBeaconTimer invalidate];
         chirpBeaconTimer = nil;
-        elipseTimer = nil;
+//        elipseTimer = nil;
     }
 }
 

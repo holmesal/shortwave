@@ -12,6 +12,8 @@
 
 @interface ESTransponder : NSObject
 
+#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
+
 //#define SINGLETON_IDENTIFIER @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 #define IDENTIFIER_STRING @"CB284D88-5317-4FB4-9621-C5A3A49E6155"
 //#define IBEACON_UUID @"BC43DDCC-AF0C-4A69-9E75-4CDFF8FD5F63"

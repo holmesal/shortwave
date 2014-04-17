@@ -26,7 +26,6 @@
 #define IS_RUNNING_ON_SIMULATOR NO
 
 #define MAX_BEACON 19 // How many beacons to use (IOS max 19)
-#define TIMEOUT 30.0 // How old should a user be before I consider them gone?
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
@@ -174,7 +173,8 @@
             float lastSeen = [now timeIntervalSinceDate:[userBeacon objectForKey:@"lastSeen"]];
             if (DEBUG_USERS) NSLog(@"time interval for %@ -> %f",[userBeacon objectForKey:@"earshotID"],lastSeen);
             // If it's longer than 20 seconds, they're probs gone
-            if (lastSeen > TIMEOUT) {
+            if (lastSeen > TIMEOUT)
+            {
                 if (DEBUG_USERS) NSLog(@"Removing user: %@",userBeacon);
                 // Remove from earshotUsers, if it's actually in there
     //            if ([userBeacon objectForKey:@"earshotID"] != [NSNull null]) {
@@ -305,7 +305,8 @@
     uint then = [last intValue];
 //    NSLog(@"Time difference for user %@ is %u",userID,(now - then));
     uint howLong = now - then;
-    if (howLong > REPORTING_INTERVAL){
+    if (howLong > REPORTING_INTERVAL)
+    {
         if(DEBUG_USERS) NSLog(@"Adding/updating user on firebase: %@",userID);
         // Add the user for yourself
         [[self.earshotUsersRef childByAppendingPath:userID] setValue:[[NSNumber alloc] initWithInt:now]];
