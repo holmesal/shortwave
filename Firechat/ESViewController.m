@@ -964,7 +964,7 @@ typedef enum
     {
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         NSString *whatClass = NSStringFromClass([self class]);
-        [mixpanel track:@"Send message button clicked" properties:@{@"fromView": whatClass}];
+        [mixpanel track:@"Text message button clicked" properties:@{@"fromView": whatClass}];
         
         NSArray *recipents = nil;
         NSString *message = @"Hey! You should check out Earshot - getearshot.com";
