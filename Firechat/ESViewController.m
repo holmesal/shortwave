@@ -43,6 +43,7 @@ typedef enum
 @property (nonatomic) CALayer *coordScene;
 @property (nonatomic) CALayer *coord;
 @property (nonatomic) CALayer *plug;
+@property (nonatomic) CALayer *outRimPlug;
 @property (nonatomic) CALayer *fullCoordMask;
 @property (nonatomic) CGPoint lastOffset;
 @property (nonatomic) CALayer *maskOfCoord;
@@ -77,6 +78,7 @@ typedef enum
 @synthesize coord;
 @synthesize coordScene;
 @synthesize plug;
+@synthesize outRimPlug;
 @synthesize movementVector;
 @synthesize fullCoordMask;
 @synthesize maskOfCoord;
@@ -256,7 +258,12 @@ typedef enum
         
         if (newAlertStatus == NoInternetAlertStatusFull)
         {
-            [self.composeBarView.superview addSubview:self.fadedOverView];
+
+            UIView *superView = self.composeBarView.superview;
+            UIView *fadedView = [superView viewWithTag:617];
+            
+            [superView insertSubview:self.fadedOverView belowSubview:fadedView];
+            
             self.fadedOverView.alpha = 0.0f;
             [self.composeBarView.superview addSubview:self.noInternetView];
             [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:0.6 initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
@@ -339,7 +346,7 @@ typedef enum
     if (!noUsersNearbyPopup)
     {
         CGRect noUsersNearbyPopupRect = self.composeBarViewFrame;
-        noUsersNearbyPopupRect.size.height += 141;
+        noUsersNearbyPopupRect.size.height += 155;//141;
         noUsersNearbyPopup = [[UIView alloc] initWithFrame:noUsersNearbyPopupRect];
     
         UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
@@ -381,10 +388,14 @@ typedef enum
         [noUsersNearbyPopup addSubview:darkUnderLayer];
         
         
-        CGFloat buttonDim = 75.0f;//142*0.5f;
+        CGFloat buttonDim = 69.0f;//142*0.5f;
+        CGFloat diff = 458-568-20;
+        
+        
         composeBlurButton = [[FCLiveBlurButton alloc] initWithFrame:CGRectMake(
                                                       (noUsersNearbyPopup.frame.size.width-buttonDim)*0.5f,
-                                                      ((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height*0.5f + 15,//noUsersLabel.frame.size.height + //+25*0.5f,//
+                                                      noUsersNearbyPopupRect.size.height+diff,
+                                                      //((noUsersNearbyPopup.frame.size.height-noUsersLabel.frame.size.height)-buttonDim)*0.5f+noUsersLabel.frame.size.height*0.5f + 15,//noUsersLabel.frame.size.height + //+25*0.5f,//
                                                       buttonDim,buttonDim)];
         
 
@@ -471,7 +482,7 @@ typedef enum
 }
 -(UIColor*)darkOpacity
 {
-    return [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.15f];//[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.05f];
+    return [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.0f];//[UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:0.05f];
 }
 -(UILabel*)generateATopLabel
 {
@@ -491,8 +502,9 @@ typedef enum
     NSString *stillString = @"";
     if (still)
     {
-        NSArray *modifiers = @[@"really ", @"still ", @"surely ", @"absolutely ", @"kinda "];
+        NSArray *modifiers = @[@"really ", @"still ", @"surely ", @"absolutely ", @"kinda ", @"positively ", @"frankly ", @"sir/madam, ", @"unapologetically "];
         int modifierIndex = esRandomNumberIn(0, modifiers.count);
+        
         stillString = [modifiers objectAtIndex:modifierIndex];
     }
 
@@ -572,14 +584,18 @@ typedef enum
     UIImage *_coordImg = [UIImage imageNamed:@"cord.png"];//[UIImage imageNamed:@"Phone-cord-export-03.png"];
     UIImage *_mask = [UIImage imageNamed:@"plugmask.png"];//[UIImage imageNamed:@"Phone-cord-export-04.png"];
     UIImage *_coordMask = [UIImage imageNamed:@"cordmask.png"];
+    UIImage *_outRimPlug = [UIImage imageNamed:@"plugline.png"];
 
-//    CGSize plugImageSize = {_plugImg.size.width*graphicScaleRatio*1.1f, _plugImg.size.height*graphicScaleRatio*1.1f};
-    CGSize plugImageSize = {_plugImg.size.width*graphicScaleRatio, _plugImg.size.height*graphicScaleRatio};
-    CGSize coordImageSize = {_coordImg.size.width*graphicScaleRatio, _coordImg.size.height*graphicScaleRatio};
-//    CGSize maskImageSize = {_mask.size.width*graphicScaleRatio*1.1f, _mask.size.height*graphicScaleRatio*1.1f};
-    CGSize maskImageSize = {_mask.size.width*graphicScaleRatio, _mask.size.height*graphicScaleRatio};
-    CGSize coordMaskImageSize = {_coordMask.size.width*graphicScaleRatio, _coordMask.size.height*graphicScaleRatio};
+    CGFloat yShiftForPlugThings = 3.0f;
+    CGFloat forPlugScale = 1.05f;
+    CGSize plugImageSize = {_plugImg.size.width*graphicScaleRatio*forPlugScale, _plugImg.size.height*graphicScaleRatio*forPlugScale};
+        CGSize outRimPlugImageSize = {_outRimPlug.size.width*graphicScaleRatio*forPlugScale, _outRimPlug.size.height*graphicScaleRatio*forPlugScale};
     
+    CGSize coordImageSize = {_coordImg.size.width*graphicScaleRatio, _coordImg.size.height*graphicScaleRatio};
+    CGSize maskImageSize = {_mask.size.width*graphicScaleRatio*forPlugScale, _mask.size.height*graphicScaleRatio*forPlugScale};
+    CGSize coordMaskImageSize = {_coordMask.size.width*graphicScaleRatio, _coordMask.size.height*graphicScaleRatio};
+
+
     
     plug = [CALayer layer];
     [plug setContentsGravity:kCAGravityResizeAspectFill];
@@ -588,7 +604,18 @@ typedef enum
     CGRect plugFrame = CGRectMake(0, 0, plugImageSize.width, plugImageSize.height);
     plugFrame.origin.x = (sceneRect.origin.x+sceneRect.size.width) - plugFrame.size.width*0.5f;
     plugFrame.origin.y = (sceneRect.origin.y) - plugFrame.size.height*0.5f;//upper right
+    plugFrame.origin.y -= yShiftForPlugThings;
     plug.frame = plugFrame;
+    
+    outRimPlug = [CALayer layer];
+    [outRimPlug setContentsGravity:kCAGravityResizeAspectFill];
+    outRimPlug.contentsScale = [UIScreen mainScreen].scale;
+    outRimPlug.contents = (id)_outRimPlug.CGImage;
+    CGRect outRimPlugFrame = CGRectMake(0, 0, outRimPlugImageSize.width, outRimPlugImageSize.height);
+    outRimPlugFrame.origin.x = (sceneRect.origin.x+sceneRect.size.width) - outRimPlugFrame.size.width*0.5f;
+    outRimPlugFrame.origin.y = (sceneRect.origin.y) - outRimPlugFrame.size.height*0.5f;//upper right
+    outRimPlugFrame.origin.y -= yShiftForPlugThings;
+    outRimPlug.frame = outRimPlugFrame;
     
     
     coordScene = [CALayer layer];
@@ -641,7 +668,7 @@ typedef enum
     }
     
     maskOfCoord.frame = maskOfCoordFrame;
-//    [plug setMask:maskOfCoord];
+    [plug setMask:maskOfCoord];
     
     
     
@@ -649,6 +676,7 @@ typedef enum
     CGRect fullCoordMaskFrame = coordScene.bounds;
     fullCoordMaskFrame.origin.x -= 2;
     fullCoordMaskFrame.origin.y += 2;//shift that mask  just a bit so it does not disapear the edge of the socket
+    fullCoordMaskFrame.origin.y -= yShiftForPlugThings;
     fullCoordMask.frame = fullCoordMaskFrame;
     
     [fullCoordMask setBackgroundColor:[UIColor clearColor].CGColor];
@@ -691,6 +719,8 @@ typedef enum
     
     
     [self.dialUpView.layer addSublayer:plug];
+    [self.dialUpView.layer addSublayer:outRimPlug];
+    
     [self.dialUpView.layer addSublayer:coordScene];
     [coordScene addSublayer:coord];
     [fullCoordMask addSublayer:coordMask];
@@ -842,8 +872,10 @@ typedef enum
             //order of conditions is important, ...must have noUsersNearbyPopup AFTER composeBarView is set
             if ( self.composeBarView.superview && !self.noUsersNearbyPopup.superview)
             {
+                UIView *superView = self.composeBarView.superview;
+                UIView *fadedView = [superView viewWithTag:617];
                 
-                [self.composeBarView.superview addSubview:self.fadedOverView];
+                [superView insertSubview:self.fadedOverView belowSubview:fadedView];
                 self.fadedOverView.alpha = 0.0f;
                 NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
                 [self.composeBarView.superview addSubview:noUsersNearbyPopup];
@@ -884,8 +916,11 @@ typedef enum
         if (newUsersAlertStatus == NoUsersStatusFull)
         {
             //order of conditions is important, ...must have noUsersNearbyPopup AFTER composeBarView is set
+            UIView *superView = self.composeBarView.superview;
+            UIView *fadedView = [superView viewWithTag:617];
             
-            [self.composeBarView.superview addSubview:self.fadedOverView];
+            [superView insertSubview:self.fadedOverView belowSubview:fadedView];
+            
             self.fadedOverView.alpha = 0.0f;
             [self.composeBarView.superview addSubview:noUsersNearbyPopup];
             ///wait please

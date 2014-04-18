@@ -275,6 +275,24 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         return;
     }
     
+    if (!self.numberOfPeopleBeingTracked)
+    {
+        if (!timerToShowSearchingText)
+        {
+            [self startSearchingBehavior];
+        }
+        return;
+    }
+
+    //make sure invalidate Searching... behavior if must.
+    if (timerToShowSearchingText)
+    {
+        //invalidates current timer to show searching text stuff
+        [self timerToShowSearchingTextAction:nil];
+    }
+
+    
+    
     [notifyingStr beginEditing];
     [notifyingStr addAttribute:NSFontAttributeName
                          value:[UIFont boldSystemFontOfSize:15]
@@ -515,21 +533,26 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self.dateLastVisible];
         if (timeInterval > TIMEOUT)// TIMEOUT about 30 secs
         {
-            //hide peopleNearbyLabel;
-//            [self.peopleNearbyLabel.superview addSubview:self.searchingLabelView];
-//            [self.peopleNearbyLabel setHidden:YES];
-            self.peopleNearbyLabel.text = @"Searching for others";
-            timerToShowSearchingText = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(timerToShowSearchingTextAction:) userInfo:nil repeats:NO];
-            if (elipseTimer2)
-            {//nevr happn
-                [elipseTimer2 invalidate];
-                elipseTimer2 = nil;
-            }
-            elipseTimer2 = [NSTimer timerWithTimeInterval:0.3f target:self selector:@selector(elipseTimerAction2:) userInfo:nil repeats:YES];
-            [[NSRunLoop mainRunLoop] addTimer:elipseTimer2 forMode:NSDefaultRunLoopMode];
-            [[NSRunLoop mainRunLoop] addTimer:timerToShowSearchingText forMode:NSDefaultRunLoopMode];
+            [self startSearchingBehavior];
         }
     }
+}
+//helpy helperton
+-(void)startSearchingBehavior
+{
+    //hide peopleNearbyLabel;
+    //            [self.peopleNearbyLabel.superview addSubview:self.searchingLabelView];
+    //            [self.peopleNearbyLabel setHidden:YES];
+    self.peopleNearbyLabel.text = @"Searching for others";
+    timerToShowSearchingText = [NSTimer timerWithTimeInterval:5.0f target:self selector:@selector(timerToShowSearchingTextAction:) userInfo:nil repeats:NO];
+    if (elipseTimer2)
+    {//nevr happn
+        [elipseTimer2 invalidate];
+        elipseTimer2 = nil;
+    }
+    elipseTimer2 = [NSTimer timerWithTimeInterval:0.3f target:self selector:@selector(elipseTimerAction2:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:elipseTimer2 forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop mainRunLoop] addTimer:timerToShowSearchingText forMode:NSDefaultRunLoopMode];
 }
 //callthis to end this nav-bar 'searching' state
 -(void)timerToShowSearchingTextAction:(NSTimer*)trw
@@ -1615,6 +1638,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.presentAnimated = animated;
     self.needsToDoTransitionWithShadeView = YES;
     self.shadeView = [[UIView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.shadeView.tag = 617;
     [self.shadeView setBackgroundColor:backgroundColor];
     
     

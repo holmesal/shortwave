@@ -157,7 +157,8 @@
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
     // Set the token on firebase via the user object
-    [[FCUser owner] sendProviderDeviceToken:devToken]; // custom method
+
+    [[FCUser owner] sendProviderDeviceToken:devToken];
 }
 
 - (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {

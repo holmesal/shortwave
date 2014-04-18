@@ -84,7 +84,7 @@
 @property (nonatomic) CALayer *fullMask;
 @property (nonatomic) CALayer *invertedImage;
 @property (nonatomic) CALayer *spinnerRod;
-@property (nonatomic) CALayer *trail;
+@property (nonatomic) CALayer *trailPositive;
 
 
 
@@ -113,7 +113,7 @@
 @synthesize fullMask;
 
 @synthesize spinnerRod;
-@synthesize trail;
+@synthesize trailPositive;
 
 @synthesize centeredIconImageView;
 
@@ -138,6 +138,7 @@
         [self.contentLayer setFrame:self.bounds];
         [self.layer addSublayer:self.contentLayer];
         [self.contentLayer addSublayer:self.spinnerRod];
+        [self.contentLayer addSublayer:self.trailPositive];
         targetAngularVelocity = 1.8f;
         
         panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(rotationGesture:)];
@@ -163,20 +164,35 @@
     {
         //build
         spinnerRod = [CALayer layer];
+        
         [spinnerRod setFrame:self.bounds];
         CAShapeLayer *theRod =  [CAShapeLayer layer];
         [theRod setBackgroundColor:[UIColor clearColor].CGColor];
         [theRod setStrokeColor:[UIColor whiteColor].CGColor];
         [theRod setLineCap:kCALineCapRound];
-        [theRod setLineWidth:1.0f];
+        [theRod setLineWidth:4.0f];
         UIBezierPath *bezPath = [[UIBezierPath alloc] init];
         [bezPath moveToPoint:CGPointMake(spinnerRod.frame.size.width*0.5f, spinnerRod.frame.size.height*0.5f)];
-        [bezPath addLineToPoint:CGPointMake(spinnerRod.frame.size.width*0.5f, 3)];
+        [bezPath addLineToPoint:CGPointMake(spinnerRod.frame.size.width*0.5f, 2.5)];
         [theRod setPath:bezPath.CGPath];
         
         [spinnerRod addSublayer:theRod];
     }
     return spinnerRod;
+}
+-(CALayer*)trailPositive
+{
+    if (!trailPositive)
+    {
+//        static CGFloat dim = 272.0f;
+        trailPositive = [CALayer layer];
+        [trailPositive setContentsGravity:kCAGravityResizeAspectFill];
+        UIImage *trailImage = [UIImage imageNamed:@"radar.png"];
+        trailPositive.contents = (id)trailImage.CGImage;
+        trailPositive.frame = self.bounds;
+        
+    }
+    return trailPositive;
 }
 
 -(void)buildRoundMaskAtRadius:(CGFloat)radius
@@ -449,6 +465,17 @@
 //    NSLog(@"vA_Accum %f", vA_Accum);
     
     spinnerRod.transform = CATransform3DMakeRotation(r_Accum, 0, 0, 1);
+//    trailPositive.opacity = positiveOpacy;
+//    NSLog(@"dr = %f", dr);
+//    NSLog(@"r_Accum = %f", r_Accum);
+    CGFloat dAccum = r_Accum-lastRAccum;
+//    NSLog(@"dAccum = %f", dAccum);
+    
+    CGFloat p = (dAccum)/0.11099;
+    CGFloat positiveOpacity = MAX(0, p);
+//    NSLog(@"positiveOpacity = %f", positiveOpacity);
+    trailPositive.transform = CATransform3DMakeRotation(r_Accum, 0, 0, 1);
+    trailPositive.opacity = positiveOpacity;
     time = t1;
 }
 

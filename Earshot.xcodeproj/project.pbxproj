@@ -8,8 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
+		AA2B983A1900D625002C0BC7 /* icongradient.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2B98391900D625002C0BC7 /* icongradient.png */; };
+		AA2B983C1900E56A002C0BC7 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2B983B1900E56A002C0BC7 /* radar.png */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
 		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
+		AA643414190105E400419043 /* plugline.png in Resources */ = {isa = PBXBuildFile; fileRef = AA643413190105E400419043 /* plugline.png */; };
 		AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */; };
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
 		AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */; };
@@ -39,7 +42,6 @@
 		AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */; };
 		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF40AC218F12FD6000526BE /* UIImage+Resize.m */; };
-		AAF40AC918F149FB000526BE /* icongradient.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF40AC818F149FB000526BE /* icongradient.png */; };
 		C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8318FF857500C8050B /* Firebase.framework */; };
 		C0032A8618FF858800C8050B /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */; };
 		C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */; };
@@ -97,10 +99,13 @@
 
 /* Begin PBXFileReference section */
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		AA2B98391900D625002C0BC7 /* icongradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icongradient.png; sourceTree = "<group>"; };
+		AA2B983B1900E56A002C0BC7 /* radar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radar.png; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
 		AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESUserPMCell.m; sourceTree = "<group>"; };
+		AA643413190105E400419043 /* plugline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plugline.png; sourceTree = "<group>"; };
 		AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
 		AA69A5E818D7AD27000E6781 /* FCLiveBlurButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLiveBlurButton.h; sourceTree = "<group>"; };
@@ -148,7 +153,6 @@
 		AAE3743F18DC098B006A9C82 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		AAF40AC118F12FD6000526BE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AAF40AC218F12FD6000526BE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
-		AAF40AC818F149FB000526BE /* icongradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icongradient.png; sourceTree = "<group>"; };
 		C0032A8318FF857500C8050B /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
 		C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		C0032A8718FF877E00C8050B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
@@ -363,6 +367,7 @@
 		AAC6507418FA1E420010916D /* no internet assets */ = {
 			isa = PBXGroup;
 			children = (
+				AA643413190105E400419043 /* plugline.png */,
 				AAC6507518FA1E6B0010916D /* old */,
 				AAC6506C18FA1E3D0010916D /* cord.png */,
 				AAC6506D18FA1E3D0010916D /* cordmask.png */,
@@ -400,9 +405,10 @@
 				AAC6507418FA1E420010916D /* no internet assets */,
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,
+				AA2B983B1900E56A002C0BC7 /* radar.png */,
 				AAC6506818FA15F60010916D /* message.png */,
 				AAC6506918FA15F60010916D /* message@2x.png */,
-				AAF40AC818F149FB000526BE /* icongradient.png */,
+				AA2B98391900D625002C0BC7 /* icongradient.png */,
 				C02CE397186808B000305FC9 /* Firechat */,
 				C02CE3BB186808B000305FC9 /* FirechatTests */,
 				C02CE38C186808B000305FC9 /* Frameworks */,
@@ -608,11 +614,13 @@
 				C02CE39C186808B000305FC9 /* InfoPlist.strings in Resources */,
 				AADAB29F18F62C5F00E61579 /* Phone-cord-export-03.png in Resources */,
 				AAC6507018FA1E3D0010916D /* cord.png in Resources */,
-				AAF40AC918F149FB000526BE /* icongradient.png in Resources */,
 				AAC6506B18FA15F60010916D /* message@2x.png in Resources */,
+				AA2B983C1900E56A002C0BC7 /* radar.png in Resources */,
+				AA2B983A1900D625002C0BC7 /* icongradient.png in Resources */,
 				AAC6506A18FA15F60010916D /* message.png in Resources */,
 				AAC6507218FA1E3D0010916D /* plug.png in Resources */,
 				AAC6507118FA1E3D0010916D /* cordmask.png in Resources */,
+				AA643414190105E400419043 /* plugline.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

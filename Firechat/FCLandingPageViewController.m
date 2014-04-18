@@ -54,6 +54,8 @@ typedef enum
 
 //vars for searching view
 @property (weak, nonatomic) IBOutlet UIView *searchingView;
+@property (assign, nonatomic) NSInteger elipseCount;
+@property (strong, nonatomic) NSTimer *searchingElipseTimer;
 @property (weak, nonatomic) IBOutlet UILabel *searchingLabel;
 @property (weak, nonatomic) IBOutlet UILabel *numberPeopleNearbyLabel;
 @property (weak, nonatomic) IBOutlet UILabel *peopleNearbyGrammarLabel;
@@ -94,6 +96,9 @@ typedef enum
 
 
 @implementation FCLandingPageViewController
+
+@synthesize searchingElipseTimer;
+@synthesize elipseCount;
 
 @synthesize tracking;
 @synthesize beganShowingSearchingView;
@@ -174,7 +179,7 @@ typedef enum
         self.leftCircleLayer = [CALayer layer];
         [self.leftCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
         [self.leftCircleLayer setBorderColor:[UIColor whiteColor].CGColor];
-        [self.leftCircleLayer setBorderWidth:1.0f];
+        [self.leftCircleLayer setBorderWidth:0.9f];
         [self.leftCircleLayer setCornerRadius:self.leftCircleColorView.frame.size.width*0.5f];
         [self.leftCircleLayer setFrame:circleFrame];
         
@@ -182,12 +187,11 @@ typedef enum
         
         
         [self performSelector:@selector(circleBounceTimerAction:) withObject:nil afterDelay:1.0f];
-//        [self initializeCircleBounceTimerIfNecessary];
         
         self.rightCircleLayer = [CALayer layer];
         [self.rightCircleLayer setBackgroundColor:[UIColor clearColor].CGColor];
         [self.rightCircleLayer setBorderColor:[UIColor whiteColor].CGColor];
-        [self.rightCircleLayer setBorderWidth:1.0f];
+        [self.rightCircleLayer setBorderWidth:0.9f];
         [self.rightCircleLayer setCornerRadius:self.rightCircleColorView.frame.size.width*0.5f];
         [self.rightCircleLayer setFrame:circleFrame];
         [self.rightCircleColorView.layer addSublayer:self.rightCircleLayer];
@@ -201,7 +205,7 @@ typedef enum
     
 //    CGSize sizeOfIcon = {160.0f, 160.0f};
     CGRect iconContainerViewRect = self.spinnerImageView.frame;//CGRectMake((self.view.frame.size.width - sizeOfIcon.width)*0.5f, (self.view.frame.size.height-sizeOfIcon.height)*0.5f, sizeOfIcon.width, sizeOfIcon.height);
-    CGFloat topInset = 31+30-20;
+    CGFloat topInset = 31+30-19;
     CGFloat bottomInset = 568-478;
     iconContainerViewRect.origin.y = (([UIScreen mainScreen].bounds.size.height - topInset - bottomInset) - iconContainerViewRect.size.height)*0.5f;
     iconContainerViewRect.origin.y += topInset;
@@ -230,8 +234,9 @@ typedef enum
     [startTalkingBlurButton setRadius:startTalkingBlurButton.frame.size.width/2.0f];
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
-#pragma mark Alonso put colors here
-    NSArray *colorsHex = @[@"4F92E0", @"F1793A", @"AB4EFE", @"FBB829", @"00CF69", @"0074D9", @"39CCCC"];
+
+                        //     blue       purps      red        orng      yellow   realgreen//   seagreen
+    NSArray *colorsHex = @[@"4F92E0", @"AB4EFE", @"EF4F4F" ,@"F1793A", @"FBB829",  @"00CF69"];// @"0074D9"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
@@ -527,7 +532,6 @@ typedef enum
         
         NSString *newIcon = iconIndexStr;
         NSString *newColor = [self.view.backgroundColor toHexString];
-        NSLog(@"newColor = %@ oldColor = %@", newColor, owner.color);
         if (![oldColor isEqualToString:newColor] || ![oldIcon isEqualToString:newIcon])
         {
             //post a change message
@@ -577,20 +581,10 @@ typedef enum
     [welcomeView2 setFrame:tempFrame];
     
     CGRect targetFrameForExtractedImageView = frameForIcon;
-    targetFrameForExtractedImageView.origin.y = (self.welcomeLabel.frame.origin.y-frameForIcon.size.height)*0.5f;
+    targetFrameForExtractedImageView.origin.y = (self.welcomeLabel.frame.origin.y-frameForIcon.size.height)*0.5f + 8;
     
-    //welcomeView2.frame.origin.y - 5 - frameForIcon.size.height - 40;
-    
-    
-    
-    //    FCUser *owner = ((FCAppDelegate*)[UIApplication sharedApplication].delegate).owner;
     BOOL peripheralManagerIsRunning = owner.beacon.stackIsRunning;
-    //    if (peripheralManagerIsRunning)
-    //    {
-    //        targetFrameForExtractedImageView.origin.y = 20;
-    //        targetFrameForExtractedImageView.size = CGSizeMake(35, 35);
-    //    }
-    
+
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
          
@@ -759,7 +753,7 @@ typedef enum
                 [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
-        [self.radarView buildRoundMaskAtRadius:28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
+        [self.radarView buildRoundMaskAtRadius:4+28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
         [self.radarView animate];
         
 
@@ -1500,18 +1494,7 @@ typedef enum
     
     colorIndex = newColorIndex%colors.count;
     
-    //update left and right circles!
-    
-//    int left = colorIndex-1;
-//    int right = colorIndex+1;
-//    
-//    if (left < 0)
-//        left = colors.count-1;
-//    if (right == colors.count)
-//        right = 0;
-//    
-//    [self.leftCircleLayer setBackgroundColor:((UIColor*)[colors objectAtIndex:left]).CGColor];
-//    [self.rightCircleLayer setBackgroundColor:((UIColor*)[colors objectAtIndex:right]).CGColor];
+    NSLog(@"color = %@", [self.colors objectAtIndex:colorIndex]);
 }
 
 #pragma mark iconTableView delegate callback

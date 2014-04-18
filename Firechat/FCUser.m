@@ -26,6 +26,7 @@ typedef void (^CompletionBlockType)(id);
 @implementation FCUser
 @synthesize color, icon;
 @synthesize fuser;
+@synthesize deviceToken;
 
 static FCUser *currentUser;
 
@@ -81,10 +82,8 @@ static FCUser *currentUser;
     if (!fuser)
     {
         NSString *userId = bewser.userId;
-        
-    //    NSLog(@"self.ref = %@", self.ref);
-        
-        
+
+        self.deviceToken = self.deviceToken;
         self.color = color;
         self.icon = icon;
 
@@ -172,19 +171,40 @@ static FCUser *currentUser;
 # pragma mark - push notification registration
 - (void)sendProviderDeviceToken:(NSData *)token
 {
+    //setter and getter link this with firebase and NSUserDefaults as appropriate
     self.deviceToken = [self hexStringFromData:token];
-    NSLog(@"Got token: %@",self.deviceToken);
     
-    // This will fail if not logged in but no big deal
-    [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
+}
+//setter
+-(void)setDeviceToken:(NSString *)dvcToken
+{
+//    NSLog(@"Got token: %@",self.deviceToken);
+    deviceToken = dvcToken;
+    if (deviceToken)
+    {
+        // This will fail if not logged in but no big deal
+        [[self.ref childByAppendingPath:@"deviceToken"] setValue:self.deviceToken];
+        [[NSUserDefaults standardUserDefaults] setObject:dvcToken forKey:@"deviceToken"];
+    }
+}
+//gettter
+-(NSString*)deviceToken
+{
+    if (!deviceToken)
+    {
+        deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
+    }
+    return deviceToken;
 }
 
 - (NSString *)hexStringFromData:(NSData *)data
 {
 	NSMutableString *hex = [NSMutableString stringWithCapacity:[data length]*2];
-	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop) {
+	[data enumerateByteRangesUsingBlock:^(const void *bytes, NSRange byteRange, BOOL *stop)
+    {
 		const unsigned char *dataBytes = (const unsigned char *)bytes;
-		for (NSUInteger i = byteRange.location; i < byteRange.length; ++i) {
+		for (NSUInteger i = byteRange.location; i < byteRange.length; ++i)
+        {
 			[hex appendFormat:@"%02x", dataBytes[i]];
 		}
 	}];
