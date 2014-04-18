@@ -1028,7 +1028,9 @@ typedef enum
             break;
         case MessageComposeResultSent:
         {
-            
+            Mixpanel *mixpanel = [Mixpanel sharedInstance];
+            NSString *whatClass = NSStringFromClass([self class]);
+            [mixpanel track:@"Text message sent" properties:@{@"fromView": whatClass}];
         }
             break;
     }
