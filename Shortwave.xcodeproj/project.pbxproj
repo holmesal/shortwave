@@ -165,7 +165,7 @@
 		C013C4FC189EFF44001157E3 /* FCWallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCWallViewController.m; sourceTree = "<group>"; };
 		C020259018735B3300883A38 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		C020259218735B3D00883A38 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		C02CE38A186808B000305FC9 /* Earshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Earshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C02CE38A186808B000305FC9 /* Shortwave.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortwave.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02CE38D186808B000305FC9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		C02CE38F186808B000305FC9 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		C02CE391186808B000305FC9 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -174,15 +174,15 @@
 		C02CE399186808B000305FC9 /* Earshot-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Earshot-Info.plist"; sourceTree = "<group>"; };
 		C02CE39B186808B000305FC9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C02CE39D186808B000305FC9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		C02CE39F186808B000305FC9 /* Earshot-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Earshot-Prefix.pch"; sourceTree = "<group>"; };
+		C02CE39F186808B000305FC9 /* Shortwave-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Prefix.pch"; sourceTree = "<group>"; };
 		C02CE3A0186808B000305FC9 /* FCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FCAppDelegate.h; sourceTree = "<group>"; };
 		C02CE3A1186808B000305FC9 /* FCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FCAppDelegate.m; sourceTree = "<group>"; };
 		C02CE3A6186808B000305FC9 /* FCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = FCViewController.h; path = Firechat/FCViewController.h; sourceTree = "<group>"; };
 		C02CE3A7186808B000305FC9 /* FCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = FCViewController.m; path = Firechat/FCViewController.m; sourceTree = "<group>"; };
 		C02CE3AC186808B000305FC9 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FCViewController.xib; sourceTree = "<group>"; };
-		C02CE3B4186808B000305FC9 /* EarshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EarshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortwaveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C02CE3B5186808B000305FC9 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		C02CE3BD186808B000305FC9 /* EarshotTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "EarshotTests-Info.plist"; sourceTree = "<group>"; };
+		C02CE3BD186808B000305FC9 /* ShortwaveTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ShortwaveTests-Info.plist"; sourceTree = "<group>"; };
 		C02CE3BF186808B000305FC9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C02CE3C1186808B000305FC9 /* FirechatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirechatTests.m; sourceTree = "<group>"; };
 		C02CE3CB1868095900305FC9 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
@@ -420,8 +420,8 @@
 		C02CE38B186808B000305FC9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C02CE38A186808B000305FC9 /* Earshot.app */,
-				C02CE3B4186808B000305FC9 /* EarshotTests.xctest */,
+				C02CE38A186808B000305FC9 /* Shortwave.app */,
+				C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -482,7 +482,7 @@
 				C02CE399186808B000305FC9 /* Earshot-Info.plist */,
 				C02CE39A186808B000305FC9 /* InfoPlist.strings */,
 				C02CE39D186808B000305FC9 /* main.m */,
-				C02CE39F186808B000305FC9 /* Earshot-Prefix.pch */,
+				C02CE39F186808B000305FC9 /* Shortwave-Prefix.pch */,
 				AAE1028D18C4729200BC7269 /* Math.h */,
 				C0C75B2518F5EF0E004E1FB5 /* Constants.h */,
 			);
@@ -501,7 +501,7 @@
 		C02CE3BC186808B000305FC9 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				C02CE3BD186808B000305FC9 /* EarshotTests-Info.plist */,
+				C02CE3BD186808B000305FC9 /* ShortwaveTests-Info.plist */,
 				C02CE3BE186808B000305FC9 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -520,9 +520,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C02CE389186808B000305FC9 /* Earshot */ = {
+		C02CE389186808B000305FC9 /* Shortwave */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C02CE3C5186808B000305FC9 /* Build configuration list for PBXNativeTarget "Earshot" */;
+			buildConfigurationList = C02CE3C5186808B000305FC9 /* Build configuration list for PBXNativeTarget "Shortwave" */;
 			buildPhases = (
 				FC43C679E4654BBC9D761B36 /* Check Pods Manifest.lock */,
 				C02CE386186808B000305FC9 /* Sources */,
@@ -535,14 +535,14 @@
 			);
 			dependencies = (
 			);
-			name = Earshot;
+			name = Shortwave;
 			productName = Firechat;
-			productReference = C02CE38A186808B000305FC9 /* Earshot.app */;
+			productReference = C02CE38A186808B000305FC9 /* Shortwave.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C02CE3B3186808B000305FC9 /* EarshotTests */ = {
+		C02CE3B3186808B000305FC9 /* ShortwaveTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C02CE3C8186808B000305FC9 /* Build configuration list for PBXNativeTarget "EarshotTests" */;
+			buildConfigurationList = C02CE3C8186808B000305FC9 /* Build configuration list for PBXNativeTarget "ShortwaveTests" */;
 			buildPhases = (
 				C02CE3B0186808B000305FC9 /* Sources */,
 				C02CE3B1186808B000305FC9 /* Frameworks */,
@@ -553,9 +553,9 @@
 			dependencies = (
 				C02CE3BA186808B000305FC9 /* PBXTargetDependency */,
 			);
-			name = EarshotTests;
+			name = ShortwaveTests;
 			productName = FirechatTests;
-			productReference = C02CE3B4186808B000305FC9 /* EarshotTests.xctest */;
+			productReference = C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -581,7 +581,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Earshot" */;
+			buildConfigurationList = C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Shortwave" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -594,8 +594,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C02CE389186808B000305FC9 /* Earshot */,
-				C02CE3B3186808B000305FC9 /* EarshotTests */,
+				C02CE389186808B000305FC9 /* Shortwave */,
+				C02CE3B3186808B000305FC9 /* ShortwaveTests */,
 			);
 		};
 /* End PBXProject section */
@@ -737,7 +737,7 @@
 /* Begin PBXTargetDependency section */
 		C02CE3BA186808B000305FC9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C02CE389186808B000305FC9 /* Earshot */;
+			target = C02CE389186808B000305FC9 /* Shortwave */;
 			targetProxy = C02CE3B9186808B000305FC9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -856,8 +856,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
-				INFOPLIST_FILE = "Firechat/Earshot-Info.plist";
+				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
+				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -867,7 +867,7 @@
 					"-ObjC",
 					"-licucore",
 				);
-				PRODUCT_NAME = Earshot;
+				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -884,8 +884,8 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Firechat/Earshot-Prefix.pch";
-				INFOPLIST_FILE = "Firechat/Earshot-Info.plist";
+				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
+				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -895,7 +895,7 @@
 					"-ObjC",
 					"-licucore",
 				);
-				PRODUCT_NAME = Earshot;
+				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "439C768C-01DB-4175-95CE-BD5C2C7C1836";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -918,8 +918,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "FirechatTests/EarshotTests-Info.plist";
-				PRODUCT_NAME = EarshotTests;
+				INFOPLIST_FILE = "FirechatTests/ShortwaveTests-Info.plist";
+				PRODUCT_NAME = ShortwaveTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -937,8 +937,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
-				INFOPLIST_FILE = "FirechatTests/EarshotTests-Info.plist";
-				PRODUCT_NAME = EarshotTests;
+				INFOPLIST_FILE = "FirechatTests/ShortwaveTests-Info.plist";
+				PRODUCT_NAME = ShortwaveTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -947,7 +947,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Earshot" */ = {
+		C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Shortwave" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C02CE3C3186808B000305FC9 /* Debug */,
@@ -956,7 +956,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C02CE3C5186808B000305FC9 /* Build configuration list for PBXNativeTarget "Earshot" */ = {
+		C02CE3C5186808B000305FC9 /* Build configuration list for PBXNativeTarget "Shortwave" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C02CE3C6186808B000305FC9 /* Debug */,
@@ -965,7 +965,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C02CE3C8186808B000305FC9 /* Build configuration list for PBXNativeTarget "EarshotTests" */ = {
+		C02CE3C8186808B000305FC9 /* Build configuration list for PBXNativeTarget "ShortwaveTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C02CE3C9186808B000305FC9 /* Debug */,

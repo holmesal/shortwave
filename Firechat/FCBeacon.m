@@ -213,7 +213,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
 //            UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 //
 //            localNotification.fireDate = [NSDate date];
-//            localNotification.alertBody = @"Earshot users nearby!";
+//            localNotification.alertBody = @"Shortwave users nearby!";
 //            localNotification.timeZone = [NSTimeZone defaultTimeZone];
 //
 //            [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
@@ -367,7 +367,7 @@ if ([CLLocationManager isMonitoringAvailableForClass:[CLBeaconRegion class]])
             UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 
             localNotification.fireDate = [NSDate date];
-            localNotification.alertBody = @"Earshot users nearby!";
+            localNotification.alertBody = @"Shortwave users nearby!";
             localNotification.timeZone = [NSTimeZone defaultTimeZone];
 
             [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];

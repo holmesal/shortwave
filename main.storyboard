@@ -21,7 +21,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <attributedString key="attributedText">
                                     <fragment>
-                                        <string key="content">Earshot uses Location + Bluetooth (iBeacons) to connect you to other users nearby, and won't work properly without your permission.</string>
+                                        <string key="content">Shortwave uses Location + Bluetooth (iBeacons) to connect you to other users nearby, and won't work properly without your permission.</string>
                                         <attributes>
                                             <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="15" name="HelveticaNeue"/>
@@ -741,7 +741,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vP9-sB-rBu">
-                                <rect key="frame" x="300" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="302" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xdM-uQ-G6h" customClass="FCLiveBlurButton">
@@ -765,11 +765,11 @@
                                             <constraint firstAttribute="width" constant="69" id="ruw-UQ-LIo"/>
                                         </constraints>
                                     </view>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Earshot to a friend?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p62-vH-uMT">
-                                        <rect key="frame" x="75" y="543" width="171" height="15"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Send Shortwave to a friend?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p62-vH-uMT">
+                                        <rect key="frame" x="1" y="543" width="320" height="15"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="171" id="Apg-tr-np8"/>
+                                            <constraint firstAttribute="width" constant="320" id="Apg-tr-np8"/>
                                             <constraint firstAttribute="height" constant="15" id="pTW-iU-OP2"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>

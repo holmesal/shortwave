@@ -353,7 +353,7 @@ typedef enum
         [noUsersNearbyPopup setBackgroundColor:userColor];
         
         noUsersLabel = [self generateATopLabel];
-        [noUsersLabel setText:@"Send Earshot to a friend?"];
+        [noUsersLabel setText:@"Send Shortwave to a friend?"];
         CGFloat height = noUsersLabel.frame.size.height;
         [noUsersLabel sizeToFit];
         CGRect newFrame = noUsersLabel.frame;
@@ -1002,7 +1002,7 @@ typedef enum
         [mixpanel track:@"Text message button clicked" properties:@{@"fromView": whatClass}];
         
         NSArray *recipents = nil;
-        NSString *message = @"Hey! You should check out Earshot - getearshot.com";
+        NSString *message = @"You should get on Shortwave! getshortwave.com";
         
         MFMessageComposeViewController *messageController = [[MFMessageComposeViewController alloc] init];
         messageController.messageComposeDelegate = self;

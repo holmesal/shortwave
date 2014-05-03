@@ -407,7 +407,7 @@
         //        [app cancelAllLocalNotifications];
         // Add a new notifications
         UILocalNotification *notice = [[UILocalNotification alloc] init];
-        notice.alertBody = [NSString stringWithFormat:@"Earshot users nearby."];
+        notice.alertBody = [NSString stringWithFormat:@"Shortwave users nearby."];
         notice.alertAction = @"Converse";
         [app scheduleLocalNotification:notice];
     } else
@@ -1081,7 +1081,7 @@
                 [app cancelAllLocalNotifications];
                 // Add a new notification
                 UILocalNotification *notice = [[UILocalNotification alloc] init];
-                notice.alertBody = [NSString stringWithFormat:@"There is a new Earshot user nearby - say hi!"];
+                notice.alertBody = [NSString stringWithFormat:@"Shortwave users nearby!"];
                 notice.alertAction = @"Converse";
                 [app scheduleLocalNotification:notice];
                 // Update the date we use for the notification timeout
