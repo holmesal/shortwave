@@ -585,6 +585,8 @@ typedef enum
     
     BOOL peripheralManagerIsRunning = owner.beacon.stackIsRunning;
 
+    
+    [self.doneBlurButton setUserInteractionEnabled:NO];
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
          
@@ -643,6 +645,7 @@ typedef enum
                   [startTalkingBlurButton invalidatePressedLayer];
                   self.doneBlurButton.alpha = 0.0f;
                   self.startTalkingBlurButton.alpha = 1.0f;
+                  [self.doneBlurButton setUserInteractionEnabled:YES];
               }];
          }
      }];
