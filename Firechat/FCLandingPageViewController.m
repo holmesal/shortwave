@@ -503,6 +503,7 @@ typedef enum
 #pragma mark blurActionButton callbacks
 -(void)doneBlurButtonAction:(UIButton*)button
 {
+    
     [self continueWithDoneBlurButtonAction];
 }
 
@@ -692,6 +693,7 @@ typedef enum
 
 -(void)continueWithBluetooth:(NSNotification*)notification
 {
+//    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"showSearchingScreen"];
     [self removeBluetoothEvents];
     //after bluetooth stack is active
     //either you go to the wallviewcontroller or you become "Searching", based on kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN
@@ -753,10 +755,11 @@ typedef enum
             } else
             if (IS_ON_SIMULATOR)
             {
-                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
-        [self.radarView buildRoundMaskAtRadius:4+28.0f];//buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
+        [self.radarView buildRoundMaskAtRadius:4+28.0f];
+        //buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
         [self.radarView animate];
         
 
@@ -845,6 +848,8 @@ typedef enum
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+
     ////this is to fade in the view after splash screen is gone
     
     if (!hasBeenHereBefore)
@@ -860,6 +865,81 @@ typedef enum
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     
     
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"showSearchingScreen"])
+    {
+        hasBeenHereBefore = YES;
+        [self skipToSearchingScreen];
+    }
+    
+    
+}
+
+-(void)skipToSearchingScreen
+{
+    
+    UITableViewCell * cell = [iconTableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:self.selectedIconIndex inSection:0] ];
+    UIImageView* imageView = (UIImageView*)[cell viewWithTag:5];
+    [imageView setHidden:YES];
+    CGRect frameForIcon = CGRectMake(self.iconContainerView.frame.origin.x, self.iconContainerView.frame.origin.y, 50, 50);
+    frameForIcon.origin.x += (self.iconContainerView.frame.size.width-frameForIcon.size.width)*0.5f;
+    frameForIcon.origin.y += (self.iconContainerView.frame.size.height-frameForIcon.size.height)*0.5f;
+    
+    
+    self.originalFrameForIcon = frameForIcon;
+    self.extractedImageViewOnDone = [[UIImageView alloc] initWithFrame:frameForIcon];
+    [self.extractedImageViewOnDone setContentMode:UIViewContentModeScaleAspectFit];
+    NSString *imageName = [[self.icons objectAtIndex:self.selectedIconIndex] objectForKey:@"name"];
+    [self.extractedImageViewOnDone setImage:[UIImage imageNamed:imageName]];
+    //        [self.view addSubview:self.extractedImageViewOnDone];
+    self.extractedImageViewOnDone.alpha = 1.0f;
+    
+    for (UIView *subview in self.view.subviews)
+    {
+//        if (subview == self.doneBlurButton)
+//        {
+//            
+//        } else
+        if (subview == self.searchingView)
+        {
+            //                tempFrame.origin.y -=5;
+            //                welcomeView2.frame = tempFrame;
+            //                welcomeView2.alpha = 1.0f;
+        } else
+        if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
+        {
+            subview.alpha = 0.0f;
+            subview.transform = CGAffineTransformMakeTranslation(0, 0);
+        }
+    }
+    
+    [self.view addSubview:self.extractedImageViewOnDone];
+    
+//    [self continueWithDoneBlurButtonAction];
+//    [self continueWithBluetooth:nil];
+//
+    FCUser *owner = [FCUser owner];
+    __block CGRect tempFrame = welcomeView2.frame;
+    tempFrame.origin.x = (self.view.frame.size.width -tempFrame.size.width)*0.5f;
+    tempFrame.origin.y = (self.view.frame.size.height -tempFrame.size.height)*0.5f;
+    tempFrame.origin.y += 5;
+    [welcomeView2 setFrame:tempFrame];
+    
+    CGRect targetFrameForExtractedImageView = frameForIcon;
+    targetFrameForExtractedImageView.origin.y = (self.welcomeLabel.frame.origin.y-frameForIcon.size.height)*0.5f + 8;
+    
+    BOOL peripheralManagerIsRunning = owner.beacon.stackIsRunning;
+    
+    [UIView animateWithDuration:1.6f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+    {
+         self.extractedImageViewOnDone.frame = targetFrameForExtractedImageView;
+    } completion:^(BOOL finished)
+    {
+        [self continueWithBluetooth:nil];
+    }];
+    
+    
+
 }
 
 -(void)viewWillLayoutSubviews
