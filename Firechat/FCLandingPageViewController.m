@@ -304,6 +304,7 @@ typedef enum
     [iconTableView setSeparatorColor:[UIColor clearColor]];
     [iconTableView setShowsVerticalScrollIndicator:NO];
 //    [iconTableView setScrollEnabled:NO]
+    
     [iconTableView setUserInteractionEnabled:NO];
     
 
@@ -693,7 +694,6 @@ typedef enum
 
 -(void)continueWithBluetooth:(NSNotification*)notification
 {
-//    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"showSearchingScreen"];
     [self removeBluetoothEvents];
     //after bluetooth stack is active
     //either you go to the wallviewcontroller or you become "Searching", based on kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN
@@ -755,7 +755,7 @@ typedef enum
             } else
             if (IS_ON_SIMULATOR)
             {
-//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
             }
         }];
         [self.radarView buildRoundMaskAtRadius:4+28.0f];
@@ -866,7 +866,9 @@ typedef enum
     
     
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"showSearchingScreen"])
+    if (!IS_ON_SIMULATOR &&
+        [[NSUserDefaults standardUserDefaults] boolForKey:@"showSearchingScreen"] &&
+        ![FCUser owner].beacon.stackIsRunning)
     {
         hasBeenHereBefore = YES;
         [self skipToSearchingScreen];
@@ -915,9 +917,8 @@ typedef enum
     
     [self.view addSubview:self.extractedImageViewOnDone];
     
-//    [self continueWithDoneBlurButtonAction];
-//    [self continueWithBluetooth:nil];
-//
+    [self.view removeGestureRecognizer:self.panGesture];
+    
     FCUser *owner = [FCUser owner];
     __block CGRect tempFrame = welcomeView2.frame;
     tempFrame.origin.x = (self.view.frame.size.width -tempFrame.size.width)*0.5f;
@@ -936,6 +937,12 @@ typedef enum
     } completion:^(BOOL finished)
     {
         [self continueWithBluetooth:nil];
+        [[FCUser owner].beacon startBroadcasting];
+        [[FCUser owner].beacon startDetecting];
+        [[FCUser owner].beacon chirpBeacon];
+        
+        id own = [FCUser owner];
+        id baccon = [FCUser owner].beacon;
     }];
     
     
@@ -1672,6 +1679,7 @@ typedef enum
 //redraw the view as if it were the first time.
 -(void)resetAsNewAnimated
 {
+#warning userInteractionDisabled:NO set
     [self.view setUserInteractionEnabled:NO];
     
     self.welcomeView2.alpha = 0.0f;

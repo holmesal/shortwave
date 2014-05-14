@@ -866,10 +866,10 @@ typedef enum
 
 -(void)setUsersAlertStatus:(NoUsersStatus)newUsersAlertStatus
 {
-//    if (IS_ON_SIMULATOR)
-//    {
-//        return;
-//    }
+    if (IS_ON_SIMULATOR)
+    {
+        return;
+    }
     if (usersAlertStatus == NoUsersStatusNone)
     {
         if (newUsersAlertStatus == NoUsersStatusFull)
