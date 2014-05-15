@@ -600,9 +600,7 @@ typedef enum
              } else
              if (subview == welcomeView2)
              {
-                 //                tempFrame.origin.y -=5;
-                 //                welcomeView2.frame = tempFrame;
-                 //                welcomeView2.alpha = 1.0f;
+
              } else
              if (subview != self.extractedImageViewOnDone ) //&& subview != welcomeView2)
              {

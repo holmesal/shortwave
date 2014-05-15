@@ -324,22 +324,23 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)updateLine
 {
     //table view is flipped keep in mind
+    return;
     
-    if (self.wall.count)
-    {
-        CGRect rectOfZeroCell = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:self.wall.count-1 inSection:0 ]];
-//        NSLog(@"rectOfZeroCell = %@", NSStringFromCGRect(rectOfZeroCell));
-        
-        UIBezierPath *linePath = [UIBezierPath bezierPath];
-        CGFloat x = self.tableView.frame.size.width - (19.5 + 35/2.0f);
-        CGFloat ystart = rectOfZeroCell.origin.y+rectOfZeroCell.size.height - (7+35/2.0f);
-        CGFloat bottomOfScreen = self.tableView.contentOffset.y;
-        
-        [linePath moveToPoint:CGPointMake(x, ystart) ];//(heightForZeroPath)/2)];
-        [linePath addLineToPoint:CGPointMake(x, bottomOfScreen)];
-        
-        [lineLayer setPath:linePath.CGPath];
-    }
+//    if (self.wall.count)
+//    {
+//        CGRect rectOfZeroCell = [self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:self.wall.count-1 inSection:0 ]];
+////        NSLog(@"rectOfZeroCell = %@", NSStringFromCGRect(rectOfZeroCell));
+//        
+//        UIBezierPath *linePath = [UIBezierPath bezierPath];
+//        CGFloat x = self.tableView.frame.size.width - (19.5 + 35/2.0f);
+//        CGFloat ystart = rectOfZeroCell.origin.y+rectOfZeroCell.size.height - (7+35/2.0f);
+//        CGFloat bottomOfScreen = self.tableView.contentOffset.y;
+//        
+//        [linePath moveToPoint:CGPointMake(x, ystart) ];//(heightForZeroPath)/2)];
+//        [linePath addLineToPoint:CGPointMake(x, bottomOfScreen)];
+//        
+//        [lineLayer setPath:linePath.CGPath];
+//    }
 }
 
 -(void)readTime
