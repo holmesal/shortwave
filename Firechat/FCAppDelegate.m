@@ -201,7 +201,16 @@
             UINavigationController *navContr = (UINavigationController *)self.window.rootViewController;
             if (navContr.viewControllers.count > 1)
             {
-                FCLandingPageViewController *lvc =  (FCLandingPageViewController*)[navContr.viewControllers objectAtIndex:0];
+                FCLandingPageViewController *lvc = nil;// (FCLandingPageViewController*)[navContr.viewControllers objectAtIndex:0];
+                
+                for (UIViewController *vc in navContr.viewControllers)
+                {
+                    if ([vc isKindOfClass:[FCLandingPageViewController class]])
+                    {
+                        lvc = (FCLandingPageViewController*)vc;
+                        break;
+                    }
+                }
                 [lvc resetAsNewAnimated];
                 [navContr popToRootViewControllerAnimated:NO];
             }

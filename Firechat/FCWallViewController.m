@@ -1722,7 +1722,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     UINavigationController *navContr = self.navigationController;
     NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
     
-    UIViewController *landingPageViewController = [vc objectAtIndex:vc.count-2];
+    UIViewController *landingPageViewController = nil;
+    for (UIViewController *viewController in vc)
+    {
+        if ([viewController isKindOfClass:[FCLandingPageViewController class]])
+        {
+            landingPageViewController = viewController;
+        }
+    }
     
     [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:10.0f options:UIViewAnimationOptionCurveLinear animations:^
      {

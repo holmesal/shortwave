@@ -21,10 +21,12 @@ int main(int argc, char * argv[])
 {
     @autoreleasepool
     {
+        
         //Welcome back to main.m!  Goodbye, take care!
         return UIApplicationMain(argc,
                                  argv,
                                  NSStringFromClass([ESApplication class]),
                                  NSStringFromClass([FCAppDelegate class]));
+        
     }
 }
