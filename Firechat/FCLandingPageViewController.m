@@ -590,8 +590,7 @@ typedef enum
     
     [self.doneBlurButton setUserInteractionEnabled:NO];
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-     {
-         
+     {   
          
          for (UIView *subview in self.view.subviews)
          {
@@ -788,6 +787,8 @@ typedef enum
                  self.searchingView.alpha = 1.0f;
              } completion:^(BOOL finished)
              {
+                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"showSearchingScreen"];
+                 
                  [self.searchingView setUserInteractionEnabled:YES];
              }];
         }];
@@ -867,8 +868,10 @@ typedef enum
     
     
     if (!IS_ON_SIMULATOR &&
-        [[NSUserDefaults standardUserDefaults] boolForKey:@"showSearchingScreen"] &&
-        ![FCUser owner].beacon.stackIsRunning)
+        [[NSUserDefaults standardUserDefaults] boolForKey:@"showSearchingScreen"])
+//        &&
+        
+        //![FCUser owner].beacon.stackIsRunning)
     {
         hasBeenHereBefore = YES;
         [self skipToSearchingScreen];
@@ -1748,6 +1751,10 @@ typedef enum
     }
     NSLog(@"//handle the touch");
     return YES; // handle the touch
+}
+- (IBAction)forceDramaticTransition:(id)sender
+{
+    [self prepareToTransitionDramatically];
 }
 
 @end
