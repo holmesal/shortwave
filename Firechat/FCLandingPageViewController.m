@@ -590,7 +590,7 @@ typedef enum
     
     [self.doneBlurButton setUserInteractionEnabled:NO];
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-     {   
+     {
          
          for (UIView *subview in self.view.subviews)
          {
