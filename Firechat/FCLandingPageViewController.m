@@ -1724,6 +1724,8 @@ typedef enum
         
     }];
     
+    [self.doneBlurButton setUserInteractionEnabled:YES];
+    
     NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
 }
 
