@@ -235,8 +235,8 @@ typedef enum
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 
-                        //     blue       purps      red        orng      yellow   realgreen//   seagreen
-    NSArray *colorsHex = @[@"4F92E0", @"AB4EFE", @"EF4F4F" ,@"F1793A", @"FBB829",  @"00CF69"];// @"0074D9"];
+                        //     blue       purps      red        orng      yellow     green
+    NSArray *colorsHex = @[@"4793E7", @"A550F3", @"E15050" ,@"F1793A", @"E8AD27", @"02C263"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
