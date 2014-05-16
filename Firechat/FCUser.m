@@ -352,6 +352,8 @@ static FCUser *currentUser;
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setValue:self.id forKey:@"id"];
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"mustSendMessage"];
+    // Synchronize preferences
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 -(void)postHello:(NSString *)message
 {
