@@ -253,11 +253,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    UILocalNotification *notification = [[UILocalNotification alloc] init];
-    notification.alertBody = @"ERMAGERD TERMINATING";
-    notification.soundName = UILocalNotificationDefaultSoundName;
-    
-    [[UIApplication sharedApplication] presentLocalNotificationNow:notification];
 }
 
 #pragma mark custom touches captured
