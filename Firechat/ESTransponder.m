@@ -29,7 +29,7 @@
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
-#define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
+#define NOTIFICATION_TIMEOUT 30.0 //1200.0 // Minimum time between sending discover notifications
 #define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
 
@@ -946,7 +946,7 @@
             }
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-                [self debugNote:[NSString stringWithFormat:@"Exited region %lu",(unsigned long)indexOfThisRegion]];
+//                [self debugNote:[NSString stringWithFormat:@"Exited region %lu",(unsigned long)indexOfThisRegion]];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -1074,6 +1074,7 @@
     } else
     {
         NSLog(@"%@ NO", NSStringFromSelector(_cmd));
+        [self debugNote:@"NOT sending anon note - already sent"];
     }
 }
 
@@ -1083,6 +1084,8 @@
     if ([self.seen indexOfObject:userID] != NSNotFound) {
         // Attempt to send the notification
         [self sendDiscoverNotification];
+    } else {
+        [self debugNote:@"NOT sending anon note - user already seen"];
     }
 }
 
@@ -1102,7 +1105,7 @@
             // If it's been more than 20 minutes since the last notification OR app open
             NSDate *currentDate = [NSDate date];
             NSTimeInterval howLong = [currentDate timeIntervalSinceDate:self.lastNotificationEvent];
-            if (howLong > NOTIFICATION_TIMEOUT) {
+            if (isnan(howLong) || howLong > NOTIFICATION_TIMEOUT) {
                 NSLog(@"Sending a local discover notification!");
                 // Cancel all of the existing notifications
                 [app cancelAllLocalNotifications];
@@ -1117,9 +1120,11 @@
                 [self.mixpanel track:@"Notified of user nearby" properties:@{}];
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
+                [self debugNote:@"NOT sending disc note - timeout too short"];
             }
         } else {
             NSLog(@"There is already an existing discover notification - ignoring notification call");
+            [self debugNote:@"NOT sending disc note - existing note"];
         }
         
     } else

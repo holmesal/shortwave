@@ -92,11 +92,11 @@
 
         
     // Clear any outstanding local notifications
-    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localNotification) {
-        
-        [application cancelAllLocalNotifications];
-    }
+//    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+//    if (localNotification) {
+//        
+//        [application cancelAllLocalNotifications];
+//    }
 
     
     // Register for push notifications
