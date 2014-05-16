@@ -172,8 +172,8 @@
         UILocalNotification *notice = [[UILocalNotification alloc] init];
         notice.alertBody = text;
         notice.alertAction = @"Open";
-        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
-        
+//        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+        [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
     }
 }
 
@@ -903,6 +903,7 @@
     // What region?
     NSUUID *uuidVal = [region proximityUUID];
     NSString *uuid = [uuidVal UUIDString];
+    if(DEBUG_BEACON) NSLog(@"Got region event with UUID: %@",uuid);
     NSUInteger indexOfThisRegion = [self.regionUUIDS indexOfObject:uuid];
 //    NSLog(@"Got state %ld for region %lu", state, (unsigned long)indexOfThisRegion);
 //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
