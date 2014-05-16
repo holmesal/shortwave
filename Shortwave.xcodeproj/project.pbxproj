@@ -328,6 +328,13 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
+		AA4E2E531926A44500534F91 /* image loader */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "image loader";
+			sourceTree = "<group>";
+		};
 		AA8EC98B18C5039500A8C4DC /* extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -402,6 +409,7 @@
 		C02CE381186808B000305FC9 = {
 			isa = PBXGroup;
 			children = (
+				AA4E2E531926A44500534F91 /* image loader */,
 				AAC6507418FA1E420010916D /* no internet assets */,
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,

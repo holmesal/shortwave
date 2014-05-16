@@ -22,6 +22,8 @@
 #import "FCWallViewController.h"
 #import <CoreLocation/CoreLocation.h>
 #import <Crashlytics/Crashlytics.h>
+//#import <ESImageLoader/ESImagßeLoader.h>
+
 
 @interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>
 
@@ -53,10 +55,16 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+//    ESImageLoader *loader = [ESImageLoader sharedImageLoader];
+//    
+//    NSURL *url = [NSURL URLWithString:@"http://cdn3.raywenderlich.com/wp-content/uploads/2013/06/lib-header-search-2.png"];
+//    [loader loadImage:url completionBlock:^(UIImage *image, BOOL wasInstantaneous)
+//    {
+//        NSLog(@"image %@ wasInstantaneous %d", image, wasInstantaneous);
+//        
+//    } errorBlock:nil];
     
-
-    
-    // Register as a location manager delegate
+     // Register as a location manager delegate
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
@@ -131,23 +139,32 @@
     }
     
 
-//    if (!owner.fuser)
-//    {
-        [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
-            if (error != nil)
+    [self.authClient loginAnonymouslywithCompletionBlock:^(NSError* error, FAUser* user) {
+        if (error != nil)
+        {
+            //wait for internet and try again!
+            NSLog(@"error = %@", error.localizedDescription);
+            //loop itself every 1.5 seconds
+            [self performSelector:_cmd withObject:nil afterDelay:1.5];
+            
+        } else
+        {
+            owner.fuser = user; // We are now logged in
+            Firebase* authRef = [owner.rootRef childByAppendingPath:@".info/authenticated"];
+            __block FirebaseHandle isAuthenticatedHandle = [authRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
             {
-                //wait for internet and try again!
-                [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetStateChanged:) name:kReachabilityChangedNotification object:nil];
-                
-                
-            } else
-            {
-                owner.fuser = user; // We are now logged in
-            }
-        }];
-//    } else
-//    { 
-//    }
+                BOOL isAuthenticated = [snap.value boolValue];
+//                NSLog(@"isAuthenticated = %@", isAuthenticated ? @"YES" : @"NO");
+                if (!isAuthenticated)
+                {
+                    [authRef removeObserverWithHandle:isAuthenticatedHandle];
+                    owner.fuser = nil;
+                    [self authorizeWithFirebase];
+                }
+            }];
+        }
+    }];
+
 
 }
 
