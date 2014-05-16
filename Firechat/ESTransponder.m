@@ -232,6 +232,8 @@
         }
         // Filter the users based on timeout
         [self filterFirebaseUsers];
+        // Send the "users updated" event
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.earshotUsers allKeys] count]]}];
     }];
     
 //    self.seenRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"seen"];

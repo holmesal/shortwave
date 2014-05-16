@@ -80,9 +80,6 @@
     {
         NSLog(@"error = %@", error.localizedDescription);
     }];
-    
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    
 
     
     //notifications for when internet changes, handld in ESViewController, superclass to all UIViewControllers these days
@@ -102,7 +99,8 @@
     // Register for push notifications
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
-    
+    // Listen for updates to the number of users and set the app icon
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBadge:) name:kTransponderEventCountUpdated object:nil];
 
     
     // Add mixpanel
@@ -169,6 +167,12 @@
 //        [self authorizeWithFirebase];
 //    }
 //}
+
+- (void)updateBadge:(NSNotification *)note
+{
+    NSInteger count = [[note.userInfo objectForKey:@"count"] integerValue];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:count];
+}
 
 // Delegation methods
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
