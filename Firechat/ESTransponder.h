@@ -63,6 +63,9 @@ typedef enum
 // Chirp the iBeacon for a few seconds to wake up others
 - (void)chirpBeacon;
 
+// Shorthand for startDetecting, startBroadcasting, and chirpBeacon
+- (void)startAwesome;
+
 // If you're doing bluetooth stuff, stop it. Just stop.
 - (void)resetBluetooth;
 

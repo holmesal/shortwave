@@ -19,7 +19,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -138,7 +138,7 @@
         // Start flipping between the identity beacon and BLE
         [self startFlipping];
         // Chirp another beacona  few times to wake up other users
-        [self chirpBeacon];
+//        [self chirpBeacon];
         // Start the timer to filter the users
         [self startFilterTimer];
         // Start a repeating timer to prune the in-range users, every 10 seconds
@@ -152,6 +152,29 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
     }
     return self;
+}
+
+// Shorthand for startDetecting, startBroadcasting, and chirpBeacon
+- (void)startAwesome
+{
+    NSLog(@"Starting via startAwesome");
+    [self startBroadcasting];
+    [self startDetecting];
+    [self chirpBeacon];
+    
+    [self debugNote:@"Transponder is ready to let it rock."];
+}
+
+// Send a local notification for deep background debugging
+- (void)debugNote:(NSString *)text
+{
+    if (DEBUG_SHOW_NOTIFS) {
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = text;
+        notice.alertAction = @"Open";
+        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+        
+    }
 }
 
 - (void)pruneUsers
@@ -423,6 +446,7 @@
 
 - (void)startDetecting
 {
+    NSLog(@"startDetecting called");
     // Setup beacon monitoring for regions
     [self setupBeaconRegions];
     // Listen for major location changes
@@ -433,7 +457,7 @@
 
 - (void)startBroadcasting
 {
-    
+    NSLog(@"startBroadcast called");
     [self startBluetoothBroadcast];
     
 }
@@ -610,16 +634,17 @@
 // Below lie the functions for interacting with iBeacon
 - (void)chirpBeacon
 {
-    NSLog(@"chirpBeacon");
+    NSLog(@"chirpBeacon called!");
+    NSLog(@"Is stack running? %u", [self stackIsRunning]);
     UIApplication *application = [UIApplication sharedApplication];
     if ([application applicationState] == UIApplicationStateActive) {
-        if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
-        if (DEBUG_BEACON) NSLog(@"Current regions: %@",self.regions);
 
         // Don't do anything if you're already chirping
         if (self.currentlyChirping == YES) {
             if (DEBUG_BEACON) NSLog(@"Currently chirping, creation CANCELLED");
         } else{
+            if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
+            if (DEBUG_BEACON) NSLog(@"Current regions: %@",self.regions);
             // Build an array to sort
             NSMutableArray *fucker = [[NSMutableArray alloc] init];
 
@@ -631,6 +656,7 @@
             // Preticate - filter self.regions
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
             NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
+            if (DEBUG_BEACON) NSLog(@"Available regions count: %lu",(unsigned long)[availableNos count]);
             if ([availableNos count])
             {
                 NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
@@ -646,15 +672,18 @@
                                                                                      minor:0
                                                                                 identifier:[NSString stringWithFormat:@"Broadcast region %@",regionUUID]];
                 self.chirpBeaconData = [self.chirpBeaconRegion peripheralDataWithMeasuredPower:nil];
-
+                
                 // Start chirping
                 self.currentlyChirping = YES;
+
                 // Stop chirping after 10 seconds
                 [self performSelector:@selector(stopChirping) withObject:nil afterDelay:CHIRP_LENGTH];
                 // This region should be off-limits for a bit
                 [self disallowRegion:chosenIndex];
             } else
             {
+                // Not chirping
+                self.currentlyChirping = NO;
                 int timeoutSeconds = 10;
                 NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
@@ -800,14 +829,29 @@
     // Init the region tracker
     self.regions = [[NSMutableArray alloc] init];
     
+    // Log the regions already monitored
+    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
+        NSLog(@"Already monitoring region: %@", monitored);
+//        [self.locationManager stopMonitoringForRegion:monitored];
+    }
+    
 //    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
 //        [self.locationManager stopMonitoringForRegion:monitored];
 //    }
     
+    // Only set up the regions if they aren't already set up
+    BOOL alreadySetup = NO;
+    if ([[self.locationManager monitoredRegions] count] > 1) {
+        alreadySetup = YES;
+        if (DEBUG_BEACON) NSLog(@"Regions have already have been set up");
+    } else {
+        alreadySetup = NO;
+        if (DEBUG_BEACON) NSLog(@"Setting up regions for the first time");
+    }
+        
     // Regions 0-18 are available for wakeup chirps
     for (int major=0; major< MAX_BEACON; major++) {
         NSString *regionUUID = [self.regionUUIDS objectAtIndex:major];
-        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",regionUUID);
         // Start outside the region
         [self.regions addObject:@NO];
         // Create a region with this minor
@@ -817,13 +861,16 @@
 //        region.notifyEntryStateOnDisplay = YES;
         region.notifyOnEntry = YES;
         region.notifyOnExit = YES;
-        // Start monitoring via location manager
-        [self.locationManager startMonitoringForRegion:region];
+        // Start monitoring via location manager, if not already
+        if (alreadySetup == NO) {
+            if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",regionUUID);
+            [self.locationManager startMonitoringForRegion:region];
+        }
         // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
         [self.locationManager requestStateForRegion:region];
     }
-    
-    
+        
+        
     // Region 19 is available for ranging - totally separate
     // This might look like duplicate code, but it's way easier to understand if this gets set up as a separate region
     if (DEBUG_BEACON) NSLog(@"Setting up the mystical region %@",IDENTITY_BEACON_UUID);
@@ -835,8 +882,11 @@
 //    self.rangingRegion.notifyEntryStateOnDisplay = YES;
     self.rangingRegion.notifyOnEntry = YES;
     self.rangingRegion.notifyOnExit = YES;
-    // Start monitoring via location manager
-    [self.locationManager startMonitoringForRegion:self.rangingRegion];
+    if (alreadySetup == NO){
+        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",IDENTITY_BEACON_UUID);
+        // Start monitoring via location manager
+        [self.locationManager startMonitoringForRegion:self.rangingRegion];
+    }
     // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
     [self.locationManager requestStateForRegion:self.rangingRegion];
     // Start ranging for beacons in this region
@@ -902,10 +952,7 @@
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",uuid];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
+                [self debugNote:[NSString stringWithFormat:@"Entered region %lu",(unsigned long)indexOfThisRegion]];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -917,10 +964,7 @@
             }
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",major];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+                [self debugNote:[NSString stringWithFormat:@"Exited region %lu",(unsigned long)indexOfThisRegion]];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -1018,6 +1062,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
 {
+    NSLog(@"Region monitoring failed for region: %@", region);
     NSLog(@"Region monitoring failed with error: %@", [error localizedDescription]);
     
 }

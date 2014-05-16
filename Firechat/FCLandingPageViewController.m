@@ -938,9 +938,10 @@ typedef enum
     } completion:^(BOOL finished)
     {
         [self continueWithBluetooth:nil];
-        [[FCUser owner].beacon startBroadcasting];
-        [[FCUser owner].beacon startDetecting];
-        [[FCUser owner].beacon chirpBeacon];
+        // ALONSO COMMENTED THIS OUT
+//        [[FCUser owner].beacon startBroadcasting];
+//        [[FCUser owner].beacon startDetecting];
+//        [[FCUser owner].beacon chirpBeacon];
         
         id own = [FCUser owner];
         id baccon = [FCUser owner].beacon;
@@ -1069,10 +1070,11 @@ typedef enum
         [viewControllers addObject:nextViewController];
         [self.navigationController pushViewController:nextViewController animated:NO];
 
-        
-        [[FCUser owner].beacon startBroadcasting];
-        [[FCUser owner].beacon startDetecting];
-        [[FCUser owner].beacon chirpBeacon];
+
+        // ALONSO COMMENTED THIS OUT
+//        [[FCUser owner].beacon startBroadcasting];
+//        [[FCUser owner].beacon startDetecting];
+//        [[FCUser owner].beacon chirpBeacon];
         
     }
 }

@@ -35,12 +35,16 @@
 #define FIREBASE_ROOT_URL @"https://earshot-dev.firebaseio.com"
 // Show user ids on single tap
 #define DEBUG_SHOW_USER_ID_SINGLE_TAP YES
+// Show debug local notifications
+#define DEBUG_SHOW_NOTIFS YES
 #else
 
 // Use the production firebase
 #define FIREBASE_ROOT_URL @"https://earshot.firebaseio.com"
 // Don't show user ids on single tap
 #define DEBUG_SHOW_USER_ID_SINGLE_TAP NO
+// Don't show local notifications
+#define DEBUG_SHOW_NOTIFS NO
 
 //// Hide NSLogs
 #undef NSLog
