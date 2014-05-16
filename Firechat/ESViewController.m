@@ -882,7 +882,6 @@ typedef enum
                 
                 [superView insertSubview:self.fadedOverView belowSubview:fadedView];
                 self.fadedOverView.alpha = 0.0f;
-                NSLog(@"OOOH, parent will be %@", self.composeBarView.superview);
                 [self.composeBarView.superview addSubview:noUsersNearbyPopup];
 ///wait please
 

@@ -54,6 +54,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
+
+    
     // Register as a location manager delegate
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;

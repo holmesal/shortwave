@@ -338,16 +338,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        
 //        [linePath moveToPoint:CGPointMake(x, ystart) ];//(heightForZeroPath)/2)];
 //        [linePath addLineToPoint:CGPointMake(x, bottomOfScreen)];
-//        
+//
 //        [lineLayer setPath:linePath.CGPath];
 //    }
 }
 
--(void)readTime
-{
-    NSLog(@"sex.view bouns is %@", NSStringFromCGRect(self.view.frame));
-    NSLog(@"self.contentVIew bounds changed to : %@", NSStringFromCGRect(self.contentView.frame));
-}
+
 
 - (void)viewDidLoad
 {
@@ -355,7 +351,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //state of login flow
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"showSearchingScreen"];
     
-    [self performSelector:@selector(readTime) withObject:nil afterDelay:2];
+
     
     [self.view addObserver:self forKeyPath:@"frame" options:0 context:nil];
     
@@ -805,6 +801,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)dealloc
 {
+    NSLog(@"FCWallViewController dealloc");
     [self.wallRef removeObserverWithHandle:self.bindToWallHandle];
     [self.userPmListRef removeObserverWithHandle:self.bindToUserPmListHandle];
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];

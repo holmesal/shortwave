@@ -79,12 +79,15 @@
             // Send a push notification to this user
             Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
             [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-                // Make the push notification
-                NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-                                                   @"alert": text};
-                // Set the push notification
-                Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
-                [pushQueueRef setValue:pushNotification];
+                // Make the push notification IF the user allows it
+                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
+                {
+                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+                                                       @"alert": text};
+                    // Set the push notification
+                    Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+                    [pushQueueRef setValue:pushNotification];
+                }
             }];
         }
         
