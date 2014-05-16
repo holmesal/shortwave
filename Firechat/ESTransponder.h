@@ -22,6 +22,7 @@
 #define kTransponderEventTransponderEnabled @"Bluetooth Enabled"
 #define kTransponderEventTransponderDisabled @"Bluetooth Disabled"
 #define kTransponderTriggerChirpBeacon @"chirpBeacon"
+#define kTransponderEventCountUpdated @"WHO DAT"
 
 #define kTransponderEventEarshotUserDiscovered @"earshotDiscover"
 //nobody listens to the bellow

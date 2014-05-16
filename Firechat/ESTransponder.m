@@ -232,6 +232,8 @@
         }
         // Filter the users based on timeout
         [self filterFirebaseUsers];
+        // The app icon badge listens to these events
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.earshotUsers allKeys] count]]}];
     }];
     
 //    self.seenRef = [[[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.earshotID] childByAppendingPath:@"seen"];
@@ -1127,6 +1129,8 @@
                 self.lastNotificationEvent = [NSDate date];
                 // Track this via mixpanel
                 [self.mixpanel track:@"Notified of user nearby" properties:@{}];
+                // The app icon badge listens to these events
+                [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":@1}];
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
                 [self debugNote:@"NOT sending disc note - timeout too short"];
