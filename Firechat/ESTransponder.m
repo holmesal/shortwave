@@ -835,23 +835,10 @@
 //        [self.locationManager stopMonitoringForRegion:monitored];
     }
     
-//    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
-//        [self.locationManager stopMonitoringForRegion:monitored];
-//    }
-    
-    // Only set up the regions if they aren't already set up
-    BOOL alreadySetup = NO;
-    if ([[self.locationManager monitoredRegions] count] > 1) {
-        alreadySetup = YES;
-        if (DEBUG_BEACON) NSLog(@"Regions have already have been set up");
-    } else {
-        alreadySetup = NO;
-        if (DEBUG_BEACON) NSLog(@"Setting up regions for the first time");
-    }
-        
     // Regions 0-18 are available for wakeup chirps
     for (int major=0; major< MAX_BEACON; major++) {
         NSString *regionUUID = [self.regionUUIDS objectAtIndex:major];
+        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",regionUUID);
         // Start outside the region
         [self.regions addObject:@NO];
         // Create a region with this minor
@@ -861,16 +848,13 @@
 //        region.notifyEntryStateOnDisplay = YES;
         region.notifyOnEntry = YES;
         region.notifyOnExit = YES;
-        // Start monitoring via location manager, if not already
-        if (alreadySetup == NO) {
-            if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",regionUUID);
-            [self.locationManager startMonitoringForRegion:region];
-        }
+        // Start monitoring via location manager
+        [self.locationManager startMonitoringForRegion:region];
         // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
         [self.locationManager requestStateForRegion:region];
     }
-        
-        
+    
+    
     // Region 19 is available for ranging - totally separate
     // This might look like duplicate code, but it's way easier to understand if this gets set up as a separate region
     if (DEBUG_BEACON) NSLog(@"Setting up the mystical region %@",IDENTITY_BEACON_UUID);
@@ -882,11 +866,8 @@
 //    self.rangingRegion.notifyEntryStateOnDisplay = YES;
     self.rangingRegion.notifyOnEntry = YES;
     self.rangingRegion.notifyOnExit = YES;
-    if (alreadySetup == NO){
-        if (DEBUG_BEACON) NSLog(@"Starting to monitor for region %@",IDENTITY_BEACON_UUID);
-        // Start monitoring via location manager
-        [self.locationManager startMonitoringForRegion:self.rangingRegion];
-    }
+    // Start monitoring via location manager
+    [self.locationManager startMonitoringForRegion:self.rangingRegion];
     // OPTIONAL - if we need to initialize this region with an inside/outside state, do it here
     [self.locationManager requestStateForRegion:self.rangingRegion];
     // Start ranging for beacons in this region
