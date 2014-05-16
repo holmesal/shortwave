@@ -161,8 +161,6 @@
     [self startBroadcasting];
     [self startDetecting];
     [self chirpBeacon];
-    
-    [self debugNote:@"Transponder is ready to let it rock."];
 }
 
 // Send a local notification for deep background debugging
@@ -477,6 +475,7 @@
 {
     // start broadcasting if it's stopped
     if (!self.peripheralManager) {
+        [self debugNote:@"Transponder is booting bluetooth"];
         self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
     }
 }
@@ -497,6 +496,7 @@
     self.bluetoothAdvertisingData = @{CBAdvertisementDataServiceUUIDsKey:@[self.identifier], CBAdvertisementDataLocalNameKey:self.earshotID};
     
     // Start advertising over BLE
+    [self debugNote:@"Transponder is rocking the bluetooths"];
     [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
 }
 
@@ -721,10 +721,19 @@
 
 - (void)startFlipping
 {
-    self.isFlipping = YES;
-    self.broadcastMode = 0;
-    self.flippingBreaker = NO;
-    [self flipState];
+    // If you're in the foreground, start flipping the state
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    {
+        self.isFlipping = YES;
+        self.broadcastMode = 0;
+        self.flippingBreaker = NO;
+        [self flipState];
+    } else {
+        // You're in the background, so just start broadcasting on BLE
+        [self debugNote:@"Transponder is rocking the BLE."];
+        [self resetBluetooth];
+    }
+    
 }
 
 - (void)stopFlipping
@@ -1124,7 +1133,6 @@
             }
         } else {
             NSLog(@"There is already an existing discover notification - ignoring notification call");
-            [self debugNote:@"NOT sending disc note - existing note"];
         }
         
     } else

@@ -321,13 +321,6 @@
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     NSLog(@"Woke up via app delegate location manager callback");
-    if (DEBUG_SHOW_NOTIFS) {
-        UILocalNotification *notice = [[UILocalNotification alloc] init];
-        notice.alertBody = @"Beacon launched app delegate!";
-        notice.alertAction = @"Open";
-        //        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
-        [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
-    }
 }
 
 
