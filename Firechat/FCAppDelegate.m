@@ -60,8 +60,15 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     
-    //clear local notifications
+    // Setup the owner
+    // Can get owner later with [FCUser owner];
+    [self authorizeWithFirebase];
     
+    // Try to start the beacon (won't go if owner is null or owner.id is null)
+    [self attemptToStartBeacon];
+    
+    
+    // Fetch message prompts from firebase
     Firebase *fetchMessageHints = [[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"messageInputHints"];
     [fetchMessageHints observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
@@ -84,14 +91,12 @@
     
 
         
-    
-    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localNotification) {
-        
-        [application cancelAllLocalNotifications];
-    }
-    
-    [self authorizeWithFirebase]; //creates owner
+    // Clear any outstanding local notifications
+//    UILocalNotification *localNotification = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+//    if (localNotification) {
+//        
+//        [application cancelAllLocalNotifications];
+//    }
 
     
     // Register for push notifications
@@ -146,6 +151,15 @@
 //    { 
 //    }
 
+}
+
+- (void)attemptToStartBeacon
+{
+    FCUser *owner = [FCUser owner];
+    if (owner && owner.id) {
+        NSLog(@"The user has an ID - starting the transponder!");
+        [owner.beacon startAwesome];
+    }
 }
 
 //-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -302,7 +316,6 @@
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     NSLog(@"Woke up via app delegate location manager callback");
-    
 }
 
 

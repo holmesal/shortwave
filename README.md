@@ -1,4 +1,4 @@
-earshot
+shortwave
 =======
 
 hacking on earshot

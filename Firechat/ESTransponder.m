@@ -19,7 +19,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON NO
+#define DEBUG_BEACON YES
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -29,7 +29,7 @@
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
-#define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
+#define NOTIFICATION_TIMEOUT 30.0 //1200.0 // Minimum time between sending discover notifications
 #define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
 
@@ -138,7 +138,7 @@
         // Start flipping between the identity beacon and BLE
         [self startFlipping];
         // Chirp another beacona  few times to wake up other users
-        [self chirpBeacon];
+//        [self chirpBeacon];
         // Start the timer to filter the users
         [self startFilterTimer];
         // Start a repeating timer to prune the in-range users, every 10 seconds
@@ -152,6 +152,27 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterBackground) name:UIApplicationWillResignActiveNotification object:nil];
     }
     return self;
+}
+
+// Shorthand for startDetecting, startBroadcasting, and chirpBeacon
+- (void)startAwesome
+{
+    NSLog(@"Starting via startAwesome");
+    [self startBroadcasting];
+    [self startDetecting];
+    [self chirpBeacon];
+}
+
+// Send a local notification for deep background debugging
+- (void)debugNote:(NSString *)text
+{
+    if (DEBUG_SHOW_NOTIFS) {
+        UILocalNotification *notice = [[UILocalNotification alloc] init];
+        notice.alertBody = text;
+        notice.alertAction = @"Open";
+//        [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+        [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
+    }
 }
 
 - (void)pruneUsers
@@ -423,6 +444,7 @@
 
 - (void)startDetecting
 {
+    NSLog(@"startDetecting called");
     // Setup beacon monitoring for regions
     [self setupBeaconRegions];
     // Listen for major location changes
@@ -433,7 +455,7 @@
 
 - (void)startBroadcasting
 {
-    
+    NSLog(@"startBroadcast called");
     [self startBluetoothBroadcast];
     
 }
@@ -453,6 +475,7 @@
 {
     // start broadcasting if it's stopped
     if (!self.peripheralManager) {
+        [self debugNote:@"Transponder is booting bluetooth"];
         self.peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil];
     }
 }
@@ -473,6 +496,7 @@
     self.bluetoothAdvertisingData = @{CBAdvertisementDataServiceUUIDsKey:@[self.identifier], CBAdvertisementDataLocalNameKey:self.earshotID};
     
     // Start advertising over BLE
+    [self debugNote:@"Transponder is rocking the bluetooths"];
     [self.peripheralManager startAdvertising:self.bluetoothAdvertisingData];
 }
 
@@ -610,16 +634,17 @@
 // Below lie the functions for interacting with iBeacon
 - (void)chirpBeacon
 {
-    NSLog(@"chirpBeacon");
+    NSLog(@"chirpBeacon called!");
+    NSLog(@"Is stack running? %u", [self stackIsRunning]);
     UIApplication *application = [UIApplication sharedApplication];
     if ([application applicationState] == UIApplicationStateActive) {
-        if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
-        if (DEBUG_BEACON) NSLog(@"Current regions: %@",self.regions);
 
         // Don't do anything if you're already chirping
         if (self.currentlyChirping == YES) {
             if (DEBUG_BEACON) NSLog(@"Currently chirping, creation CANCELLED");
         } else{
+            if (DEBUG_BEACON) NSLog(@"Attempting to create new beacon!");
+            if (DEBUG_BEACON) NSLog(@"Current regions: %@",self.regions);
             // Build an array to sort
             NSMutableArray *fucker = [[NSMutableArray alloc] init];
 
@@ -631,6 +656,7 @@
             // Preticate - filter self.regions
             NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.isInside == %@)", @NO];
             NSArray *availableNos = [fucker filteredArrayUsingPredicate:predicate];
+            if (DEBUG_BEACON) NSLog(@"Available regions count: %lu",(unsigned long)[availableNos count]);
             if ([availableNos count])
             {
                 NSInteger randomChoice = esRandomNumberIn(0, (int)[availableNos count]);
@@ -646,15 +672,18 @@
                                                                                      minor:0
                                                                                 identifier:[NSString stringWithFormat:@"Broadcast region %@",regionUUID]];
                 self.chirpBeaconData = [self.chirpBeaconRegion peripheralDataWithMeasuredPower:nil];
-
+                
                 // Start chirping
                 self.currentlyChirping = YES;
+
                 // Stop chirping after 10 seconds
                 [self performSelector:@selector(stopChirping) withObject:nil afterDelay:CHIRP_LENGTH];
                 // This region should be off-limits for a bit
                 [self disallowRegion:chosenIndex];
             } else
             {
+                // Not chirping
+                self.currentlyChirping = NO;
                 int timeoutSeconds = 10;
                 NSLog(@"Couldn't find an open region, trying again in %i seconds.",timeoutSeconds);
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW,  timeoutSeconds*1000* NSEC_PER_MSEC), dispatch_get_main_queue(),                ^{
@@ -692,10 +721,19 @@
 
 - (void)startFlipping
 {
-    self.isFlipping = YES;
-    self.broadcastMode = 0;
-    self.flippingBreaker = NO;
-    [self flipState];
+    // If you're in the foreground, start flipping the state
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    {
+        self.isFlipping = YES;
+        self.broadcastMode = 0;
+        self.flippingBreaker = NO;
+        [self flipState];
+    } else {
+        // You're in the background, so just start broadcasting on BLE
+        [self debugNote:@"Transponder is rocking the BLE."];
+        [self resetBluetooth];
+    }
+    
 }
 
 - (void)stopFlipping
@@ -800,9 +838,11 @@
     // Init the region tracker
     self.regions = [[NSMutableArray alloc] init];
     
-//    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
+    // Log the regions already monitored
+    for (CLRegion *monitored in [self.locationManager monitoredRegions]){
+        NSLog(@"Already monitoring region: %@", monitored);
 //        [self.locationManager stopMonitoringForRegion:monitored];
-//    }
+    }
     
     // Regions 0-18 are available for wakeup chirps
     for (int major=0; major< MAX_BEACON; major++) {
@@ -872,6 +912,7 @@
     // What region?
     NSUUID *uuidVal = [region proximityUUID];
     NSString *uuid = [uuidVal UUIDString];
+    if(DEBUG_BEACON) NSLog(@"Got region event with UUID: %@",uuid);
     NSUInteger indexOfThisRegion = [self.regionUUIDS indexOfObject:uuid];
 //    NSLog(@"Got state %ld for region %lu", state, (unsigned long)indexOfThisRegion);
 //    NSLog(@"Got state %li for region %@ : %@",state,minor,region);
@@ -902,10 +943,7 @@
             
             if (DEBUG_BEACON){
                 NSLog(@"--- Entered region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Entered region %@",uuid];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] presentLocalNotificationNow:notice];
+                [self debugNote:[NSString stringWithFormat:@"Entered region %lu",(unsigned long)indexOfThisRegion]];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -917,10 +955,7 @@
             }
             if (DEBUG_BEACON){
                 NSLog(@"--- Exited region: %@", region);
-//                UILocalNotification *notice = [[UILocalNotification alloc] init];
-//                notice.alertBody = [NSString stringWithFormat:@"Exited region %@",major];
-//                notice.alertAction = @"Open";
-//                [[UIApplication sharedApplication] scheduleLocalNotification:notice];
+//                [self debugNote:[NSString stringWithFormat:@"Exited region %lu",(unsigned long)indexOfThisRegion]];
                 NSLog(@"%@",self.regions);
             }
             break;
@@ -1018,6 +1053,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error
 {
+    NSLog(@"Region monitoring failed for region: %@", region);
     NSLog(@"Region monitoring failed with error: %@", [error localizedDescription]);
     
 }
@@ -1047,6 +1083,7 @@
     } else
     {
         NSLog(@"%@ NO", NSStringFromSelector(_cmd));
+        [self debugNote:@"NOT sending anon note - already sent"];
     }
 }
 
@@ -1056,6 +1093,8 @@
     if ([self.seen indexOfObject:userID] != NSNotFound) {
         // Attempt to send the notification
         [self sendDiscoverNotification];
+    } else {
+        [self debugNote:@"NOT sending anon note - user already seen"];
     }
 }
 
@@ -1075,7 +1114,7 @@
             // If it's been more than 20 minutes since the last notification OR app open
             NSDate *currentDate = [NSDate date];
             NSTimeInterval howLong = [currentDate timeIntervalSinceDate:self.lastNotificationEvent];
-            if (howLong > NOTIFICATION_TIMEOUT) {
+            if (isnan(howLong) || howLong > NOTIFICATION_TIMEOUT) {
                 NSLog(@"Sending a local discover notification!");
                 // Cancel all of the existing notifications
                 [app cancelAllLocalNotifications];
@@ -1090,6 +1129,7 @@
                 [self.mixpanel track:@"Notified of user nearby" properties:@{}];
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
+                [self debugNote:@"NOT sending disc note - timeout too short"];
             }
         } else {
             NSLog(@"There is already an existing discover notification - ignoring notification call");
