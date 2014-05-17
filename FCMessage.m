@@ -94,7 +94,7 @@
         // Log the message to mixpanel
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Message Sent" properties:@{
-                                                     @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy},
+                                                     @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy, @"toUsers":earshotIds},
                                                      @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]]}];
     }
     

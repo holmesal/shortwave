@@ -96,6 +96,9 @@ static FCUser *currentUser;
         [mixpanel.people set:@{@"userID": self.id}];
         [mixpanel.people set:@{@"name": self.id}];
         
+        // Log the user id change
+        [mixpanel track:@"authIdChanged" properties:@{}];
+        
         if ([[NSUserDefaults standardUserDefaults] boolForKey:@"mustSendMessage"])
         {
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"mustSendMessage"];
@@ -242,6 +245,10 @@ static FCUser *currentUser;
     // Call update to set these values on firebase, and save to NSUserDefaults
     [self updateUserData];
     
+    // Log the new user to mixpanel
+    Mixpanel *mixpanel = [Mixpanel sharedInstance];
+    [mixpanel track:@"User generated" properties:@{}];
+    
 }
 
 - (void) updateUserData
@@ -346,6 +353,16 @@ static FCUser *currentUser;
 //generatesIds but also posts to wall a greeting message!
 - (void) generateIds
 {
+    
+    // This shouldn't be called if the user has already set an ID.
+    // Double-checking by looking in prefs
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSString *existingId = [prefs valueForKey:@"id"];
+    if (existingId) {
+        // Todo: identify calling function
+//        NSLog(@"Not changing the id, as one already exists. Someone incorrectly called generateIds, and the culprit is: ")
+    }
+    
     // Generate an id
     NSInteger idInt = esRandomNumberIn(0, 99999999);
     
