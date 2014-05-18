@@ -19,7 +19,7 @@
 
 #define DEBUG_CENTRAL NO
 #define DEBUG_PERIPHERAL NO
-#define DEBUG_BEACON YES
+#define DEBUG_BEACON NO
 #define DEBUG_USERS NO
 #define DEBUG_TIMEOUTS NO
 #define DEBUG_NOTIFICATIONS NO
@@ -29,7 +29,7 @@
 #define REPORTING_INTERVAL 12.0 // How often to report to firebase
 #define BACKGROUND_REPORTING_INTERVAL 3.0 // How often to report, when in the background
 #define BEACON_TIMEOUT 10.0 // How long to range when a beacon is discovered (background only)
-#define NOTIFICATION_TIMEOUT 30.0 //1200.0 // Minimum time between sending discover notifications
+#define NOTIFICATION_TIMEOUT 1200.0 // Minimum time between sending discover notifications
 #define CHIRP_LENGTH 10.0 // How long to chirp for? NOTE - might take up to 40 seconds more for other devices to exit the region
 
 
