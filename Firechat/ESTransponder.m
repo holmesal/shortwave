@@ -1104,6 +1104,15 @@
 - (void)sendDiscoverNotification
 
 {
+    // The app icon badge listens to these events
+    if ([[self.earshotUsers allKeys] count] == 0){
+        // Badge the number of bluetooth users
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.bluetoothUsers allKeys] count]]}];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":@1}];
+    } else {
+        // Badge the number of users tracked via firebase
+        [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":[NSNumber numberWithLong:[[self.earshotUsers allKeys] count]]}];
+    }
     // Only do this if the app is in the background
     //    NSLog(@"Current app state is %ld",[[UIApplication sharedApplication] applicationState]);
     UIApplication *app = [UIApplication sharedApplication];
@@ -1129,8 +1138,6 @@
                 self.lastNotificationEvent = [NSDate date];
                 // Track this via mixpanel
                 [self.mixpanel track:@"Notified of user nearby" properties:@{}];
-                // The app icon badge listens to these events
-                [[NSNotificationCenter defaultCenter] postNotificationName:kTransponderEventCountUpdated object:self userInfo:@{@"count":@1}];
             } else{
                 NSLog(@"It has only been %f seconds of the %f second notification timeout - ignoring notification call.", howLong, NOTIFICATION_TIMEOUT);
                 [self debugNote:@"NOT sending disc note - timeout too short"];
