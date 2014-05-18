@@ -235,8 +235,8 @@ typedef enum
     [startTalkingBlurButton addTarget:self action:@selector(startTalkingBlurButtonAction) forControlEvents:UIControlEventTouchUpInside];
     
 
-                        //     blue       purps      red        orng      yellow   realgreen//   seagreen
-    NSArray *colorsHex = @[@"4F92E0", @"AB4EFE", @"EF4F4F" ,@"F1793A", @"FBB829",  @"00CF69"];// @"0074D9"];
+                        //    blue       purple     red        orange     yellow      green
+    NSArray *colorsHex = @[@"4793E7", @"A550F3", @"E15050" ,@"F1793A", @"E8AD27",  @"02C263"];
     NSMutableArray *colorsMutable = [[NSMutableArray alloc] init];
     for (NSString *hexColor in colorsHex)
     {
@@ -246,28 +246,29 @@ typedef enum
     colors = [NSArray arrayWithArray:colorsMutable];
     
  
-    self.icons = @[@{@"name":@"1", @"attribution":@"John Caserta"}, //cloud
-                   @{@"name":@"2", @"attribution":@"Jardson A."}, //person
+    self.icons = @[@{@"name":@"1", @"attribution":@"Muneer A. Safiah"}, //lightning bolt
+                   @{@"name":@"2", @"attribution":@"Shane Miller"}, //apple
                    @{@"name":@"3", @"attribution":@"Yuko Iwai"}, //balloon
-                   @{@"name":@"4", @"attribution":@"Mister Pixel"},
-                   @{@"name":@"5", @"attribution":@"Edward Boatman"},
-                   @{@"name":@"6", @"attribution":@"Antonis Makriyannis"},
-                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"},
-                   @{@"name":@"8", @"attribution":@"Pedro Vidal"}, //sun
-                   @{@"name":@"9", @"attribution":@"Daniel Gamage"}, //stunners
+                   @{@"name":@"4", @"attribution":@"Mister Pixel"}, //pawprint
+                   @{@"name":@"5", @"attribution":@"Edward Boatman"}, //tree
+                   @{@"name":@"6", @"attribution":@"Antonis Makriyannis"}, //rocket
+                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"}, //star
+                   @{@"name":@"8", @"attribution":@"Matthew Kulp"}, //sun
+                   @{@"name":@"9", @"attribution":@"Les Kleuver"}, //shades
                    @{@"name":@"10", @"attribution":@"Jacob Thompson"}, //cherries
-                   @{@"name":@"11", @"attribution":@"José Manuel de Laá"}, //diamond
-                   @{@"name":@"12", @"attribution":@"Nick Abrams"}, //lightbulb
-                   @{@"name":@"13", @"attribution":@"Nick Abrams"}, //dish
+                   @{@"name":@"11", @"attribution":@"Matthew Kulp"}, //diamond
+                   @{@"name":@"12", @"attribution":@"Matthew Kulp"}, //lightbulb
+                   @{@"name":@"13", @"attribution":@"Jacob Halton"}, //coffee
                    @{@"name":@"14", @"attribution":@"Christopher T. Howlett"}, //pineapple
                    @{@"name":@"15", @"attribution":@"Agarunov Oktay-Abraham"}, //burger
-                   @{@"name":@"16", @"attribution":@"José Manuel de Laá"}, //backetball
+                   @{@"name":@"16", @"attribution":@"Edward Boatman"}, //basketball
                    @{@"name":@"17", @"attribution":@"Kelig Le Luron"}, //moon
                    @{@"name":@"18", @"attribution":@"Maxim Cherenkovsky"}, //snowflake
-                   @{@"name":@"19", @"attribution":@"Patrick Morrison"}, //chicken leg
-                   @{@"name":@"20", @"attribution":@"Jan-Kanty Pawelski"}, //pacman
+                   @{@"name":@"19", @"attribution":@"Geoffrey Joe"}, //chicken leg
+                   @{@"name":@"20", @"attribution":@"James Fenton"}, //paperplane
                    @{@"name":@"21", @"attribution":@"Matthew Clarke"}, //chef
-                   @{@"name":@"22", @"attribution":@"Christopher T. Howlett"} //flask
+                   @{@"name":@"22", @"attribution":@"Christopher T. Howlett"}, //flask
+//                   @{@"name":@"23", @"attribution":@"Carlos Sarmento"} //socks
                    ];
 # pragma mark Ethan match these to icons via an attribution at the bottom of the screen
 //    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
@@ -585,6 +586,8 @@ typedef enum
     
     BOOL peripheralManagerIsRunning = owner.beacon.stackIsRunning;
 
+    
+    [self.doneBlurButton setUserInteractionEnabled:NO];
     [UIView animateWithDuration:1.2f delay:0.0 usingSpringWithDamping:1.2 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
      {
          
@@ -643,6 +646,7 @@ typedef enum
                   [startTalkingBlurButton invalidatePressedLayer];
                   self.doneBlurButton.alpha = 0.0f;
                   self.startTalkingBlurButton.alpha = 1.0f;
+                  [self.doneBlurButton setUserInteractionEnabled:YES];
               }];
          }
      }];

@@ -32,7 +32,8 @@ typedef enum
     
 } WallState;
 
-
+@property (nonatomic) BOOL initializedTableView;
+@property (nonatomic) CGRect lastFrameForSelfView;
 @property (nonatomic) NSTimer *autoScrollLockTimer;
 @property (nonatomic) UITapGestureRecognizer *singleTapDebugGesture;
 
@@ -123,6 +124,7 @@ typedef enum
 
 @implementation FCWallViewController
 
+@synthesize initializedTableView;
 @synthesize autoScrollLockTimer;
 
 //searching label stuff
@@ -186,7 +188,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+    self.lastFrameForSelfView = self.view.frame;
     
     NSLog(@"self.dateLastVisible = %@", self.dateLastVisible);
     
@@ -340,9 +342,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }
 }
 
+-(void)readTime
+{
+    NSLog(@"sex.view bouns is %@", NSStringFromCGRect(self.view.frame));
+    NSLog(@"self.contentVIew bounds changed to : %@", NSStringFromCGRect(self.contentView.frame));
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self performSelector:@selector(readTime) withObject:nil afterDelay:2];
+    
+    [self.view addObserver:self forKeyPath:@"frame" options:0 context:nil];
     
     [self performSelector:@selector(foreground:) withObject:nil afterDelay:0.5f];
 //    [self foreground:nil];
@@ -470,7 +482,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
     
     // Load the compose view
-    [self loadComposeView];
+//    [self loadComposeView];
     
     //pm stuff setup
     
@@ -478,7 +490,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    [self.view addGestureRecognizer:panLeftGesture];
     
 
-    self.contentView.frame = self.view.bounds;
+//    self.contentView.frame = self.view.bounds;
     [self.contentView setClipsToBounds:YES];
     [self.contentView setBackgroundColor:[UIColor clearColor]];
     
@@ -695,66 +707,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     }
     
     //tableView setup goes on here!
+    if (!initializedTableView)
     {
+        initializedTableView = YES;
         CGFloat bottomEdgeInset = 50;
         self.tableView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
         //table view is upsid down, so insets beware
-        self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+//        self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
         
-        if (self.view.frame.size.height == 480)
-        {
-            // fix for the fact that the 3.5" screen is 88px shorter than the 4"
-            self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset+88, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
-        }
-        
-        //setup tableViewMask, remember tableView is upside down
-        if (NO) //(!tableViewMask)
-        {
-            //create tableViewMask
-            tableViewMask = [CALayer layer];
-            
-            
-            CGRect tableViewMaskFrame = {0.0f, 0.0f, tableView.frame.size.width, tableView.frame.size.height};
-            [tableViewMask setFrame:tableViewMaskFrame];
-            [tableViewMask setBackgroundColor:[UIColor clearColor].CGColor];
-            tableViewMask.anchorPoint = CGPointZero;
-            [tableView.layer setMask:tableViewMask];
-            
-            
-            //the area behind the whosethereview
-            CALayer *areaBehindWhoseThereView = [CALayer layer];
-            CGRect areaBehindWhoseThereViewFrame = {0.0f, tableViewMaskFrame.size.height-HeightOfWhoIsHereView,
-                                                    tableViewMaskFrame.size.width, HeightOfWhoIsHereView};
-            areaBehindWhoseThereView.frame = areaBehindWhoseThereViewFrame;
-            [areaBehindWhoseThereView setBackgroundColor:[UIColor clearColor].CGColor];
-            [tableViewMask addSublayer:areaBehindWhoseThereView];
-            
-            //the gradient layer underneath
-            CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-            CGRect gradientLayerFrame = {0.0f, areaBehindWhoseThereViewFrame.origin.y-HeightOfGradient,
-                                         tableView.frame.size.width, HeightOfGradient};
-            //high resolution drawing for retina, low res for non retina
-            [gradientLayer setContentsScale:[[UIScreen mainScreen] scale]];
-            [gradientLayer setFrame:gradientLayerFrame];
-            [gradientLayer setStartPoint:CGPointMake(0.5, 1)];
-            [gradientLayer setEndPoint:CGPointMake(0.5, 0)];
-            [gradientLayer setColors:@[(id)[UIColor clearColor].CGColor, (id)[UIColor blackColor].CGColor ] ];
-            [tableViewMask addSublayer:gradientLayer];
-            
-            //all the rest
-            CALayer *allTheRest = [CALayer layer];
-            CGFloat allRestHeight = tableView.frame.size.height - HeightOfWhoIsHereView - HeightOfGradient;
-            CGRect allTheRestFrame = {0.0f, gradientLayerFrame.origin.y-allRestHeight,
-                                      tableView.frame.size.width, allRestHeight};
-            [allTheRest setFrame:allTheRestFrame];
-            [allTheRest setBackgroundColor:[UIColor blackColor].CGColor];
-            [tableViewMask addSublayer:allTheRest];
-            
-            
-            //to center the anchor point, act as if tableview did scroll
-            [self scrollViewDidScroll:self.tableView];
-            
-        }
+//        if (self.view.frame.size.height == 480 || self.view.frame.size.height == 460)
+//        {
+//            // fix for 3.5" screen is 88px shorter than the 4". yuckys
+//            
+            self.tableView.contentInset = UIEdgeInsetsMake(bottomEdgeInset+(568-self.view.frame.size.height), 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+//        }
         
     }//end of tableview setup
     
@@ -762,17 +728,28 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 
+-(void)updateViewConstraints
+{
+    [super updateViewConstraints];
+    if (!self.composeBarView)
+    {//make sure updateViewConstraint being called doesn't mean loadComposeBarView always gets initialized.  Not sure when this function happens
+        [self loadComposeView];
+    }
+}
 
 
-
-- (void)loadComposeView{
+- (void)loadComposeView
+{
     CGRect viewBounds = self.view.bounds;
     
     NSLog(@"%f", viewBounds.origin.x);
     
+    //try to set constraints on this object
+//    NSLayoutConstraint *constraint = [NSLayoutConstraint constraint]
+    
     CGRect frame = CGRectMake(0.0f,
                               viewBounds.size.height - PHFComposeBarViewInitialHeight,
-                              viewBounds.size.width,
+                              self.view.frame.size.width,
                               PHFComposeBarViewInitialHeight);
     self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
     [self.composeBarView setMaxCharCount:160];
@@ -786,6 +763,39 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 
     [self.contentView addSubview:self.composeBarView];
+
+    
+    
+    UIView *composeBarView = self.composeBarView;
+//    NSArray *fixedHeight = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[composeBarView(==%d)]", (int)PHFComposeBarViewInitialHeight ]
+//                                                                              options:0
+//                                                                              metrics:nil
+//                                                                     views:NSDictionaryOfVariableBindings(composeBarView)];
+//    [self.composeBarView addConstraints:fixedHeight];
+    
+    
+//    [self.composeBarView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[composeBarView(==%d)]", (int)320 ]
+//                                                                                options:0
+//                                                                                metrics:nil
+//                                                                                  views:NSDictionaryOfVariableBindings(composeBarView)]];
+    NSLayoutConstraint *constraint1Y =  [NSLayoutConstraint constraintWithItem:composeBarView
+                                                                 attribute:NSLayoutAttributeTop
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.contentView
+                                                                 attribute:NSLayoutAttributeBottom
+                                                                multiplier:1.0
+                                                                  constant:-PHFComposeBarViewInitialHeight];
+    [self.contentView addConstraint:constraint1Y];
+    
+    NSLayoutConstraint *constraint2CenterX =  [NSLayoutConstraint constraintWithItem:composeBarView
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.contentView
+                                                                   attribute:NSLayoutAttributeCenterX
+                                                                  multiplier:1.0
+                                                                    constant:0];
+    [self.contentView addConstraint:constraint2CenterX];
+    
     
     
 }
@@ -796,6 +806,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.userPmListRef removeObserverWithHandle:self.bindToUserPmListHandle];
     [self.userPmListRef removeObserverWithHandle:self.removeFromUserPmListHandle];
     [self.trackingRef removeObserverWithHandle:trackingHandle];
+    [self.view removeObserver:self forKeyPath:@"frame"];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -1403,8 +1414,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     keyboardIsVisible = (sizeChange < 0);
     keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     
-    CGRect newContainerFrame = [[self tableView] frame];
-    newContainerFrame.size.height += sizeChange;
+//    CGRect newContainerFrame = [[self tableView] frame];
+//    newContainerFrame.size.height += sizeChange;
     
     CGRect newComposeBarFrame = [[self composeBarView] frame];
     newComposeBarFrame.origin.y += sizeChange;
@@ -1412,8 +1423,21 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     CGPoint contentOffset = {0.0f, tableView.contentOffset.y + sizeChange};
     
     //ethan changed this because edge insets is the way to go when resizing from keyboard
-    UIEdgeInsets edgeInsets = self.tableView.contentInset;
-    edgeInsets.top -= sizeChange;
+//    float bottomEdgeInset = 50;
+    UIEdgeInsets edgeInsets = self.tableView.contentInset;// UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+    
+//    if (self.view.frame.size.height == 480)
+//    {
+//        // fix for the fact that the 3.5" screen is 88px shorter than the 4"
+//        edgeInsets = UIEdgeInsetsMake(bottomEdgeInset+88, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
+//    }
+//    if (keyboardIsVisible)
+//    {
+        edgeInsets.top -= sizeChange;
+//    }
+//    self.tableView.contentInset;
+//    edgeInsets.top -= sizeChange;
+    
     
     [UIView animateWithDuration:duration
                           delay:0
@@ -1421,13 +1445,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                      animations:^
                     {
 //                         [[self tableView] setFrame:newContainerFrame];
-                        [self.tableView setContentInset:edgeInsets];
-                        [self.tableView setContentOffset:contentOffset];
+//                        [self.tableView setContentInset:edgeInsets];    //edges pull content on bottom
+                        [self.tableView setContentOffset:contentOffset];//scrollview scroll up
                         
-//                        [[self tableView] setContentInset:UIEdgeInsetsMake(0, 0, HeightOfWhoseHereView+HeightOfGradient, 0)];
-                         [[self composeBarView] setFrame:newComposeBarFrame];
-                    }
-                     completion:NULL];
+                        NSLog(@"edgeInset <- %@", NSStringFromUIEdgeInsets(edgeInsets));
+                        
+                        
+                        [[self tableView] setContentInset:edgeInsets];
+                         [[self composeBarView] setFrame:newComposeBarFrame]; //move composeBarView up
+                    } completion:NULL];
     
     // If the keyboard is coming up, broadcast as an iBeacon to sync surrounding users
     if (heightChange < 0) {
@@ -1499,7 +1525,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
+//    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
     
     if (scrollView == self.tableView && !decelerate)
     {
@@ -1508,12 +1534,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    NSLog(@"scrollViewDidEndDecelerating");
+//    NSLog(@"scrollViewDidEndDecelerating");
     [self ifTableViewIsNotAtBottomStartATimer];
 }
 -(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-    NSLog(@"scrollViewDidEndScrollingAnimation");
+//    NSLog(@"scrollViewDidEndScrollingAnimation");
     if (scrollView == self.tableView)
     {
         [self ifTableViewIsNotAtBottomStartATimer];
@@ -1522,8 +1548,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)ifTableViewIsNotAtBottomStartATimer
 {
-    NSLog(@"self.tableView = %f", self.tableView.contentOffset.y);
-    NSLog(@"edgeinset top = %f", self.tableView.contentInset.top);
+//    NSLog(@"self.tableView = %f", self.tableView.contentOffset.y);
+//    NSLog(@"edgeinset top = %f", self.tableView.contentInset.top);
     
     if (self.tableView.contentOffset.y + self.tableView.contentInset.top == 0)
     {
@@ -1752,7 +1778,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (!self.isPanAnimating)
     {
-        
         self.isPanAnimating = YES;
 //        CGPoint translation = [panLeftGesture translationInView:self.view];
         CGPoint velocity = [panLeftGesture velocityInView:self.view];
@@ -1872,5 +1897,32 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    }
 //}
 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if (object == self.view && [keyPath isEqualToString:@"frame"])
+    {
+        CGRect currentFrame = self.view.frame;
+        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
+        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
+
+        CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
+//        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIEdgeInsets e = self.tableView.contentInset;
+        e.top -= diffHeight;
+        
+        [UIView animateWithDuration:0.3f animations:^
+        {
+            CGRect tempFrame = self.composeBarView.frame;
+            tempFrame.origin.y += diffHeight;
+            self.composeBarView.frame = tempFrame;
+            self.tableView.contentInset = e;
+        }];
+        
+        
+        
+        self.lastFrameForSelfView = currentFrame;
+    }
+}
 
 @end

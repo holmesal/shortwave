@@ -141,8 +141,10 @@ static FCUser *currentUser;
         // Init the beacon
 //        self.beacon = [[FCBeacon alloc] initWithMajor:self.major andMinor:self.minor];
         // Init the transponder class
-        self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:FIREBASE_ROOT_URL];
-        
+        if (!IS_ON_SIMULATOR)
+        {
+            self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:FIREBASE_ROOT_URL];
+        }
         // Listen for beacon discover events
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:kTransponderEventEarshotUserDiscovered object:nil];
     }

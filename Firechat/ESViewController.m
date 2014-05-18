@@ -519,6 +519,7 @@ typedef enum
 
 -(void)panHandleUsersAlert:(UIPanGestureRecognizer*)pan
 {
+   
     CGFloat yVelocity = [pan velocityInView:self.noUsersNearbyPopup].y;
     if (yVelocity < 0)
     {
@@ -865,6 +866,10 @@ typedef enum
 
 -(void)setUsersAlertStatus:(NoUsersStatus)newUsersAlertStatus
 {
+    if (IS_ON_SIMULATOR)
+    {
+        return;
+    }
     if (usersAlertStatus == NoUsersStatusNone)
     {
         if (newUsersAlertStatus == NoUsersStatusFull)
