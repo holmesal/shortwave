@@ -290,9 +290,11 @@ typedef enum
     }
     [self setIconIndex:randIcon];
     
-    NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
-    NSString *iconName = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"name"];
-    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@ %@", attribution, iconName]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
+    int currentIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;
+    
+    NSString *attribution = [[self.icons objectAtIndex:currentIndex] objectForKey:@"attribution"];
+//    NSString *iconName = [[self.icons objectAtIndex:currentIndex] objectForKey:@"name"];
+    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//%@", attribution, iconName]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
     CGFloat heightOfFadedArea = self.cellHeight;//self.cellHeight;//self.cellHeight; //180;
     CGRect rect = self.iconContainerView.bounds;
@@ -1411,20 +1413,20 @@ typedef enum
                 [UIView animateWithDuration:0.25f delay:0.0f usingSpringWithDamping:1.25f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
                 {
                     
-                    int index = y/self.cellHeight;
-                    NSDictionary *dc = [self.icons objectAtIndex:index];
-//                    NSString *attribution = [dc objectForKey:@"attribution"];
-//                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];
-                    NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
-                    NSString *iconName = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"name"];
-                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@ %@", attribution, iconName]];
+//                    int index = y/self.cellHeight;
+
                     
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     
                 } completion:^(BOOL finished)
                 {
+                    int currentIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;//+(direction==1?-1:0);
+                    NSLog(@"self.iconIndex = %d", currentIndex);
+                    NSString *attribution = [[self.icons objectAtIndex:currentIndex] objectForKey:@"attribution"];
                     
+//                    NSString *iconName = [[self.icons objectAtIndex:currentIndex] objectForKey:@"name"];
+                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//%@", attribution, iconName]];
                 }];
             }
             
