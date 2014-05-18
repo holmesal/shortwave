@@ -876,7 +876,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Shortwave;
-				PROVISIONING_PROFILE = "8D0BF104-A5DE-4F71-9033-84C2E7924E24";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -888,8 +888,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
@@ -904,7 +904,7 @@
 					"-licucore",
 				);
 				PRODUCT_NAME = Shortwave;
-				PROVISIONING_PROFILE = "3B3439BC-234D-4DBF-B366-D714EDB72629";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

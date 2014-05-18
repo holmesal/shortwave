@@ -291,7 +291,8 @@ typedef enum
     [self setIconIndex:randIcon];
     
     NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
-    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
+    NSString *iconName = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"name"];
+    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@ %@", attribution, iconName]];//[[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"]];
 
     CGFloat heightOfFadedArea = self.cellHeight;//self.cellHeight;//self.cellHeight; //180;
     CGRect rect = self.iconContainerView.bounds;
@@ -1412,8 +1413,12 @@ typedef enum
                     
                     int index = y/self.cellHeight;
                     NSDictionary *dc = [self.icons objectAtIndex:index];
-                    NSString *attribution = [dc objectForKey:@"attribution"];
-                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];
+//                    NSString *attribution = [dc objectForKey:@"attribution"];
+//                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@", attribution]];
+                    NSString *attribution = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"attribution"];
+                    NSString *iconName = [[self.icons objectAtIndex:self.iconIndex] objectForKey:@"name"];
+                    [self.attributionLabel setText:[NSString stringWithFormat:@"Icon by %@ %@", attribution, iconName]];
+                    
                     [self.iconTableView setContentOffset:CGPointMake(0, y)];
                     self.iconIndex = iconIndex - numberOfWraps;
                     
