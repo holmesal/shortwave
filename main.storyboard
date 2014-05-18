@@ -319,9 +319,9 @@
                                                         <constraint firstAttribute="centerY" secondItem="sR9-7Q-T6Q" secondAttribute="centerY" id="Fqh-cg-qDg"/>
                                                         <constraint firstItem="hNe-T6-fzo" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="17" id="Ueu-LU-RCT"/>
                                                         <constraint firstItem="hNe-T6-fzo" firstAttribute="centerX" secondItem="1s7-CE-E9b" secondAttribute="centerX" id="Wqn-vs-ADj"/>
-                                                        <constraint firstAttribute="centerY" secondItem="hNe-T6-fzo" secondAttribute="centerY" id="WzV-Qs-CQA"/>
                                                         <constraint firstItem="sR9-7Q-T6Q" firstAttribute="leading" secondItem="wNA-VD-qQo" secondAttribute="leading" constant="74" id="YMI-hb-TGS"/>
                                                         <constraint firstItem="hNe-T6-fzo" firstAttribute="centerY" secondItem="1s7-CE-E9b" secondAttribute="centerY" constant="0.5" id="bVg-I4-DNg"/>
+                                                        <constraint firstItem="hNe-T6-fzo" firstAttribute="top" secondItem="wNA-VD-qQo" secondAttribute="top" constant="17" id="mOQ-6c-6fU"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
