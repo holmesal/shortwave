@@ -1188,6 +1188,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             NSLog(@"making an image cell");
             ESImageMessage *imageMessage = unknownTypeOfMessage;
             ESImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"ESImageCell"];
+            [imageCell setBackgroundColor:[UIColor clearColor]];
             
             [imageCell setImage:nil];
             [imageCell setProfileColor:imageMessage.color];
