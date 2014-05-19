@@ -354,21 +354,14 @@ static FCUser *currentUser;
 - (void) generateIds
 {
     
-    // This shouldn't be called if the user has already set an ID.
-    // Double-checking by looking in prefs
-//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-//    NSString *existingId = [prefs valueForKey:@"id"];
-//    if (existingId) {
-//        // Todo: identify calling function
-//        NSLog(@"Not changing the id, as one already exists. Someone incorrectly called generateIds, and the culprit is: ")
-//        
-//    }
     
     NSArray *syms = [NSThread  callStackSymbols];
     NSString *caller = [[NSString alloc] init];
-    if ([syms count] > 1) {
+    if ([syms count] > 1)
+    {
         caller = [NSString stringWithFormat: @"<%@ %p> %@ - caller: %@ ", [self class], self, NSStringFromSelector(_cmd),[syms objectAtIndex:1]];
-    } else {
+    } else
+    {
         caller = [NSString stringWithFormat: @"<%@ %p> %@", [self class], self, NSStringFromSelector(_cmd)];
     }
     
@@ -380,6 +373,11 @@ static FCUser *currentUser;
     
     // Generate an id
     NSInteger idInt = esRandomNumberIn(0, 99999999);
+    
+//    if (IS_ON_SIMULATOR)
+//    {
+//        idInt = 40515276;
+//    }
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setValue:self.id forKey:@"id"];

@@ -10,6 +10,8 @@
 		14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D45A069EAF964C748607E8B9 /* libPods.a */; };
 		AA2B983A1900D625002C0BC7 /* icongradient.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2B98391900D625002C0BC7 /* icongradient.png */; };
 		AA2B983C1900E56A002C0BC7 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2B983B1900E56A002C0BC7 /* radar.png */; };
+		AA2F91951929598B005081C4 /* ESImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F91941929598B005081C4 /* ESImageCell.m */; };
+		AA2F919C19296263005081C4 /* ESImageMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F919B19296263005081C4 /* ESImageMessage.m */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
 		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
 		AA643414190105E400419043 /* plugline.png in Resources */ = {isa = PBXBuildFile; fileRef = AA643413190105E400419043 /* plugline.png */; };
@@ -21,6 +23,10 @@
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
+		AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3152192A9712003D010F /* DataLoadingOperation.m */; };
+		AA9D3158192A9712003D010F /* DiscardableImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3154192A9712003D010F /* DiscardableImage.m */; };
+		AA9D3159192A9712003D010F /* ESImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3156192A9712003D010F /* ESImageLoader.m */; };
+		AA9D315C192AA14F003D010F /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D315B192AA14F003D010F /* UIImage+animatedGIF.m */; };
 		AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA3779A18F87BBC00B70B00 /* MessageUI.framework */; };
 		AAC6506718FA00700010916D /* RadarView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC6506618FA00700010916D /* RadarView.m */; };
 		AAC6506A18FA15F60010916D /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506818FA15F60010916D /* message.png */; };
@@ -101,6 +107,10 @@
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		AA2B98391900D625002C0BC7 /* icongradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icongradient.png; sourceTree = "<group>"; };
 		AA2B983B1900E56A002C0BC7 /* radar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = radar.png; sourceTree = "<group>"; };
+		AA2F91931929598B005081C4 /* ESImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageCell.h; sourceTree = "<group>"; };
+		AA2F91941929598B005081C4 /* ESImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageCell.m; sourceTree = "<group>"; };
+		AA2F919A19296263005081C4 /* ESImageMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageMessage.h; sourceTree = "<group>"; };
+		AA2F919B19296263005081C4 /* ESImageMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageMessage.m; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
@@ -122,6 +132,14 @@
 		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCOwnerMessageCell.m; sourceTree = "<group>"; };
 		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		AA9D3151192A9712003D010F /* DataLoadingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoadingOperation.h; sourceTree = "<group>"; };
+		AA9D3152192A9712003D010F /* DataLoadingOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataLoadingOperation.m; sourceTree = "<group>"; };
+		AA9D3153192A9712003D010F /* DiscardableImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscardableImage.h; sourceTree = "<group>"; };
+		AA9D3154192A9712003D010F /* DiscardableImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscardableImage.m; sourceTree = "<group>"; };
+		AA9D3155192A9712003D010F /* ESImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageLoader.h; sourceTree = "<group>"; };
+		AA9D3156192A9712003D010F /* ESImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageLoader.m; sourceTree = "<group>"; };
+		AA9D315A192AA14E003D010F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
+		AA9D315B192AA14F003D010F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		AAA3779A18F87BBC00B70B00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AAC6506518FA00700010916D /* RadarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadarView.h; sourceTree = "<group>"; };
 		AAC6506618FA00700010916D /* RadarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadarView.m; sourceTree = "<group>"; };
@@ -286,12 +304,9 @@
 		AA1F2DEE18C3D9070087AAF7 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				AA2F919919296235005081C4 /* messages */,
 				C05E124C186D3D5F00BA89EA /* FCUser.h */,
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
-				C02CE3D9186814A700305FC9 /* FCMessage.h */,
-				C02CE3DA186814A700305FC9 /* FCMessage.m */,
-				AA6BB86C18ED141E00EE6CF5 /* ESSwapUserStateMessage.h */,
-				AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */,
 			);
 			name = models;
 			sourceTree = "<group>";
@@ -311,6 +326,8 @@
 				AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */,
 				AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */,
 				AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */,
+				AA2F91931929598B005081C4 /* ESImageCell.h */,
+				AA2F91941929598B005081C4 /* ESImageCell.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -328,9 +345,30 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
+		AA2F919919296235005081C4 /* messages */ = {
+			isa = PBXGroup;
+			children = (
+				C02CE3D9186814A700305FC9 /* FCMessage.h */,
+				C02CE3DA186814A700305FC9 /* FCMessage.m */,
+				AA6BB86C18ED141E00EE6CF5 /* ESSwapUserStateMessage.h */,
+				AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */,
+				AA2F919A19296263005081C4 /* ESImageMessage.h */,
+				AA2F919B19296263005081C4 /* ESImageMessage.m */,
+			);
+			name = messages;
+			sourceTree = "<group>";
+		};
 		AA4E2E531926A44500534F91 /* image loader */ = {
 			isa = PBXGroup;
 			children = (
+				AA9D315A192AA14E003D010F /* UIImage+animatedGIF.h */,
+				AA9D315B192AA14F003D010F /* UIImage+animatedGIF.m */,
+				AA9D3151192A9712003D010F /* DataLoadingOperation.h */,
+				AA9D3152192A9712003D010F /* DataLoadingOperation.m */,
+				AA9D3153192A9712003D010F /* DiscardableImage.h */,
+				AA9D3154192A9712003D010F /* DiscardableImage.m */,
+				AA9D3155192A9712003D010F /* ESImageLoader.h */,
+				AA9D3156192A9712003D010F /* ESImageLoader.m */,
 			);
 			name = "image loader";
 			sourceTree = "<group>";
@@ -704,12 +742,16 @@
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
 				C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */,
+				AA9D3159192A9712003D010F /* ESImageLoader.m in Sources */,
 				AAC6506718FA00700010916D /* RadarView.m in Sources */,
+				AA9D315C192AA14F003D010F /* UIImage+animatedGIF.m in Sources */,
 				AAD2449418D777590042A93F /* FCLandingPageViewController.m in Sources */,
 				C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */,
 				AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */,
 				C02CE3DB186814A700305FC9 /* FCMessage.m in Sources */,
+				AA2F91951929598B005081C4 /* ESImageCell.m in Sources */,
 				AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */,
+				AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */,
 				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,
@@ -721,12 +763,14 @@
 				AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */,
 				C070A20518EF54C3000C9D3C /* CBUUID+Ext.m in Sources */,
 				AADE169118C52C8100F70F75 /* ESApplication.m in Sources */,
+				AA9D3158192A9712003D010F /* DiscardableImage.m in Sources */,
 				AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */,
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
 				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
+				AA2F919C19296263005081C4 /* ESImageMessage.m in Sources */,
 				C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */,
 				AADAB29A18F5F1AA00E61579 /* ESViewController.m in Sources */,
 			);
@@ -865,11 +909,21 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					$SOURCE_ROOT/include,
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/Facebook-iOS-SDK\"",
+					"\"${PODS_ROOT}/Headers/Facebook-iOS-SDK/FacebookSDK\"",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/PHFComposeBarView\"",
+					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
+				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -893,11 +947,21 @@
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					$SOURCE_ROOT/include,
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/Facebook-iOS-SDK\"",
+					"\"${PODS_ROOT}/Headers/Facebook-iOS-SDK/FacebookSDK\"",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/PHFComposeBarView\"",
+					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
+				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				OTHER_LDFLAGS = (
 					"-ObjC",

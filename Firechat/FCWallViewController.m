@@ -18,6 +18,11 @@
 #import "ESUserPMCell.h"
 #import "FCLandingPageViewController.h"
 #import <Mixpanel/Mixpanel.h>
+#import "ESImageCell.h"
+#import "ESImageMessage.h"
+#import "ESImageLoader.h"
+
+
 
 #define WIDTH_OF_PM_LIST 75.0f
 
@@ -698,8 +703,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [self.view insertSubview:self.pmTableViewContainer atIndex:0];
         [self.pmTableView setSeparatorColor:[UIColor redColor]];
         
-        [self.pmTableView setDelegate:self];
-        [self.pmTableView setDataSource:self];
+//        [self.pmTableView setDelegate:self];
+//        [self.pmTableView setDataSource:self];
 
         [self.pmTableView setBackgroundColor:[UIColor clearColor]];
         [self.pmTableViewContainer setBackgroundColor:[UIColor clearColor]];
@@ -954,16 +959,30 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)bindToWall
 {
     self.wallRef = [self.owner.ref childByAppendingPath:@"wall"];
-    // Watch for changes
     
     __weak typeof(self) weakSelf = self;
-
-    
     self.bindToWallHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
             if ([snapshot.value isKindOfClass:[NSDictionary class]])
             {
-            
+                if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
+                {
+                    NSLog(@"this is an image cell! %@", snapshot.value);
+                    
+                    
+                    
+                    ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
+                    //imageMessage
+                    [weakSelf.wall insertObject:imageMessage atIndex:0];
+                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
+                    [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
+                    if (!weakSelf.autoScrollLockTimer)
+                    {
+                        [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                    }
+                    [weakSelf updateLine];
+                    
+                } else
                 if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
                 {
                     ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
@@ -1164,6 +1183,60 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         id unknownTypeOfMessage = [self.wall objectAtIndex:indexPath.row];
     
+        if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+        {
+            NSLog(@"making an image cell");
+            ESImageMessage *imageMessage = unknownTypeOfMessage;
+            ESImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"ESImageCell"];
+            
+            [imageCell setImage:nil];
+            [imageCell setProfileColor:imageMessage.color];
+            [imageCell setProfileImage:imageMessage.icon];
+            
+            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.url] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
+            {
+                if (synchronous)
+                {
+                    [imageCell setImage:image];
+                } else
+                {
+                    NSIndexPath *currentIndexPath;
+                    for (NSIndexPath *indexPaths in [tableView indexPathsForVisibleRows])
+                    {
+                        if ([[self.wall objectAtIndex:indexPath.row] isKindOfClass:[ESImageMessage class]])
+                        {
+                            ESImageMessage *imageMessage = [self.wall objectAtIndex:indexPath.row];
+                            if ([url.absoluteString isEqualToString:imageMessage.url])
+                            {
+                                currentIndexPath  = indexPath;
+                                break;
+                            }
+                        }
+                    }
+                    if (currentIndexPath)
+                    {
+                        ESImageCell *imageCell = (ESImageCell*)[tableView cellForRowAtIndexPath:currentIndexPath];
+                        if (imageCell)
+                        {
+                    
+                            ESAssert([imageCell isKindOfClass:[ESImageCell class]], @"a cell was supposed to be an imagecell but is not");
+                            [imageCell setImage:image];
+                        }
+                    }
+                    
+                    
+                    
+                    
+                }
+            } isGif:imageMessage.isGif];
+            
+            //load image time
+            
+            
+            imageCell.tag = indexPath.row;
+            return imageCell;
+            
+        } else
         if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
         {
             FCMessage *message = unknownTypeOfMessage;
@@ -1205,7 +1278,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             BOOL userIsInTracking = [self isUserBeingTracked:cell.ownerID];
             
             [cell setFaded:!userIsInTracking animated:NO];
-
+            cell.tag = indexPath.row;
             return cell;
         } else
         if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
@@ -1227,7 +1300,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 
                 [cell doFirstTimeAnimation];
             }
-            
+            cell.tag = indexPath.row;
             return cell;
         }
     } else
@@ -1328,6 +1401,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (CGFloat) tableView:(UITableView *)tV heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"never called");
     if (tV == self.tableView)
     {
         if (indexPath.row >= self.wall.count)
@@ -1335,7 +1409,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             return 0.0f;
         }
         id unknownType = [self.wall objectAtIndex:indexPath.row];
-
+        NSLog(@"unknownType = %@", unknownType);
         if ([unknownType isKindOfClass:[FCMessage class]])
         {
 
@@ -1350,6 +1424,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
         {
             return 50;
+        } else
+        if ([unknownType isKindOfClass:[ESImageMessage class]])
+        {
+            return ESImageCell_IMAGE_CELL_HEIGHT;
         }
     } else
     if (tV == self.pmUsersTableView)
@@ -1444,11 +1522,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                         options:(animationCurve << 16)|UIViewAnimationOptionBeginFromCurrentState
                      animations:^
                     {
-//                         [[self tableView] setFrame:newContainerFrame];
-//                        [self.tableView setContentInset:edgeInsets];    //edges pull content on bottom
                         [self.tableView setContentOffset:contentOffset];//scrollview scroll up
                         
-                        NSLog(@"edgeInset <- %@", NSStringFromUIEdgeInsets(edgeInsets));
+//                        NSLog(@"edgeInset <- %@", NSStringFromUIEdgeInsets(edgeInsets));
                         
                         
                         [[self tableView] setContentInset:edgeInsets];
@@ -1468,6 +1544,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 // Pressed "send"
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
     // Send the message
+    
+    if ([composeBarView.text isEqualToString:@"image"])
+    {
+        ESImageMessage *messages = [[ESImageMessage alloc] init];
+        [messages testImageStaticMessage];
+        return;
+    }
+    if ([composeBarView.text isEqualToString:@"gif"])
+    {
+        ESImageMessage *messages = [[ESImageMessage alloc] init];
+        [messages testImageGifMessage];
+        return;
+    }
     FCMessage *message = [[FCMessage alloc] init];
     
     FCUser *owner = [FCUser owner];
