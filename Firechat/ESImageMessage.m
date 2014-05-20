@@ -37,14 +37,17 @@
             src = [dict objectForKey:@"src"];
             
             //is it a gif?
-            if ([type isEqualToString:@"gif"])
+            NSRange gifSuffixRange = [src rangeOfString:@".gif#.png"];
+            if (gifSuffixRange.location != NSNotFound &&
+                gifSuffixRange.location + gifSuffixRange.length == src.length)
             {
+                NSLog(@"it's a giffy!");
                 isGif = YES;
             } else
             {
                 isGif = NO;
             }
-            
+
             //ESAssertion check that all values are strings
             [self checkValidityOfValues:dict];
         }
@@ -60,7 +63,7 @@
 {
     NSString *string = [NSString stringWithFormat:@"I was expecting to get strings for text,ownerID,icon,color,type,src: %@", dict];
     
-    ESAssert(([text isKindOfClass:[NSString class]] &&
+    ESAssert((
              [ownerID isKindOfClass:[NSString class]] &&
              [icon isKindOfClass:[NSString class] ] &&
              [color isKindOfClass:[NSString class] ] &&

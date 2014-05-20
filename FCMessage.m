@@ -120,7 +120,8 @@
     
     // Finally, post the contents of the filter message, if they exist
     NSDictionary *responseMessage = [results objectForKey:@"message"];
-    if ([responseMessage count] != 0) {
+    if ([responseMessage count] != 0)
+    {
         // Post the message TO YOUR OWN WALL FIRST (faster?)
         Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
         [ownerMessageRef setValue:responseMessage];

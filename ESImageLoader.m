@@ -38,17 +38,18 @@ static ESImageLoader *loader;
 
 -(void)loadImage:(NSURL*)url completionBlock:(void(^)(UIImage* image, NSURL *url, BOOL synchronous))completion isGif:(BOOL)_isGif//error:(void(^)(NSError *error))errorBlock
 {
-//    DiscardableImage *discardableImage = [cache objectForKey:url];
-//    if ( discardableImage)
-//    {
+    DiscardableImage *discardableImage = [cache objectForKey:url];
+    if ( discardableImage)
+    {
+//        BOOL isMainThread = [NSThread isMainThread];
 //        dispatch_sync(dispatch_get_main_queue(), ^
 //        {
-//            NSLog(@"Load image from queue %@", url);
-//            completion(discardableImage.image, url, YES);
+            NSLog(@"Load image from cache %@", url);
+            completion(discardableImage.image, url, YES);
 //        });
-//    } else
-    __block BOOL isGif = _isGif;
+    } else
     {
+        __block BOOL isGif = _isGif;
         NSLog(@"NEW Add Image to operation queue %@", [url.absoluteString substringToIndex:5]);
 
         DataLoadingOperation *operation = [[DataLoadingOperation alloc] initWithUrl:url
@@ -65,6 +66,7 @@ static ESImageLoader *loader;
             }
             dispatch_sync(dispatch_get_main_queue(), ^
             {
+                [cache setObject:[[DiscardableImage alloc] initWithImage:img]  forKey:dlo.url];
                 completion(img, dlo.url, NO);
             });
             
