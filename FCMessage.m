@@ -11,17 +11,15 @@
 #import <Mixpanel/Mixpanel.h>
 
 @implementation FCMessage
-
 - (id) initWithSnapshot:(FDataSnapshot *)snapshot
 {
-    self = [super init];
-    if(!self) return Nil;
-    
-    self.text = [snapshot.value valueForKey:@"text"];
-    self.ownerID = [[snapshot.value valueForKey:@"meta"] objectForKey:@"ownerID"];
-    self.icon = [snapshot.value valueForKey:@"icon"];
-    self.color = [snapshot.value valueForKey:@"color"];
-    
+    if (self = [super init])
+    {
+        self.text = [snapshot.value valueForKey:@"text"];
+        self.ownerID = [[snapshot.value valueForKey:@"meta"] objectForKey:@"ownerID"];
+        self.icon = [snapshot.value valueForKey:@"icon"];
+        self.color = [snapshot.value valueForKey:@"color"];
+    }
     return self;
 }
 
@@ -53,7 +51,8 @@
                               @"meta":
                                   @{@"ownerID": owner.id, @"location":
                                         @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
-                                    }
+                                    },
+                              @"type":@"text"
                               };
     
     // Post the message TO YOUR OWN WALL FIRST (faster?)
@@ -121,7 +120,8 @@
     
     // Finally, post the contents of the filter message, if they exist
     NSDictionary *responseMessage = [results objectForKey:@"message"];
-    if ([responseMessage count] != 0) {
+    if ([responseMessage count] != 0)
+    {
         // Post the message TO YOUR OWN WALL FIRST (faster?)
         Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
         [ownerMessageRef setValue:responseMessage];

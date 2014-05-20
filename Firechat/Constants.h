@@ -30,6 +30,7 @@
 
 #ifdef DEBUG
 
+#define ESAssert(b, s) { NSAssert(b, s);}
 
 // Use the dev firebase
 #define FIREBASE_ROOT_URL @"https://earshot-dev.firebaseio.com"
@@ -39,6 +40,7 @@
 #define DEBUG_SHOW_NOTIFS YES
 #else
 
+#define ESAssert(b,s) if (!b) {NSLog([NSString stringWithFormat:@"ERROR: %@", s])};
 // Use the production firebase
 #define FIREBASE_ROOT_URL @"https://earshot.firebaseio.com"
 // Don't show user ids on single tap

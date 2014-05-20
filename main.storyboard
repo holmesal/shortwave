@@ -438,6 +438,51 @@
                                                     <segue destination="Onb-Ca-k4I" kind="push" identifier="fail" id="I1F-nt-3Va"/>
                                                 </connections>
                                             </tableViewCell>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ESImageCell" rowHeight="166" id="f45-q7-1Zd" customClass="ESImageCell">
+                                                <rect key="frame" x="0.0" y="222" width="320" height="166"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="f45-q7-1Zd" id="8e6-zN-5Hq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <subviews>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C7j-lE-pbf">
+                                                            <rect key="frame" x="74" y="17" width="232" height="135"/>
+                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                        </imageView>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xcp-7F-KCD">
+                                                            <rect key="frame" x="17" y="17" width="40" height="40"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <subviews>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IP5-x0-6GG">
+                                                                    <rect key="frame" x="10" y="10" width="20" height="20"/>
+                                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="20" id="ZaC-wG-csa"/>
+                                                                        <constraint firstAttribute="width" constant="20" id="dxi-94-utU"/>
+                                                                    </constraints>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="centerX" secondItem="IP5-x0-6GG" secondAttribute="centerX" id="3Vb-Uq-IMG"/>
+                                                                <constraint firstAttribute="height" constant="40" id="bJo-op-Eog"/>
+                                                                <constraint firstAttribute="centerY" secondItem="IP5-x0-6GG" secondAttribute="centerY" id="bfw-Wo-imA"/>
+                                                                <constraint firstAttribute="width" constant="40" id="f9b-E7-HA2"/>
+                                                            </constraints>
+                                                        </view>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="xcp-7F-KCD" firstAttribute="top" secondItem="8e6-zN-5Hq" secondAttribute="top" constant="17" id="LcH-N9-Ai8"/>
+                                                        <constraint firstItem="xcp-7F-KCD" firstAttribute="leading" secondItem="8e6-zN-5Hq" secondAttribute="leading" constant="17" id="jyb-Xw-fjb"/>
+                                                    </constraints>
+                                                </tableViewCellContentView>
+                                                <color key="backgroundColor" red="0.67595232660000004" green="0.036636003239999999" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <connections>
+                                                    <outlet property="iconImageView" destination="IP5-x0-6GG" id="VEu-1R-vzF"/>
+                                                    <outlet property="iconImageViewContiainer" destination="xcp-7F-KCD" id="u53-py-2HF"/>
+                                                    <outlet property="imageView" destination="C7j-lE-pbf" id="Df7-hT-Kzs"/>
+                                                </connections>
+                                            </tableViewCell>
                                         </prototypes>
                                     </tableView>
                                 </subviews>
