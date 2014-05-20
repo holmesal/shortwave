@@ -96,7 +96,10 @@
             }];
         }
         
-        // Is this a hubot message?
+        // Catch two-word shortbot messages
+        text = [text stringByReplacingOccurrencesOfString:@"short bot" withString:@"shortbot" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [text length])];
+        
+        // Is this a shortbot message?
         if ([text rangeOfString:@"shortbot" options:NSCaseInsensitiveSearch].location != NSNotFound || [text rangeOfString:@"short bot" options:NSCaseInsensitiveSearch].location != NSNotFound) {
             // Create a hubot message
             NSDictionary *shortbotMessage = @{
