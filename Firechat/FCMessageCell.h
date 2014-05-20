@@ -14,7 +14,6 @@
 @property (nonatomic) NSString *ownerID;
 
 @property (weak, nonatomic) IBOutlet UIImageView *profilePhoto;
-@property (weak, nonatomic) IBOutlet UILabel *username;
 @property (weak, nonatomic) IBOutlet UILabel *messageText;
 @property (weak, nonatomic) IBOutlet UILabel *timestamp;
 

@@ -27,6 +27,10 @@
 		AA9D3158192A9712003D010F /* DiscardableImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3154192A9712003D010F /* DiscardableImage.m */; };
 		AA9D3159192A9712003D010F /* ESImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3156192A9712003D010F /* ESImageLoader.m */; };
 		AA9D315C192AA14F003D010F /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D315B192AA14F003D010F /* UIImage+animatedGIF.m */; };
+		AA9D31A0192AC154003D010F /* ESSpringFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D319F192AC154003D010F /* ESSpringFlowLayout.m */; };
+		AA9D31A4192AF10C003D010F /* SWImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D31A3192AF10C003D010F /* SWImageCell.m */; };
+		AA9D31A7192AF285003D010F /* SWTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D31A6192AF285003D010F /* SWTextCell.m */; };
+		AA9D31AA192AF90C003D010F /* SWOwnerTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */; };
 		AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA3779A18F87BBC00B70B00 /* MessageUI.framework */; };
 		AAC6506718FA00700010916D /* RadarView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC6506618FA00700010916D /* RadarView.m */; };
 		AAC6506A18FA15F60010916D /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506818FA15F60010916D /* message.png */; };
@@ -142,6 +146,14 @@
 		AA9D3156192A9712003D010F /* ESImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageLoader.m; sourceTree = "<group>"; };
 		AA9D315A192AA14E003D010F /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		AA9D315B192AA14F003D010F /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
+		AA9D319E192AC154003D010F /* ESSpringFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESSpringFlowLayout.h; sourceTree = "<group>"; };
+		AA9D319F192AC154003D010F /* ESSpringFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESSpringFlowLayout.m; sourceTree = "<group>"; };
+		AA9D31A2192AF10C003D010F /* SWImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWImageCell.h; sourceTree = "<group>"; };
+		AA9D31A3192AF10C003D010F /* SWImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWImageCell.m; sourceTree = "<group>"; };
+		AA9D31A5192AF285003D010F /* SWTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTextCell.h; sourceTree = "<group>"; };
+		AA9D31A6192AF285003D010F /* SWTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTextCell.m; sourceTree = "<group>"; };
+		AA9D31A8192AF90C003D010F /* SWOwnerTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWOwnerTextCell.h; sourceTree = "<group>"; };
+		AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWOwnerTextCell.m; sourceTree = "<group>"; };
 		AAA3779A18F87BBC00B70B00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AAC6506518FA00700010916D /* RadarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadarView.h; sourceTree = "<group>"; };
 		AAC6506618FA00700010916D /* RadarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadarView.m; sourceTree = "<group>"; };
@@ -320,6 +332,7 @@
 		AA1F2DEF18C3D91A0087AAF7 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				AA9D31A1192AF0DA003D010F /* collection view cells */,
 				AAC6506518FA00700010916D /* RadarView.h */,
 				AAC6506618FA00700010916D /* RadarView.m */,
 				AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */,
@@ -347,6 +360,8 @@
 				C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */,
 				AAD2449218D777590042A93F /* FCLandingPageViewController.h */,
 				AAD2449318D777590042A93F /* FCLandingPageViewController.m */,
+				AA9D319E192AC154003D010F /* ESSpringFlowLayout.h */,
+				AA9D319F192AC154003D010F /* ESSpringFlowLayout.m */,
 				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
 				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
 				AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */,
@@ -417,6 +432,19 @@
 				C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */,
 			);
 			name = services;
+			sourceTree = "<group>";
+		};
+		AA9D31A1192AF0DA003D010F /* collection view cells */ = {
+			isa = PBXGroup;
+			children = (
+				AA9D31A2192AF10C003D010F /* SWImageCell.h */,
+				AA9D31A3192AF10C003D010F /* SWImageCell.m */,
+				AA9D31A8192AF90C003D010F /* SWOwnerTextCell.h */,
+				AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */,
+				AA9D31A5192AF285003D010F /* SWTextCell.h */,
+				AA9D31A6192AF285003D010F /* SWTextCell.m */,
+			);
+			name = "collection view cells";
 			sourceTree = "<group>";
 		};
 		AAC6507418FA1E420010916D /* no internet assets */ = {
@@ -742,10 +770,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
+				AA9D31A4192AF10C003D010F /* SWImageCell.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
 				C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */,
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
+				AA9D31AA192AF90C003D010F /* SWOwnerTextCell.m in Sources */,
 				AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */,
 				AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */,
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
@@ -753,6 +783,7 @@
 				C0064BED192C48BA00877CDF /* ESShortbotOverlay.m in Sources */,
 				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
 				C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */,
+				AA9D31A0192AC154003D010F /* ESSpringFlowLayout.m in Sources */,
 				AA9D3159192A9712003D010F /* ESImageLoader.m in Sources */,
 				AAC6506718FA00700010916D /* RadarView.m in Sources */,
 				AA9D315C192AA14F003D010F /* UIImage+animatedGIF.m in Sources */,
@@ -763,6 +794,7 @@
 				AA2F91951929598B005081C4 /* ESImageCell.m in Sources */,
 				AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */,
 				AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */,
+				AA9D31A7192AF285003D010F /* SWTextCell.m in Sources */,
 				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,

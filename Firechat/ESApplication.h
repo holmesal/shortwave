@@ -12,5 +12,5 @@
 @end
 //for capturing touches on a keyboard, to flash profile icons
 @protocol ESApplicationDelegate <UIApplicationDelegate>
-- (void)application:(ESApplication *)application willSendTouchEvent:(UIEvent *)event;
+//- (void)application:(ESApplication *)application willSendTouchEvent:(UIEvent *)event;
 @end

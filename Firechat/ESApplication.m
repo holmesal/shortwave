@@ -10,14 +10,14 @@
 
 @implementation ESApplication
 
-- (void)sendEvent:(UIEvent *)event
-{
-    if (event.type == UIEventTypeTouches)
-    {
-        id<ESApplicationDelegate> delegate = (id<ESApplicationDelegate>)self.delegate;
-        [delegate application:self willSendTouchEvent:event];
-    }
-    [super sendEvent:event];
-}
+//- (void)sendEvent:(UIEvent *)event
+//{
+//    if (event.type == UIEventTypeTouches)
+//    {
+//        id<ESApplicationDelegate> delegate = (id<ESApplicationDelegate>)self.delegate;
+//        [delegate application:self willSendTouchEvent:event];
+//    }
+//    [super sendEvent:event];
+//}
 
 @end
