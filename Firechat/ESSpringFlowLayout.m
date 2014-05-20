@@ -33,17 +33,22 @@
     return self;
 }
 
-- (void)setup {
+- (void)setup
+{
     _dynamicAnimator = [[UIDynamicAnimator alloc] initWithCollectionViewLayout:self];
     _visibleIndexPathsSet = [NSMutableSet set];
     _visibleHeaderAndFooterSet = [[NSMutableSet alloc] init];
 }
 
+
+
 - (void)prepareLayout
 {
+    //position teh colleciotn view layout attributes...
     [super prepareLayout];
     
-    if ([[UIApplication sharedApplication] statusBarOrientation] != self.interfaceOrientation) {
+    if ([[UIApplication sharedApplication] statusBarOrientation] != self.interfaceOrientation)
+    {
         [self.dynamicAnimator removeAllBehaviors];
         self.visibleIndexPathsSet = [NSMutableSet set];
     }
@@ -77,7 +82,8 @@
     
     CGPoint touchLocation = [self.collectionView.panGestureRecognizer locationInView:self.collectionView];
     
-    [newlyVisibleItems enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *item, NSUInteger idx, BOOL *stop) {
+    [newlyVisibleItems enumerateObjectsUsingBlock:^(UICollectionViewLayoutAttributes *item, NSUInteger idx, BOOL *stop)
+    {
         CGPoint center = item.center;
         UIAttachmentBehavior *springBehaviour = [[UIAttachmentBehavior alloc] initWithItem:item attachedToAnchor:center];
         
@@ -86,8 +92,10 @@
         springBehaviour.frequency = 1.0f;
         
         // If our touchLocation is not (0,0), we'll need to adjust our item's center "in flight"
-        if (!CGPointEqualToPoint(CGPointZero, touchLocation)) {
-            if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+        if (!CGPointEqualToPoint(CGPointZero, touchLocation))
+        {
+            if (self.scrollDirection == UICollectionViewScrollDirectionVertical)
+            {
                 CGFloat distanceFromTouch = fabsf(touchLocation.y - springBehaviour.anchorPoint.y);
                 
                 CGFloat scrollResistance;
@@ -99,7 +107,8 @@
                 
                 item.center = center;
                 
-            } else {
+            } else
+            {
                 CGFloat distanceFromTouch = fabsf(touchLocation.x - springBehaviour.anchorPoint.x);
                 
                 CGFloat scrollResistance;
@@ -130,10 +139,32 @@
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewLayoutAttributes *dynamicLayoutAttributes = [self.dynamicAnimator layoutAttributesForCellAtIndexPath:indexPath];
+    
+    
+//    UICollectionViewLayoutAttributes *dynamicLayoutAttributes = [self.dynamicAnimator layoutAttributesForCellAtIndexPath:indexPath];
+    
+    UICollectionViewLayoutAttributes *layoutAttributes = [self.dynamicAnimator layoutAttributesForCellAtIndexPath:indexPath];
+    if (!layoutAttributes)
+    {
+        layoutAttributes = [super layoutAttributesForItemAtIndexPath:indexPath];
+    }
+    return layoutAttributes;
+    
     // Check if dynamic animator has layout attributes for a layout, otherwise use the flow layouts properties. This will prevent crashing when you add items later in a performBatchUpdates block (e.g. triggered by NSFetchedResultsController update)
-    return (dynamicLayoutAttributes)?dynamicLayoutAttributes:[super layoutAttributesForItemAtIndexPath:indexPath];
+//    return (dynamicLayoutAttributes)?dynamicLayoutAttributes:[super layoutAttributesForItemAtIndexPath:indexPath];
 }
+/*
+ -(UICollectionViewLayoutAttributes*) layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+ {
+     UICollectionViewLayoutAttributes *layoutAttributes = [self.dynamicAnimator layoutAttributesForCellAtIndexPath:indexPath];
+     if (!layoutAttributes)
+     {
+         layoutAttributes = [super layoutAttributesForItemAtIndexPath:indexPath];
+     }
+     return layoutAttributes;
+     
+ }
+ */
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
     UIScrollView *scrollView = self.collectionView;
@@ -146,8 +177,10 @@
     
     CGPoint touchLocation = [self.collectionView.panGestureRecognizer locationInView:self.collectionView];
     
-    [self.dynamicAnimator.behaviors enumerateObjectsUsingBlock:^(UIAttachmentBehavior *springBehaviour, NSUInteger idx, BOOL *stop) {
-        if (self.scrollDirection == UICollectionViewScrollDirectionVertical) {
+    [self.dynamicAnimator.behaviors enumerateObjectsUsingBlock:^(UIAttachmentBehavior *springBehaviour, NSUInteger idx, BOOL *stop)
+    {
+        if (self.scrollDirection == UICollectionViewScrollDirectionVertical)
+        {
             CGFloat distanceFromTouch = fabsf(touchLocation.y - springBehaviour.anchorPoint.y);
             
             CGFloat scrollResistance;
@@ -162,7 +195,8 @@
             item.center = center;
             
             [self.dynamicAnimator updateItemUsingCurrentState:item];
-        } else {
+        } else
+        {
             CGFloat distanceFromTouch = fabsf(touchLocation.x - springBehaviour.anchorPoint.x);
             
             CGFloat scrollResistance;
@@ -183,7 +217,8 @@
     return NO;
 }
 
-- (void)prepareForCollectionViewUpdates:(NSArray *)updateItems {
+- (void)prepareForCollectionViewUpdates:(NSArray *)updateItems
+{
     [super prepareForCollectionViewUpdates:updateItems];
     
     [updateItems enumerateObjectsUsingBlock:^(UICollectionViewUpdateItem *updateItem, NSUInteger idx, BOOL *stop) {
@@ -196,6 +231,12 @@
             UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:updateItem.indexPathAfterUpdate];
             
             //attributes.frame = CGRectMake(10, updateItem.indexPathAfterUpdate.item * 310, 300, 44); // or some other initial frame
+            
+            if (attributes.frame.size.width == 0 &&
+                attributes.frame.size.height == 0)
+            {
+                return;
+            }
             
             UIAttachmentBehavior *springBehaviour = [[UIAttachmentBehavior alloc] initWithItem:attributes attachedToAnchor:attributes.center];
             

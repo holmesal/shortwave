@@ -67,7 +67,8 @@
 -(void)setMessage:(ESImageMessage*)message
 {
     [iconImageView setImage:[UIImage imageNamed:message.icon]];
-    [coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
+    
+    [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
     ownerID = message.ownerID;
 }
 

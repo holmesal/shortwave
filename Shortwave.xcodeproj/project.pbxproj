@@ -12,6 +12,7 @@
 		AA2B983C1900E56A002C0BC7 /* radar.png in Resources */ = {isa = PBXBuildFile; fileRef = AA2B983B1900E56A002C0BC7 /* radar.png */; };
 		AA2F91951929598B005081C4 /* ESImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F91941929598B005081C4 /* ESImageCell.m */; };
 		AA2F919C19296263005081C4 /* ESImageMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA2F919B19296263005081C4 /* ESImageMessage.m */; };
+		AA422B3E192BBD7900AE8C2A /* SWSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
 		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
 		AA643414190105E400419043 /* plugline.png in Resources */ = {isa = PBXBuildFile; fileRef = AA643413190105E400419043 /* plugline.png */; };
@@ -117,6 +118,8 @@
 		AA2F91941929598B005081C4 /* ESImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageCell.m; sourceTree = "<group>"; };
 		AA2F919A19296263005081C4 /* ESImageMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESImageMessage.h; sourceTree = "<group>"; };
 		AA2F919B19296263005081C4 /* ESImageMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESImageMessage.m; sourceTree = "<group>"; };
+		AA422B3C192BBD7900AE8C2A /* SWSwapUserStateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSwapUserStateCell.h; sourceTree = "<group>"; };
+		AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSwapUserStateCell.m; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
@@ -443,6 +446,8 @@
 				AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */,
 				AA9D31A5192AF285003D010F /* SWTextCell.h */,
 				AA9D31A6192AF285003D010F /* SWTextCell.m */,
+				AA422B3C192BBD7900AE8C2A /* SWSwapUserStateCell.h */,
+				AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */,
 			);
 			name = "collection view cells";
 			sourceTree = "<group>";
@@ -801,6 +806,7 @@
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
 				AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */,
+				AA422B3E192BBD7900AE8C2A /* SWSwapUserStateCell.m in Sources */,
 				C02CE3F21868D1A500305FC9 /* AsyncImageView.m in Sources */,
 				AA69A5ED18D7B4D4000E6781 /* UIImage+ImageEffects.m in Sources */,
 				AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */,

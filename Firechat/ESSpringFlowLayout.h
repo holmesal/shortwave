@@ -25,5 +25,6 @@
 /// The dynamic animator used to animate the collection's bounce
 @property (nonatomic, strong, readonly) UIDynamicAnimator *dynamicAnimator;
 
+-(void)prepareLayout;
 
 @end

@@ -23,19 +23,22 @@
 #import "ESShortbotOverlay.h"
 #import "ESSpringFlowLayout.h"
 
+#import "SWTextCell.h"
+#import "SWOwnerTextCell.h"
+#import "SWImageCell.h"
+
+#import "SWSwapUserStateCell.h"
+
+@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
 
-#define WIDTH_OF_PM_LIST 75.0f
-
-
-@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ESShortbotOverlayDelegate>
-
+@property (weak, nonatomic) IBOutlet PHFComposeBarView *theComposeBarView;
 @property (weak, nonatomic) IBOutlet ESSpringFlowLayout *springFlowLayout;
 @property (weak, nonatomic) IBOutlet UICollectionView *wallCollectionView;
 
 @property (strong, nonatomic) Firebase *wallRef;
 @property (nonatomic, assign) FirebaseHandle bindToWallHandle;
-@property (nonatomic, strong) NSMutableArray *wall;
+@property (atomic, strong) NSMutableArray *wall;
 
 
 @property (nonatomic) BOOL initializedTableView;
@@ -49,7 +52,6 @@
 @property (nonatomic) NSTimer *elipseTimer2;
 @property (nonatomic) NSDate *dateLastVisible;
 @property (nonatomic) NSTimer *timerToShowSearchingText;
-
 
 @property (nonatomic) IBOutlet UIView *contentView;
 
@@ -110,7 +112,7 @@
 @synthesize buttonImageInset;
 @synthesize peopleNearbyLabel;
 
-
+@synthesize springFlowLayout;
 @synthesize tableView;
 
 
@@ -145,9 +147,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     wallCollectionView.delegate = self;
     wallCollectionView.dataSource = self;
     wallCollectionView.alwaysBounceVertical = YES;
-    
-    [wallCollectionView setContentInset:UIEdgeInsetsMake(64+5, 0, 40, 0)];
+    [wallCollectionView setBackgroundColor:[UIColor clearColor]];
 
+    
+    [wallCollectionView setContentInset:UIEdgeInsetsMake(64+5, 0, 44, 0)];
+    [wallCollectionView setScrollIndicatorInsets:UIEdgeInsetsMake(64, 0, 44, 0)];
+    
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
     if (self.shadeView && self.needsToDoTransitionWithShadeView)
     {
@@ -283,7 +288,21 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    //state of login flow
+    
+    //compose bar is set to the subclass ESViewController, intialized from the nib
+    self.composeBarView = self.theComposeBarView;
+    [self.composeBarView setDelegate:self];
+    [self loadComposeView]; //in the sense of custom initializations
+    // Bind to keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillToggle:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"showSearchingScreen"];
     
     // Init the shortbot overlay view
@@ -351,18 +370,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Bind to the owner's tracking, updates UI cells
     [self bindToTracking];
     
-    // Log this on mixpanel
-//    [self.mixpanel track:@"Wall Loaded" properties:@{@"inRangeCount":[NSNumber numberWithInt[self.owner.beacon.earshotUsers count]]}];
-    
-    // Bind to keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillToggle:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
+
     
     // Hide the keyboard on taps
 //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -492,70 +500,64 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)updateViewConstraints
 {
     [super updateViewConstraints];
-    if (!self.composeBarView)
-    {//make sure updateViewConstraint being called doesn't mean loadComposeBarView always gets initialized.  Not sure when this function happens
-        [self loadComposeView];
-    }
+//    if (!self.composeBarView)
+//    {//make sure updateViewConstraint being called doesn't mean loadComposeBarView always gets initialized.  Not sure when this function happens
+//        [self loadComposeView];
+//    }
 }
 
 
 - (void)loadComposeView
 {
-    CGRect viewBounds = self.view.bounds;
-    
-    NSLog(@"%f", viewBounds.origin.x);
-    
-    //try to set constraints on this object
+//    CGRect viewBounds = self.view.bounds;
+//    NSLog(@"%f", viewBounds.origin.x);
+////try to set constraints on this object
 //    NSLayoutConstraint *constraint = [NSLayoutConstraint constraint]
     
-    CGRect frame = CGRectMake(0.0f,
-                              viewBounds.size.height - PHFComposeBarViewInitialHeight,
-                              self.view.frame.size.width,
-                              PHFComposeBarViewInitialHeight);
-    self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
+//    CGRect frame = CGRectMake(0.0f,
+//                              viewBounds.size.height - PHFComposeBarViewInitialHeight,
+//                              self.view.frame.size.width,
+//                              PHFComposeBarViewInitialHeight);
+//    self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
+    
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
 
     [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot-dark"]];
     [self.composeBarView setDelegate:self];
-    
     // Style the compose bar view
     [self setComposeBarWithRandomHint];
-    
-
-    [self.contentView addSubview:self.composeBarView];
 
     
-    
-    UIView *composeBarView = self.composeBarView;
-//    NSArray *fixedHeight = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[composeBarView(==%d)]", (int)PHFComposeBarViewInitialHeight ]
-//                                                                              options:0
-//                                                                              metrics:nil
-//                                                                     views:NSDictionaryOfVariableBindings(composeBarView)];
-//    [self.composeBarView addConstraints:fixedHeight];
-    
-    
-//    [self.composeBarView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[composeBarView(==%d)]", (int)320 ]
-//                                                                                options:0
-//                                                                                metrics:nil
-//                                                                                  views:NSDictionaryOfVariableBindings(composeBarView)]];
-    NSLayoutConstraint *constraint1Y =  [NSLayoutConstraint constraintWithItem:composeBarView
-                                                                 attribute:NSLayoutAttributeTop
-                                                                 relatedBy:NSLayoutRelationEqual
-                                                                    toItem:self.contentView
-                                                                 attribute:NSLayoutAttributeBottom
-                                                                multiplier:1.0
-                                                                  constant:-PHFComposeBarViewInitialHeight];
-    [self.contentView addConstraint:constraint1Y];
-    
-    NSLayoutConstraint *constraint2CenterX =  [NSLayoutConstraint constraintWithItem:composeBarView
-                                                                   attribute:NSLayoutAttributeCenterX
-                                                                   relatedBy:NSLayoutRelationEqual
-                                                                      toItem:self.contentView
-                                                                   attribute:NSLayoutAttributeCenterX
-                                                                  multiplier:1.0
-                                                                    constant:0];
-    [self.contentView addConstraint:constraint2CenterX];
+//    UIView *composeBarView = self.composeBarView;
+////    NSArray *fixedHeight = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[composeBarView(==%d)]", (int)PHFComposeBarViewInitialHeight ]
+////                                                                              options:0
+////                                                                              metrics:nil
+////                                                                     views:NSDictionaryOfVariableBindings(composeBarView)];
+////    [self.composeBarView addConstraints:fixedHeight];
+//    
+//    
+////    [self.composeBarView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[composeBarView(==%d)]", (int)320 ]
+////                                                                                options:0
+////                                                                                metrics:nil
+////                                                                                  views:NSDictionaryOfVariableBindings(composeBarView)]];
+//    NSLayoutConstraint *constraint1Y =  [NSLayoutConstraint constraintWithItem:composeBarView
+//                                                                 attribute:NSLayoutAttributeTop
+//                                                                 relatedBy:NSLayoutRelationEqual
+//                                                                    toItem:self.contentView
+//                                                                 attribute:NSLayoutAttributeBottom
+//                                                                multiplier:1.0
+//                                                                  constant:-PHFComposeBarViewInitialHeight];
+//    [self.contentView addConstraint:constraint1Y];
+//    
+//    NSLayoutConstraint *constraint2CenterX =  [NSLayoutConstraint constraintWithItem:composeBarView
+//                                                                   attribute:NSLayoutAttributeCenterX
+//                                                                   relatedBy:NSLayoutRelationEqual
+//                                                                      toItem:self.contentView
+//                                                                   attribute:NSLayoutAttributeCenterX
+//                                                                  multiplier:1.0
+//                                                                    constant:0];
+//    [self.contentView addConstraint:constraint2CenterX];
     
     
     
@@ -700,9 +702,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             }
             [weakSelf.wallCollectionView performBatchUpdates:^
              {
-                 
-                 NSArray *paths = @[ [NSIndexPath indexPathForRow:weakSelf.wall.count inSection:0] ];
-                 [weakSelf.wall insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+                 [springFlowLayout prepareLayout];
+//                 NSArray *paths = @[ [NSIndexPath indexPathForRow:weakSelf.wall.count inSection:0] ];
+                 [weakSelf.wall addObject:unknownTypeOfMessage];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+                 NSArray *paths = @[[NSIndexPath indexPathForItem:weakSelf.wall.count-1 inSection:0]];
                  [weakSelf.wallCollectionView insertItemsAtIndexPaths:paths];
              } completion:nil];
         }
@@ -905,7 +908,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
             CGSize constraintSize = {225.0f, 700};
             CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
-            CGFloat height = MAX(actualSize.height+14.0f*2, 75.0f);//14 is top and bottom padding of label
+            CGFloat height = MAX(actualSize.height + 14.0f*2, 75.0f);//14 is top and bottom padding of label
             return height;
         } else
         if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
@@ -950,29 +953,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     keyboardIsVisible = (sizeChange < 0);
     keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     
-//    CGRect newContainerFrame = [[self tableView] frame];
-//    newContainerFrame.size.height += sizeChange;
-    
     CGRect newComposeBarFrame = [[self composeBarView] frame];
     newComposeBarFrame.origin.y += sizeChange;
     
     CGPoint contentOffset = {0.0f, tableView.contentOffset.y + sizeChange};
     
-    //ethan changed this because edge insets is the way to go when resizing from keyboard
-//    float bottomEdgeInset = 50;
-    UIEdgeInsets edgeInsets = self.tableView.contentInset;// UIEdgeInsetsMake(bottomEdgeInset, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
-    
-//    if (self.view.frame.size.height == 480)
-//    {
-//        // fix for the fact that the 3.5" screen is 88px shorter than the 4"
-//        edgeInsets = UIEdgeInsetsMake(bottomEdgeInset+88, 0, HeightOfWhoIsHereView+HeightOfGradient, 0);
-//    }
-//    if (keyboardIsVisible)
-//    {
-        edgeInsets.top -= sizeChange;
-//    }
-//    self.tableView.contentInset;
-//    edgeInsets.top -= sizeChange;
+    UIEdgeInsets edgeInsets = self.tableView.contentInset;
+            edgeInsets.top -= sizeChange;
     
     
     [UIView animateWithDuration:duration
@@ -981,8 +968,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                      animations:^
                     {
                         [self.tableView setContentOffset:contentOffset];//scrollview scroll up
-                        
-//                        NSLog(@"edgeInset <- %@", NSStringFromUIEdgeInsets(edgeInsets));
+
                         
                         
                         [[self tableView] setContentInset:edgeInsets];
@@ -1279,24 +1265,24 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (object == self.view && [keyPath isEqualToString:@"frame"])
     {
-        CGRect currentFrame = self.view.frame;
-        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
-        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
-
-        CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
-//        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-        UIEdgeInsets e = self.tableView.contentInset;
-        e.top -= diffHeight;
-        
-        [UIView animateWithDuration:0.3f animations:^
-        {
-            CGRect tempFrame = self.composeBarView.frame;
-            tempFrame.origin.y += diffHeight;
-            self.composeBarView.frame = tempFrame;
-            self.tableView.contentInset = e;
-        }];
-        
-        self.lastFrameForSelfView = currentFrame;
+//        CGRect currentFrame = self.view.frame;
+//        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
+//        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
+//
+//        CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
+////        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+//        UIEdgeInsets e = self.tableView.contentInset;
+//        e.top -= diffHeight;
+//        
+//        [UIView animateWithDuration:0.3f animations:^
+//        {
+//            CGRect tempFrame = self.composeBarView.frame;
+//            tempFrame.origin.y += diffHeight;
+//            self.composeBarView.frame = tempFrame;
+//            self.tableView.contentInset = e;
+//        }];
+//        
+//        self.lastFrameForSelfView = currentFrame;
     }
 }
 
@@ -1318,30 +1304,111 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return wall.count;
 }
 
+- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    return UIEdgeInsetsZero;
+}
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+//    UICollectionViewCell *otherCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+//    return otherCell;
     
-    
-    UICollectionViewCell *otherCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-    return otherCell;
+    if (collectionView == wallCollectionView)
+    {
+
+        
+        
+        id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+        if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+        {
+            //image message
+            ESImageMessage *imageMessage = unknownTypeOfMessage;
+            
+            SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell setMessage:imageMessage]; //does everything short of loading an image.
+            
+            /*
+             * load iamge here
+             */
+            
+            
+            
+//            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.url] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous) isGif:YES];
+            
+            return imageCell;
+            
+        } else
+        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
+        {
+            FCMessage *textMessage = unknownTypeOfMessage;
+            SWTextCell *textCell = nil;
+            if ([textMessage.ownerID isEqualToString:[FCUser owner].id])
+            {
+                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWOwnerTextCellIdentifier forIndexPath:indexPath];
+            } else
+            {
+                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
+            }
+            
+            //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
+            [textCell setMessage:textMessage];
+            return textCell;
+        } else
+        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+        {
+            ESSwapUserStateMessage *swapUserMessage = unknownTypeOfMessage;
+            
+            SWSwapUserStateCell *swapCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWSwapUserStateCellIdentifier forIndexPath:indexPath];
+           
+            
+            [swapCell setMessage:swapUserMessage];
+            
+            if (!swapUserMessage.hasDoneFirstTimeAnimation)
+            {
+                swapUserMessage.hasDoneFirstTimeAnimation = YES;
+                
+                [swapCell doFirstTimeAnimation];
+            }
+            
+            return swapCell;
+        }
+    }
+    return nil;
 }
 
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-    
-    [UIView transitionWithView:collectionView duration:.5 options:UIViewAnimationTransitionCurlUp animations:^{
+    id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+    CGSize size = CGSizeZero;
+    if ([unknownTypeOfMessage isKindOfClass:[FCMessage class] ])
+    {
+        FCMessage *message = unknownTypeOfMessage;
+        NSString *text = message.text;
         
-        //any animateable attribute here.
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+        NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
+                                             @{ NSFontAttributeName: font }] ;
         
-        cell.frame = CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, cell.frame.size.height+100);
+        size = [attributedText boundingRectWithSize:CGSizeMake(235, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
         
-    } completion:^(BOOL finished) {
-        //whatever you want to do upon completion
-    }];
-    
+        size.height = (15+8)*2 + size.height;//MAX(17*2+40, 15*2 + size.height);
+
+        
+    } else
+    if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+    {
+        ESImageMessage *imageMessage = unknownTypeOfMessage;
+        
+        size.height = 174;
+    } else
+    if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+    {
+        size.height = 50;
+    }
+    size.width = 320;
+//    NSLog(@"size = %@ of %@", NSStringFromCGSize(size), unknownTypeOfMessage);
+//    size.height = 75;
+    return size;
 }
 @end
