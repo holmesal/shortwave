@@ -19,7 +19,7 @@
 @property (strong, nonatomic, readonly) NSString *icon;
 @property (strong, nonatomic, readonly) NSString *color;
 @property (strong, nonatomic, readonly) NSString *type;
-@property (strong, nonatomic, readonly) NSString *url;
+@property (strong, nonatomic, readonly) NSString *src;
 
 @property (assign, nonatomic, readonly) BOOL isGif;
 

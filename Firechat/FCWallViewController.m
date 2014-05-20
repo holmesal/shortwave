@@ -965,6 +965,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
             if ([snapshot.value isKindOfClass:[NSDictionary class]])
             {
+                NSLog(@"snapshot.value = %@", snapshot.value);
                 if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
                 {
                     NSLog(@"this is an image cell! %@", snapshot.value);
@@ -1194,7 +1195,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             [imageCell setProfileColor:imageMessage.color];
             [imageCell setProfileImage:imageMessage.icon];
             
-            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.url] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
+            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.src] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
             {
                 if (synchronous)
                 {
@@ -1207,7 +1208,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                         if ([[self.wall objectAtIndex:indexPath.row] isKindOfClass:[ESImageMessage class]])
                         {
                             ESImageMessage *imageMessage = [self.wall objectAtIndex:indexPath.row];
-                            if ([url.absoluteString isEqualToString:imageMessage.url])
+                            if ([url.absoluteString isEqualToString:imageMessage.src])
                             {
                                 currentIndexPath  = indexPath;
                                 break;
@@ -1546,18 +1547,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
     // Send the message
     
-    if ([composeBarView.text isEqualToString:@"image"])
-    {
-        ESImageMessage *messages = [[ESImageMessage alloc] init];
-        [messages testImageStaticMessage];
-        return;
-    }
-    if ([composeBarView.text isEqualToString:@"gif"])
-    {
-        ESImageMessage *messages = [[ESImageMessage alloc] init];
-        [messages testImageGifMessage];
-        return;
-    }
     FCMessage *message = [[FCMessage alloc] init];
     
     FCUser *owner = [FCUser owner];

@@ -17,7 +17,7 @@
 @synthesize icon;
 @synthesize color;
 @synthesize type;
-@synthesize url;
+@synthesize src;
 @synthesize isGif;
 
 
@@ -30,21 +30,14 @@
         if ([dict isKindOfClass:[NSDictionary class]])
         {
             text = [dict objectForKey:@"text"];
-            ownerID = [dict objectForKey:@"ownerID"];
+            ownerID = [[dict objectForKey:@"meta"] objectForKey:@"ownerID"];
             icon = [dict objectForKey:@"icon"];
             color = [dict objectForKey:@"color"];
             type = [dict objectForKey:@"type"];
-            url = [dict objectForKey:@"url"];
+            src = [dict objectForKey:@"src"];
             
             //is it a gif?
-            NSString *gifOrStatic = @"static";
-            NSArray *components = [type componentsSeparatedByString:@":"];
-            if (components.count > 1)
-            {
-                gifOrStatic = [components objectAtIndex:1];
-            }
-            
-            if ([gifOrStatic isEqualToString:@"gif"])
+            if ([type isEqualToString:@"gif"])
             {
                 isGif = YES;
             } else
@@ -65,40 +58,41 @@
 //validity check
 -(void)checkValidityOfValues:(NSDictionary*)dict
 {
-    NSString *string = [NSString stringWithFormat:@"I was expecting to get strings for text,ownerID,icon,color,type,url: %@", dict];
+    NSString *string = [NSString stringWithFormat:@"I was expecting to get strings for text,ownerID,icon,color,type,src: %@", dict];
     
     ESAssert(([text isKindOfClass:[NSString class]] &&
              [ownerID isKindOfClass:[NSString class]] &&
              [icon isKindOfClass:[NSString class] ] &&
              [color isKindOfClass:[NSString class] ] &&
              [type isKindOfClass:[NSString class] ] &&
-             [url isKindOfClass:[NSString class] ]), string
+             [src isKindOfClass:[NSString class] ]), string
              );
 }
 
+#warning remove these methods, they were only for definining dictionaries anyway.
 -(void)testImageStaticMessage
 {
     
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSDictionary *dict = @{@"text": @"",
-                           @"ownerID": [FCUser owner].id,
+                           @"meta": @{@"ownerID" : [FCUser owner].id},
                            @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
                            @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
-                           @"type": @"image:static",
-                           @"url": @"http://cdn3.whatculture.com/wp-content/uploads/2013/03/url-711.jpeg"};
+                           @"type": @"image",
+                           @"src": @"http://cdn3.whatculture.com/wp-content/uploads/2013/03/url-711.jpeg"};
     Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
     [mywall setValue:dict];
 }
+#warning remove these methods, they were only for definining dictionaries anyway.
 -(void)testImageGifMessage
 {
-    
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     NSDictionary *dict = @{@"text": @"",
-                           @"ownerID": [FCUser owner].id,
+                            @"meta": @{@"ownerID" : [FCUser owner].id},
                            @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
                            @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
-                           @"type": @"image:gif",
-                           @"url": @"http://a.gifb.in/1601003555.gif"};
+                           @"type": @"gif",
+                           @"src": @"http://a.gifb.in/1601003555.gif"};
     Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
     [mywall setValue:dict];
 }
