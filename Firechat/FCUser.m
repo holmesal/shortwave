@@ -397,8 +397,8 @@ static FCUser *currentUser;
 
 -(NSDictionary*)generateFirstPost:(NSString *)message
 {
-    return @{@"color": @"FFFFFF" ,
-             @"icon":@"nakedicon",
+    return @{@"color": @"292929" ,
+             @"icon":@"shortbot",
              @"text":message,
              @"meta":@{@"ownerID":@"shortbot"}
              };

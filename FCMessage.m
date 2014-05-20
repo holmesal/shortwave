@@ -144,8 +144,8 @@
         [results setObject:@NO forKey:@"shouldPostToPeers"];
         // Post the current version to yourself
         NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-        NSDictionary *message = @{@"color": @"FFFFFF" ,
-          @"icon":@"nakedicon",
+        NSDictionary *message = @{@"color": @"292929" ,
+          @"icon":@"shortbot",
           @"text":[NSString stringWithFormat:@"%@ iterations of awesomeness so far.",version],
           @"meta":@{@"ownerID":@"shortbot"}
           };
