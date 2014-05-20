@@ -67,6 +67,11 @@
         // Grab the current list of earshot users
         NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
         
+        
+        if (IS_ON_SIMULATOR) {
+            earshotIds = @[];
+        }
+        
         // Loop through and post to the firebase of every beacon in range
         for (NSString *earshotId in earshotIds)
         {
@@ -97,7 +102,7 @@
             NSDictionary *shortbotMessage = @{
                                               @"sender": owner.id,
                                               @"message": text,
-                                              @"nearby": [owner.beacon.earshotUsers allKeys]
+                                              @"nearby": earshotIds
                                               };
             // post to the queue
             Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
