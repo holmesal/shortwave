@@ -91,6 +91,19 @@
             }];
         }
         
+        // Is this a hubot message?
+        if ([text rangeOfString:@"shortbot" options:NSCaseInsensitiveSearch].location != NSNotFound || [text rangeOfString:@"short bot" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            // Create a hubot message
+            NSDictionary *shortbotMessage = @{
+                                              @"sender": owner.id,
+                                              @"message": text,
+                                              @"nearby": [owner.beacon.earshotUsers allKeys]
+                                              };
+            // post to the queue
+            Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
+            [shortbotQueueItemRef setValue:shortbotMessage];
+        }
+        
         // Log the message to mixpanel
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Message Sent" properties:@{
@@ -129,7 +142,7 @@
         NSDictionary *message = @{@"color": @"FFFFFF" ,
           @"icon":@"nakedicon",
           @"text":[NSString stringWithFormat:@"%@ iterations of awesomeness so far.",version],
-          @"meta":@{@"ownerID":@"Welcome:Bot"}
+          @"meta":@{@"ownerID":@"shortbot"}
           };
         // Store that shit
         [results setObject:message forKey:@"message"];

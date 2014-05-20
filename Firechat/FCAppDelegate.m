@@ -164,8 +164,6 @@
             }];
         }
     }];
-
-
 }
 
 - (void)attemptToStartBeacon
@@ -338,7 +336,6 @@
 {
     NSLog(@"Woke up via app delegate location manager callback");
 }
-
 
 
 @end

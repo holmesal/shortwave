@@ -871,7 +871,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //uses tracking array to determine if the current user is being tracked.  Also, it returns YES for ids that are yourself / the welcome bot
 -(BOOL)isUserBeingTracked:(NSString*)userId
 {
-    if ([[FCUser owner].id isEqualToString:userId] || [userId isEqualToString:@"Welcome:Bot"])
+    if ([[FCUser owner].id isEqualToString:userId] || [userId isEqualToString:@"shortbot"])
         return YES;
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF == %@)", userId];
@@ -1288,7 +1288,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             // Set message cell values
             [cell setMessage:message];
             
-            BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"Welcome:Bot"];
+            BOOL isFaded = NO;//!beaconFound && !messageBelongsToMe && ![message.ownerID isEqualToString:@"shortbot"];
             
             [cell setFaded:isFaded animated:NO];
             

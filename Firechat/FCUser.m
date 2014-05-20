@@ -400,7 +400,7 @@ static FCUser *currentUser;
     return @{@"color": @"FFFFFF" ,
              @"icon":@"nakedicon",
              @"text":message,
-             @"meta":@{@"ownerID":@"Welcome:Bot"}
+             @"meta":@{@"ownerID":@"shortbot"}
              };
 }
 
