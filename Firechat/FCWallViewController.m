@@ -21,6 +21,7 @@
 #import "ESImageCell.h"
 #import "ESImageMessage.h"
 #import "ESImageLoader.h"
+#import "ESShortbotOverlay.h"
 
 
 
@@ -89,6 +90,10 @@ typedef enum
 
 @property (nonatomic) CAShapeLayer *lineLayer;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+// The overlay for the shortbot shortcut view
+@property (weak, nonatomic) IBOutlet UIView *shortbotOverlayView;
+@property (nonatomic) ESShortbotOverlay *shortbotOverlayController;
 
 
 //SOME KEYBOARD PROPERTIES FOR HIT TESTING A TOUCH
@@ -174,6 +179,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if(self = [super initWithCoder:aDecoder])
     {
+        
         self.wall = [NSMutableArray array];
         
         self.currentPrivateMessages = self.wall;
@@ -196,6 +202,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.lastFrameForSelfView = self.view.frame;
     
     NSLog(@"self.dateLastVisible = %@", self.dateLastVisible);
+    
+    // Init the shortbot overlay view
+    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView];
     
 
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
@@ -759,7 +768,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
 
-//    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot"]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
@@ -1540,7 +1549,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView {
-    NSLog(@"Utility button pressed");
+    // Show the shortbot overlay
+    [self.shortbotOverlayController showOverlay];
 }
 
 // Pressed "send"
