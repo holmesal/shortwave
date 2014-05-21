@@ -653,53 +653,25 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         if ([snapshot.value isKindOfClass:[NSDictionary class]])
         {
             id unknownTypeOfMessage = nil;
+            
+            NSLog(@"snapshot.value = %@", snapshot.value);
             if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
             {
-                NSLog(@"snapshot.value = %@", snapshot.value);
-                if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
-                {
-                    NSLog(@"this is an image cell! %@", snapshot.value);
-                    
-                    
-                    
-                    ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
-                    //imageMessage
-                    [weakSelf.wall insertObject:imageMessage atIndex:0];
-                    NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
-                    [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
-                    if (!weakSelf.autoScrollLockTimer)
-                    {
-                        [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                    }
-                    [weakSelf updateLine];
-                    
-                } else
-                if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
-                {
-                    ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
-                    
-
-                unknownTypeOfMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
-//                [weakSelf.wallCollectionView performBatchUpdates:^
-//                 {
-//                     FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
-//                     NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
-//                     [weakSelf.wall insertObject:message atIndex:0];
-//                     [weakSelf.wallCollectionView insertItemsAtIndexPaths:paths];
-//                 } completion:nil];
+                NSLog(@"this is an image cell! %@", snapshot.value);
+                ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
+                unknownTypeOfMessage = imageMessage;
                 
-//                FCMessage *message = [[FCMessage alloc] initWithSnapshot:snapshot];
-//                // Init a new message
-//                [weakSelf.wall insertObject:message atIndex:0];
-//                NSArray *paths = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]];
-//                [weakSelf.tableView insertRowsAtIndexPaths:paths withRowAnimation:UITableViewRowAnimationTop];
-//                
-//                // Scroll to the new message
-//                if (!weakSelf.autoScrollLockTimer)
-//                {
-//                    [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-//                }
+            } else
+            if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
+            {
+                ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+                unknownTypeOfMessage = swapMsg;
+            } else
+            {
+                FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
+                unknownTypeOfMessage = fcMessage;
             }
+            
             [weakSelf.wallCollectionView performBatchUpdates:^
              {
                  [springFlowLayout prepareLayout];
@@ -799,9 +771,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                             [imageCell setImage:image];
                         }
                     }
-                    
-                    
-                    
                     
                 }
             } isGif:imageMessage.isGif];
@@ -1334,7 +1303,35 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             
             
-//            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.url] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous) isGif:YES];
+            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.src] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
+             {
+                 if (synchronous)
+                 {
+                     [imageCell setImage:image];
+                 } else
+                 {
+                     NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+                     [visibleIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger indx, BOOL *stop)
+                     {
+                         //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+                         id uknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+                         if ([uknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+                         {
+                             ESImageMessage *currentImageMessage = unknownTypeOfMessage;
+                             if ([url.absoluteString isEqualToString:currentImageMessage.src])
+                             {
+                                 SWImageCell *imageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:indexPath];
+                                 if (imageCell)
+                                 {
+                                     [imageCell setImage:image];
+                                     ESAssert([imageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+                                 }
+                                 *stop = YES;
+                             }
+                         }
+                     }];
+                 }
+             } isGif:imageMessage.isGif];
             
             return imageCell;
             
