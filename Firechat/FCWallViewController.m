@@ -28,7 +28,7 @@
 #define WIDTH_OF_PM_LIST 75.0f
 
 
-@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ESShortbotOverlayDelegate>
 
 typedef enum
 {
@@ -203,9 +203,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     NSLog(@"self.dateLastVisible = %@", self.dateLastVisible);
     
-    // Init the shortbot overlay view
-    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView];
-    
 
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
     if (self.shadeView && self.needsToDoTransitionWithShadeView)
@@ -364,6 +361,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [super viewDidLoad];
     //state of login flow
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"showSearchingScreen"];
+    
+    // Init the shortbot overlay view
+    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView];
+    self.shortbotOverlayController.delegate = self;
     
 
     
@@ -1549,6 +1550,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView {
+    // Drop the text view
+    [self.composeBarView resignFirstResponder];
     // Show the shortbot overlay
     [self.shortbotOverlayController showOverlay];
 }
@@ -2020,5 +2023,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.lastFrameForSelfView = currentFrame;
     }
 }
+
+# pragma mark - shortbot delegate methods
+- (void)shortbotOverlay:(ESShortbotOverlay *)overlay didPickCommand:(NSString *)command
+{
+    NSLog(@"Picked command: %@", command);
+    // Set the text to the command response
+    [self.composeBarView setText:[NSString stringWithFormat:@"shortbot %@ ", command]];
+    // Set focus on the view
+    [self.composeBarView.textView becomeFirstResponder];
+}
+
 
 @end

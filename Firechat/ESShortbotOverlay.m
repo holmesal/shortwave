@@ -40,15 +40,23 @@
         
         //
         self.commands = @[
+                          @{@"title": @"image me <search>",
+                            @"command": @"image me",
+                            @"description": @"Searches for an image and posts is."},
                           @{@"title": @"animate me <search>",
                             @"command": @"animate me",
-                            @"description": @"Searches for a GIF and posts it."}
+                            @"description": @"Like \"image me\", but for GIFs."},
+                          @{@"title": @"mustache me <search>",
+                            @"command": @"mustache me",
+                            @"description": @"Like \"image me\", but adds a mustache."}
                           ];
         
         // Set yourself as a delegate
         self.tableView.dataSource = self;
         self.tableView.delegate = self;
         [self.tableView reloadData];
+        
+//        self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 20, 0);
     }
     
     return self;
@@ -104,7 +112,8 @@
     
     [cell setBackgroundColor:[UIColor clearColor]];
     
-    [cell.commandNameLabel setText:[command objectForKey:@"title"]];
+    [cell.nameLabel setText:[command objectForKey:@"title"]];
+    [cell.descriptionLabel setText:[command objectForKey:@"description"]];
     
     cell.tag = [indexPath row];
     
@@ -113,10 +122,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    // Get the command
+    NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"command"];
+//    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
     // TODO - set the input and focus on the text field
+    [self.delegate shortbotOverlay:self didPickCommand:command];
     
     [self hideOverlay];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 100;
 }
 
 
