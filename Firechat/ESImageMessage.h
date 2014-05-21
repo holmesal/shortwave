@@ -21,6 +21,7 @@
 @property (strong, nonatomic, readonly) NSString *type;
 @property (strong, nonatomic, readonly) NSString *src;
 
+@property (assign, nonatomic) BOOL isExpanded;
 @property (assign, nonatomic, readonly) BOOL isGif;
 
 -(id)initWithSnapshot:(FDataSnapshot*)snapshot;

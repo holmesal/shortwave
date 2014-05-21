@@ -1324,25 +1324,47 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                  } else
                  {
                      NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
-                     [visibleIndexPaths enumerateObjectsUsingBlock:^(NSIndexPath *indexPath, NSUInteger indx, BOOL *stop)
+                     for (NSIndexPath *currentIndexPath in visibleIndexPaths)
                      {
                          //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
-                         id uknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
-                         if ([uknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+                         id aMessage = [wall objectAtIndex:currentIndexPath.row];
+                         if ([aMessage isKindOfClass:[ESImageMessage class]])
                          {
-                             ESImageMessage *currentImageMessage = unknownTypeOfMessage;
+                             ESImageMessage *currentImageMessage = aMessage;
                              if ([url.absoluteString isEqualToString:currentImageMessage.src])
                              {
-                                 SWImageCell *imageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:indexPath];
-                                 if (imageCell)
+                                 NSLog(@"%@", url.absoluteString);
+                                 NSLog(@"%@", currentImageMessage.src);
+                                 
+                                 SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
+                                 ESImageMessage *againmessage = [wall objectAtIndex:currentIndexPath.row];
+                                 NSLog(@"againMessage = %@", againmessage.src);
+                                 //ready to animate also invalidate layout for increased width
+//                                [springFlowLayout invalidateLayout];
+//                                 __weak UICollectionViewCell *cell = imageCell;
+                                
+                                 if (retrievedImageCell)
                                  {
-                                     [imageCell setImage:image];
-                                     ESAssert([imageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+                                     [retrievedImageCell setImage:image];
+                                     ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+                                     
+//                                     //animateChangeHeight block ran by transitionWithView
+//                                     void (^animateChangeHeight)() = ^()
+//                                     {
+//                                         CGRect frame = cell.frame;
+//                                         frame.size.height = 250;
+//                                         cell.frame = frame;
+//                                     };
+//                                     
+//                                     // Animate
+//                                     currentImageMessage.isExpanded = YES;
+//                                     [UIView transitionWithView:imageCell duration:0.6f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
+                                     
                                  }
-                                 *stop = YES;
+                                 break;
                              }
                          }
-                     }];
+                     }//end of NSIndexPath visible loop
                  }
              } isGif:imageMessage.isGif];
             
@@ -1409,8 +1431,22 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
     {
         ESImageMessage *imageMessage = unknownTypeOfMessage;
+        NSString *src = imageMessage.src;
         
-        size.height = 174;
+        CGSize imageSize = [[ESImageLoader sharedImageLoader] sizeOfImage:[NSURL URLWithString:src]];
+        if (YES
+            //!imageMessage.isExpanded
+//            &&
+//            imageSize.width == 0 &&
+//            imageSize.height == 0)
+        ){
+            size.height = SWImageCell_FIXEDHEIGHT;
+//            size.height = SWImageCell_NoImageHeight;
+        } else
+        if (imageMessage.isExpanded)
+        {
+            size.height = 250;
+        }
     } else
     if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
     {
@@ -1420,5 +1456,44 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    NSLog(@"size = %@ of %@", NSStringFromCGSize(size), unknownTypeOfMessage);
 //    size.height = 75;
     return size;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+//    [springFlowLayout invalidateLayout];
+//    __weak UICollectionViewCell *cell = imageCell;
+//    //animateChangeHeight block ran by transitionWithView
+//    void (^animateChangeHeight)() = ^()
+//    {
+//        CGRect frame = cell.frame;
+//        frame.size.height = 250;
+//        cell.frame = frame;
+//    };
+    
+    // Animate
+//    ESImageMessage *currentImageMessage = [wall objectAtIndex:indexPath.row];
+////    currentImageMessage.isExpanded = YES;
+////    [UIView transitionWithView:imageCell duration:0.6f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
+//    
+//    
+//    [springFlowLayout invalidateLayout];
+//    __weak UICollectionViewCell *cell = [wallCollectionView cellForItemAtIndexPath:indexPath]; // Avoid retain cycles
+//    void (^animateChangeHeight)() = ^()
+//    {
+//        currentImageMessage.isExpanded = YES;
+//        CGRect frame = cell.frame;
+//        frame.size.height = 250;
+//        cell.frame = frame;
+//        [springFlowLayout invalidateLayout];
+//    };
+//
+//    // Animate
+//
+//    [UIView transitionWithView:cell duration:3.1f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
+
+//    currentImageMessage.isExpanded = YES;
+//    [wallCollectionView reloadData];
+//    [wallCollectionView performBatchUpdates:nil completion:nil];
 }
 @end

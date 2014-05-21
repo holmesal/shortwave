@@ -374,10 +374,10 @@ static FCUser *currentUser;
     // Generate an id
     NSInteger idInt = esRandomNumberIn(0, 99999999);
     
-    if (IS_ON_SIMULATOR)
-    {
-        idInt = 77541575;
-    }
+//    if (IS_ON_SIMULATOR)
+//    {
+//        idInt = 77541575;
+//    }
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setValue:self.id forKey:@"id"];

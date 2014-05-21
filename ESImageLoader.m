@@ -38,16 +38,16 @@ static ESImageLoader *loader;
 
 -(void)loadImage:(NSURL*)url completionBlock:(void(^)(UIImage* image, NSURL *url, BOOL synchronous))completion isGif:(BOOL)_isGif//error:(void(^)(NSError *error))errorBlock
 {
-    DiscardableImage *discardableImage = [cache objectForKey:url];
-    if ( discardableImage)
-    {
-//        BOOL isMainThread = [NSThread isMainThread];
-//        dispatch_sync(dispatch_get_main_queue(), ^
-//        {
-            NSLog(@"Load image from cache %@", url);
-            completion(discardableImage.image, url, YES);
-//        });
-    } else
+//    DiscardableImage *discardableImage = [cache objectForKey:url];
+//    if ( discardableImage)
+//    {
+////        BOOL isMainThread = [NSThread isMainThread];
+////        dispatch_sync(dispatch_get_main_queue(), ^
+////        {
+//            NSLog(@"Load image from cache %@", url);
+//            completion(discardableImage.image, url, YES);
+////        });
+//    } else
     {
         __block BOOL isGif = _isGif;
         NSLog(@"NEW Add Image to operation queue %@", [url.absoluteString substringToIndex:5]);
@@ -55,7 +55,7 @@ static ESImageLoader *loader;
         DataLoadingOperation *operation = [[DataLoadingOperation alloc] initWithUrl:url
         completion:^(DataLoadingOperation *dlo)
         {
-            NSLog(@"completion! %@", [dlo.url.absoluteString substringToIndex:5]);
+            NSLog(@"completion! %@", dlo.url.absoluteString);
             UIImage *img  = nil;
             if (isGif)
             {
@@ -75,20 +75,20 @@ static ESImageLoader *loader;
         {
             dispatch_sync(dispatch_get_main_queue(), ^
             {
-                NSLog(@"failure! %@ : %@", [dlo.url.absoluteString substringToIndex:5], dlo.error);
+                NSLog(@"failure! %@ : %@", dlo.url.absoluteString , dlo.error);
                 completion(nil, dlo.url, NO);
             });
         }
         progress:^(DataLoadingOperation* dlo)
         {
             //not called
-            NSLog(@"progress! %@ : %f", [dlo.url.absoluteString substringToIndex:5], dlo.percent);
+            NSLog(@"progress! %@ : %f", dlo.url.absoluteString , dlo.percent);
         }
         began:^(DataLoadingOperation *dlo)
         {
             dispatch_sync(dispatch_get_main_queue(), ^
             {
-                NSLog(@"began! %@ ", [dlo.url.absoluteString substringToIndex:5]);
+                NSLog(@"began! %@ ", dlo.url.absoluteString );
             });
         }];
         	
