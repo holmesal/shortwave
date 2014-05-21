@@ -31,7 +31,7 @@
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
-
+@property (strong, nonatomic) UIButton *dismissKeyboardButton;
 @property (weak, nonatomic) IBOutlet PHFComposeBarView *theComposeBarView;
 @property (weak, nonatomic) IBOutlet ESSpringFlowLayout *springFlowLayout;
 @property (weak, nonatomic) IBOutlet UICollectionView *wallCollectionView;
@@ -122,6 +122,7 @@
 
 //@synthesize panLeftGesture;
 @synthesize contentView;
+@synthesize dismissKeyboardButton;
 
 
 static CGFloat HeightOfGradient = 60;
@@ -379,6 +380,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    [self.view addGestureRecognizer:tap];
 
 //    panLeftGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    
+    dismissKeyboardButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [dismissKeyboardButton setFrame:self.view.bounds];
+    [dismissKeyboardButton setUserInteractionEnabled:NO];
+    [dismissKeyboardButton setBackgroundColor:[UIColor clearColor]];
+    [dismissKeyboardButton addTarget:self action:@selector(dismissKeyboard) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView insertSubview:dismissKeyboardButton belowSubview:self.composeBarView];
 
     
     [self.contentView setClipsToBounds:YES];
@@ -920,12 +928,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     CGFloat sizeChange = UIInterfaceOrientationIsLandscape([self interfaceOrientation]) ? widthChange : heightChange;
     
     keyboardIsVisible = (sizeChange < 0);
+    [dismissKeyboardButton setUserInteractionEnabled:keyboardIsVisible];
     keyboardRect = [[userInfo objectForKey:@"UIKeyboardFrameEndUserInfoKey"] CGRectValue];
     
     CGRect newComposeBarFrame = [[self composeBarView] frame];
     newComposeBarFrame.origin.y += sizeChange;
     
+    
+    UIEdgeInsets collectionEdgeInsets = wallCollectionView.contentInset;
+    collectionEdgeInsets.bottom -= sizeChange;
+    CGPoint collectionContentOffset = {0.0f, wallCollectionView.contentOffset.y - sizeChange};
+    
+    
     CGPoint contentOffset = {0.0f, tableView.contentOffset.y + sizeChange};
+    
     
     UIEdgeInsets edgeInsets = self.tableView.contentInset;
             edgeInsets.top -= sizeChange;
@@ -937,11 +953,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                      animations:^
                     {
                         [self.tableView setContentOffset:contentOffset];//scrollview scroll up
-
-                        
-                        
                         [[self tableView] setContentInset:edgeInsets];
                          [[self composeBarView] setFrame:newComposeBarFrame]; //move composeBarView up
+                        
+                        [wallCollectionView setContentInset:collectionEdgeInsets];
+                        [wallCollectionView setContentOffset:collectionContentOffset];
                     } completion:NULL];
     
     // If the keyboard is coming up, broadcast as an iBeacon to sync surrounding users
@@ -1298,11 +1314,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
             
             /*
-             * load iamge here
+             * load image here
              */
-            
-            
-            
             [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.src] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
              {
                  if (synchronous)
