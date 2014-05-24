@@ -18,7 +18,8 @@
 
 #elif TARGET_OS_IPHONE
 //is real device
-#define IS_ON_SIMULATOR NO
+#warning "AHHH!"
+#define IS_ON_SIMULATOR YES
 
 #else
 #define IS_ON_SIMULATOR NO

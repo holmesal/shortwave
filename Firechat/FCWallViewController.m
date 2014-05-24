@@ -29,6 +29,9 @@
 
 #import "SWSwapUserStateCell.h"
 
+#define kWallCollectionView_MAX_CELLS_INSERT 20
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.2f
+
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
 @property (strong, nonatomic) UIButton *dismissKeyboardButton;
@@ -38,8 +41,12 @@
 
 @property (strong, nonatomic) Firebase *wallRef;
 @property (nonatomic, assign) FirebaseHandle bindToWallHandle;
-@property (atomic, strong) NSMutableArray *wall;
 
+
+
+@property (atomic, strong) NSMutableArray *wallQueue;
+@property (atomic, strong) NSMutableArray *wall;
+@property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
 
 @property (nonatomic) BOOL initializedTableView;
 @property (nonatomic) CGRect lastFrameForSelfView;
@@ -84,7 +91,6 @@
 
 
 @property (nonatomic) UILabel *peopleNearbyLabel;
-
 @property (nonatomic) CGRect originalRectOfIcon;
 
 
@@ -94,8 +100,8 @@
 
 @synthesize wallCollectionView;
 @synthesize wall;
-
-
+@synthesize wallQueue;
+@synthesize wallQueueInsertTimer;
 
 @synthesize initializedTableView;
 @synthesize autoScrollLockTimer;
@@ -134,6 +140,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if(self = [super initWithCoder:aDecoder])
     {
         wall = [NSMutableArray array];
+        wallQueue = [[NSMutableArray alloc] initWithCapacity:kWallCollectionView_MAX_CELLS_INSERT];
     }
     return self;
 }
@@ -349,11 +356,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     self.navigationController.navigationBarHidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     // Init table view
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+//    self.tableView.delegate = self;
+//    self.tableView.dataSource = self;
 	// Get the owner
     
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
     
     // Flip the table view in viewWillLayoutSubviews, frame adjust in viewDidLayoutSubviews
     
@@ -601,10 +608,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     __weak typeof(self) weakSelf = self;
     trackingHandle = [self.trackingRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
-        NSLog(@"tracking users update!");
+
         if ([snapshot value] && [snapshot value] != [NSNull null])
         {
-            NSLog(@"Tracking length is %lu",(unsigned long)[snapshot.value count]);
             [weakSelf updatePeopleNearby:(int)[snapshot.value count]];
             
             //setter for tracking updates UI
@@ -612,9 +618,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
         } else
         {
-            NSLog(@"Count is nothing! %@", snapshot.value);
             [weakSelf updatePeopleNearby:0];
-            
             weakSelf.tracking = @[ ];
         }
     }];
@@ -658,60 +662,110 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     __weak typeof(self) weakSelf = self;
     self.bindToWallHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
+        
         if ([snapshot.value isKindOfClass:[NSDictionary class]])
         {
-            id unknownTypeOfMessage = nil;
             
-            NSLog(@"snapshot.value = %@", snapshot.value);
-            if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
+            id unknownTypeOfMessage = [self snapshotToMessage:snapshot];
+
+            if (unknownTypeOfMessage)
             {
-                NSLog(@"this is an image cell! %@", snapshot.value);
-                ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
-                unknownTypeOfMessage = imageMessage;
-                
-            } else
-            if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
-            {
-                ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
-                unknownTypeOfMessage = swapMsg;
-            } else
-            {
-                FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
-                unknownTypeOfMessage = fcMessage;
+                [weakSelf addMessageToWallEventually:unknownTypeOfMessage];
             }
             
-            [weakSelf.wallCollectionView performBatchUpdates:^
-             {
-                 [springFlowLayout prepareLayout];
-//                 NSArray *paths = @[ [NSIndexPath indexPathForRow:weakSelf.wall.count inSection:0] ];
-                 [weakSelf.wall addObject:unknownTypeOfMessage];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
-                 NSArray *paths = @[[NSIndexPath indexPathForItem:weakSelf.wall.count-1 inSection:0]];
-                 [weakSelf.wallCollectionView insertItemsAtIndexPaths:paths];
-             } completion:nil];
         }
     } withCancelBlock:^(NSError *someError)
     {
         NSLog(@"error = %@", someError.localizedDescription);
     }];
 }
-
-#pragma mark - custom Table View delegate methods
--(void)tableView:(UITableView*)tV didLongPressCellAtIndexPath:(NSIndexPath*)indexPath
+//queue it in dat der wallQueue array until wallQueue reached maximum capacity then print in the event that.. just do it
+-(void)addMessageToWallEventually:(id)unknownTypeOfMessage
 {
-    if (tV == self.tableView)
+    if (wallQueueInsertTimer)
     {
-
+        NSLog(@"-TIMER INVAL");
+        [wallQueueInsertTimer invalidate];
+        wallQueueInsertTimer = nil;
+    }
+    
+    [wallQueue addObject:unknownTypeOfMessage];
+    if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
+    {
+        NSLog(@"begin timer to insert animated");
+        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
+    } else
+    {//drain wallQueue now without animation
+        NSLog(@"&&&Drain wallqueue no animation&&&");
+        [wall addObjectsFromArray:wallQueue];
+        [wallQueue removeAllObjects];
+        [wallCollectionView reloadData];
+        
+        CGRect visibleRect = wallCollectionView.frame;
+        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+        [wallCollectionView scrollRectToVisible:visibleRect animated:NO];
+        
     }
 }
--(void)tableView:(UITableView *)tV didDoubleTapCellAtIndexPath:(NSIndexPath *)indexPath
+-(void)insertMessagesToWallNow
 {
-    if (tV == self.tableView)
-    {
+    NSLog(@"+TIMER END");
+    BOOL isMain = [NSThread mainThread];
 
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
+    int row = wall.count;
+    for (id msg in wallQueue)
+    {
+        [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+        row++;
     }
+    
+    [self.wallCollectionView performBatchUpdates:^
+     {
+         [springFlowLayout invalidateLayout];
+         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+         [self.wallCollectionView insertItemsAtIndexPaths:paths];
+         [wallQueue removeAllObjects];
+         NSLog(@"last indexPath = %@", [paths lastObject]);
+//         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+         
+     } completion:^(BOOL finished)
+    {
+        
+
+        CGRect visibleRect = wallCollectionView.frame;
+        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+        
+        
+        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
+//        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+    }];
+    
 }
 
-
+//helper method for inserting wallCollectionView
+-(id)snapshotToMessage:(FDataSnapshot*)snapshot
+{
+    id unknownTypeOfMessage = nil;
+    
+    if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
+    {
+        ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
+        unknownTypeOfMessage = imageMessage;
+        
+    } else
+    if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
+    {
+        ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+        unknownTypeOfMessage = swapMsg;
+    } else
+    {
+        FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
+        unknownTypeOfMessage = fcMessage;
+    }
+    return unknownTypeOfMessage;
+}
 
 
 
@@ -1289,8 +1343,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return wall.count;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsZero;
+- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(0, 0, 0, 0);
 }
 
 

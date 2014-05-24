@@ -76,7 +76,7 @@
 
 -(void)main
 {
-    NSLog(@"main of data loading operation %@", [url.absoluteString substringToIndex:5]);
+//    NSLog(@"main of data loading operation %@", [url.absoluteString substringToIndex:5]);
     NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     began(self);
     receivedData = [[NSMutableData alloc] init];

@@ -41,21 +41,18 @@ static ESImageLoader *loader;
     DiscardableImage *discardableImage = [cache objectForKey:url];
     if ( discardableImage)
     {
-//        BOOL isMainThread = [NSThread isMainThread];
-//        dispatch_sync(dispatch_get_main_queue(), ^
-//        {
-            NSLog(@"Load image from cache %@", url);
-            completion(discardableImage.image, url, YES);
-//        });
+
+        completion(discardableImage.image, url, YES);
+
     } else
     {
         __block BOOL isGif = _isGif;
-        NSLog(@"NEW Add Image to operation queue %@", [url.absoluteString substringToIndex:5]);
+//        NSLog(@"NEW Add Image to operation queue %@", url.absoluteString);
 
         DataLoadingOperation *operation = [[DataLoadingOperation alloc] initWithUrl:url
         completion:^(DataLoadingOperation *dlo)
         {
-            NSLog(@"completion! %@", dlo.url.absoluteString);
+//            NSLog(@"completion! %@", dlo.url.absoluteString);
             UIImage *img  = nil;
             if (isGif)
             {
@@ -82,13 +79,13 @@ static ESImageLoader *loader;
         progress:^(DataLoadingOperation* dlo)
         {
             //not called
-            NSLog(@"progress! %@ : %f", dlo.url.absoluteString , dlo.percent);
+//            NSLog(@"progress! %@ : %f", dlo.url.absoluteString , dlo.percent);
         }
         began:^(DataLoadingOperation *dlo)
         {
             dispatch_sync(dispatch_get_main_queue(), ^
             {
-                NSLog(@"began! %@ ", dlo.url.absoluteString );
+//                NSLog(@"began! %@ ", dlo.url.absoluteString );
             });
         }];
         	

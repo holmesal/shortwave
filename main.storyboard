@@ -85,7 +85,7 @@
                                     <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hhB-Xz-SvL">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="uRX-8q-WFT" customClass="ESSpringFlowLayout">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uRX-8q-WFT" customClass="ESSpringFlowLayout">
                                             <size key="itemSize" width="315" height="174"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -140,7 +140,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWOwnerTextCell" id="7KM-xp-WCq" customClass="SWOwnerTextCell">
-                                                <rect key="frame" x="0.0" y="184" width="320" height="74"/>
+                                                <rect key="frame" x="0.0" y="174" width="320" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
@@ -195,7 +195,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWTextCell" id="5wK-Ju-KLO" customClass="SWTextCell">
-                                                <rect key="frame" x="0.0" y="268" width="320" height="74"/>
+                                                <rect key="frame" x="0.0" y="248" width="320" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
@@ -250,7 +250,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWSwapUserStateCell" id="sm6-F9-nq8" customClass="SWSwapUserStateCell">
-                                                <rect key="frame" x="0.0" y="352" width="320" height="50"/>
+                                                <rect key="frame" x="0.0" y="322" width="320" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>

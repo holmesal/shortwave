@@ -56,7 +56,7 @@
     self.interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     // Need to overflow our actual visible rect slightly to avoid flickering.
-    CGRect visibleRect = CGRectInset((CGRect){.origin = self.collectionView.bounds.origin, .size = self.collectionView.frame.size}, -100, -100);
+    CGRect visibleRect = CGRectInset((CGRect){.origin = self.collectionView.bounds.origin, .size = self.collectionView.frame.size}, -150, -150);
     
     NSArray *itemsInVisibleRectArray = [super layoutAttributesForElementsInRect:visibleRect];
     
@@ -89,7 +89,7 @@
         
         springBehaviour.length = 1.0f;
         springBehaviour.damping = 0.8f;
-        springBehaviour.frequency = 1.0f;
+        springBehaviour.frequency = 1.5f;
         
         // If our touchLocation is not (0,0), we'll need to adjust our item's center "in flight"
         if (!CGPointEqualToPoint(CGPointZero, touchLocation))
@@ -232,10 +232,19 @@
             
             //attributes.frame = CGRectMake(10, updateItem.indexPathAfterUpdate.item * 310, 300, 44); // or some other initial frame
             
+//            attributes.frame = CGRectMake(10, updateItem.indexPathAfterUpdate.item * 310, 300, 44); // or some other initial frame
+            
             if (attributes.frame.size.width == 0 &&
                 attributes.frame.size.height == 0)
             {
+                NSLog(@"********insert");
+                UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:attributes.indexPath];
                 return;
+//                CGRect tempFrame = attributes.frame;
+//                tempFrame.origin.y += 200;
+//                tempFrame.size.width = 320;
+//                tempFrame.size.height = 275;
+//                attributes.frame = tempFrame;
             }
             
             UIAttachmentBehavior *springBehaviour = [[UIAttachmentBehavior alloc] initWithItem:attributes attachedToAnchor:attributes.center];
