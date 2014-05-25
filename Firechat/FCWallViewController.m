@@ -21,13 +21,14 @@
 #import "ESImageCell.h"
 #import "ESImageMessage.h"
 #import "ESImageLoader.h"
+#import "ESShortbotOverlay.h"
 
 
 
 #define WIDTH_OF_PM_LIST 75.0f
 
 
-@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout>
+@interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ESShortbotOverlayDelegate>
 
 typedef enum
 {
@@ -89,6 +90,10 @@ typedef enum
 
 @property (nonatomic) CAShapeLayer *lineLayer;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+
+// The overlay for the shortbot shortcut view
+@property (weak, nonatomic) IBOutlet UIView *shortbotOverlayView;
+@property (nonatomic) ESShortbotOverlay *shortbotOverlayController;
 
 
 //SOME KEYBOARD PROPERTIES FOR HIT TESTING A TOUCH
@@ -174,6 +179,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if(self = [super initWithCoder:aDecoder])
     {
+        
         self.wall = [NSMutableArray array];
         
         self.currentPrivateMessages = self.wall;
@@ -355,6 +361,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [super viewDidLoad];
     //state of login flow
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"showSearchingScreen"];
+    
+    // Init the shortbot overlay view
+    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView andColor:self.shadeView.backgroundColor];
+    self.shortbotOverlayController.delegate = self;
     
 
     
@@ -759,7 +769,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
 
-//    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@",self.owner.icon]]];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot-dark"]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view
@@ -1540,7 +1550,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 - (void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView {
-    NSLog(@"Utility button pressed");
+    // Drop the text view
+    [self.composeBarView resignFirstResponder];
+    // Show the shortbot overlay
+    [self.shortbotOverlayController showOverlay];
 }
 
 // Pressed "send"
@@ -2010,5 +2023,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.lastFrameForSelfView = currentFrame;
     }
 }
+
+# pragma mark - shortbot delegate methods
+- (void)shortbotOverlay:(ESShortbotOverlay *)overlay didPickCommand:(NSString *)command
+{
+    NSLog(@"Picked command: %@", command);
+    // Set the text to the command response
+    [self.composeBarView setText:[NSString stringWithFormat:@"shortbot %@ ", command]];
+    // Set focus on the view
+    [self.composeBarView.textView becomeFirstResponder];
+}
+
 
 @end

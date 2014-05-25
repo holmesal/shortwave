@@ -1,0 +1,21 @@
+//
+//  ESCommandTableViewCell.h
+//  Shortwave
+//
+//  Created by Alonso Holmes on 5/20/14.
+//  Copyright (c) 2014 Buildco. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface ESCommandTableViewCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *button;
+@property (weak, nonatomic) IBOutlet UIView *colorBar;
+@property (weak, nonatomic) IBOutlet UIView *cursor;
+@property (assign) BOOL currentlyAnimating;
+
+- (void)startAnimating;
+
+@end
