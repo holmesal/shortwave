@@ -11,6 +11,11 @@
 @interface ESCommandTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *button;
+@property (weak, nonatomic) IBOutlet UIView *colorBar;
+@property (weak, nonatomic) IBOutlet UIView *cursor;
+@property (assign) BOOL currentlyAnimating;
 
+- (void)startAnimating;
 
 @end

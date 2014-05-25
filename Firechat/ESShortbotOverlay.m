@@ -14,12 +14,14 @@
 @property (assign, nonatomic) float animationDuration;
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSArray *commands;
+@property (strong, nonatomic) UIButton *button;
+@property (strong, nonatomic) UIColor *color;
 
 @end
 
 @implementation ESShortbotOverlay
 
-- (ESShortbotOverlay *)initWithView:(UIView *)overlayView
+- (ESShortbotOverlay *)initWithView:(UIView *)overlayView andColor:(UIColor *)color
 {
     if (self = [super init]){
         
@@ -28,6 +30,8 @@
         self.theView = overlayView;
         self.theView.alpha = 0.0f;
         
+        self.color = color;
+        
         // Find and set the table view
         for (UIView *view in self.theView.subviews)
         {
@@ -35,6 +39,16 @@
             if ([view isKindOfClass:[UITableView class]]){
                 NSLog(@"found a table view!");
                 self.tableView = (UITableView *)view;
+            }
+        }
+        
+        // Find and set the close button
+        for (UIView *view in self.theView.subviews)
+        {
+            NSLog(@"%@", view);
+            if ([view isKindOfClass:[UIButton class]]){
+                NSLog(@"found a button");
+                self.button = (UIButton *)view;
             }
         }
         
@@ -56,6 +70,10 @@
         self.tableView.delegate = self;
         [self.tableView reloadData];
         
+        // Register a touchup on the button
+        [self.button addTarget:self action:@selector(hideOverlay) forControlEvents:UIControlEventTouchUpInside];
+
+        
 //        self.tableView.contentInset = UIEdgeInsetsMake(20, 0, 20, 0);
     }
     
@@ -65,6 +83,7 @@
 - (void)showOverlay
 {
     self.theView.hidden = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
          usingSpringWithDamping:1.0
@@ -80,6 +99,7 @@
 - (void)hideOverlay
 {
     self.theView.userInteractionEnabled = NO;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     [UIView animateWithDuration:self.animationDuration
                           delay:0.0
          usingSpringWithDamping:1.0
@@ -112,10 +132,27 @@
     
     [cell setBackgroundColor:[UIColor clearColor]];
     
-    [cell.nameLabel setText:[command objectForKey:@"title"]];
+    [cell.button.layer setBorderWidth:0.5f];
+    [cell.button.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [cell.button.layer setCornerRadius:cell.button.layer.bounds.size.height/2];
+    
+//    [cell.button addTarget:cell action:@selector(pulseButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    cell.colorBar.backgroundColor = self.color;
+    
+    [cell.nameLabel setText:[NSString stringWithFormat:@"Shortbot %@",[command objectForKey:@"command"]]];
     [cell.descriptionLabel setText:[command objectForKey:@"description"]];
     
     cell.tag = [indexPath row];
+    
+//    NSNumber *delay = [NSNumber numberWithInt:[indexPath row]] longValue
+    
+    float wait = [indexPath row] * 0.2f;
+    NSTimeInterval delay = [[NSNumber numberWithFloat:wait] doubleValue];
+    
+    [cell performSelector:@selector(startAnimating) withObject:nil afterDelay:delay];
+    
+//    [cell startAnimating];
     
     return cell;
 }

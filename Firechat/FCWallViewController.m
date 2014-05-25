@@ -363,7 +363,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"showSearchingScreen"];
     
     // Init the shortbot overlay view
-    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView];
+    self.shortbotOverlayController = [[ESShortbotOverlay alloc] initWithView:self.shortbotOverlayView andColor:self.shadeView.backgroundColor];
     self.shortbotOverlayController.delegate = self;
     
 
@@ -769,7 +769,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
 
-    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot"]];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot-dark"]];
     [self.composeBarView setDelegate:self];
     
     // Style the compose bar view

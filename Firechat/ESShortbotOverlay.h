@@ -20,8 +20,9 @@
 @property (nonatomic) UIView *theView;
 @property (nonatomic, assign) id <ESShortbotOverlayDelegate> delegate;
 
-- (ESShortbotOverlay *)initWithView:(UIView *)overlayView;
+- (ESShortbotOverlay *)initWithView:(UIView *)overlayView andColor:(UIColor *)color;
 
 - (void)showOverlay;
+- (void)pulseButton;
 
 @end
