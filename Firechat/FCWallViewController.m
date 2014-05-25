@@ -1520,7 +1520,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
                                              @{ NSFontAttributeName: font }] ;
         
-        size = [attributedText boundingRectWithSize:CGSizeMake(235, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+        size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
         
         size.height = (15+8)*2 + size.height;//MAX(17*2+40, 15*2 + size.height);
 

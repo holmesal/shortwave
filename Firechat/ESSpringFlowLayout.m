@@ -56,7 +56,7 @@
     self.interfaceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     // Need to overflow our actual visible rect slightly to avoid flickering.
-    CGRect visibleRect = CGRectInset((CGRect){.origin = self.collectionView.bounds.origin, .size = self.collectionView.frame.size}, -150, -150);
+    CGRect visibleRect = CGRectInset((CGRect){.origin = self.collectionView.bounds.origin, .size = self.collectionView.frame.size}, -100, -100);
     
     NSArray *itemsInVisibleRectArray = [super layoutAttributesForElementsInRect:visibleRect];
     

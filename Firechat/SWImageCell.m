@@ -53,6 +53,10 @@
 
 -(void)resetWithImageSize:(CGSize)size
 {
+    CGSize sizeOfImageView = {240,147};//imageView.frame.size;
+    //ratio w.h
+    
+    
     //if size is 0,0 then it is still loading, and activate loading mode
     if (size.width == size.height && size.height == 0)
     {
@@ -60,6 +64,29 @@
     }
     else
     {
+        
+//        NSLog(@"targetSize = %@", NSStringFromCGSize(sizeOfImageView));
+        NSLog(@"imageSize = %@", NSStringFromCGSize(size));
+        
+        //scale to width of target
+        float width = sizeOfImageView.width;
+        float height = width*(size.height/size.width);
+        
+        //if it does not fit, then scale it to height of target
+        if (height > sizeOfImageView.height)
+        {
+            height = sizeOfImageView.height;
+            width = height*(size.width/size.height);
+        }
+        
+        
+        CGPoint position = {iconImageViewContiainer.frame.size.width+2*iconImageViewContiainer.frame.origin.x+ sizeOfImageView.width-width,
+            iconImageViewContiainer.frame.size.height+2*iconImageViewContiainer.frame.origin.y+ sizeOfImageView.height-height};
+        position = imageView.frame.origin;
+        CGRect frame = { position, {width,height}};
+        
+//        imageView.backgroundColor = [UIColor redColor];
+        imageView.frame = frame;
         
     }
 }
@@ -79,7 +106,9 @@
         [self resetWithImageSize:CGSizeZero];
     }
     
+
     [self.imageView setImage:image];
+    [self resetWithImageSize:image.size];
 }
 -(BOOL)hasImage
 {
