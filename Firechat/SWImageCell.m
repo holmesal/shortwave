@@ -34,7 +34,7 @@
 {
     if (!coloredCircleLayer)
     {
-        CGFloat radius = 15;
+        CGFloat radius = iconImageViewContiainer.frame.size.width/2;
         coloredCircleLayer = [CALayer layer];
         [coloredCircleLayer setBackgroundColor:[UIColor blackColor].CGColor];
         [coloredCircleLayer setBorderColor:[UIColor clearColor].CGColor];

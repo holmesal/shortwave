@@ -221,8 +221,8 @@
     [self.earshotUsersRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
         // Update the locally-stored earshotUsers array
-        NSLog(@"Got data from firebase");
-        NSLog(@"%@",snapshot.value);
+//        NSLog(@"Got data from firebase");
+//        NSLog(@"%@",snapshot.value);
         if (snapshot.value != [NSNull null]){
             self.earshotUsers = [NSMutableDictionary dictionaryWithDictionary:snapshot.value];
         } else

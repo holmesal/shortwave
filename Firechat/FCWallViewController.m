@@ -30,7 +30,7 @@
 #import "SWSwapUserStateCell.h"
 
 #define kWallCollectionView_MAX_CELLS_INSERT 20
-#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.2f
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
@@ -43,7 +43,7 @@
 @property (nonatomic, assign) FirebaseHandle bindToWallHandle;
 
 
-
+@property (nonatomic, strong) NSArray *hideCells;
 @property (atomic, strong) NSMutableArray *wallQueue;
 @property (atomic, strong) NSMutableArray *wall;
 @property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
@@ -157,9 +157,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     wallCollectionView.alwaysBounceVertical = YES;
     [wallCollectionView setBackgroundColor:[UIColor clearColor]];
 
+
+    static float wtf = 0;
+    CGRect wallCollectionViewRect = wallCollectionView.frame;
+    wallCollectionViewRect.size.height += wtf;
+    [wallCollectionView setFrame:wallCollectionViewRect];
     
-    [wallCollectionView setContentInset:UIEdgeInsetsMake(64+5, 0, 44, 0)];
-    [wallCollectionView setScrollIndicatorInsets:UIEdgeInsetsMake(64, 0, 44, 0)];
+    
+//    UIEdgeInsetsMake(<#CGFloat top#>, <#CGFloat left#>, <#CGFloat bottom#>, <#CGFloat right#>)
+    [wallCollectionView setContentInset:UIEdgeInsetsMake(64+5, 0, 44+wtf, 0)];
+    [wallCollectionView setScrollIndicatorInsets:UIEdgeInsetsMake(64, 0, 44+wtf, 0)];
+    
+//    [wallCollectionView setContentInset:UIEdgeInsetsMake(64+5, 0, 44, 0)];
+//    [wallCollectionView setScrollIndicatorInsets:UIEdgeInsetsMake(64, 0, 44, 0)];
     
     //handle the animation where the shadeView slidse up to be the 'navbar' then the icon and peopleNearbyLabel separate animated
     if (self.shadeView && self.needsToDoTransitionWithShadeView)
@@ -402,6 +412,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(background:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(foreground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    
 }
 
 -(void)background:(NSNotification*)notification
@@ -693,6 +704,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
     {
         NSLog(@"begin timer to insert animated");
+//        [self insertMessagesToWallNow];
         wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
     } else
@@ -711,7 +723,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 -(void)insertMessagesToWallNow
 {
     NSLog(@"+TIMER END");
-    BOOL isMain = [NSThread mainThread];
 
     NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
     int row = wall.count;
@@ -723,7 +734,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     [self.wallCollectionView performBatchUpdates:^
      {
-         [springFlowLayout invalidateLayout];
+//         [springFlowLayout invalidateLayout];
+         
+         self.hideCells = [NSArray arrayWithArray:paths];
          [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
          [self.wallCollectionView insertItemsAtIndexPaths:paths];
          [wallQueue removeAllObjects];
@@ -732,13 +745,29 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
          
      } completion:^(BOOL finished)
     {
+
+//        CGRect tempRect = self.wallCollectionView.frame;
+//        tempRect.size.height -= 100;
+//        self.wallCollectionView.frame = tempRect;
+//
+//        CGPoint wallOffset = wallCollectionView.contentOffset;
+//        wallOffset.y += 100;
+//        wallCollectionView.contentOffset = wallOffset;
         
 
+        for (NSIndexPath *indexPath in self.hideCells)
+        {
+            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+        }
+        self.hideCells = @[];
         CGRect visibleRect = wallCollectionView.frame;
         visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
         
         
         [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
+        
+
+        
 //        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }];
     
@@ -791,7 +820,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (tableView == tV)
     {
         id unknownTypeOfMessage = [self.wall objectAtIndex:indexPath.row];
-    
+        UITableViewCell *unknownCell = nil;
         if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
         {
             NSLog(@"making an image cell");
@@ -841,7 +870,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             
             imageCell.tag = indexPath.row;
-            return imageCell;
+            unknownCell = imageCell;
             
         } else
         if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
@@ -886,7 +915,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             [cell setFaded:!userIsInTracking animated:NO];
             cell.tag = indexPath.row;
-            return cell;
+            unknownCell = cell;
         } else
         if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
         {
@@ -908,8 +937,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 [cell doFirstTimeAnimation];
             }
             cell.tag = indexPath.row;
-            return cell;
+            unknownCell = cell;
         }
+        
+
+        
+        return unknownCell;
     }
     return nil;
 }
@@ -1066,6 +1099,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     [self.tableView setContentInset:edgeInsets];
     [self.tableView setContentOffset:contentOffset];
+
+    
 }
 
 
@@ -1343,10 +1378,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return wall.count;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
-{
-    return UIEdgeInsetsMake(0, 0, 0, 0);
-}
+//- (UIEdgeInsets)collectionView:(UICollectionView*)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+//{
+//    return UIEdgeInsetsMake(0, 0, 0, 0);
+//}
 
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1360,6 +1395,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
         
         id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+        UICollectionViewCell *unknownCell = nil;
         if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
         {
             //image message
@@ -1367,7 +1403,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
-            
+            [imageCell setImage:nil];
             /*
              * load image here
              */
@@ -1423,7 +1459,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                  }
              } isGif:imageMessage.isGif];
             
-            return imageCell;
+            unknownCell = imageCell;
             
         } else
         if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
@@ -1440,7 +1476,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
             [textCell setMessage:textMessage];
-            return textCell;
+            unknownCell = textCell;
         } else
         if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
         {
@@ -1458,8 +1494,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 [swapCell doFirstTimeAnimation];
             }
             
-            return swapCell;
+            unknownCell = swapCell;
         }
+        
+        if (self.hideCells && self.hideCells.count && [self.hideCells containsObject:indexPath])
+        {
+            unknownCell.contentView.alpha = 0.0f;
+        }
+        
+        return unknownCell;
     }
     return nil;
 }
@@ -1473,7 +1516,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         FCMessage *message = unknownTypeOfMessage;
         NSString *text = message.text;
         
-        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
         NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
                                              @{ NSFontAttributeName: font }] ;
         
@@ -1505,13 +1548,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     } else
     if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
     {
-        size.height = 50;
+        size.height = 60;
     }
     size.width = 320;
 //    NSLog(@"size = %@ of %@", NSStringFromCGSize(size), unknownTypeOfMessage);
 //    size.height = 75;
     return size;
 }
+
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {

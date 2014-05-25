@@ -43,7 +43,7 @@
 
 -(void)initialize
 {
-    CGFloat radius = 15;
+    CGFloat radius = fromView.frame.size.width/2;
     
     [self.fromImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.toImageView setContentMode:UIViewContentModeScaleAspectFit];
