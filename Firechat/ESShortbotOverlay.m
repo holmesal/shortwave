@@ -35,9 +35,10 @@
         // Find and set the table view
         for (UIView *view in self.theView.subviews)
         {
-            NSLog(@"%@", view);
-            if ([view isKindOfClass:[UITableView class]]){
-                NSLog(@"found a table view!");
+//            NSLog(@"%@", view);
+            if ([view isKindOfClass:[UITableView class]])
+            {
+//                NSLog(@"found a table view!");
                 self.tableView = (UITableView *)view;
             }
         }
@@ -45,14 +46,14 @@
         // Find and set the close button
         for (UIView *view in self.theView.subviews)
         {
-            NSLog(@"%@", view);
-            if ([view isKindOfClass:[UIButton class]]){
-                NSLog(@"found a button");
+//            NSLog(@"%@", view);
+            if ([view isKindOfClass:[UIButton class]])
+            {
+//                NSLog(@"found a button");
                 self.button = (UIButton *)view;
             }
         }
         
-        //
         self.commands = @[
                           @{@"title": @"image me <search>",
                             @"command": @"image me",

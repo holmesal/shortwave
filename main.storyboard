@@ -85,7 +85,7 @@
                                     <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hhB-Xz-SvL">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uRX-8q-WFT" customClass="ESSpringFlowLayout">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uRX-8q-WFT" customClass="ESSpringFlowLayout1">
                                             <size key="itemSize" width="315" height="174"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -316,28 +316,22 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-SA-2sg" customClass="PHFComposeBarView">
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-SA-2sg" customClass="PHFComposeBarView">
                                         <rect key="frame" x="0.0" y="528" width="320" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="3kN-cP-XQL"/>
-                                            <constraint firstAttribute="width" constant="320" id="zuE-Ja-ac7"/>
-                                        </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" red="0.38823529410000002" green="0.72156862749999995" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="hgh-SA-2sg" secondAttribute="bottom" id="A1Y-cd-sor"/>
                                     <constraint firstItem="hhB-Xz-SvL" firstAttribute="width" secondItem="C1x-yP-RTu" secondAttribute="width" id="GGT-n7-gjt"/>
                                     <constraint firstAttribute="centerY" secondItem="hhB-Xz-SvL" secondAttribute="centerY" id="Iaz-GE-Cvc"/>
                                     <constraint firstItem="hhB-Xz-SvL" firstAttribute="height" secondItem="C1x-yP-RTu" secondAttribute="height" id="MCc-lS-ZiX"/>
                                     <constraint firstAttribute="centerX" secondItem="hhB-Xz-SvL" secondAttribute="centerX" id="Qvj-sw-gUO"/>
-                                    <constraint firstAttribute="centerX" secondItem="hgh-SA-2sg" secondAttribute="centerX" id="eOS-bK-bKA"/>
                                 </constraints>
                             </view>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
+                                <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-xj-Ecd">
@@ -396,12 +390,12 @@
                                                         <constraint firstItem="fLq-kK-tUL" firstAttribute="leading" secondItem="gdW-5r-s7F" secondAttribute="leading" constant="44" id="1s3-BP-MDW"/>
                                                         <constraint firstItem="ee7-FO-Nca" firstAttribute="leading" secondItem="gdW-5r-s7F" secondAttribute="leading" constant="23" id="5dt-9L-xcI"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="leading" secondItem="UEH-Wh-E5h" secondAttribute="trailing" constant="-12" id="9sJ-rs-Fe1"/>
-                                                        <constraint firstItem="ee7-FO-Nca" firstAttribute="top" secondItem="gdW-5r-s7F" secondAttribute="top" id="EGb-Ys-739"/>
                                                         <constraint firstAttribute="centerY" secondItem="fLq-kK-tUL" secondAttribute="centerY" constant="5" id="EyQ-bb-Q28"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="top" secondItem="fLq-kK-tUL" secondAttribute="bottom" constant="-2" id="GiB-R5-5rK"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="top" secondItem="UEH-Wh-E5h" secondAttribute="bottom" constant="3" id="WQf-uk-7D1"/>
                                                         <constraint firstAttribute="trailing" secondItem="fLq-kK-tUL" secondAttribute="trailing" constant="91" id="uXc-xD-BFh"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="leading" secondItem="fLq-kK-tUL" secondAttribute="trailing" constant="8" id="yf1-nd-zrE"/>
+                                                        <constraint firstAttribute="centerY" secondItem="ee7-FO-Nca" secondAttribute="centerY" constant="5" id="z4D-A0-10T"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
                                                 <connections>

@@ -44,9 +44,9 @@
 # pragma mark - beacon ranging
 - (void)beaconsUpdated:(NSNotification *)notification
 {
-    NSLog(@"Got notification from center!");
-    
-    NSLog(@"%@",notification.object);
+//    NSLog(@"Got notification from center!");
+//    
+//    NSLog(@"%@",notification.object);
     self.beacons = notification.object;
     
     [self.tableView reloadData];

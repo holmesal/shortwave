@@ -60,13 +60,13 @@
     //if size is 0,0 then it is still loading, and activate loading mode
     if (size.width == size.height && size.height == 0)
     {
-        NSLog(@"be loading!");
+//        NSLog(@"be loading!");
     }
     else
     {
         
 //        NSLog(@"targetSize = %@", NSStringFromCGSize(sizeOfImageView));
-        NSLog(@"imageSize = %@", NSStringFromCGSize(size));
+//        NSLog(@"imageSize = %@", NSStringFromCGSize(size));
         
         //scale to width of target
         float width = sizeOfImageView.width;
@@ -117,7 +117,7 @@
     {
         self.imageView.alpha = 0.0f;
         
-        [UIView animateWithDuration:0.2f animations:^
+        [UIView animateWithDuration:0.52f animations:^
         {
             imageView.alpha = 1.0f;
         }];

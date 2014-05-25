@@ -57,9 +57,26 @@ static ESImageLoader *loader;
             if (isGif)
             {
                 img = [UIImage animatedImageWithAnimatedGIFData:dlo.receivedData];
+                CGSize sizeBefore = img.size;
+                
+                CGSize sizeAfter = img.size;
+                
+//                NSLog(@"before %@ after %@", NSStringFromCGSize(sizeBefore), NSStringFromCGSize(sizeAfter));
             } else
             {
                 img = [UIImage imageWithData:dlo.receivedData];
+                CGSize sizeBefore = img.size;
+                float maxDim = 300;
+
+                float h = sizeBefore.height;
+                float w = sizeBefore.width;
+                float s = (w>h) ? maxDim/w: maxDim/h;
+                
+                //downsample image
+                 img = [UIImage imageWithCGImage:[img CGImage] scale:1/s orientation:UIImageOrientationUp];
+                CGSize sizeAfter = img.size;
+                
+//                NSLog(@"before %@ after %@", NSStringFromCGSize(sizeBefore), NSStringFromCGSize(sizeAfter));
             }
             dispatch_sync(dispatch_get_main_queue(), ^
             {

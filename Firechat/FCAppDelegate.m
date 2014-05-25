@@ -170,7 +170,7 @@
 {
     FCUser *owner = [FCUser owner];
     if (owner && owner.id) {
-        NSLog(@"The user has an ID - starting the transponder!");
+//        NSLog(@"The user has an ID - starting the transponder!");
         [owner.beacon startAwesome];
     }
 }

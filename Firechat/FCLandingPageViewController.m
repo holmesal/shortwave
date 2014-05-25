@@ -124,7 +124,7 @@ typedef enum
 
 -(BOOL)userIsLoggedIn
 {
-    NSLog(@"userIsLoggedIn = %@", ([[NSUserDefaults standardUserDefaults] boolForKey:@"isLoggedIn"] ? @"YES": @"NO"));
+//    NSLog(@"userIsLoggedIn = %@", ([[NSUserDefaults standardUserDefaults] boolForKey:@"isLoggedIn"] ? @"YES": @"NO"));
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"isLoggedIn"];
 }
 -(void)setUserIsLoggedIn:(BOOL)b
@@ -1421,7 +1421,7 @@ typedef enum
                 } completion:^(BOOL finished)
                 {
                     int currentIndex = ((iconTableView.contentOffset.y)/self.cellHeight)+1;//+(direction==1?-1:0);
-                    NSLog(@"self.iconIndex = %d", currentIndex);
+//                    NSLog(@"self.iconIndex = %d", currentIndex);
                     NSString *attribution = [[self.icons objectAtIndex:currentIndex] objectForKey:@"attribution"];
                     
 //                    NSString *iconName = [[self.icons objectAtIndex:currentIndex] objectForKey:@"name"];
@@ -1722,7 +1722,7 @@ typedef enum
     
     [self.doneBlurButton setUserInteractionEnabled:YES];
     
-    NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
+//    NSLog(@"contentOffset = %f", self.iconTableView.contentOffset.y);
 }
 
 -(void)pushErrorScreen:(NSNotification*)notification
@@ -1747,7 +1747,7 @@ typedef enum
     {
         return NO; // ignore the touch
     }
-    NSLog(@"//handle the touch");
+//    NSLog(@"//handle the touch");
     return YES; // handle the touch
 }
 - (IBAction)forceDramaticTransition:(id)sender

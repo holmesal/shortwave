@@ -288,7 +288,7 @@ static FCUser *currentUser;
     // id
     self.id = [prefs valueForKey:@"id"];
     
-    NSLog(@"COLOR IS %@",self.color);
+//    NSLog(@"COLOR IS %@",self.color);
 //    NSLog(@"Got id: %@:%@",self.major,self.minor);
 }
 
@@ -315,7 +315,7 @@ static FCUser *currentUser;
 
 -(void)setIcon:(NSString *)icn
 {
-    NSLog(@"icon set as %@", icn);
+//    NSLog(@"icon set as %@", icn);
     icon = icn;
     if ([self isOwner])
     {

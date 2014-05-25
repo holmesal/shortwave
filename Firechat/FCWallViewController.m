@@ -30,7 +30,7 @@
 #import "SWSwapUserStateCell.h"
 
 #define kWallCollectionView_MAX_CELLS_INSERT 20
-#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.9f
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
@@ -703,7 +703,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (wallQueueInsertTimer)
     {
-        NSLog(@"-TIMER INVAL");
+//        NSLog(@"-TIMER INVAL");
         [wallQueueInsertTimer invalidate];
         wallQueueInsertTimer = nil;
     }
@@ -711,7 +711,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [wallQueue addObject:unknownTypeOfMessage];
     if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
     {
-        NSLog(@"begin timer to insert animated");
+//        NSLog(@"begin timer to insert animated");
 //        [self insertMessagesToWallNow];
         wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
@@ -730,7 +730,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 -(void)insertMessagesToWallNow
 {
-    NSLog(@"+TIMER END");
+//    NSLog(@"+TIMER END");
 
     NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
     int row = wall.count;
@@ -748,35 +748,35 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
          [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
          [self.wallCollectionView insertItemsAtIndexPaths:paths];
          [wallQueue removeAllObjects];
-         NSLog(@"last indexPath = %@", [paths lastObject]);
+//         NSLog(@"last indexPath = %@", [paths lastObject]);
 //         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
          
      } completion:^(BOOL finished)
     {
 
-//        CGRect tempRect = self.wallCollectionView.frame;
-//        tempRect.size.height -= 100;
-//        self.wallCollectionView.frame = tempRect;
+////        CGRect tempRect = self.wallCollectionView.frame;
+////        tempRect.size.height -= 100;
+////        self.wallCollectionView.frame = tempRect;
+////
+////        CGPoint wallOffset = wallCollectionView.contentOffset;
+////        wallOffset.y += 100;
+////        wallCollectionView.contentOffset = wallOffset;
+//        
 //
-//        CGPoint wallOffset = wallCollectionView.contentOffset;
-//        wallOffset.y += 100;
-//        wallCollectionView.contentOffset = wallOffset;
-        
-
-        for (NSIndexPath *indexPath in self.hideCells)
-        {
-            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-        }
-        self.hideCells = @[];
-        CGRect visibleRect = wallCollectionView.frame;
-        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
-        
-        
-        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
-        
-
-        
-//        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+//        for (NSIndexPath *indexPath in self.hideCells)
+//        {
+//            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+//        }
+//        self.hideCells = @[];
+//        CGRect visibleRect = wallCollectionView.frame;
+//        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+//        
+//        
+//        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
+//        
+//
+//        
+////        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }];
     
 }
@@ -1113,28 +1113,28 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 
 
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-//    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
-    
-    if (scrollView == self.tableView && !decelerate)
-    {
-        [self ifTableViewIsNotAtBottomStartATimer];
-    }
-}
--(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-//    NSLog(@"scrollViewDidEndDecelerating");
-    [self ifTableViewIsNotAtBottomStartATimer];
-}
--(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-{
-//    NSLog(@"scrollViewDidEndScrollingAnimation");
-    if (scrollView == self.tableView)
-    {
-        [self ifTableViewIsNotAtBottomStartATimer];
-    }
-}
+//-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+//{
+////    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
+//    
+//    if (scrollView == self.tableView && !decelerate)
+//    {
+//        [self ifTableViewIsNotAtBottomStartATimer];
+//    }
+//}
+//-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+////    NSLog(@"scrollViewDidEndDecelerating");
+//    [self ifTableViewIsNotAtBottomStartATimer];
+//}
+//-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+//{
+////    NSLog(@"scrollViewDidEndScrollingAnimation");
+//    if (scrollView == self.tableView)
+//    {
+//        [self ifTableViewIsNotAtBottomStartATimer];
+//    }
+//}
 
 -(void)ifTableViewIsNotAtBottomStartATimer
 {
@@ -1358,8 +1358,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    if (object == self.view && [keyPath isEqualToString:@"frame"])
-    {
+//    if (object == self.view && [keyPath isEqualToString:@"frame"])
+//    {
 //        CGRect currentFrame = self.view.frame;
 //        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
 //        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
@@ -1378,7 +1378,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        }];
 //        
 //        self.lastFrameForSelfView = currentFrame;
-    }
+//    }
 }
 
 # pragma mark - shortbot delegate methods
@@ -1432,7 +1432,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
              {
                  if (synchronous)
                  {
-                     [imageCell setImage:image animated:YES];
+                     [imageCell setImage:image animated:NO];
                  } else
                  {
                      NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
@@ -1445,8 +1445,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                              ESImageMessage *currentImageMessage = aMessage;
                              if ([url.absoluteString isEqualToString:currentImageMessage.src])
                              {
-                                 NSLog(@"%@", url.absoluteString);
-                                 NSLog(@"%@", currentImageMessage.src);
+//                                 NSLog(@"%@", url.absoluteString);
+//                                 NSLog(@"%@", currentImageMessage.src);
                                  
                                  SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
                                  ESImageMessage *againmessage = [wall objectAtIndex:currentIndexPath.row];
@@ -1457,7 +1457,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                 
                                  if (retrievedImageCell)
                                  {
-                                     [retrievedImageCell setImage:image];
+                                     [retrievedImageCell setImage:image animated:YES];
                                      ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
                                      
 //                                     //animateChangeHeight block ran by transitionWithView

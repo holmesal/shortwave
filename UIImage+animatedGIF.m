@@ -70,8 +70,19 @@ static NSArray *frameArray(size_t const count, CGImageRef const images[count], i
     size_t const frameCount = totalDurationCentiseconds / gcd;
     UIImage *frames[frameCount];
     for (size_t i = 0, f = 0; i < count; ++i) {
-        UIImage *const frame = [UIImage imageWithCGImage:images[i]];
-        for (size_t j = delayCentiseconds[i] / gcd; j > 0; --j) {
+        
+
+        float maxDim = 100;
+        CGImageRef img = images[i];
+        float h = CGImageGetHeight(img);
+        float w = CGImageGetWidth(img);
+        float s = (w>h) ? maxDim/w: maxDim/h;
+        
+        UIImage *const frame = [UIImage imageWithCGImage:images[i]  scale:1/s orientation:UIImageOrientationUp];
+        CGSize size = frame.size;
+        
+        for (size_t j = delayCentiseconds[i] / gcd; j > 0; --j)
+        {
             frames[f++] = frame;
         }
     }
@@ -84,7 +95,8 @@ static void releaseImages(size_t const count, CGImageRef const images[count]) {
     }
 }
 
-static UIImage *animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const source) {
+static UIImage *animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const source)
+{
     size_t const count = CGImageSourceGetCount(source);
     CGImageRef images[count];
     int delayCentiseconds[count]; // in centiseconds
@@ -96,12 +108,15 @@ static UIImage *animatedImageWithAnimatedGIFImageSource(CGImageSourceRef const s
     return animation;
 }
 
-static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef source) {
-    if (source) {
+static UIImage *animatedImageWithAnimatedGIFReleasingImageSource(CGImageSourceRef source)
+{
+    if (source)
+    {
         UIImage *const image = animatedImageWithAnimatedGIFImageSource(source);
         CFRelease(source);
         return image;
-    } else {
+    } else
+    {
         return nil;
     }
 }

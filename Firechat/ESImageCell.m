@@ -35,7 +35,7 @@
     //if size is 0,0 then it is still loading, and activate loading mode
     if (size.width == size.height && size.height == 0)
     {
-        NSLog(@"be loading!");
+//        NSLog(@"be loading!");
     }
     else
     {
