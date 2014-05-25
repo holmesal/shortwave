@@ -23,7 +23,7 @@
         
         NSString *encodedQuery = [queryText stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
         
-        NSString *fullURL = [NSString stringWithFormat:@"http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&safe=active&q=%@",encodedQuery];
+        NSString *fullURL = [NSString stringWithFormat:@"http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&safe=active&imgsz=medium&q=%@",encodedQuery];
         
         NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:fullURL]];
         [request setHTTPMethod:@"GET"];
