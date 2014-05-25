@@ -23,6 +23,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <Crashlytics/Crashlytics.h>
 //#import <ESImageLoader/ESImagßeLoader.h>
+#include "ESRobot.h"
 
 
 @interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>

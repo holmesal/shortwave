@@ -9,6 +9,7 @@
 #import "FCMessage.h"
 #import "FCUser.h"
 #import <Mixpanel/Mixpanel.h>
+#import "ESRobot.h"
 
 @implementation FCMessage
 - (id) initWithSnapshot:(FDataSnapshot *)snapshot
@@ -109,6 +110,10 @@
             // post to the queue
             Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
             [shortbotQueueItemRef setValue:shortbotMessage];
+            
+            // Check with shortbot
+            ESRobot *robot = [[ESRobot alloc] init];
+            [robot checkForCommand:text];
         }
         
         // Log the message to mixpanel
