@@ -19,6 +19,8 @@
 @synthesize type;
 @synthesize src;
 @synthesize isGif;
+@synthesize width;
+@synthesize height;
 
 
 -(id)initWithSnapshot:(FDataSnapshot*)snapshot
@@ -35,6 +37,8 @@
             color = [dict objectForKey:@"color"];
             type = [dict objectForKey:@"type"];
             src = [dict objectForKey:@"src"];
+            width = [[dict objectForKey:@"meta"] objectForKey:@"width"];
+            height = [[dict objectForKey:@"meta"] objectForKey:@"height"];
             
             //is it a gif?
             NSRange gifSuffixRange = [src rangeOfString:@".gif#.png"];
@@ -68,7 +72,9 @@
              [icon isKindOfClass:[NSString class] ] &&
              [color isKindOfClass:[NSString class] ] &&
              [type isKindOfClass:[NSString class] ] &&
-             [src isKindOfClass:[NSString class] ]), string
+             [src isKindOfClass:[NSString class] ] &&
+             [width isKindOfClass:[NSNumber class]] &&
+             [height isKindOfClass:[NSNumber class]]), string
              );
 }
 

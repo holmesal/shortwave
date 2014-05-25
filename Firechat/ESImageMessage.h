@@ -20,6 +20,8 @@
 @property (strong, nonatomic, readonly) NSString *color;
 @property (strong, nonatomic, readonly) NSString *type;
 @property (strong, nonatomic, readonly) NSString *src;
+@property (strong, nonatomic, readonly) NSNumber *width;
+@property (strong, nonatomic, readonly) NSNumber *height;
 
 @property (assign, nonatomic) BOOL isExpanded;
 @property (assign, nonatomic, readonly) BOOL isGif;

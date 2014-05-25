@@ -108,6 +108,8 @@
     // Grab the icon from the included PNGs
     [self.profilePhoto setContentMode:UIViewContentModeScaleAspectFit];
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:color].CGColor];
+//    [self.sneakyView.layer setBackgroundColor:[UIColor colorWithHexString:color].CGColor];
+//    [self.sneakyView.layer setCornerRadius: self.sneakyView.layer.bounds.size.width / 2];
     UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",icon]];
     self.profilePhoto.image = img;
     // Set the color

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mGJ-G4-FVS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mGJ-G4-FVS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -104,24 +104,24 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPE-YH-M2T">
-                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
+                                                            <rect key="frame" x="10" y="10" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C2t-um-36S">
-                                                                    <rect key="frame" x="6" y="6" width="27" height="27"/>
+                                                                    <rect key="frame" x="5" y="5" width="23" height="23"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="width" constant="27" id="DGk-Jm-qlY"/>
-                                                                        <constraint firstAttribute="height" constant="27" id="ePM-3j-hdO"/>
+                                                                        <constraint firstAttribute="width" constant="23" id="DGk-Jm-qlY"/>
+                                                                        <constraint firstAttribute="height" constant="23" id="ePM-3j-hdO"/>
                                                                     </constraints>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="40" id="0RC-nq-dZ9"/>
+                                                                <constraint firstAttribute="width" constant="34" id="0RC-nq-dZ9"/>
                                                                 <constraint firstAttribute="centerX" secondItem="C2t-um-36S" secondAttribute="centerX" id="KXD-xh-z2U"/>
                                                                 <constraint firstAttribute="centerY" secondItem="C2t-um-36S" secondAttribute="centerY" id="SGX-oy-UdJ"/>
-                                                                <constraint firstAttribute="height" constant="40" id="WBs-jG-0YC"/>
+                                                                <constraint firstAttribute="height" constant="34" id="WBs-jG-0YC"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -147,23 +147,23 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MPQ-dK-I32">
-                                                            <rect key="frame" x="270" y="10" width="40" height="40"/>
+                                                            <rect key="frame" x="276" y="10" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cIc-fe-hL8">
-                                                                    <rect key="frame" x="7" y="6" width="27" height="27"/>
+                                                                    <rect key="frame" x="6" y="5" width="23" height="23"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="27" id="I4k-aO-L7X"/>
-                                                                        <constraint firstAttribute="width" constant="27" id="ee4-FS-u54"/>
+                                                                        <constraint firstAttribute="height" constant="23" id="I4k-aO-L7X"/>
+                                                                        <constraint firstAttribute="width" constant="23" id="ee4-FS-u54"/>
                                                                     </constraints>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="40" id="IHM-Ub-Ala"/>
+                                                                <constraint firstAttribute="width" constant="34" id="IHM-Ub-Ala"/>
                                                                 <constraint firstAttribute="centerY" secondItem="cIc-fe-hL8" secondAttribute="centerY" id="QUo-TR-315"/>
-                                                                <constraint firstAttribute="height" constant="40" id="oh4-ML-MsN"/>
+                                                                <constraint firstAttribute="height" constant="34" id="oh4-ML-MsN"/>
                                                                 <constraint firstAttribute="centerX" secondItem="cIc-fe-hL8" secondAttribute="centerX" id="vMO-yh-5zX"/>
                                                             </constraints>
                                                         </view>
@@ -203,24 +203,24 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="keH-oy-wRy">
-                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
+                                                            <rect key="frame" x="10" y="10" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="elm-wT-Q6P">
-                                                                    <rect key="frame" x="7" y="7" width="27" height="27"/>
+                                                                    <rect key="frame" x="6" y="6" width="23" height="23"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="height" constant="27" id="NXL-1p-IIx"/>
-                                                                        <constraint firstAttribute="width" constant="27" id="oud-3N-3Lq"/>
+                                                                        <constraint firstAttribute="height" constant="23" id="NXL-1p-IIx"/>
+                                                                        <constraint firstAttribute="width" constant="23" id="oud-3N-3Lq"/>
                                                                     </constraints>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="40" id="0eH-jk-rfr"/>
+                                                                <constraint firstAttribute="height" constant="34" id="0eH-jk-rfr"/>
                                                                 <constraint firstAttribute="centerY" secondItem="elm-wT-Q6P" secondAttribute="centerY" id="6wT-Wd-RaT"/>
                                                                 <constraint firstAttribute="centerX" secondItem="elm-wT-Q6P" secondAttribute="centerX" id="Xae-Ph-9yD"/>
-                                                                <constraint firstAttribute="width" constant="40" id="vlK-K2-tAn"/>
+                                                                <constraint firstAttribute="width" constant="34" id="vlK-K2-tAn"/>
                                                             </constraints>
                                                         </view>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rY9-qH-6ep">
@@ -258,34 +258,34 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zsi-Xb-Jw2">
+                                                        <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zsi-Xb-Jw2">
                                                             <rect key="frame" x="79" y="10" width="40" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kiy-wS-WLr">
-                                                                    <rect key="frame" x="7" y="6" width="27" height="27"/>
+                                                                    <rect key="frame" x="7" y="6" width="23" height="23"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="40" id="Qf1-ko-h3E"/>
-                                                                <constraint firstAttribute="height" constant="40" id="ksy-8a-oIc"/>
+                                                                <constraint firstAttribute="width" constant="34" id="Qf1-ko-h3E"/>
+                                                                <constraint firstAttribute="height" constant="34" id="ksy-8a-oIc"/>
                                                             </constraints>
                                                         </view>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BTq-BE-Vgf">
-                                                            <rect key="frame" x="200" y="10" width="40" height="40"/>
+                                                            <rect key="frame" x="200" y="13" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Fn-jN-Lev">
-                                                                    <rect key="frame" x="7" y="6" width="27" height="27"/>
+                                                                    <rect key="frame" x="7" y="6" width="23" height="23"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="40" id="4Mx-6V-0fK"/>
-                                                                <constraint firstAttribute="width" constant="40" id="rJ7-wb-Q4p"/>
+                                                                <constraint firstAttribute="height" constant="34" id="4Mx-6V-0fK"/>
+                                                                <constraint firstAttribute="width" constant="34" id="rJ7-wb-Q4p"/>
                                                             </constraints>
                                                         </view>
                                                         <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="change-arrow" translatesAutoresizingMaskIntoConstraints="NO" id="D9H-bQ-okr">
