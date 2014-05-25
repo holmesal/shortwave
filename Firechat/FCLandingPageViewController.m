@@ -696,7 +696,7 @@ typedef enum
     //after bluetooth stack is active
     //either you go to the wallviewcontroller or you become "Searching", based on kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN])
+    if (YES || [[NSUserDefaults standardUserDefaults] boolForKey:kNSUSER_DEFAULTS_HAS_BEEN_INVITED_IN])
     {
         [self removeBluetoothEvents];
         [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^
@@ -712,86 +712,87 @@ typedef enum
          {
              [self transitionToFCWallViewControllerWithImage:self.extractedImageViewOnDone.image andFrame:self.extractedImageViewOnDone.frame andColor:self.view.backgroundColor];
          }];
-    } else
-    {
-        __block NSTimer *chirpTimer = [NSTimer timerWithTimeInterval:20 target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:chirpTimer forMode:NSDefaultRunLoopMode];
-        
-        tracking = [[FCUser owner].ref childByAppendingPath:@"tracking"];
-        __weak typeof (self) weakSelf = self;
-        
-        NSLog(@"tracking = %@", tracking);
-        __block FirebaseHandle handle = [tracking observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-        {
-            if (snapshot.value != [NSNull null])
-            {
-                [chirpTimer invalidate];
-                
-                [weakSelf.tracking removeObserverWithHandle:handle];
-                weakSelf.tracking = nil;
-                NSDictionary *users = snapshot.value;
-                int numUsers = users.count;
-                if ((!weakSelf.beganShowingSearchingView && numUsers))
-                {//go right on ahead to the app
-                    weakSelf.beganShowingSearchingView = NO;
-                    NSLog(@"interupt!");
-                    [weakSelf.searchingView setHidden:YES];
-                    //and go on
-                    [weakSelf transitionToFCWallViewControllerWithImage:weakSelf.extractedImageViewOnDone.image andFrame:weakSelf.extractedImageViewOnDone.frame andColor:weakSelf.view.backgroundColor];
-                } else
-                {
-                    weakSelf.tracking = nil;
-                    NSLog(@"found a user! %d", numUsers);
-                    
-                    weakSelf.numberPeopleNearbyLabel.text = [NSString stringWithFormat:@"%d", numUsers];
-                    weakSelf.peopleNearbyGrammarLabel.text = (numUsers == 1 ? @"person nearby": @"people nearby");
-                    if (numUsers)
-                    {//success!
-                        [weakSelf prepareToTransitionDramatically];
-                    }
-                }
-            } else
-            if (IS_ON_SIMULATOR)
-            {
-                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
-            }
-        }];
-        [self.radarView buildRoundMaskAtRadius:4+28.0f];
-        //buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
-        [self.radarView animate];
-        
-
-
-        CGPoint point = CGPointMake(
-                                    self.extractedImageViewOnDone.frame.size.width*0.5f+self.extractedImageViewOnDone.frame.origin.x,
-                                    self.extractedImageViewOnDone.frame.size.height*0.5f+self.extractedImageViewOnDone.frame.origin.y);
-        [self.radarView setPosition:point];
-        
-        [self.searchingView addSubview:self.radarView];
-
-        self.searchingView.alpha = 0.0f;
-        [self.searchingView setHidden:NO];
-        
-        [UIView animateWithDuration:0.9f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
-        {
-            self.welcomeView2.alpha = 0.0f;
-        } completion:^(BOOL finished)
-        {
-            beganShowingSearchingView = YES;
-            // Log via mixpanel
-            [self.mixpanel track:@"Searching view shown"];
-            // Animate dat shit
-            [UIView animateWithDuration:1.1f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
-             {
-                 self.searchingView.alpha = 1.0f;
-             } completion:^(BOOL finished)
-             {
-                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"showSearchingScreen"];
-                 
-                 [self.searchingView setUserInteractionEnabled:YES];
-             }];
-        }];
     }
+//    else
+//    {
+//        __block NSTimer *chirpTimer = [NSTimer timerWithTimeInterval:20 target:[FCUser owner].beacon selector:@selector(chirpBeacon) userInfo:nil repeats:YES];
+//        [[NSRunLoop mainRunLoop] addTimer:chirpTimer forMode:NSDefaultRunLoopMode];
+//        
+//        tracking = [[FCUser owner].ref childByAppendingPath:@"tracking"];
+//        __weak typeof (self) weakSelf = self;
+//        
+//        NSLog(@"tracking = %@", tracking);
+//        __block FirebaseHandle handle = [tracking observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+//        {
+//            if (snapshot.value != [NSNull null])
+//            {
+//                [chirpTimer invalidate];
+//                
+//                [weakSelf.tracking removeObserverWithHandle:handle];
+//                weakSelf.tracking = nil;
+//                NSDictionary *users = snapshot.value;
+//                int numUsers = users.count;
+//                if ((!weakSelf.beganShowingSearchingView && numUsers))
+//                {//go right on ahead to the app
+//                    weakSelf.beganShowingSearchingView = NO;
+//                    NSLog(@"interupt!");
+//                    [weakSelf.searchingView setHidden:YES];
+//                    //and go on
+//                    [weakSelf transitionToFCWallViewControllerWithImage:weakSelf.extractedImageViewOnDone.image andFrame:weakSelf.extractedImageViewOnDone.frame andColor:weakSelf.view.backgroundColor];
+//                } else
+//                {
+//                    weakSelf.tracking = nil;
+//                    NSLog(@"found a user! %d", numUsers);
+//                    
+//                    weakSelf.numberPeopleNearbyLabel.text = [NSString stringWithFormat:@"%d", numUsers];
+//                    weakSelf.peopleNearbyGrammarLabel.text = (numUsers == 1 ? @"person nearby": @"people nearby");
+//                    if (numUsers)
+//                    {//success!
+//                        [weakSelf prepareToTransitionDramatically];
+//                    }
+//                }
+//            } else
+//            if (IS_ON_SIMULATOR)
+//            {
+//                [weakSelf performSelector:@selector(prepareToTransitionDramatically) withObject:nil afterDelay:2];
+//            }
+//        }];
+//        [self.radarView buildRoundMaskAtRadius:4+28.0f];
+//        //buildMaskWithImage:self.extractedImageViewOnDone.image atScale:1.2f];
+//        [self.radarView animate];
+//        
+//
+//
+//        CGPoint point = CGPointMake(
+//                                    self.extractedImageViewOnDone.frame.size.width*0.5f+self.extractedImageViewOnDone.frame.origin.x,
+//                                    self.extractedImageViewOnDone.frame.size.height*0.5f+self.extractedImageViewOnDone.frame.origin.y);
+//        [self.radarView setPosition:point];
+//        
+//        [self.searchingView addSubview:self.radarView];
+//
+//        self.searchingView.alpha = 0.0f;
+//        [self.searchingView setHidden:NO];
+//        
+//        [UIView animateWithDuration:0.9f delay:0.0f usingSpringWithDamping:1.0f initialSpringVelocity:5 options:UIViewAnimationOptionCurveLinear animations:^
+//        {
+//            self.welcomeView2.alpha = 0.0f;
+//        } completion:^(BOOL finished)
+//        {
+//            beganShowingSearchingView = YES;
+//            // Log via mixpanel
+//            [self.mixpanel track:@"Searching view shown"];
+//            // Animate dat shit
+//            [UIView animateWithDuration:1.1f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0 options:UIViewAnimationOptionCurveLinear animations:^
+//             {
+//                 self.searchingView.alpha = 1.0f;
+//             } completion:^(BOOL finished)
+//             {
+//                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"showSearchingScreen"];
+//                 
+//                 [self.searchingView setUserInteractionEnabled:YES];
+//             }];
+//        }];
+//    }
 }
 
 -(void)prepareToTransitionDramatically

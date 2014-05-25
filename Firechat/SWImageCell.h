@@ -23,6 +23,7 @@
 -(BOOL)hasImage;
 -(void)setMessage:(ESImageMessage*)message;
 -(void)setImage:(UIImage *)image;
+-(void)setImage:(UIImage *)image animated:(BOOL)animated;
 //-(void)setProfileImage:(NSString*)imageName;
 //-(void)setProfileColor:(NSString*)profileColor;
 

@@ -99,16 +99,31 @@
     ownerID = message.ownerID;
 }
 
--(void)setImage:(UIImage*)image
+-(void)setImage:(UIImage *)image animated:(BOOL)animated
 {
     if (!image)
     {
         [self resetWithImageSize:CGSizeZero];
     }
     
-
+    
     [self.imageView setImage:image];
     [self resetWithImageSize:image.size];
+    
+    if (animated)
+    {
+        self.imageView.alpha = 0.0f;
+        
+        [UIView animateWithDuration:0.2f animations:^
+        {
+            imageView.alpha = 1.0f;
+        }];
+    }
+}
+
+-(void)setImage:(UIImage*)image
+{
+    [self setImage:image animated:NO];
 }
 -(BOOL)hasImage
 {

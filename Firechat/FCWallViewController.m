@@ -183,7 +183,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                              targetPeopleNearbyLabelFrame.origin.y, targetPeopleNearbyLabelFrame.size.width, targetPeopleNearbyLabelFrame.size.height);
         [peopleNearbyLabel setBackgroundColor:[UIColor clearColor]];
         
-        self.labelMaskView = [[UIView alloc] initWithFrame:peopleNearbyLabel.frame];
+        CGRect r = peopleNearbyLabel.frame;
+        r.size.height -= 1; //-1 for the opaque underline
+        self.labelMaskView = [[UIView alloc] initWithFrame:r];
         {
             UIColor *color = self.shadeView.backgroundColor;
             [self.labelMaskView setBackgroundColor:color];
@@ -196,6 +198,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             frame.size.height = 64;
             frame.origin.y = 0;
             self.shadeView.frame = frame;
+            
+            UIView *opaqueLine = [self.shadeView viewWithTag:65];
+            CGRect opaqueLineFrame = opaqueLine.frame;
+            opaqueLineFrame.origin.y = self.shadeView.frame.size.height-1;
+            [opaqueLine setFrame:opaqueLineFrame];
             
             frame = self.iconButton.frame;
             frame.origin.y = 23;
@@ -215,6 +222,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 peopleNearbyLabel.frame = targetPeopleNearbyLabelFrame;
                 CGRect maskFrame = targetPeopleNearbyLabelFrame;
                 maskFrame.origin.x += targetPeopleNearbyLabelFrame.size.width;
+                maskFrame.size.height -= 1; //for the opaque line of course silly goose
                 self.labelMaskView.frame = maskFrame;
                 
             } completion:^(BOOL finished)
@@ -1251,6 +1259,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
     [self.iconButton setContentMode:UIViewContentModeScaleAspectFit];
 
+    
+    UIView *opaqueLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.shadeView.frame.size.height-1, self.shadeView.frame.size.width, 0.5f)];
+    [opaqueLine setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.65f]];
+    opaqueLine.tag = 65;
+    [self.shadeView addSubview:opaqueLine];
+    
+    
     [self.shadeView addSubview:self.iconButton];
 }
 
@@ -1265,6 +1280,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     //labelMaskView
     CGRect newTargetFrame = realPeopleNearbyLabelFrame;
     newTargetFrame.origin.x = (self.view.frame.size.width*0.5f);
+    newTargetFrame.size.height -= 1; //for the opaqueline
     
     //moving shadeView to the top
     [self.shadeView removeFromSuperview];
@@ -1295,7 +1311,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
      {
          [UIView animateWithDuration:0.7f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
          {
+             UIView *opaqueLine = [self.shadeView viewWithTag:65];
+             CGRect opaqueLineFrame = opaqueLine.frame;
+             opaqueLineFrame.origin.y = self.view.bounds.size.height;
+             [opaqueLine setFrame:opaqueLineFrame];
              
+             [opaqueLine setFrame:opaqueLineFrame];
              [self.shadeView setFrame:self.view.bounds];
              
              if (self.originalRectOfIcon.origin.y < 0)
@@ -1411,7 +1432,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
              {
                  if (synchronous)
                  {
-                     [imageCell setImage:image];
+                     [imageCell setImage:image animated:YES];
                  } else
                  {
                      NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];

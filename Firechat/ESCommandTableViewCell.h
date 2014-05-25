@@ -9,13 +9,18 @@
 #import <UIKit/UIKit.h>
 
 @interface ESCommandTableViewCell : UITableViewCell
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (weak, nonatomic) IBOutlet UIButton *button;
-@property (weak, nonatomic) IBOutlet UIView *colorBar;
-@property (weak, nonatomic) IBOutlet UIView *cursor;
-@property (assign) BOOL currentlyAnimating;
+
+//make these internal to the view to have some kind of incapsulation
+//@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+//@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+//@property (weak, nonatomic) IBOutlet UIButton *button;
+//@property (weak, nonatomic) IBOutlet UIView *colorBar;
+//@property (weak, nonatomic) IBOutlet UIView *cursor;
 
 - (void)startAnimating;
+
+-(void)setCommand:(NSString*)command;
+-(void)setBarColor:(UIColor*)barColor;
+-(void)setDescription:(NSString*)description;
 
 @end

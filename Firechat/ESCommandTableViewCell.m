@@ -7,53 +7,54 @@
 //
 
 #import "ESCommandTableViewCell.h"
-
+#import "FCLiveBlurButton.h"
 @interface ESCommandTableViewCell()
 
+//no need to own animations like this unless we need to reference it again
 @property (strong, nonatomic) CABasicAnimation *animation;
 
+@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
+@property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UIButton *button;
+@property (weak, nonatomic) IBOutlet UIView *colorBar;
+@property (weak, nonatomic) IBOutlet UIView *cursor;
+@property (weak, nonatomic) IBOutlet FCLiveBlurButton *blurButton;
+
+@property (assign, nonatomic) BOOL setup;
 @end
 
 @implementation ESCommandTableViewCell
+@synthesize colorBar;
+@synthesize descriptionLabel;
+@synthesize nameLabel;
+@synthesize blurButton;
 
-- (IBAction)FakeButtonClicked:(id)sender {
-    UITableView *tableView = (UITableView *)self.superview.superview;
-    [[tableView delegate] tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:self.tag inSection:0]];
-}
-
--(id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        // Register for touch events
-//        [self.button addTarget:self action:@selector(pulseButton) forControlEvents:UIControlEventTouchUpInside];
-//        self.currentlyAnimating = NO;
-    }
-    return self;
-}
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-        
-        
-    }
-    return self;
-}
 
 - (void)awakeFromNib
 {
     // Initialization code
+    
+//    [cell.button.layer setBorderWidth:0.5f];
+//    [cell.button.layer setBorderColor:[UIColor whiteColor].CGColor];
+//    [cell.button.layer setCornerRadius:cell.button.layer.bounds.size.height/2];
+//    [cell.button addTarget:cell action:@selector(pulseButton) forControlEvents:UIControlEventTouchUpInside];
+    
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+-(void)pressedButton
 {
-    [super setSelected:selected animated:animated];
+    UITableView *tableView =  (UITableView *)self.superview.superview;
+//    [tableView.delegate tableView:tableView didSelectRowAtIndexPath:[NSIndexPath indexPathForRow:self.tag inSection:0]];
 
-    // Configure the view for the selected state
+    [tableView.delegate performSelector:@selector(customCellSelectAtIndexPath:) withObject:[NSIndexPath indexPathForRow:self.tag inSection:0] ];
 }
+
+//- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+//{
+//    [super setSelected:selected animated:animated];
+//
+//    // Configure the view for the selected state
+//}
 
 - (void)pulseButton
 {
@@ -69,7 +70,18 @@
 
 - (void)startAnimating
 {
-    
+    if (!self.setup)
+    {
+        self.setup = YES;
+        float radius = blurButton.frame.size.height/2;
+        [blurButton invalidatePressedLayer];
+        [blurButton setRadius:radius];
+        [blurButton setBackgroundColor:[UIColor clearColor]];
+        [blurButton invalidatePressedLayer];
+        [blurButton addTarget:self action:@selector(pressedButton) forControlEvents:UIControlEventTouchUpInside];
+        [self setBackgroundColor:[UIColor clearColor]];
+        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    }
     self.animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
     self.animation.duration = 0.5f;
     self.animation.fromValue = @1;
@@ -80,4 +92,16 @@
 
 }
 
+-(void)setBarColor:(UIColor *)barColor
+{
+    colorBar.backgroundColor = barColor;
+}
+-(void)setDescription:(NSString *)description
+{
+    [descriptionLabel setText:description];
+}
+-(void)setCommand:(NSString *)command
+{
+    [nameLabel setText:command];
+}
 @end

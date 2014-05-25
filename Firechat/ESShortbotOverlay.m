@@ -128,20 +128,16 @@
 {
     ESCommandTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"commandCell"];
     
-    NSDictionary *command = [self.commands objectAtIndex:[indexPath row]];
+    NSDictionary *commandDict = [self.commands objectAtIndex:[indexPath row]];
+
     
-    [cell setBackgroundColor:[UIColor clearColor]];
     
-    [cell.button.layer setBorderWidth:0.5f];
-    [cell.button.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [cell.button.layer setCornerRadius:cell.button.layer.bounds.size.height/2];
+    [cell setBarColor:self.color];
+    [cell setCommand:[NSString stringWithFormat:@"Shortbot %@",[commandDict objectForKey:@"command"] ] ];
+    //    [cell.nameLabel setText:[NSString stringWithFormat:@"Shortbot %@",[command objectForKey:@"command"]]];
     
-//    [cell.button addTarget:cell action:@selector(pulseButton) forControlEvents:UIControlEventTouchUpInside];
-    
-    cell.colorBar.backgroundColor = self.color;
-    
-    [cell.nameLabel setText:[NSString stringWithFormat:@"Shortbot %@",[command objectForKey:@"command"]]];
-    [cell.descriptionLabel setText:[command objectForKey:@"description"]];
+    [cell setDescription:[commandDict objectForKey:@"description"]];
+//    [cell.descriptionLabel setText:[command objectForKey:@"description"]];
     
     cell.tag = [indexPath row];
     
@@ -150,23 +146,35 @@
     float wait = [indexPath row] * 0.2f;
     NSTimeInterval delay = [[NSNumber numberWithFloat:wait] doubleValue];
     
+    //?
     [cell performSelector:@selector(startAnimating) withObject:nil afterDelay:delay];
     
-//    [cell startAnimating];
-    
+
+    cell.tag = indexPath.row;
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+-(void)customCellSelectAtIndexPath:(NSIndexPath*)indexPath
 {
     // Get the command
     NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"command"];
-//    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
+    //    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
     // TODO - set the input and focus on the text field
     [self.delegate shortbotOverlay:self didPickCommand:command];
     
     [self hideOverlay];
 }
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+////    // Get the command
+////    NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"command"];
+//////    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
+////    // TODO - set the input and focus on the text field
+////    [self.delegate shortbotOverlay:self didPickCommand:command];
+////    
+////    [self hideOverlay];
+//}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

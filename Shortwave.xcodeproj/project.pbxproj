@@ -359,8 +359,6 @@
 			children = (
 				C0064BEB192C48BA00877CDF /* ESShortbotOverlay.h */,
 				C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */,
-				C0064BEE192C5DE400877CDF /* ESCommandTableViewCell.h */,
-				C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */,
 				AAD2449218D777590042A93F /* FCLandingPageViewController.h */,
 				AAD2449318D777590042A93F /* FCLandingPageViewController.m */,
 				AA9D319E192AC154003D010F /* ESSpringFlowLayout.h */,
@@ -440,6 +438,8 @@
 		AA9D31A1192AF0DA003D010F /* collection view cells */ = {
 			isa = PBXGroup;
 			children = (
+				C0064BEE192C5DE400877CDF /* ESCommandTableViewCell.h */,
+				C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */,
 				AA9D31A2192AF10C003D010F /* SWImageCell.h */,
 				AA9D31A3192AF10C003D010F /* SWImageCell.m */,
 				AA9D31A8192AF90C003D010F /* SWOwnerTextCell.h */,

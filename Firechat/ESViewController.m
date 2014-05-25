@@ -865,7 +865,8 @@ typedef enum
 
 
 -(void)setUsersAlertStatus:(NoUsersStatus)newUsersAlertStatus
-{
+{//ui change, do not ever do this
+    return;
     if (IS_ON_SIMULATOR)
     {
         return;
