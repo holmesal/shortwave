@@ -97,6 +97,9 @@
     
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
     ownerID = message.ownerID;
+    
+    // Set the imageview height
+    [self resetWithImageSize:CGSizeMake([message.width floatValue], [message.height floatValue])];
 }
 
 -(void)setImage:(UIImage *)image animated:(BOOL)animated
