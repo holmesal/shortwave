@@ -99,7 +99,9 @@
         text = [text stringByReplacingOccurrencesOfString:@"short bot" withString:@"shortbot" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [text length])];
         
         // Is this a shortbot message?
+        NSNumber *isShortbotMessage = @0;
         if ([text rangeOfString:@"shortbot" options:NSCaseInsensitiveSearch].location != NSNotFound || [text rangeOfString:@"short bot" options:NSCaseInsensitiveSearch].location != NSNotFound) {
+            isShortbotMessage = @1;
             // Create a hubot message
             NSDictionary *shortbotMessage = @{
                                               @"sender": owner.id,
@@ -114,8 +116,13 @@
         // Log the message to mixpanel
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel track:@"Message Sent" properties:@{
-                                                     @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy, @"toUsers":earshotIds},
-                                                     @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]]}];
+                                                     @"location":@{
+                                                             @"lat":lat,
+                                                             @"lon":lon,
+                                                             @"accuracy":accuracy,
+                                                             @"toUsers":earshotIds},
+                                                        @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]],
+                                                     @"shortbotMessage":isShortbotMessage}];
     }
     
     // Finally, post the contents of the filter message, if they exist
