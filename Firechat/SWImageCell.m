@@ -28,7 +28,7 @@
 -(void)awakeFromNib
 {
     [super awakeFromNib];
-    [self resetWithImageSize:CGSizeZero];
+//    [self resetWithImageSize:CGSizeZero];
 }
 -(CALayer*)coloredCircleLayer
 {
@@ -101,19 +101,19 @@
     ownerID = message.ownerID;
     
     // Set the imageview height
-    [self resetWithImageSize:CGSizeMake([message.width floatValue], [message.height floatValue])];
+    [self resetWithImageSize:message.size];
 }
 
 -(void)setImage:(UIImage *)image animated:(BOOL)animated
 {
-    if (!image)
-    {
-        [self resetWithImageSize:CGSizeZero];
-    }
+//    if (!image)
+//    {
+//        [self resetWithImageSize:CGSizeZero];
+//    }
     
     
     [self.imageView setImage:image];
-    [self resetWithImageSize:image.size];
+//    [self resetWithImageSize:image.size];
     
     if (animated)
     {

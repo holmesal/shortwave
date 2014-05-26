@@ -100,7 +100,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Hello world" translatesAutoresizingMaskIntoConstraints="NO" id="LSb-91-EIH">
-                                                            <rect key="frame" x="58" y="11" width="247" height="40"/>
+                                                            <rect key="frame" x="92" y="11" width="213" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
@@ -116,24 +116,24 @@
                                                             <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPE-YH-M2T">
-                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
+                                                            <rect key="frame" x="21" y="10" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C2t-um-36S">
-                                                                    <rect key="frame" x="5" y="5" width="29" height="29"/>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C2t-um-36S">
+                                                                    <rect key="frame" x="5" y="5" width="22" height="22"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <constraints>
-                                                                        <constraint firstAttribute="width" constant="23" id="DGk-Jm-qlY"/>
-                                                                        <constraint firstAttribute="height" constant="23" id="ePM-3j-hdO"/>
+                                                                        <constraint firstAttribute="width" constant="22" id="DGk-Jm-qlY"/>
+                                                                        <constraint firstAttribute="height" constant="22" id="ePM-3j-hdO"/>
                                                                     </constraints>
                                                                 </imageView>
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="40" id="0RC-nq-dZ9"/>
-                                                                <constraint firstAttribute="centerX" secondItem="C2t-um-36S" secondAttribute="centerX" id="KXD-xh-z2U"/>
-                                                                <constraint firstAttribute="centerY" secondItem="C2t-um-36S" secondAttribute="centerY" id="SGX-oy-UdJ"/>
-                                                                <constraint firstAttribute="height" constant="40" id="WBs-jG-0YC"/>
+                                                                <constraint firstAttribute="width" constant="34" id="0RC-nq-dZ9"/>
+                                                                <constraint firstAttribute="centerX" secondItem="C2t-um-36S" secondAttribute="centerX" constant="1" id="KXD-xh-z2U"/>
+                                                                <constraint firstAttribute="centerY" secondItem="C2t-um-36S" secondAttribute="centerY" constant="1" id="SGX-oy-UdJ"/>
+                                                                <constraint firstAttribute="height" constant="34" id="WBs-jG-0YC"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -141,11 +141,11 @@
                                                 </view>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstItem="hPE-YH-M2T" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="10" id="DPp-fP-YRa"/>
-                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="58" id="V4m-8k-Nyw"/>
+                                                    <constraint firstItem="hPE-YH-M2T" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="21" id="DPp-fP-YRa"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="10" id="VR8-iQ-jHz"/>
                                                     <constraint firstAttribute="trailing" secondItem="LSb-91-EIH" secondAttribute="trailing" constant="15" id="fVX-yM-CWg"/>
                                                     <constraint firstItem="LSb-91-EIH" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="11" id="hra-91-zAr"/>
+                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="hPE-YH-M2T" secondAttribute="trailing" constant="37" id="yUq-XJ-CbS"/>
                                                 </constraints>
                                                 <size key="customSize" width="320" height="210"/>
                                                 <connections>
