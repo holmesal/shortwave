@@ -246,36 +246,34 @@ typedef enum
     colors = [NSArray arrayWithArray:colorsMutable];
     
  
-    self.icons = @[@{@"name":@"1", @"attribution":@"John Caserta"}, //cloud
-                   @{@"name":@"2", @"attribution":@"Jardson A."}, //person
-                   @{@"name":@"3", @"attribution":@"Yuko Iwai"}, //balloon
-                   @{@"name":@"4", @"attribution":@"Mister Pixel"},
-                   @{@"name":@"5", @"attribution":@"Edward Boatman"},
-                   @{@"name":@"6", @"attribution":@"Antonis Makriyannis"},
-                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"},
-                   @{@"name":@"8", @"attribution":@"Pedro Vidal"}, //sun
-                   @{@"name":@"9", @"attribution":@"Daniel Gamage"}, //stunners
+    self.icons = @[@{@"name":@"1", @"attribution":@"Muneer A. Safiah"}, //lightning
+                   @{@"name":@"2", @"attribution":@"Matthew Kulp"}, //Wine glass
+                   @{@"name":@"3", @"attribution":@"Matthew Kulp"}, //balloon
+                   @{@"name":@"4", @"attribution":@"Mister Pixel"}, //Pawprint
+                   @{@"name":@"5", @"attribution":@"Edward Boatman"}, // Tree
+                   @{@"name":@"6", @"attribution":@"Antonis Makriyannis"}, //Rocket
+                   @{@"name":@"7", @"attribution":@"Yaroslav Samoilov"}, //Star
+                   @{@"name":@"8", @"attribution":@"Matthew Kulp"}, //Sun
+                   @{@"name":@"9", @"attribution":@"Les Kleuver"}, //Shades
                    @{@"name":@"10", @"attribution":@"Jacob Thompson"}, //cherries
-                   @{@"name":@"11", @"attribution":@"José Manuel de Laá"}, //diamond
-                   @{@"name":@"12", @"attribution":@"Nick Abrams"}, //lightbulb
-                   @{@"name":@"13", @"attribution":@"Nick Abrams"}, //dish
+                   @{@"name":@"11", @"attribution":@"Mandy Zibart"}, //diamond
+                   @{@"name":@"12", @"attribution":@"Matthew Kulp"}, //lightbulb
+                   @{@"name":@"13", @"attribution":@"Matthew Kulp"}, //paperplane
                    @{@"name":@"14", @"attribution":@"Christopher T. Howlett"}, //pineapple
                    @{@"name":@"15", @"attribution":@"Agarunov Oktay-Abraham"}, //burger
-                   @{@"name":@"16", @"attribution":@"José Manuel de Laá"}, //backetball
+                   @{@"name":@"16", @"attribution":@"Edward Boatman"}, //basketball
                    @{@"name":@"17", @"attribution":@"Kelig Le Luron"}, //moon
                    @{@"name":@"18", @"attribution":@"Maxim Cherenkovsky"}, //snowflake
-                   @{@"name":@"19", @"attribution":@"Patrick Morrison"}, //chicken leg
-                   @{@"name":@"20", @"attribution":@"Jan-Kanty Pawelski"}, //pacman
+                   @{@"name":@"19", @"attribution":@"Matthew Kulp"}, //chicken leg
+                   @{@"name":@"20", @"attribution":@"Jacob Halton"}, //coffee
                    @{@"name":@"21", @"attribution":@"Matthew Clarke"}, //chef
-                   @{@"name":@"22", @"attribution":@"Christopher T. Howlett"} //flask
+                   @{@"name":@"22", @"attribution":@"Christopher T. Howlett"} //beaker
                    ];
-# pragma mark Ethan match these to icons via an attribution at the bottom of the screen
-//    self.iconAttributions = @[@"FIND THIS1", @"FIND THIS2", @"FIND THIS3", @"FIND THIS4"];//, @"Edward Boatman", @"Antonis Makriyannis", @"Yaroslav Samoilov"];
     
     // Mixpanel init
     [self.mixpanel track:@"Icon/color select screen loaded" properties:@{@"loggedIn": ([self userIsLoggedIn]?@"true":@"false") }];
     
-    int randIcon = 0;//esRandomNumberIn(0, icons.count);
+    int randIcon = 11;//esRandomNumberIn(0, icons.count);
     
     if ([self userIsLoggedIn])
     {
