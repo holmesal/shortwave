@@ -261,8 +261,9 @@
     //    attachmentBehavior.frequency = 1.5f;
 
     attachmentBehavior.length = 0.2f;
-    attachmentBehavior.damping = 1.0f;
-    attachmentBehavior.frequency = 10.0f;
+    attachmentBehavior.damping = 2.0f;
+    attachmentBehavior.frequency = 5.0f;
+    
     
     
 }
