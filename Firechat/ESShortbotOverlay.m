@@ -17,6 +17,8 @@
 @property (strong, nonatomic) UIButton *button;
 @property (strong, nonatomic) UIColor *color;
 
+@property (strong, nonatomic) NSIndexPath *selectedIndexPath;
+
 @end
 
 @implementation ESShortbotOverlay
@@ -160,10 +162,11 @@
     // Get the command
     NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"command"];
     //    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
-    // TODO - set the input and focus on the text field
-    [self.delegate shortbotOverlay:self didPickCommand:command];
+
     
     [self hideOverlay];
+
+    [self.delegate shortbotOverlay:self didPickCommand:command];
 }
 
 //- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

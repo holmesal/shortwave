@@ -2,7 +2,7 @@
 //  SWImageCell.m
 //  Shortwave
 //
-//  Created by Ethan Sherr on 5/19/14.
+//  Created by Ethan Sherr on 5/19/14./Users/ethan/Desktop/iOS Simulator Screen shot May 23, 2014, 5.32.02 PM.png
 //  Copyright (c) 2014 Buildco. All rights reserved.
 //
 
@@ -10,6 +10,7 @@
 
 @interface SWImageCell()
 
+@property (weak, nonatomic) IBOutlet UITextView *textLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIImageView *iconImageView;
 @property (weak, nonatomic) IBOutlet UIView *iconImageViewContiainer;
@@ -28,7 +29,6 @@
 -(void)awakeFromNib
 {
     [super awakeFromNib];
-//    [self resetWithImageSize:CGSizeZero];
 }
 -(CALayer*)coloredCircleLayer
 {
@@ -59,38 +59,6 @@
     CGRect imageViewRect = {self.imageView.frame.origin, sizeOfImageView};
     [imageView setFrame:imageViewRect];
     
-//    //if size is 0,0 then it is still loading, and activate loading mode
-//    if (size.width == size.height && size.height == 0)
-//    {
-////        NSLog(@"be loading!");
-//    }
-//    else
-//    {
-//        
-////        NSLog(@"targetSize = %@", NSStringFromCGSize(sizeOfImageView));
-////        NSLog(@"imageSize = %@", NSStringFromCGSize(size));
-//        
-//        //scale to width of target
-//        float width = sizeOfImageView.width;
-//        float height = width*(size.height/size.width);
-//        
-//        //if it does not fit, then scale it to height of target
-//        if (height > sizeOfImageView.height)
-//        {
-//            height = sizeOfImageView.height;
-//            width = height*(size.width/size.height);
-//        }
-//        
-//        
-//        CGPoint position = {iconImageViewContiainer.frame.size.width+2*iconImageViewContiainer.frame.origin.x+ sizeOfImageView.width-width,
-//            iconImageViewContiainer.frame.size.height+2*iconImageViewContiainer.frame.origin.y+ sizeOfImageView.height-height};
-//        position = imageView.frame.origin;
-//        CGRect frame = { position, {width,height}};
-//        
-////        imageView.backgroundColor = [UIColor redColor];
-//        imageView.frame = frame;
-//        
-//    }
 }
 
 -(void)setMessage:(ESImageMessage*)message
@@ -101,19 +69,19 @@
     ownerID = message.ownerID;
     
     // Set the imageview height
-    [self resetWithImageSize:message.size];
+//    [self resetWithImageSize:message.size];
 }
 
 -(void)setImage:(UIImage *)image animated:(BOOL)animated
 {
-//    if (!image)
-//    {
-//        [self resetWithImageSize:CGSizeZero];
-//    }
-    
     
     [self.imageView setImage:image];
-//    [self resetWithImageSize:image.size];
+    
+    if (image)
+    {
+        [self resetWithImageSize:image.size];
+    }
+
     
     if (animated)
     {

@@ -87,9 +87,7 @@
         CGPoint center = item.center;
         UIAttachmentBehavior *springBehaviour = [[UIAttachmentBehavior alloc] initWithItem:item attachedToAnchor:center];
         
-        springBehaviour.length = 1.0f;
-        springBehaviour.damping = 0.8f;
-        springBehaviour.frequency = 1.5f;
+        [self setSpringBehavior:springBehaviour];
         
         // If our touchLocation is not (0,0), we'll need to adjust our item's center "in flight"
         if (!CGPointEqualToPoint(CGPointZero, touchLocation))
@@ -248,13 +246,25 @@
             }
             
             UIAttachmentBehavior *springBehaviour = [[UIAttachmentBehavior alloc] initWithItem:attributes attachedToAnchor:attributes.center];
+            [self setSpringBehavior:springBehaviour];
             
-            springBehaviour.length = 1.0f;
-            springBehaviour.damping = 0.8f;
-            springBehaviour.frequency = 1.0f;
             [self.dynamicAnimator addBehavior:springBehaviour];
         }
     }];
+}
+
+-(void)setSpringBehavior:(UIAttachmentBehavior*)attachmentBehavior
+{
+    
+    //    attachmentBehavior.length = 1.0f;
+    //    attachmentBehavior.damping = 0.8f;
+    //    attachmentBehavior.frequency = 1.5f;
+
+    attachmentBehavior.length = 0.2f;
+    attachmentBehavior.damping = 1.0f;
+    attachmentBehavior.frequency = 10.0f;
+    
+    
 }
 
 @end

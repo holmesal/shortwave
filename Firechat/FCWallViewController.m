@@ -1330,27 +1330,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-//    if (object == self.view && [keyPath isEqualToString:@"frame"])
-//    {
-//        CGRect currentFrame = self.view.frame;
-//        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
-//        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
-//
-//        CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
-////        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-//        UIEdgeInsets e = self.tableView.contentInset;
-//        e.top -= diffHeight;
-//        
-//        [UIView animateWithDuration:0.3f animations:^
-//        {
-//            CGRect tempFrame = self.composeBarView.frame;
-//            tempFrame.origin.y += diffHeight;
-//            self.composeBarView.frame = tempFrame;
-//            self.tableView.contentInset = e;
-//        }];
-//        
-//        self.lastFrameForSelfView = currentFrame;
-//    }
+    if (object == self.view && [keyPath isEqualToString:@"frame"])
+    {
+        CGRect currentFrame = self.view.frame;
+        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
+        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
+
+        CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
+//        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        UIEdgeInsets e = self.tableView.contentInset;
+        e.top -= diffHeight;
+        
+        [UIView animateWithDuration:0.3f animations:^
+        {
+            CGRect tempFrame = self.composeBarView.frame;
+            tempFrame.origin.y += diffHeight;
+            self.composeBarView.frame = tempFrame;
+            self.tableView.contentInset = e;
+        }];
+        
+        self.lastFrameForSelfView = currentFrame;
+    }
 }
 
 # pragma mark - shortbot delegate methods

@@ -100,7 +100,7 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Hello world" translatesAutoresizingMaskIntoConstraints="NO" id="LSb-91-EIH">
-                                                            <rect key="frame" x="92" y="11" width="213" height="40"/>
+                                                            <rect key="frame" x="69" y="11" width="236" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
@@ -110,7 +110,7 @@
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                         </textView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
                                                             <rect key="frame" x="0.0" y="53" width="320" height="157"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
@@ -141,17 +141,22 @@
                                                 </view>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
+                                                    <constraint firstItem="L84-gL-m1P" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" id="2Fs-dD-Ocl"/>
+                                                    <constraint firstAttribute="trailing" secondItem="L84-gL-m1P" secondAttribute="trailing" id="3V2-qY-cAX"/>
+                                                    <constraint firstAttribute="bottom" secondItem="L84-gL-m1P" secondAttribute="bottom" id="6ag-Vh-omk"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="21" id="DPp-fP-YRa"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="10" id="VR8-iQ-jHz"/>
                                                     <constraint firstAttribute="trailing" secondItem="LSb-91-EIH" secondAttribute="trailing" constant="15" id="fVX-yM-CWg"/>
+                                                    <constraint firstItem="L84-gL-m1P" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="53" id="hAV-8E-s25"/>
                                                     <constraint firstItem="LSb-91-EIH" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="11" id="hra-91-zAr"/>
-                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="hPE-YH-M2T" secondAttribute="trailing" constant="37" id="yUq-XJ-CbS"/>
+                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="hPE-YH-M2T" secondAttribute="trailing" constant="14" id="yUq-XJ-CbS"/>
                                                 </constraints>
                                                 <size key="customSize" width="320" height="210"/>
                                                 <connections>
                                                     <outlet property="iconImageView" destination="C2t-um-36S" id="eCr-qw-0C0"/>
                                                     <outlet property="iconImageViewContiainer" destination="hPE-YH-M2T" id="Aqx-ft-GCh"/>
                                                     <outlet property="imageView" destination="L84-gL-m1P" id="H8O-HS-1h6"/>
+                                                    <outlet property="textLabel" destination="LSb-91-EIH" id="hRr-gL-5LS"/>
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWOwnerTextCell" id="7KM-xp-WCq" customClass="SWOwnerTextCell">
@@ -353,12 +358,12 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hgh-SA-2sg" customClass="PHFComposeBarView">
-                                <rect key="frame" x="0.0" y="528" width="320" height="40"/>
+                                <rect key="frame" x="0.0" y="531" width="320" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="40" id="aWA-Qs-DHZ"/>
-                                    <constraint firstAttribute="width" constant="320" id="hQX-3O-TEt"/>
+                                    <constraint firstAttribute="height" constant="40" id="ZGd-aY-P00"/>
+                                    <constraint firstAttribute="width" constant="320" id="z0H-Ek-aVA"/>
                                 </constraints>
                             </view>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
@@ -484,11 +489,11 @@
                         <constraints>
                             <constraint firstItem="C1x-yP-RTu" firstAttribute="height" secondItem="Vn0-qG-RFG" secondAttribute="height" id="0gK-so-grI"/>
                             <constraint firstItem="YjD-TY-2Ne" firstAttribute="leading" secondItem="Vn0-qG-RFG" secondAttribute="leading" id="RH0-W7-JNR"/>
-                            <constraint firstItem="SIp-6K-rZV" firstAttribute="top" secondItem="hgh-SA-2sg" secondAttribute="bottom" id="W74-eM-dXH"/>
+                            <constraint firstAttribute="centerX" secondItem="hgh-SA-2sg" secondAttribute="centerX" id="Su2-gA-MF4"/>
                             <constraint firstItem="SIp-6K-rZV" firstAttribute="top" secondItem="YjD-TY-2Ne" secondAttribute="bottom" id="aeo-aI-z9C"/>
-                            <constraint firstAttribute="centerX" secondItem="hgh-SA-2sg" secondAttribute="centerX" id="bju-qq-vo3"/>
                             <constraint firstItem="C1x-yP-RTu" firstAttribute="width" secondItem="Vn0-qG-RFG" secondAttribute="width" id="giA-CP-urx"/>
                             <constraint firstItem="YjD-TY-2Ne" firstAttribute="width" secondItem="Vn0-qG-RFG" secondAttribute="width" id="hdR-cF-J6f"/>
+                            <constraint firstItem="SIp-6K-rZV" firstAttribute="top" secondItem="hgh-SA-2sg" secondAttribute="bottom" constant="-3" id="kRu-Om-9eH"/>
                             <constraint firstAttribute="centerY" secondItem="C1x-yP-RTu" secondAttribute="centerY" id="oO3-T2-71A"/>
                             <constraint firstItem="YjD-TY-2Ne" firstAttribute="height" secondItem="Vn0-qG-RFG" secondAttribute="height" id="oSZ-Bi-BVq"/>
                             <constraint firstAttribute="centerX" secondItem="C1x-yP-RTu" secondAttribute="centerX" id="tdH-qO-bA1"/>
@@ -497,6 +502,7 @@
                     <navigationItem key="navigationItem" title="Earshot" id="O9S-WQ-sbn">
                         <barButtonItem key="rightBarButtonItem" systemItem="compose" id="QXL-Ug-aOp"/>
                     </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="blackOpaque"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="contentView" destination="C1x-yP-RTu" id="TPg-zQ-RjF"/>
