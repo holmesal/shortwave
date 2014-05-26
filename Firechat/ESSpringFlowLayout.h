@@ -12,7 +12,7 @@
 
 
 /// The default resistance factor that determines the bounce of the collection. Default is 900.0f.
-#define kScrollResistanceFactorDefault 900.0f;
+#define kScrollResistanceFactorDefault 2500.0f;
 
 
 /// A UICollectionViewFlowLayout subclass that, when implemented, creates a dynamic / bouncing scroll effect for UICollectionViews.
