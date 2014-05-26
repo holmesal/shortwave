@@ -548,11 +548,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 ////try to set constraints on this object
 //    NSLayoutConstraint *constraint = [NSLayoutConstraint constraint]
     
+    
 //    CGRect frame = CGRectMake(0.0f,
-//                              viewBounds.size.height - PHFComposeBarViewInitialHeight,
-//                              self.view.frame.size.width,
+//                              self.view.bounds.size.height - PHFComposeBarViewInitialHeight,
+//                              self.view.bounds.size.width,
 //                              PHFComposeBarViewInitialHeight);
-//    self.composeBarView = [[PHFComposeBarView alloc] initWithFrame:frame];
+
+    self.composeBarView = self.theComposeBarView;
     
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
@@ -562,7 +564,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     // Style the compose bar view
     [self setComposeBarWithRandomHint];
 
-    
+//    [self.view addSubview:self.composeBarView];
 //    UIView *composeBarView = self.composeBarView;
 ////    NSArray *fixedHeight = [NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:[composeBarView(==%d)]", (int)PHFComposeBarViewInitialHeight ]
 ////                                                                              options:0
@@ -703,7 +705,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     if (wallQueueInsertTimer)
     {
-//        NSLog(@"-TIMER INVAL");
         [wallQueueInsertTimer invalidate];
         wallQueueInsertTimer = nil;
     }
@@ -754,29 +755,29 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
      } completion:^(BOOL finished)
     {
 
-////        CGRect tempRect = self.wallCollectionView.frame;
-////        tempRect.size.height -= 100;
-////        self.wallCollectionView.frame = tempRect;
-////
-////        CGPoint wallOffset = wallCollectionView.contentOffset;
-////        wallOffset.y += 100;
-////        wallCollectionView.contentOffset = wallOffset;
-//        
+//        CGRect tempRect = self.wallCollectionView.frame;
+//        tempRect.size.height -= 100;
+//        self.wallCollectionView.frame = tempRect;
 //
-//        for (NSIndexPath *indexPath in self.hideCells)
-//        {
-//            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-//        }
-//        self.hideCells = @[];
-//        CGRect visibleRect = wallCollectionView.frame;
-//        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
-//        
-//        
-//        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
-//        
-//
-//        
-////        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+//        CGPoint wallOffset = wallCollectionView.contentOffset;
+//        wallOffset.y += 100;
+//        wallCollectionView.contentOffset = wallOffset;
+        
+
+        for (NSIndexPath *indexPath in self.hideCells)
+        {
+            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+        }
+        self.hideCells = @[];
+        CGRect visibleRect = wallCollectionView.frame;
+        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+        
+        
+        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
+        
+
+        
+//        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }];
     
 }
@@ -1284,8 +1285,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     //moving shadeView to the top
     [self.shadeView removeFromSuperview];
-    [self.contentView addSubview:self.shadeView];
-    
+    [self.view addSubview:self.shadeView];
+     
     UINavigationController *navContr = self.navigationController;
     NSMutableArray *vc = [NSMutableArray arrayWithArray:navContr.viewControllers];
     
@@ -1412,8 +1413,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     if (collectionView == wallCollectionView)
     {
-
-        
         
         id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
         UICollectionViewCell *unknownCell = nil;
