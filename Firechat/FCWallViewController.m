@@ -30,7 +30,7 @@
 #import "SWSwapUserStateCell.h"
 
 #define kWallCollectionView_MAX_CELLS_INSERT 20
-#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.9f
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
