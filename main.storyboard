@@ -110,11 +110,6 @@
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                                             <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                         </textView>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
-                                                            <rect key="frame" x="0.0" y="53" width="320" height="157"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
-                                                        </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPE-YH-M2T">
                                                             <rect key="frame" x="21" y="10" width="34" height="34"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -136,18 +131,58 @@
                                                                 <constraint firstAttribute="height" constant="34" id="WBs-jG-0YC"/>
                                                             </constraints>
                                                         </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PEM-gm-LfV">
+                                                            <rect key="frame" x="0.0" y="59" width="320" height="151"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <subviews>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8ui-05-ws2">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <color key="backgroundColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="deviceRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="1" id="rxv-P3-HJi"/>
+                                                                    </constraints>
+                                                                </view>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jrC-65-JFz">
+                                                                    <rect key="frame" x="0.0" y="149" width="320" height="1"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <color key="backgroundColor" red="0.90196078431372551" green="0.90196078431372551" blue="0.90196078431372551" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="1" id="rRW-Uf-emN"/>
+                                                                    </constraints>
+                                                                </view>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="151"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
+                                                                </imageView>
+                                                            </subviews>
+                                                            <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="centerX" secondItem="jrC-65-JFz" secondAttribute="centerX" id="1CA-h2-Av7"/>
+                                                                <constraint firstAttribute="width" secondItem="L84-gL-m1P" secondAttribute="width" id="4QF-mC-g9j"/>
+                                                                <constraint firstAttribute="bottom" secondItem="jrC-65-JFz" secondAttribute="bottom" constant="1" id="5Nt-vY-TTl"/>
+                                                                <constraint firstAttribute="height" secondItem="L84-gL-m1P" secondAttribute="height" id="5WW-4u-3f5"/>
+                                                                <constraint firstAttribute="centerX" secondItem="8ui-05-ws2" secondAttribute="centerX" id="CZe-3s-0HV"/>
+                                                                <constraint firstAttribute="centerY" secondItem="L84-gL-m1P" secondAttribute="centerY" id="QpB-2e-Io8"/>
+                                                                <constraint firstAttribute="centerX" secondItem="L84-gL-m1P" secondAttribute="centerX" id="VJL-C7-xrP"/>
+                                                                <constraint firstItem="8ui-05-ws2" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="Wxr-t8-emV"/>
+                                                                <constraint firstAttribute="width" secondItem="jrC-65-JFz" secondAttribute="width" id="Zr4-px-we2"/>
+                                                                <constraint firstItem="8ui-05-ws2" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="uHP-WE-4j4"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
-                                                    <constraint firstItem="L84-gL-m1P" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" id="2Fs-dD-Ocl"/>
-                                                    <constraint firstAttribute="trailing" secondItem="L84-gL-m1P" secondAttribute="trailing" id="3V2-qY-cAX"/>
-                                                    <constraint firstAttribute="bottom" secondItem="L84-gL-m1P" secondAttribute="bottom" id="6ag-Vh-omk"/>
+                                                    <constraint firstAttribute="trailing" secondItem="PEM-gm-LfV" secondAttribute="trailing" id="3oR-Gb-4TP"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="21" id="DPp-fP-YRa"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="10" id="VR8-iQ-jHz"/>
+                                                    <constraint firstItem="PEM-gm-LfV" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="59" id="Vkn-H9-9Po"/>
+                                                    <constraint firstAttribute="bottom" secondItem="PEM-gm-LfV" secondAttribute="bottom" id="cv7-je-gxt"/>
                                                     <constraint firstAttribute="trailing" secondItem="LSb-91-EIH" secondAttribute="trailing" constant="15" id="fVX-yM-CWg"/>
-                                                    <constraint firstItem="L84-gL-m1P" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="53" id="hAV-8E-s25"/>
+                                                    <constraint firstItem="PEM-gm-LfV" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" id="gFp-Cv-8h5"/>
                                                     <constraint firstItem="LSb-91-EIH" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="11" id="hra-91-zAr"/>
                                                     <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="hPE-YH-M2T" secondAttribute="trailing" constant="14" id="yUq-XJ-CbS"/>
                                                 </constraints>
