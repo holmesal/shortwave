@@ -1517,14 +1517,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
     {
         ESImageMessage *imageMessage = unknownTypeOfMessage;
-        NSString *src = imageMessage.src;
         
-        
-        CGSize size = imageMessage.size;
-//        if (imageMessage.isExpanded)
-//        {
-            size.height = 250;
-//        }
+        CGSize imgSize = imageMessage.size;
+        size.height = imgSize.height*320/imgSize.width;
+
     } else
     if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
     {
