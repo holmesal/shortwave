@@ -15,6 +15,8 @@
 #import "CBPeripheralManager+Ext.h"
 #import "CBUUID+Ext.h"
 
+
+#define NSLog //
 #import "FCUser.h"
 
 #define DEBUG_CENTRAL NO
@@ -435,7 +437,7 @@
         [app scheduleLocalNotification:notice];
     } else
     {
-        NSLog(@"App is not in the background - ignoring wakeup call.");
+//        NSLog(@"App is not in the background - ignoring wakeup call.");
     }
     // If there aren't any user notifications, add a new earshot notification
     // TODO - check if there are already notifications
@@ -1148,7 +1150,7 @@
         
     } else
     {
-        NSLog(@"App is not in the background - ignoring notication call.");
+//        NSLog(@"App is not in the background - ignoring notication call.");
     }
 }
 

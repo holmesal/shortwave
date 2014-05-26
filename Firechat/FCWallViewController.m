@@ -1393,6 +1393,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             ESImageMessage *imageMessage = unknownTypeOfMessage;
             
             SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            NSLog(@"[%d](%@)-%@", indexPath.row, NSStringFromCGSize(imageMessage.size),imageMessage.src);
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
             [imageCell setImage:nil];
             /*
@@ -1420,7 +1421,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                  
                                  SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
                                  ESImageMessage *againmessage = [wall objectAtIndex:currentIndexPath.row];
-                                 NSLog(@"againMessage = %@", againmessage.src);
+//                                 NSLog(@"againMessage = %@", againmessage.src);
                                  //ready to animate also invalidate layout for increased width
 //                                [springFlowLayout invalidateLayout];
 //                                 __weak UICollectionViewCell *cell = imageCell;
@@ -1493,6 +1494,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             unknownCell.contentView.alpha = 0.0f;
         }
         
+        [unknownCell setBackgroundColor:[UIColor clearColor]];
+        
         return unknownCell;
     }
     return nil;
@@ -1521,8 +1524,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         ESImageMessage *imageMessage = unknownTypeOfMessage;
         
+        
         CGSize imgSize = imageMessage.size;
-        size.height = imgSize.height*320/imgSize.width;
+        size.height = 59 + imgSize.height*320/imgSize.width;
+        
+        
+        
+        
 
     } else
     if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])

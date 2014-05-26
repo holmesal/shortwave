@@ -25,6 +25,7 @@
 @synthesize iconImageViewContiainer;
 @synthesize coloredCircleLayer;
 @synthesize ownerID;
+@synthesize textLabel;
 
 -(void)awakeFromNib
 {
@@ -63,6 +64,7 @@
 
 -(void)setMessage:(ESImageMessage*)message
 {
+    textLabel.text = message.text;
     [iconImageView setImage:[UIImage imageNamed:message.icon]];
     
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
@@ -74,23 +76,21 @@
 
 -(void)setImage:(UIImage *)image animated:(BOOL)animated
 {
-    
+    //silly fix for double loading pics. in future don't double load imgs with same context
+    if (animated && !self.hasImage)
+    {
+        self.imageView.alpha = 0.0f;
+        
+        [UIView animateWithDuration:0.52f animations:^
+         {
+             imageView.alpha = 1.0f;
+         }];
+    }
     [self.imageView setImage:image];
     
     if (image)
     {
         [self resetWithImageSize:image.size];
-    }
-
-    
-    if (animated)
-    {
-        self.imageView.alpha = 0.0f;
-        
-        [UIView animateWithDuration:0.52f animations:^
-        {
-            imageView.alpha = 1.0f;
-        }];
     }
 }
 
@@ -102,9 +102,6 @@
 {
     return (imageView.image ? YES : NO);
 }
-
-
-
 
 -(void)setProfileColor:(NSString*)profileColor
 {
