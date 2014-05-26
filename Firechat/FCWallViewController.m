@@ -558,8 +558,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     [self.composeBarView setMaxCharCount:160];
     [self.composeBarView setMaxLinesCount:5];
+    
+    [self.composeBarView.button.titleLabel setTextColor:[UIColor colorWithHexString:@"7E7E7E"]];
 
-    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"shortbot-dark"]];
+    [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"paperclip"]];
     [self.composeBarView setDelegate:self];
     // Style the compose bar view
     [self setComposeBarWithRandomHint];
