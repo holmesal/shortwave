@@ -201,7 +201,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             UIView *opaqueLine = [self.shadeView viewWithTag:65];
             CGRect opaqueLineFrame = opaqueLine.frame;
-            opaqueLineFrame.origin.y = self.shadeView.frame.size.height+0;
+            opaqueLineFrame.origin.y = self.shadeView.frame.size.height-0.5;
             [opaqueLine setFrame:opaqueLineFrame];
             
             frame = self.iconButton.frame;
@@ -1229,8 +1229,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.iconButton setContentMode:UIViewContentModeScaleAspectFit];
 
     
-    UIView *opaqueLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.shadeView.frame.size.height+0, self.shadeView.frame.size.width, 0.5f)];
-    [opaqueLine setBackgroundColor:[UIColor colorWithRed:0 green:0 blue:0 alpha:0.65f]];
+    UIView *opaqueLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.shadeView.frame.size.height-0.5, self.shadeView.frame.size.width, 0.5f)];
+    [opaqueLine setBackgroundColor:[UIColor colorWithRed:0.3f green:0.3f blue:0.3f alpha:0.4f]];
     opaqueLine.tag = 65;
     [self.shadeView addSubview:opaqueLine];
     
