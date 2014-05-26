@@ -962,39 +962,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 
-- (CGFloat) tableView:(UITableView *)tV heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"never called");
-    if (tV == self.tableView)
-    {
-        if (indexPath.row >= wall.count)
-        {
-            return 0.0f;
-        }
-        id unknownType = [wall objectAtIndex:indexPath.row];
-        NSLog(@"unknownType = %@", unknownType);
-        if ([unknownType isKindOfClass:[FCMessage class]])
-        {
 
-            FCMessage *message = [wall objectAtIndex:indexPath.row];
-            
-            UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:13];
-            CGSize constraintSize = {225.0f, 700};
-            CGSize actualSize = [message.text sizeWithFont:font constrainedToSize:constraintSize];
-            CGFloat height = MAX(actualSize.height + 14.0f*2, 75.0f);//14 is top and bottom padding of label
-            return height;
-        } else
-        if ([unknownType isKindOfClass:[ESSwapUserStateMessage class] ] )
-        {
-            return 50;
-        } else
-        if ([unknownType isKindOfClass:[ESImageMessage class]])
-        {
-            return ESImageCell_IMAGE_CELL_HEIGHT;
-        }
-    }
-    return 0;
-}
 
 # pragma mark - keyboard did show/hide
 // Handles the resizing on a keyboard show or hide event
@@ -1551,16 +1519,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         ESImageMessage *imageMessage = unknownTypeOfMessage;
         NSString *src = imageMessage.src;
         
-        CGSize imageSize = [[ESImageLoader sharedImageLoader] sizeOfImage:[NSURL URLWithString:src]];
-        if (YES
-            //!imageMessage.isExpanded
-//            &&
-//            imageSize.width == 0 &&
-//            imageSize.height == 0)
-        ){
-            size.height = SWImageCell_FIXEDHEIGHT;
-//            size.height = SWImageCell_NoImageHeight;
-        } else
+        
+        CGSize size = imageMessage.size;
         if (imageMessage.isExpanded)
         {
             size.height = 250;

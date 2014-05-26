@@ -30,5 +30,6 @@
 
 -(void)testImageStaticMessage;
 -(void)testImageGifMessage;
+-(CGSize)size;
 
 @end

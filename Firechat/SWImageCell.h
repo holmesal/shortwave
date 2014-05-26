@@ -9,12 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ESImageMessage.h"
 
-@protocol SomeDelegate <NSObject>
-
--(void)someFunction;
-@property (strong, nonatomic) NSObject *someObjectItMustHave;
-
-@end
 
 
 @interface SWImageCell : UICollectionViewCell
@@ -23,11 +17,8 @@
 -(BOOL)hasImage;
 -(void)setMessage:(ESImageMessage*)message;
 -(void)setImage:(UIImage *)image;
+-(void)resetWithImageSize:(CGSize)size;
 -(void)setImage:(UIImage *)image animated:(BOOL)animated;
-//-(void)setProfileImage:(NSString*)imageName;
-//-(void)setProfileColor:(NSString*)profileColor;
-
-@property (assign, nonatomic) id<SomeDelegate> oops;
 
 #define SWImageCellIdentifier @"SWImageCell"
 

@@ -105,5 +105,8 @@
     Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
     [mywall setValue:dict];
 }
-
+-(CGSize)size
+{
+    return CGSizeMake([width floatValue], [height floatValue]);
+}
 @end

@@ -85,7 +85,7 @@
                                     <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="hhB-Xz-SvL">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uRX-8q-WFT" customClass="ESSpringFlowLayout1">
+                                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="uRX-8q-WFT" customClass="ESSpringFlowLayout">
                                             <size key="itemSize" width="315" height="174"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -93,22 +93,34 @@
                                         </collectionViewFlowLayout>
                                         <cells>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWImageCell" id="KPA-hL-AFj" customClass="SWImageCell">
-                                                <rect key="frame" x="0.0" y="0.0" width="320" height="174"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="174"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
-                                                            <rect key="frame" x="63" y="10" width="240" height="147"/>
+                                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Hello world" translatesAutoresizingMaskIntoConstraints="NO" id="LSb-91-EIH">
+                                                            <rect key="frame" x="58" y="11" width="247" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="40" id="rV0-dW-g1k"/>
+                                                            </constraints>
+                                                            <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                        </textView>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
+                                                            <rect key="frame" x="0.0" y="53" width="320" height="157"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPE-YH-M2T">
-                                                            <rect key="frame" x="10" y="10" width="34" height="34"/>
+                                                            <rect key="frame" x="10" y="10" width="40" height="40"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="C2t-um-36S">
-                                                                    <rect key="frame" x="5" y="5" width="23" height="23"/>
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="C2t-um-36S">
+                                                                    <rect key="frame" x="5" y="5" width="29" height="29"/>
                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="23" id="DGk-Jm-qlY"/>
@@ -118,21 +130,24 @@
                                                             </subviews>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="34" id="0RC-nq-dZ9"/>
+                                                                <constraint firstAttribute="width" constant="40" id="0RC-nq-dZ9"/>
                                                                 <constraint firstAttribute="centerX" secondItem="C2t-um-36S" secondAttribute="centerX" id="KXD-xh-z2U"/>
                                                                 <constraint firstAttribute="centerY" secondItem="C2t-um-36S" secondAttribute="centerY" id="SGX-oy-UdJ"/>
-                                                                <constraint firstAttribute="height" constant="34" id="WBs-jG-0YC"/>
+                                                                <constraint firstAttribute="height" constant="40" id="WBs-jG-0YC"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 </view>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="10" id="DPp-fP-YRa"/>
+                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="leading" secondItem="KPA-hL-AFj" secondAttribute="leading" constant="58" id="V4m-8k-Nyw"/>
                                                     <constraint firstItem="hPE-YH-M2T" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="10" id="VR8-iQ-jHz"/>
+                                                    <constraint firstAttribute="trailing" secondItem="LSb-91-EIH" secondAttribute="trailing" constant="15" id="fVX-yM-CWg"/>
+                                                    <constraint firstItem="LSb-91-EIH" firstAttribute="top" secondItem="KPA-hL-AFj" secondAttribute="top" constant="11" id="hra-91-zAr"/>
                                                 </constraints>
-                                                <size key="customSize" width="320" height="174"/>
+                                                <size key="customSize" width="320" height="210"/>
                                                 <connections>
                                                     <outlet property="iconImageView" destination="C2t-um-36S" id="eCr-qw-0C0"/>
                                                     <outlet property="iconImageViewContiainer" destination="hPE-YH-M2T" id="Aqx-ft-GCh"/>
@@ -140,7 +155,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWOwnerTextCell" id="7KM-xp-WCq" customClass="SWOwnerTextCell">
-                                                <rect key="frame" x="0.0" y="174" width="320" height="74"/>
+                                                <rect key="frame" x="0.0" y="210" width="320" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
@@ -196,7 +211,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWTextCell" id="5wK-Ju-KLO" customClass="SWTextCell">
-                                                <rect key="frame" x="0.0" y="248" width="320" height="74"/>
+                                                <rect key="frame" x="0.0" y="284" width="320" height="74"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
@@ -252,7 +267,7 @@
                                                 </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWSwapUserStateCell" id="sm6-F9-nq8" customClass="SWSwapUserStateCell">
-                                                <rect key="frame" x="0.0" y="322" width="320" height="60"/>
+                                                <rect key="frame" x="0.0" y="358" width="320" height="60"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
