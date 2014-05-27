@@ -28,7 +28,7 @@
 #import "SWImageCell.h"
 
 #import "SWSwapUserStateCell.h"
-#define kMAX_NUMBER_OF_MESSAGES 100
+#define kMAX_NUMBER_OF_MESSAGES 5
 #define kMAX_IMAGE_HEIGHT 520/2.0f
 #define kWallCollectionView_MAX_CELLS_INSERT 20
 #define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
@@ -814,6 +814,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        wallOffset.y += 100;
 //        wallCollectionView.contentOffset = wallOffset;
         
+        
 
         for (NSIndexPath *indexPath in self.hideCells)
         {
@@ -822,6 +823,17 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         self.hideCells = @[];
         CGRect visibleRect = wallCollectionView.frame;
         visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+        
+//        NSLog(@"visibleRect = %@", NSStringFromCGRect(visibleRect));
+//        NSLog(@"contentOffset = %@", NSStringFromCGPoint(wallCollectionView.contentOffset));
+//        NSLog(@"contentSize = %@", NSStringFromCGSize(wallCollectionView.contentSize));
+//        NSLog(@"collview size = %@", NSStringFromCGSize(wallCollectionView.frame.size));
+        
+        if (wallCollectionView.contentSize.height < wallCollectionView.frame.size.height)
+        {
+            NSLog(@"NO SCROLL!");
+            return;
+        }
         
         
         [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
