@@ -401,8 +401,8 @@
                                     <constraint firstAttribute="width" constant="320" id="z0H-Ek-aVA"/>
                                 </constraints>
                             </view>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
-                                <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-xj-Ecd">
@@ -455,6 +455,13 @@
                                                                 <constraint firstAttribute="width" constant="1" id="brU-DG-6cf"/>
                                                             </constraints>
                                                         </view>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xnv-aq-IUy" userLabel="Non-Query Command Name">
+                                                            <rect key="frame" x="44" y="20" width="231" height="21"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -462,8 +469,11 @@
                                                         <constraint firstItem="ee7-FO-Nca" firstAttribute="leading" secondItem="gdW-5r-s7F" secondAttribute="leading" constant="23" id="5dt-9L-xcI"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="leading" secondItem="UEH-Wh-E5h" secondAttribute="trailing" constant="-12" id="9sJ-rs-Fe1"/>
                                                         <constraint firstAttribute="centerY" secondItem="fLq-kK-tUL" secondAttribute="centerY" constant="5" id="EyQ-bb-Q28"/>
+                                                        <constraint firstItem="Xnv-aq-IUy" firstAttribute="leading" secondItem="gdW-5r-s7F" secondAttribute="leading" constant="44" id="FTL-n8-0uX"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="top" secondItem="fLq-kK-tUL" secondAttribute="bottom" constant="-2" id="GiB-R5-5rK"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="top" secondItem="UEH-Wh-E5h" secondAttribute="bottom" constant="3" id="WQf-uk-7D1"/>
+                                                        <constraint firstAttribute="trailing" secondItem="Xnv-aq-IUy" secondAttribute="trailing" constant="45" id="kSb-FV-MrU"/>
+                                                        <constraint firstAttribute="centerY" secondItem="Xnv-aq-IUy" secondAttribute="centerY" constant="4.5" id="shf-cF-b1l"/>
                                                         <constraint firstAttribute="trailing" secondItem="fLq-kK-tUL" secondAttribute="trailing" constant="91" id="uXc-xD-BFh"/>
                                                         <constraint firstItem="E3X-Yr-bJZ" firstAttribute="leading" secondItem="fLq-kK-tUL" secondAttribute="trailing" constant="8" id="yf1-nd-zrE"/>
                                                         <constraint firstAttribute="centerY" secondItem="ee7-FO-Nca" secondAttribute="centerY" constant="5" id="z4D-A0-10T"/>
@@ -474,6 +484,7 @@
                                                     <outlet property="colorBar" destination="E3X-Yr-bJZ" id="i01-48-u1b"/>
                                                     <outlet property="cursor" destination="UEH-Wh-E5h" id="2J4-Ol-tej"/>
                                                     <outlet property="nameLabel" destination="fLq-kK-tUL" id="W34-fh-r7g"/>
+                                                    <outlet property="nonQueryNameLabel" destination="Xnv-aq-IUy" id="gls-Ed-OWE"/>
                                                 </connections>
                                             </tableViewCell>
                                         </prototypes>
