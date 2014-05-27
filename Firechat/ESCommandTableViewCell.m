@@ -84,13 +84,25 @@
         [self setBackgroundColor:[UIColor clearColor]];
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-    self.animation = [CABasicAnimation animationWithKeyPath:@"opacity"];
-    self.animation.duration = 0.5f;
-    self.animation.fromValue = @1;
-    self.animation.toValue= @0;
-    self.animation.autoreverses = YES;
-    self.animation.repeatCount = MAXFLOAT;
-    [self.cursor.layer addAnimation:self.animation forKey:@"cursor"];
+    
+    self.cursor.alpha = 1;
+    
+    CAAnimationGroup *animationGroup = [CAAnimationGroup animation];
+    animationGroup.duration = 1.2f;
+    animationGroup.repeatCount = INFINITY;
+    animationGroup.autoreverses = YES;
+    
+    CAMediaTimingFunction *easeOut = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    
+    CABasicAnimation *show = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    show.duration = 0.5f;
+    show.fromValue = @0;
+    show.toValue = @1;
+    show.timingFunction = easeOut;
+    
+    animationGroup.animations = @[show];
+    
+    [self.cursor.layer addAnimation:animationGroup forKey:@"cursor"];
 
 }
 
