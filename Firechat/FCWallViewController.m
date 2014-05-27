@@ -28,7 +28,7 @@
 #import "SWImageCell.h"
 
 #import "SWSwapUserStateCell.h"
-#define kMAX_NUMBER_OF_MESSAGES 5
+#define kMAX_NUMBER_OF_MESSAGES 100
 #define kMAX_IMAGE_HEIGHT 520/2.0f
 #define kWallCollectionView_MAX_CELLS_INSERT 20
 #define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
