@@ -8,6 +8,7 @@
 
 #import "ESShortbotOverlay.h"
 #import "ESCommandTableViewCell.h"
+#import <Firebase/Firebase.h>
 
 @interface ESShortbotOverlay()
 
@@ -16,6 +17,7 @@
 @property (strong, nonatomic) NSArray *commands;
 @property (strong, nonatomic) UIButton *button;
 @property (strong, nonatomic) UIColor *color;
+@property (strong, nonatomic) Firebase *commandsRef;
 
 @property (strong, nonatomic) NSIndexPath *selectedIndexPath;
 
@@ -56,17 +58,23 @@
             }
         }
         
-        self.commands = @[
-                          @{@"title": @"image me <search>",
-                            @"command": @"image me",
-                            @"description": @"Searches for an image and posts is."},
-                          @{@"title": @"animate me <search>",
-                            @"command": @"animate me",
-                            @"description": @"Like \"image me\", but for GIFs."},
-                          @{@"title": @"mustache me <search>",
-                            @"command": @"mustache me",
-                            @"description": @"Like \"image me\", but adds a mustache."}
-                          ];
+        self.commands = @[];
+        
+        // Link up with the firebase help
+        Firebase *rootRef = [[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL];
+        self.commandsRef = [rootRef childByAppendingPath:@"shortbotHelp"];
+        [self.commandsRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+            NSArray *fbCommands = [snapshot value];
+            if ([fbCommands isKindOfClass:[NSArray class]] && [fbCommands count] > 0)
+            {
+                self.commands = fbCommands;
+            } else {
+                self.commands = @[];
+            }
+            // Reload the table view
+            [self.tableView reloadData];
+        }];
+        
         
         // Set yourself as a delegate
         self.tableView.dataSource = self;
@@ -136,7 +144,7 @@
     
     
     [cell setBarColor:self.color];
-    [cell setCommand:[NSString stringWithFormat:@"Shortbot %@",[commandDict objectForKey:@"command"] ] ];
+    [cell setCommand:[commandDict objectForKey:@"instruction"]];
     //    [cell.nameLabel setText:[NSString stringWithFormat:@"Shortbot %@",[command objectForKey:@"command"]]];
     
     [cell setDescription:[commandDict objectForKey:@"description"]];
@@ -160,7 +168,7 @@
 -(void)customCellSelectAtIndexPath:(NSIndexPath*)indexPath
 {
     // Get the command
-    NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"command"];
+    NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"instruction"];
     //    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
 
     

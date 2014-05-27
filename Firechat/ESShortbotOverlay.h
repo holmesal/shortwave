@@ -23,6 +23,5 @@
 - (ESShortbotOverlay *)initWithView:(UIView *)overlayView andColor:(UIColor *)color;
 
 - (void)showOverlay;
-- (void)pulseButton;
 
 @end
