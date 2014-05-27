@@ -11,7 +11,7 @@
 @protocol ESShortbotOverlayDelegate <NSObject>
 
 // Delegate method for selecting a command
-- (void)shortbotOverlay:(id)overlay didPickCommand:(NSString *)command;
+- (void)shortbotOverlay:(id)overlay didPickCommand:(NSString *)command hasQuery:(NSNumber *)hasQuery;
 
 @end
 

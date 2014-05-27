@@ -972,6 +972,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 // Pressed "send"
 - (void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView {
+    
+    [self sendMessageAsSelf:self.composeBarView.text];
+    
+    [composeBarView setText:@"" animated:YES];
+    [self.composeBarView resignFirstResponder];
+}
+
+- (void)sendMessageAsSelf:(NSString *)text
+{
     // Send the message
     
     FCMessage *message = [[FCMessage alloc] init];
@@ -980,11 +989,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     CLLocation *location = [owner.beacon getLocation];
     message.location = location;
     
-//    message.lat =
-//    message.lon = ;
-    [message postText:self.composeBarView.text asOwner:[FCUser owner]];
-    [composeBarView setText:@"" animated:YES];
-    [self.composeBarView resignFirstResponder];
+    //    message.lat =
+    //    message.lon = ;
+    [message postText:text asOwner:[FCUser owner]];
 }
 
 // Handle growing/shrinking
@@ -1282,13 +1289,23 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 # pragma mark - shortbot delegate methods
-- (void)shortbotOverlay:(ESShortbotOverlay *)overlay didPickCommand:(NSString *)command
+- (void)shortbotOverlay:(ESShortbotOverlay *)overlay didPickCommand:(NSString *)command hasQuery:(NSNumber *)hasQuery
 {
     NSLog(@"Picked command: %@", command);
-    // Set the text to the command response
-    [self.composeBarView setText:[NSString stringWithFormat:@"shortbot %@ ", command]];
-    // Set focus on the view
-    [self.composeBarView.textView becomeFirstResponder];
+    if ([hasQuery boolValue]) {
+        // Add a space to the command
+        command = [NSString stringWithFormat:@"%@ ",command];
+        
+        // Set the text to the command response
+        [self.composeBarView setText:command];
+        
+        // Set focus on the view
+        [self.composeBarView.textView becomeFirstResponder];
+    } else {
+        // Just send the message
+        [self sendMessageAsSelf:command];
+    }
+    
 }
 
 

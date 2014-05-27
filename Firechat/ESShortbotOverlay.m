@@ -169,12 +169,23 @@
 {
     // Get the command
     NSString *command = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"instruction"];
+    NSNumber *hasQuery = [[self.commands objectAtIndex:[indexPath row]]objectForKey:@"hasQuery"];
+    
+    if (!command || command == (NSString *)[NSNull null])
+    {
+        command = @"";
+    }
+    
+    if (!hasQuery || hasQuery == (NSNumber *)[NSNull null])
+    {
+        hasQuery = @0;
+    }
     //    NSString *commandString = [NSString stringWithFormat:@"%@ ",[command objectForKey:@"command"]];
 
     
     [self hideOverlay];
 
-    [self.delegate shortbotOverlay:self didPickCommand:command];
+    [self.delegate shortbotOverlay:self didPickCommand:command hasQuery:hasQuery];
 }
 
 //- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
