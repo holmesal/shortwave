@@ -18,7 +18,11 @@
 -(void)setMessage:(ESImageMessage*)message;
 -(void)setImage:(UIImage *)image;
 -(void)resetWithImageSize:(CGSize)size;
--(void)setImage:(UIImage *)image animated:(BOOL)animated;
+-(void)setImage:(UIImage *)image animated:(BOOL)animated isOversized:(BOOL)ovrsz;
+-(void)initializeTouchGesturesFromCollectionViewIfNecessary:(UICollectionView*)collectionView;
+-(UIImage*)getImage;
+
+-(CGRect)imageViewRect;
 
 #define SWImageCellIdentifier @"SWImageCell"
 

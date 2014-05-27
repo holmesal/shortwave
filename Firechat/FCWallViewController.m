@@ -28,25 +28,34 @@
 #import "SWImageCell.h"
 
 #import "SWSwapUserStateCell.h"
-
+#define kMAX_NUMBER_OF_MESSAGES 100
+#define kMAX_IMAGE_HEIGHT 520/2.0f
 #define kWallCollectionView_MAX_CELLS_INSERT 20
 #define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
 
 @interface FCWallViewController () <UICollectionViewDataSource, UICollectionViewDelegate, ESShortbotOverlayDelegate>
 
 @property (strong, nonatomic) UIButton *dismissKeyboardButton;
+
+@property (strong, nonatomic) UIView *fullScreenImageView;
+
 @property (weak, nonatomic) IBOutlet PHFComposeBarView *theComposeBarView;
 @property (weak, nonatomic) IBOutlet ESSpringFlowLayout *springFlowLayout;
 @property (weak, nonatomic) IBOutlet UICollectionView *wallCollectionView;
 
 @property (strong, nonatomic) Firebase *wallRef;
+@property (strong, nonatomic) FQuery *wallRefQueryLimit;
 @property (nonatomic, assign) FirebaseHandle bindToWallHandle;
+@property (nonatomic, assign) FirebaseHandle bindToWallHandleDelete;
+//@property (strong, nonatomic) CALayer *maskLayer;
 
 
 @property (nonatomic, strong) NSArray *hideCells;
 @property (atomic, strong) NSMutableArray *wallQueue;
 @property (atomic, strong) NSMutableArray *wall;
 @property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
+
+@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
 
 @property (nonatomic) BOOL initializedTableView;
 @property (nonatomic) CGRect lastFrameForSelfView;
@@ -98,6 +107,7 @@
 
 @implementation FCWallViewController
 
+@synthesize fullScreenImageView;
 @synthesize wallCollectionView;
 @synthesize wall;
 @synthesize wallQueue;
@@ -105,6 +115,7 @@
 
 @synthesize initializedTableView;
 @synthesize autoScrollLockTimer;
+@synthesize firstSnapshotFromWall;
 
 //searching label stuff
 @synthesize elipseCount;
@@ -605,7 +616,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)dealloc
 {
     NSLog(@"FCWallViewController dealloc");
-    [self.wallRef removeObserverWithHandle:self.bindToWallHandle];
+    [self.wallRefQueryLimit removeObserverWithHandle:self.bindToWallHandle];
 
     [self.trackingRef removeObserverWithHandle:trackingHandle];
     [self.view removeObserver:self forKeyPath:@"frame"];
@@ -681,14 +692,21 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)bindToWall
 {
-    self.wallRef = [[FCUser owner].ref childByAppendingPath:@"wall"];
-    
+    self.wallRef = [[FCUser owner].ref childByAppendingPath:@"wall"] ;
+    self.wallRefQueryLimit = [self.wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
     __weak typeof(self) weakSelf = self;
-    self.bindToWallHandle = [self.wallRef observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+    self.bindToWallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
+        
+//        NSLog(@"b2w snapshot.priority %@", snapshot.priority);
+//        NSLog(@"b2w snapshot.name %@", snapshot.name);
         
         if ([snapshot.value isKindOfClass:[NSDictionary class]])
         {
+            if (!firstSnapshotFromWall)
+            {
+                self.firstSnapshotFromWall = snapshot;
+            }
             
             id unknownTypeOfMessage = [self snapshotToMessage:snapshot];
 
@@ -702,6 +720,36 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     {
         NSLog(@"error = %@", someError.localizedDescription);
     }];
+    
+//    NSDate *date = [NSDate date];
+//    
+//    self.wallRefQueryDelete = [self.wallRef queryEndingAtPriority:[ummmm]];
+//    self.bindToWallHandleDelete = [self.wallRefQueryDelete observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snap)
+//    {
+//        [snap.ref removeValue];
+//    }];
+    
+//    wait here
+}
+
+
+-(void)setFirstSnapshotFromWall:(FDataSnapshot *)fSFW
+{
+    NSLog(@"firstSnapshotSet snapshot.name %@", fSFW.name);
+    firstSnapshotFromWall = fSFW;
+    
+    FQuery *query = [self.wallRef queryEndingAtPriority:nil andChildName:fSFW.name];
+    [query observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+    {
+//        NSLog(@"query got snapshot name %@", snapshot.name);
+        if (![snapshot.name isEqualToString:fSFW.name])
+        {
+            [snapshot.ref removeValue];
+        }
+    }];
+    
+    
+    
 }
 //queue it in dat der wallQueue array until wallQueue reached maximum capacity then print in the event that.. just do it
 -(void)addMessageToWallEventually:(id)unknownTypeOfMessage
@@ -827,137 +875,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return 0;
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tV cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (tableView == tV)
-    {
-        id unknownTypeOfMessage = [self.wall objectAtIndex:indexPath.row];
-        UITableViewCell *unknownCell = nil;
-        if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
-        {
-            NSLog(@"making an image cell");
-            ESImageMessage *imageMessage = unknownTypeOfMessage;
-            ESImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"ESImageCell"];
-            [imageCell setBackgroundColor:[UIColor clearColor]];
-            
-            [imageCell setImage:nil];
-            [imageCell setProfileColor:imageMessage.color];
-            [imageCell setProfileImage:imageMessage.icon];
-            
-            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.src] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
-            {
-                if (synchronous)
-                {
-                    [imageCell setImage:image];
-                } else
-                {
-                    NSIndexPath *currentIndexPath;
-                    for (NSIndexPath *indexPaths in [tableView indexPathsForVisibleRows])
-                    {
-                        if ([[self.wall objectAtIndex:indexPath.row] isKindOfClass:[ESImageMessage class]])
-                        {
-                            ESImageMessage *imageMessage = [self.wall objectAtIndex:indexPath.row];
-                            if ([url.absoluteString isEqualToString:imageMessage.src])
-                            {
-                                currentIndexPath  = indexPath;
-                                break;
-                            }
-                        }
-                    }
-                    if (currentIndexPath)
-                    {
-                        ESImageCell *imageCell = (ESImageCell*)[tableView cellForRowAtIndexPath:currentIndexPath];
-                        if (imageCell)
-                        {
-                    
-                            ESAssert([imageCell isKindOfClass:[ESImageCell class]], @"a cell was supposed to be an imagecell but is not");
-                            [imageCell setImage:image];
-                        }
-                    }
-                    
-                }
-            } isGif:imageMessage.isGif];
-            
-            //load image time
-            
-            
-            imageCell.tag = indexPath.row;
-            unknownCell = imageCell;
-            
-        } else
-        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
-        {
-            FCMessage *message = unknownTypeOfMessage;
-            
-            static NSString *CellIdentifier = @"MessageCell";
-            static NSString *ownerCellIdentifire = @"OwnerMessageCell";
-            
-            
-            FCMessageCell *cell;
-            if ([[FCUser owner].id isEqualToString:message.ownerID])
-            {
-                cell = [tableView dequeueReusableCellWithIdentifier:ownerCellIdentifire forIndexPath:indexPath];
-            } else
-            {
-                cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-//                [cell initializeLongPress];
-//                [cell initializeDoubleTap];
-            }
-            
-            if (DEBUG_SHOW_USER_ID_SINGLE_TAP)
-            {//setup a single tap alert, who does this message belong to?
-                [cell addTapDebugGestureIfNecessary];
-            }
-            
-            
-            // Flip the cell 180 degrees
-            cell.transform = CGAffineTransformMakeRotation(M_PI);
-            
-            
-            
-            // Set message cell values
-            [cell setMessage:message];
-            
-            //associate cells with owners, to fade out owners who are not in range when cell is served or tracking changes!
-            cell.ownerID = message.ownerID;
-            
-            
-            //check tracking for this person b4 serving cell to the tableview
-            BOOL userIsInTracking = [self isUserBeingTracked:cell.ownerID];
-            
-            [cell setFaded:!userIsInTracking animated:NO];
-            cell.tag = indexPath.row;
-            unknownCell = cell;
-        } else
-        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
-        {
-            static NSString *swapIdentifier = @"SwapCell";
-            
-            ESSwapUserStateMessage *message = unknownTypeOfMessage;
-            ESSwapUserStateCell *cell = [tableView dequeueReusableCellWithIdentifier:swapIdentifier forIndexPath:indexPath];
-            
-            // [cell setBackgroundColor:[UIColor yellowColor]];
-            
-            // Flip the cell 180 degrees
-            cell.transform = CGAffineTransformMakeRotation(M_PI);
-            [cell setFromColor:message.fromColor andIcon:message.fromIcon toColor:message.toColor andIcon:message.toIcon];
-            
-            if (!message.hasDoneFirstTimeAnimation)
-            {
-                message.hasDoneFirstTimeAnimation = YES;
-                
-                [cell doFirstTimeAnimation];
-            }
-            cell.tag = indexPath.row;
-            unknownCell = cell;
-        }
-        
 
-        
-        return unknownCell;
-    }
-    return nil;
-}
 
 -(void)singleTapDebugGestureAction:(UITapGestureRecognizer*)tapGesture
 {
@@ -1333,11 +1251,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     if (object == self.view && [keyPath isEqualToString:@"frame"])
     {
         CGRect currentFrame = self.view.frame;
-        NSLog(@"currentFrame -> %@", NSStringFromCGRect(currentFrame));
-        NSLog(@"fromFrame -> %@", NSStringFromCGRect(self.lastFrameForSelfView));
 
         CGFloat diffHeight = currentFrame.size.height-self.lastFrameForSelfView.size.height;
-//        CGRect tableViewRect = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+        
         UIEdgeInsets e = self.tableView.contentInset;
         e.top -= diffHeight;
         
@@ -1395,6 +1311,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
             NSLog(@"[%d](%@)-%@", indexPath.row, NSStringFromCGSize(imageMessage.size),imageMessage.src);
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
+            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:self.wallCollectionView];
             [imageCell setImage:nil];
             /*
              * load image here
@@ -1403,7 +1320,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
              {
                  if (synchronous)
                  {
-                     [imageCell setImage:image animated:NO];
+                     BOOL isOversized = (image.size.height * 320/image.size.width > kMAX_IMAGE_HEIGHT);
+                     [imageCell setImage:image animated:NO isOversized:isOversized];
                  } else
                  {
                      NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
@@ -1428,7 +1346,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                 
                                  if (retrievedImageCell)
                                  {
-                                     [retrievedImageCell setImage:image animated:YES];
+                                     BOOL isOversized = (image.size.height * 320/image.size.width > kMAX_IMAGE_HEIGHT);
+                                     [retrievedImageCell setImage:image animated:YES isOversized:isOversized];
                                      ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
                                      
 //                                     //animateChangeHeight block ran by transitionWithView
@@ -1494,7 +1413,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             unknownCell.contentView.alpha = 0.0f;
         }
         
-        [unknownCell setBackgroundColor:[UIColor clearColor]];
+
+        unknownCell.tag = indexPath.row;
+//        [unknownCell setBackgroundColor:[UIColor clearColor]];
         
         return unknownCell;
     }
@@ -1526,9 +1447,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
         
         CGSize imgSize = imageMessage.size;
-        size.height = 59 + imgSize.height*320/imgSize.width;
+        static float topImgOffset = 59;
+        CGFloat height = topImgOffset + imgSize.height*320/imgSize.width;
         
-        
+        if (height > topImgOffset+kMAX_IMAGE_HEIGHT)
+        {
+            height = 380/2.0f;
+        }
+        size.height = height;
         
         
 
@@ -1543,9 +1469,157 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return size;
 }
 
+-(UIView*)fullScreenImageView
+{
+    if (!fullScreenImageView)
+    {
+        fullScreenImageView = [[UIView alloc] initWithFrame:self.view.bounds];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+        [imageView setBackgroundColor:[UIColor whiteColor]];
+        [imageView setContentMode:UIViewContentModeScaleToFill];
+        imageView.tag = 5;
+        
+//        CALayer *maskLayer = [CALayer layer];
+//        [maskLayer setAnchorPoint:CGPointMake(0, 0)];
+//        maskLayer.backgroundColor = [UIColor whiteColor].CGColor;
+//        [imageView.layer setMask:maskLayer];
+//        self.maskLayer = maskLayer;
+        [fullScreenImageView addSubview:imageView];
+    }
+    
+    return fullScreenImageView;
+}
+
+//custom longpress callback
+-(void)collectionView:(UICollectionView*)cv didBeginLongPressForItemAtIndexPath:(NSIndexPath*)indexPath
+{
+    
+    UICollectionViewLayoutAttributes *attributes = [self.wallCollectionView layoutAttributesForItemAtIndexPath:indexPath];
+    CGRect cellRect = attributes.frame;
+    cellRect.origin.y -= wallCollectionView.contentOffset.y;
+    
+    SWImageCell *imageCell = (SWImageCell*)[self.wallCollectionView cellForItemAtIndexPath:indexPath];
+    UIImage *img = [imageCell getImage];
+    if (!img)
+    {
+        return;
+    }
+    CGRect imageViewRect = [imageCell imageViewRect];
+    NSLog(@"cellRect = %@", NSStringFromCGRect(cellRect));
+    
+    cellRect.origin.y += imageViewRect.origin.y;
+    cellRect.size = imageViewRect.size;
+    
+    
+    [self.view addSubview:    self.fullScreenImageView];
+    [self.fullScreenImageView setBackgroundColor:[UIColor clearColor]];
+    UIImageView *imageView = (UIImageView *)[self.fullScreenImageView viewWithTag:5];
+//    CALayer *maskLayer = self.maskLayer;// [imageView.layer mask];
+//    [maskLayer setFrame:CGRectMake(0, 0, cellRect.size.width, cellRect.size.height)];
+//
+//    
+    [imageView setImage:img];
+    CGSize imgSize = imageView.image.size;
+    NSLog(@"imgSize = %@", NSStringFromCGSize(imgSize));
+    CGSize fullImgSize = CGSizeMake(320, imageView.image.size.height*320/imageView.image.size.width);
+    cellRect.size = fullImgSize;
+    [imageView setFrame:cellRect];
+//
+//
+//    
+//    CGRect endMaskFrame = imageView.bounds;
+//    endMaskFrame.origin.y = endMaskFrame.size.height*0.5f;
+//    
+//    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
+//    frameAnimation.duration = 0.07;
+//    frameAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    NSLog(@"animate from %@ to %@", NSStringFromCGRect(maskLayer.frame), NSStringFromCGRect(endMaskFrame));
+//    frameAnimation.fromValue = [NSValue valueWithCGRect:maskLayer.frame];
+//    frameAnimation.toValue = [NSValue valueWithCGRect:endMaskFrame];
+//    frameAnimation.fillMode = kCAFillModeForwards;
+//    frameAnimation.removedOnCompletion = NO;
+//    [maskLayer addAnimation:frameAnimation forKey:@"sz"];
+    
+    
+    imageView.alpha = 0.0f;
+    
+    CGRect vCenterFrame = imageView.frame;
+    vCenterFrame.origin.y = (self.fullScreenImageView.frame.size.height-vCenterFrame.size.height)/2;
+    imageView.frame = vCenterFrame;
+    
+    [UIView animateWithDuration:0.3 animations:^
+    {
+        [self.fullScreenImageView setBackgroundColor:[UIColor colorWithRed:20/255.0f green:20/255.0f blue:20/255.0f alpha:0.98f]];
+
+        imageView.alpha = 1.0f;
+
+        
+//        [CATransaction begin];
+//        [CATransaction setDisableActions: NO];
+//        
+//        [CATransaction commit];
+    }];
+    
+    
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didEndLongPressForItemAtIndexPath:(NSIndexPath*)indexPath
+{
+
+    UICollectionViewLayoutAttributes *attributes = [self.wallCollectionView layoutAttributesForItemAtIndexPath:indexPath];
+    CGRect cellRect = attributes.frame;
+    cellRect.origin.y -= wallCollectionView.contentOffset.y;
+
+    
+    
+    SWImageCell *imageCell = (SWImageCell*)[self.wallCollectionView cellForItemAtIndexPath:indexPath];
+    CGRect imageViewRect = [imageCell imageViewRect];
+    
+    cellRect.origin.y += imageViewRect.origin.y;
+    cellRect.size = imageViewRect.size;
+    CGRect maskStartFrame = CGRectMake(0, 0, cellRect.size.width, cellRect.size.height);
+    
+    [self.view addSubview:    self.fullScreenImageView];
+    UIImageView *imageView = (UIImageView *)[self.fullScreenImageView viewWithTag:5];
+    CGSize fullImgSize = CGSizeMake(320, imageView.image.size.height*320/imageView.image.size.width);
+    cellRect.size = fullImgSize;
+//    
+//    CALayer *maskLayer = self.maskLayer;
+//    CGRect maskLayerFrame = maskLayer.frame;
+//    maskLayerFrame.size.height = fullImgSize.height;
+//    
+//    
+//    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
+//    frameAnimation.duration = 0.03;
+//    frameAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    CGRect s = maskLayer.frame;
+//    s.size.height = fullImgSize.height;
+//    frameAnimation.fromValue = [NSValue valueWithCGRect:s];
+//    frameAnimation.toValue = [NSValue valueWithCGRect:maskStartFrame];
+//    frameAnimation.fillMode = kCAFillModeForwards;
+//    frameAnimation.removedOnCompletion = NO;
+//    [maskLayer addAnimation:frameAnimation forKey:@"frame animate"];
+    
+    
+    [UIView animateWithDuration:0.3 animations:^
+    {
+        [self.fullScreenImageView setBackgroundColor:[UIColor clearColor]];
+        [imageView setAlpha:0.0f];
+    } completion:^(BOOL finished)
+    {
+        [self.fullScreenImageView removeFromSuperview];
+    }];
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didLongPressDragItemAtIndexPath:(NSIndexPath*)indexPath
+{
+    NSLog(@"STATE CHANGED DRAGGE!");
+}
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+//    NSLog(@"boop!");
+
     
 //    [springFlowLayout invalidateLayout];
 //    __weak UICollectionViewCell *cell = imageCell;

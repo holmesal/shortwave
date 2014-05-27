@@ -92,6 +92,7 @@
         NSLog(@"Posting message to %@",earshotId);
         // Post to the firebase wall of this beacon
         Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
+        
         [otherPersonMessageRef setValue:message];
         [self setTimestampAsNow:otherPersonMessageRef];
         
