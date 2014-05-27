@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *descriptionLabel;
+@property (weak, nonatomic) IBOutlet UILabel *nonQueryNameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *button;
 @property (weak, nonatomic) IBOutlet UIView *colorBar;
 @property (weak, nonatomic) IBOutlet UIView *cursor;
@@ -28,6 +29,7 @@
 @synthesize descriptionLabel;
 @synthesize nameLabel;
 @synthesize blurButton;
+@synthesize nonQueryNameLabel;
 
 
 - (void)awakeFromNib
@@ -103,5 +105,14 @@
 -(void)setCommand:(NSString *)command
 {
     [nameLabel setText:command];
+}
+-(void)setNonQueryCommand:(NSString *)command
+{
+    [nonQueryNameLabel setText:command];
+}
+-(void)setBarVisible:(NSNumber*)isVisible
+{
+    self.colorBar.hidden = ![isVisible boolValue];
+    self.cursor.hidden = ![isVisible boolValue];
 }
 @end

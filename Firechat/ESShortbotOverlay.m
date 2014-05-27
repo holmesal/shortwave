@@ -81,6 +81,9 @@
         self.tableView.delegate = self;
         [self.tableView reloadData];
         
+        // Hide the scroll bars
+        [self.tableView setShowsVerticalScrollIndicator:NO];
+        
         // Register a touchup on the button
         [self.button addTarget:self action:@selector(hideOverlay) forControlEvents:UIControlEventTouchUpInside];
 
@@ -140,14 +143,42 @@
     ESCommandTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"commandCell"];
     
     NSDictionary *commandDict = [self.commands objectAtIndex:[indexPath row]];
+    
+    // Get the command
+    NSString *command = [commandDict objectForKey:@"instruction"];
+    NSNumber *hasQuery = [commandDict objectForKey:@"hasQuery"];
+    
+    if (!command || command == (NSString *)[NSNull null])
+    {
+        command = @"";
+    }
+    
+    if (!hasQuery || hasQuery == (NSNumber *)[NSNull null])
+    {
+        hasQuery = @0;
+    }
+    
+    // Empty text programatically, so we can keep the preview text in the storyboard
+    [cell setCommand:@""];
+    [cell setNonQueryCommand:@""];
 
     
     
     [cell setBarColor:self.color];
-    [cell setCommand:[commandDict objectForKey:@"instruction"]];
+    
+    if ([hasQuery boolValue]) {
+        // Use the normal command label
+        [cell setCommand:command];
+    } else {
+        // Use the centered command label
+        [cell setNonQueryCommand:command];
+        // Don't show the blinky text
+        [cell setBarVisible:hasQuery];
+    }
+    
     //    [cell.nameLabel setText:[NSString stringWithFormat:@"Shortbot %@",[command objectForKey:@"command"]]];
     
-    [cell setDescription:[commandDict objectForKey:@"description"]];
+//    [cell setDescription:[commandDict objectForKey:@"description"]];
 //    [cell.descriptionLabel setText:[command objectForKey:@"description"]];
     
     cell.tag = [indexPath row];

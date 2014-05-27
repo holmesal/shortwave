@@ -20,7 +20,9 @@
 - (void)startAnimating;
 
 -(void)setCommand:(NSString*)command;
+-(void)setNonQueryCommand:(NSString*)command;
 -(void)setBarColor:(UIColor*)barColor;
+-(void)setBarVisible:(NSNumber*)isVisible;
 -(void)setDescription:(NSString*)description;
 
 @end
