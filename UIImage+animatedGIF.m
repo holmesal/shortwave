@@ -69,17 +69,18 @@ static NSArray *frameArray(size_t const count, CGImageRef const images[count], i
     int const gcd = vectorGCD(count, delayCentiseconds);
     size_t const frameCount = totalDurationCentiseconds / gcd;
     UIImage *frames[frameCount];
-    for (size_t i = 0, f = 0; i < count; ++i) {
+    for (size_t i = 0, f = 0; i < count; ++i)
+    {
         
 
-        float maxDim = 100;
-        CGImageRef img = images[i];
-        float h = CGImageGetHeight(img);
-        float w = CGImageGetWidth(img);
-        float s = (w>h) ? maxDim/w: maxDim/h;
+//        float maxDim = 100;
+//        CGImageRef img = images[i];
+//        float h = CGImageGetHeight(img);
+//        float w = CGImageGetWidth(img);
+//        float s = (w>h) ? maxDim/w: maxDim/h;
         
-        UIImage *const frame = [UIImage imageWithCGImage:images[i]  scale:1/s orientation:UIImageOrientationUp];
-        CGSize size = frame.size;
+        UIImage *const frame = [UIImage imageWithCGImage:images[i] ];//  scale:1/s orientation:UIImageOrientationUp];
+//        CGSize size = frame.size;
         
         for (size_t j = delayCentiseconds[i] / gcd; j > 0; --j)
         {

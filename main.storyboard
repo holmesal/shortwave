@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mGJ-G4-FVS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mGJ-G4-FVS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -156,6 +156,26 @@
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 </imageView>
+                                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nei-Nw-xCK">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="151"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <subviews>
+                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sLg-vq-2IT">
+                                                                            <rect key="frame" x="135" y="51" width="50" height="50"/>
+                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                            <color key="backgroundColor" red="0.26955976279999999" green="0.6588235294" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                                            <constraints>
+                                                                                <constraint firstAttribute="width" constant="50" id="eN6-eO-Kb2"/>
+                                                                                <constraint firstAttribute="height" constant="50" id="pSP-G6-qNt"/>
+                                                                            </constraints>
+                                                                        </imageView>
+                                                                    </subviews>
+                                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="centerX" secondItem="sLg-vq-2IT" secondAttribute="centerX" id="4eK-pV-4af"/>
+                                                                        <constraint firstAttribute="centerY" secondItem="sLg-vq-2IT" secondAttribute="centerY" constant="-0.5" id="ahx-bQ-F5w"/>
+                                                                    </constraints>
+                                                                </view>
                                                             </subviews>
                                                             <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
                                                             <constraints>
@@ -164,11 +184,15 @@
                                                                 <constraint firstAttribute="bottom" secondItem="jrC-65-JFz" secondAttribute="bottom" constant="1" id="5Nt-vY-TTl"/>
                                                                 <constraint firstAttribute="height" secondItem="L84-gL-m1P" secondAttribute="height" id="5WW-4u-3f5"/>
                                                                 <constraint firstAttribute="centerX" secondItem="8ui-05-ws2" secondAttribute="centerX" id="CZe-3s-0HV"/>
+                                                                <constraint firstAttribute="centerY" secondItem="nei-Nw-xCK" secondAttribute="centerY" id="PLd-2p-adm"/>
                                                                 <constraint firstAttribute="centerY" secondItem="L84-gL-m1P" secondAttribute="centerY" id="QpB-2e-Io8"/>
                                                                 <constraint firstAttribute="centerX" secondItem="L84-gL-m1P" secondAttribute="centerX" id="VJL-C7-xrP"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="Wxr-t8-emV"/>
                                                                 <constraint firstAttribute="width" secondItem="jrC-65-JFz" secondAttribute="width" id="Zr4-px-we2"/>
+                                                                <constraint firstItem="nei-Nw-xCK" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="bDk-Cn-Hhm"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="uHP-WE-4j4"/>
+                                                                <constraint firstItem="nei-Nw-xCK" firstAttribute="height" secondItem="PEM-gm-LfV" secondAttribute="height" id="wyn-Rq-Vze"/>
+                                                                <constraint firstAttribute="centerX" secondItem="nei-Nw-xCK" secondAttribute="centerX" id="yYC-q9-HjE"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>
@@ -191,6 +215,7 @@
                                                     <outlet property="iconImageView" destination="C2t-um-36S" id="eCr-qw-0C0"/>
                                                     <outlet property="iconImageViewContiainer" destination="hPE-YH-M2T" id="Aqx-ft-GCh"/>
                                                     <outlet property="imageView" destination="L84-gL-m1P" id="H8O-HS-1h6"/>
+                                                    <outlet property="oversizedOverlay" destination="nei-Nw-xCK" id="E9W-NF-7Sc"/>
                                                     <outlet property="textLabel" destination="LSb-91-EIH" id="hRr-gL-5LS"/>
                                                 </connections>
                                             </collectionViewCell>
