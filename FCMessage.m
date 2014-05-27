@@ -95,22 +95,22 @@
             }];
         }
         
-        // Catch two-word shortbot messages
-        text = [text stringByReplacingOccurrencesOfString:@"short bot" withString:@"shortbot" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [text length])];
+        // Pass every message to shortbot
+        NSDictionary *shortbotMessage = @{
+                                          @"sender": owner.id,
+                                          @"message": text,
+                                          @"nearby": earshotIds
+                                          };
+        // post to the queue
+        Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
+        [shortbotQueueItemRef setValue:shortbotMessage];
+        
+//        text = [text stringByReplacingOccurrencesOfString:@"short bot" withString:@"shortbot" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [text length])];
         
         // Is this a shortbot message?
         NSNumber *isShortbotMessage = @0;
         if ([text rangeOfString:@"shortbot" options:NSCaseInsensitiveSearch].location != NSNotFound || [text rangeOfString:@"short bot" options:NSCaseInsensitiveSearch].location != NSNotFound) {
             isShortbotMessage = @1;
-            // Create a hubot message
-            NSDictionary *shortbotMessage = @{
-                                              @"sender": owner.id,
-                                              @"message": text,
-                                              @"nearby": earshotIds
-                                              };
-            // post to the queue
-            Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
-            [shortbotQueueItemRef setValue:shortbotMessage];
         }
         
         // Log the message to mixpanel
