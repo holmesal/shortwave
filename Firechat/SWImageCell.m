@@ -20,6 +20,9 @@
 @property (strong, nonatomic) CALayer *coloredCircleLayer;
 @property (strong, nonatomic) UILongPressGestureRecognizer *longPress;
 
+@property (assign, nonatomic) CGSize assignedSize;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageViewConstraintHeigt;
+
 @end
 
 @implementation SWImageCell
@@ -48,7 +51,16 @@
 //    [oversizedOverlay addGestureRecognizer:longPress];
     oversizedOverlay.alpha = 0.0f;
     
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTap:)];
+//    [self addGestureRecognizer:tap];
+    
     [super awakeFromNib];
+}
+-(void)debugTap:(UITapGestureRecognizer*)tap
+{
+    NSLog(@"\n");
+    NSLog(@"assignedSize = %@", NSStringFromCGSize(self.assignedSize));
+    NSLog(@"currentSize = %@", NSStringFromCGSize(imageView.frame.size));
 }
 
 -(void)longPressOccured:(UILongPressGestureRecognizer*)longPress
@@ -111,11 +123,10 @@
 
 -(void)resetWithImageSize:(CGSize)size
 {
-    CGSize sizeOfImageView = {320,size.height*(320/size.width)};//imageView.frame.size;
-    //ratio w.h
-    
+    CGSize sizeOfImageView = {320,size.height*(320/size.width)};
     CGRect imageViewRect = {self.imageView.frame.origin, sizeOfImageView};
-    [imageView setFrame:imageViewRect];
+    self.assignedSize = imageViewRect.size;
+    self.imageViewConstraintHeigt.constant = self.assignedSize.height;
     
 }
 
@@ -142,8 +153,8 @@
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
     ownerID = message.ownerID;
     
-    // Set the imageview height
-//    [self resetWithImageSize:message.size];
+    [self resetWithImageSize:message.size];
+
 }
 
 -(void)setImage:(UIImage *)image animated:(BOOL)animated isOversized:(BOOL)ovrsz
@@ -164,11 +175,12 @@
              imageView.alpha = 1.0f;
          }];
     }
+//    self.imageView.backgroundColor = [UIColor redColor];
     [self.imageView setImage:image];
     
     if (image)
     {
-        [self resetWithImageSize:image.size];
+//        [self resetWithImageSize:image.size];
     }
     else
     {

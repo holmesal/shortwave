@@ -92,7 +92,7 @@
                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         </collectionViewFlowLayout>
                                         <cells>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWImageCell" id="KPA-hL-AFj" customClass="SWImageCell">
+                                            <collectionViewCell autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWImageCell" id="KPA-hL-AFj" customClass="SWImageCell">
                                                 <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -131,7 +131,7 @@
                                                                 <constraint firstAttribute="height" constant="34" id="WBs-jG-0YC"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PEM-gm-LfV">
+                                                        <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PEM-gm-LfV">
                                                             <rect key="frame" x="0.0" y="59" width="320" height="151"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <subviews>
@@ -151,10 +151,14 @@
                                                                         <constraint firstAttribute="height" constant="1" id="rRW-Uf-emN"/>
                                                                     </constraints>
                                                                 </view>
-                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
+                                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="320" placeholderIntrinsicHeight="infinite" translatesAutoresizingMaskIntoConstraints="NO" id="L84-gL-m1P">
                                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="151"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="height" constant="151" id="LlN-PD-8YB"/>
+                                                                        <constraint firstAttribute="width" constant="320" id="Xfb-cg-NgR"/>
+                                                                    </constraints>
                                                                 </imageView>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nei-Nw-xCK">
                                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="151"/>
@@ -180,18 +184,16 @@
                                                             <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="centerX" secondItem="jrC-65-JFz" secondAttribute="centerX" id="1CA-h2-Av7"/>
-                                                                <constraint firstAttribute="width" secondItem="L84-gL-m1P" secondAttribute="width" id="4QF-mC-g9j"/>
                                                                 <constraint firstAttribute="bottom" secondItem="jrC-65-JFz" secondAttribute="bottom" constant="1" id="5Nt-vY-TTl"/>
-                                                                <constraint firstAttribute="height" secondItem="L84-gL-m1P" secondAttribute="height" id="5WW-4u-3f5"/>
                                                                 <constraint firstAttribute="centerX" secondItem="8ui-05-ws2" secondAttribute="centerX" id="CZe-3s-0HV"/>
+                                                                <constraint firstAttribute="centerX" secondItem="L84-gL-m1P" secondAttribute="centerX" id="Lmi-NX-9Ux"/>
                                                                 <constraint firstAttribute="centerY" secondItem="nei-Nw-xCK" secondAttribute="centerY" id="PLd-2p-adm"/>
-                                                                <constraint firstAttribute="centerY" secondItem="L84-gL-m1P" secondAttribute="centerY" id="QpB-2e-Io8"/>
-                                                                <constraint firstAttribute="centerX" secondItem="L84-gL-m1P" secondAttribute="centerX" id="VJL-C7-xrP"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="Wxr-t8-emV"/>
                                                                 <constraint firstAttribute="width" secondItem="jrC-65-JFz" secondAttribute="width" id="Zr4-px-we2"/>
                                                                 <constraint firstItem="nei-Nw-xCK" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="bDk-Cn-Hhm"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="uHP-WE-4j4"/>
                                                                 <constraint firstItem="nei-Nw-xCK" firstAttribute="height" secondItem="PEM-gm-LfV" secondAttribute="height" id="wyn-Rq-Vze"/>
+                                                                <constraint firstItem="L84-gL-m1P" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="xLB-BH-2A1"/>
                                                                 <constraint firstAttribute="centerX" secondItem="nei-Nw-xCK" secondAttribute="centerX" id="yYC-q9-HjE"/>
                                                             </constraints>
                                                         </view>
@@ -215,6 +217,7 @@
                                                     <outlet property="iconImageView" destination="C2t-um-36S" id="eCr-qw-0C0"/>
                                                     <outlet property="iconImageViewContiainer" destination="hPE-YH-M2T" id="Aqx-ft-GCh"/>
                                                     <outlet property="imageView" destination="L84-gL-m1P" id="H8O-HS-1h6"/>
+                                                    <outlet property="imageViewConstraintHeigt" destination="LlN-PD-8YB" id="2W9-bX-cDg"/>
                                                     <outlet property="oversizedOverlay" destination="nei-Nw-xCK" id="E9W-NF-7Sc"/>
                                                     <outlet property="textLabel" destination="LSb-91-EIH" id="hRr-gL-5LS"/>
                                                 </connections>

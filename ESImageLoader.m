@@ -52,7 +52,7 @@ static ESImageLoader *loader;
         id result = [[imageLoadingQueue.operations filteredArrayUsingPredicate:predicate] lastObject];
         if (result)
         {
-            NSLog(@"already loading this operation");
+//            NSLog(@"already loading this operation");
             return;
         }
 

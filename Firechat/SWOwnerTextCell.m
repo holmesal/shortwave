@@ -58,6 +58,10 @@
     ownerID = message.ownerID;
     messageText.text = message.text;
     
+//    UIEdgeInsets edgeInsets =     messageText.textContainerInset;
+//    NSLog(@"edgeInsets = %@", NSStringFromUIEdgeInsets(edgeInsets));
+
+    
     [iconImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
     UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",message.icon]];
