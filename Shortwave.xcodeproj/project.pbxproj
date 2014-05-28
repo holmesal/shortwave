@@ -15,6 +15,7 @@
 		AA422B3E192BBD7900AE8C2A /* SWSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
 		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
+		AA524845193683F700EE6F4B /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */; };
 		AA643414190105E400419043 /* plugline.png in Resources */ = {isa = PBXBuildFile; fileRef = AA643413190105E400419043 /* plugline.png */; };
 		AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */; };
 		AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */; };
@@ -54,7 +55,6 @@
 		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF40AC218F12FD6000526BE /* UIImage+Resize.m */; };
 		C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8318FF857500C8050B /* Firebase.framework */; };
-		C0032A8618FF858800C8050B /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */; };
 		C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */; };
 		C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8718FF877E00C8050B /* AdSupport.framework */; };
 		C0064BED192C48BA00877CDF /* ESShortbotOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */; };
@@ -124,6 +124,7 @@
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
 		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESUserPMCell.h; sourceTree = "<group>"; };
 		AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESUserPMCell.m; sourceTree = "<group>"; };
+		AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AA643413190105E400419043 /* plugline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = plugline.png; sourceTree = "<group>"; };
 		AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
 		AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
@@ -189,9 +190,7 @@
 		AAF40AC118F12FD6000526BE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AAF40AC218F12FD6000526BE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
 		C0032A8318FF857500C8050B /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
-		C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		C0032A8718FF877E00C8050B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
-		C0032A8918FF88D400C8050B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FacebookSDK.framework; sourceTree = "<group>"; };
 		C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		C0064BEB192C48BA00877CDF /* ESShortbotOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESShortbotOverlay.h; sourceTree = "<group>"; };
 		C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESShortbotOverlay.m; sourceTree = "<group>"; };
@@ -250,7 +249,6 @@
 		C070A20018EF54C3000C9D3C /* CBPeripheralManager+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBPeripheralManager+Ext.m"; sourceTree = "<group>"; };
 		C070A20118EF54C3000C9D3C /* CBUUID+Ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CBUUID+Ext.h"; sourceTree = "<group>"; };
 		C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+Ext.m"; sourceTree = "<group>"; };
-		C09EE4B018FFB2DF0039D535 /* libPods-Facebook-iOS-SDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-Facebook-iOS-SDK.a"; path = "Pods/build/Debug-iphoneos/libPods-Facebook-iOS-SDK.a"; sourceTree = "<group>"; };
 		C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTransponder.h; sourceTree = "<group>"; };
 		C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTransponder.m; sourceTree = "<group>"; };
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -272,9 +270,9 @@
 				AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */,
 				C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */,
 				AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */,
-				C0032A8618FF858800C8050B /* FirebaseSimpleLogin.framework in Frameworks */,
 				C02CE3D01868097E00305FC9 /* SystemConfiguration.framework in Frameworks */,
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
+				AA524845193683F700EE6F4B /* FirebaseSimpleLogin.framework in Frameworks */,
 				C02CE394186808B000305FC9 /* CFNetwork.framework in Frameworks */,
 				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
 				C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */,
@@ -518,11 +516,9 @@
 		C02CE38C186808B000305FC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C09EE4B018FFB2DF0039D535 /* libPods-Facebook-iOS-SDK.a */,
+				AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */,
 				C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */,
-				C0032A8918FF88D400C8050B /* FacebookSDK.framework */,
 				C0032A8718FF877E00C8050B /* AdSupport.framework */,
-				C0032A8518FF858800C8050B /* FirebaseSimpleLogin.framework */,
 				C0032A8318FF857500C8050B /* Firebase.framework */,
 				C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */,
 				AAA3779A18F87BBC00B70B00 /* MessageUI.framework */,

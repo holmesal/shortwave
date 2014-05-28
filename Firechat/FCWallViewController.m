@@ -1338,10 +1338,14 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             ESImageMessage *imageMessage = unknownTypeOfMessage;
             
             SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-            NSLog(@"[%d](%@)-%@", indexPath.row, NSStringFromCGSize(imageMessage.size),imageMessage.src);
+
+            [imageCell setImage:nil];
+            CGRect aTempRect = imageCell.frame;
+            aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
+            [imageCell setFrame:aTempRect];
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
             [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:self.wallCollectionView];
-            [imageCell setImage:nil];
+            
             /*
              * load image here
              */
@@ -1466,7 +1470,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
         size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
         
-        size.height = (15+8)*2 + size.height;//MAX(17*2+40, 15*2 + size.height);
+        size.height = (12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
 
         
     } else
@@ -1481,6 +1485,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
         if (height > topImgOffset+kMAX_IMAGE_HEIGHT)
         {
+            
             height = 380/2.0f;
         }
         size.height = height;
