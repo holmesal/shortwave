@@ -103,6 +103,8 @@
 @property (nonatomic) CGRect originalRectOfIcon;
 
 
+@property (strong, nonatomic) NSTimer *postToSelfTimer;
+
 @end
 
 @implementation FCWallViewController
@@ -321,11 +323,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 
 
-
+-(void)postSpam:(NSTimer*)timer
+{
+    
+    [self sendMessageAsSelf:@"shortbot image me dogsforarms"];
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.postToSelfTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(postSpam:) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:self.postToSelfTimer forMode:NSRunLoopCommonModes];
+    
     
     //compose bar is set to the subclass ESViewController, intialized from the nib
     self.composeBarView = self.theComposeBarView;
@@ -355,8 +365,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"shouldPostSwapUserMessageWhenStateChange"];
-    
-
     
     
     //use updatePeoplNearby in order to do so
@@ -1180,6 +1188,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)iconButtonAction:(UIButton*)iconButtonThe
 {
+    [self.postToSelfTimer invalidate];
     if (keyboardIsVisible)
     {
         [self.composeBarView.textView resignFirstResponder];
@@ -1413,6 +1422,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             if ([textMessage.ownerID isEqualToString:[FCUser owner].id])
             {
                 textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWOwnerTextCellIdentifier forIndexPath:indexPath];
+                [(SWOwnerTextCell*)textCell addTapDebugGestureIfNecessary];
             } else
             {
                 textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
@@ -1420,6 +1430,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
             [textCell setMessage:textMessage];
+            
             unknownCell = textCell;
         } else
         if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
@@ -1444,6 +1455,9 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         if (self.hideCells && self.hideCells.count && [self.hideCells containsObject:indexPath])
         {
             unknownCell.contentView.alpha = 0.0f;
+        } else
+        {
+            unknownCell.contentView.alpha = 1.0f;
         }
         
 
@@ -1453,6 +1467,13 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         return unknownCell;
     }
     return nil;
+}
+-(void)tapCell:(NSIndexPath*)indexPath
+{
+    FCMessage *message = [wall objectAtIndex:indexPath.row];
+    NSNumber *alpha = [NSNumber numberWithFloat:[wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha];
+    NSLog(@"message = %@, icon = %@ color = %@. alpha = %@", message.text, message.icon, message.color, alpha);
+    [self.postToSelfTimer invalidate];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath

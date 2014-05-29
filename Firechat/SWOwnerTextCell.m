@@ -18,7 +18,7 @@
 
 //@property (nonatomic) UILongPressGestureRecognizer *longPress;
 //@property (nonatomic) UITapGestureRecognizer *doubleTap;
-//@property (nonatomic) UITapGestureRecognizer *debugTap;
+@property (nonatomic) UITapGestureRecognizer *debugTap;
 @end
 
 @implementation SWOwnerTextCell
@@ -93,16 +93,16 @@
 
 
 //debug methods & | custom touches
-//-(void)addTapDebugGestureIfNecessary
-//{
-//    if (!self.debugTap)
-//    {
-//        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
+-(void)addTapDebugGestureIfNecessary
+{
+    if (!self.debugTap)
+    {
+        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
 //        if (self.doubleTap)
 //            [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
-//        [self addGestureRecognizer:self.debugTap];
-//    }
-//}
+        [self addGestureRecognizer:self.debugTap];
+    }
+}
 
 //-(void)initializeLongPress
 //{
@@ -140,10 +140,10 @@
 //    }
 //}
 
-//-(void)debugTapGesture:(UITapGestureRecognizer*)tap
-//{
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Debug" message:self.ownerID delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-//    [alertView show];
-//}
+-(void)debugTapGesture:(UITapGestureRecognizer*)tap
+{
+    UICollectionView *cv = (UICollectionView *)self.superview;
+    [cv.delegate performSelector:@selector(tapCell:) withObject:[NSIndexPath indexPathForItem:self.tag inSection:0]];
+}
 
 @end
