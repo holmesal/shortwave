@@ -21,5 +21,5 @@
 //debugging tap gestures
 //-(void)initializeDoubleTap;
 //-(void)initializeLongPress;
-//-(void)addTapDebugGestureIfNecessary;
+-(void)addTapDebugGestureIfNecessary;
 @end
