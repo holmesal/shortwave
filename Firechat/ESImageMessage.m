@@ -45,7 +45,6 @@
             if (gifSuffixRange.location != NSNotFound &&
                 gifSuffixRange.location + gifSuffixRange.length == src.length)
             {
-                NSLog(@"it's a giffy!");
                 isGif = YES;
             } else
             {

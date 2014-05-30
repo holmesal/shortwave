@@ -334,7 +334,8 @@
 // Called when a beacon region is entered
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
-    NSLog(@"Woke up via app delegate location manager callback");
+//    //errr not true... is printed all the time
+//    NSLog(@"Woke up via app delegate location manager callback");
 }
 
 

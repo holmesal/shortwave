@@ -8,17 +8,22 @@
 
 #import "ESImageLoader.h"
 #import "DiscardableImage.h"
-#import "UIImage+animatedGIF.h"
 #import "DataLoadingOperation.h"
+#import "AnimatedGif.h"
 
 @interface ESImageLoader ()
 @property (strong, nonatomic) NSCache *cache;
+
 @property (strong, nonatomic) NSOperationQueue *imageLoadingQueue;
+@property (strong, nonatomic) NSMutableDictionary *imageLoadingOperations;
+
 @end
 
 @implementation ESImageLoader
 @synthesize cache;
 @synthesize imageLoadingQueue;
+@synthesize imageLoadingOperations;
+
 
 static ESImageLoader *loader;
 
@@ -28,76 +33,110 @@ static ESImageLoader *loader;
     if (!loader)
     {
         loader = [[ESImageLoader alloc] init];
-        loader.cache = [[NSCache alloc] init];
-        loader.imageLoadingQueue = [[NSOperationQueue alloc] init];
-        [loader.imageLoadingQueue setMaxConcurrentOperationCount:5];
-        
     }
     return loader;
 }
 
--(void)loadImage:(NSURL*)url completionBlock:(void(^)(UIImage* image, NSURL *url, BOOL synchronous))completion isGif:(BOOL)_isGif//error:(void(^)(NSError *error))errorBlock
+-(id)init
+{
+    if (self = [super init])
+    {
+        cache = [[NSCache alloc] init];
+        imageLoadingQueue = [[NSOperationQueue alloc] init];
+        [imageLoadingQueue setMaxConcurrentOperationCount:5];
+        imageLoadingOperations = [[NSMutableDictionary alloc] init];
+    }
+    return self;
+}
+
+-(void)loadImage:(NSURL*)url completionBlock:(void(^)(id imageOrGif, NSURL *url, BOOL synchronous))completion
+     updateBlock:(void(^)(NSURL *url, float p) )progressBlock isGif:(BOOL)_isGif
 {
     DiscardableImage *discardableImage = [cache objectForKey:url];
     if ( discardableImage)
     {
-
-        completion(discardableImage.image, url, YES);
-
+        if ([discardableImage isGif])
+        {
+            completion(discardableImage.gif, url, YES);
+        } else
+        {
+            completion(discardableImage.image, url, YES);
+        }
     } else
     {
         __block BOOL isGif = _isGif;
         
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(SELF.url == %@)", url];
-        id result = [[imageLoadingQueue.operations filteredArrayUsingPredicate:predicate] lastObject];
+        id result = [imageLoadingOperations objectForKey:url];
         if (result)
         {
-//            NSLog(@"already loading this operation");
+            NSLog(@"already loading this operation %@", url.absoluteString);
             return;
         }
 
-        DataLoadingOperation *operation = [[DataLoadingOperation alloc] initWithUrl:url
-        completion:^(DataLoadingOperation *dlo)
+        DataLoadingOperation *operation = [[DataLoadingOperation alloc] initWithUrl:url progress:^(DataLoadingOperation *op)
         {
+            progressBlock(op.url, op.percent);
+        }];
+        [imageLoadingOperations setObject:operation forKey:url];
+        
+        
+        __weak DataLoadingOperation *weakOperation = operation;
+        [operation setCompletionBlock:^
+        {
+            NSData *data = weakOperation.receivedData;
+            NSLog(@"%d", data.length);
+
+            
+            
+            
             UIImage *img  = nil;
+            AnimatedGif *gif = nil;
             if (isGif)
             {
-                img = [UIImage animatedImageWithAnimatedGIFData:dlo.receivedData];
+                gif = [AnimatedGif getAnimationForGifWithData:data];
                 
             } else
             {
-                img = [UIImage imageWithData:dlo.receivedData];
+                img = [UIImage imageWithData:data];
             }
             dispatch_sync(dispatch_get_main_queue(), ^
             {
-                [cache setObject:[[DiscardableImage alloc] initWithImage:img]  forKey:dlo.url];
-                completion(img, dlo.url, NO);
+                DiscardableImage *discardableImage = nil;
+                if (img)
+                {
+                    discardableImage = [[DiscardableImage alloc] initWithImage:img];
+                } else
+                if (gif)
+                {
+                    discardableImage = [[DiscardableImage alloc] initWithGif:gif];
+                } else
+                {
+                    NSString *str = [NSString stringWithFormat:@"failed to get either gif or image data from a request: %@", url.absoluteString ];
+                    ESAssert(NO, str);
+                }
+                
+                [cache setObject:discardableImage  forKey:weakOperation.url];
+                id val = gif ? gif : img;
+                completion(val, weakOperation.url, NO);
             });
             
-        }
-        failure:^(DataLoadingOperation* dlo)
-        {
-            dispatch_sync(dispatch_get_main_queue(), ^
-            {
-                NSLog(@"failure! %@ : %@", dlo.url.absoluteString , dlo.error);
-                completion(nil, dlo.url, NO);
-            });
-        }
-        progress:^(DataLoadingOperation* dlo)
-        {
-            //not called
-//            NSLog(@"progress! %@ : %f", dlo.url.absoluteString , dlo.percent);
-        }
-        began:^(DataLoadingOperation *dlo)
-        {
-            dispatch_sync(dispatch_get_main_queue(), ^
-            {
-//                NSLog(@"began! %@ ", dlo.url.absoluteString );
-            });
+            [imageLoadingOperations removeObjectForKey:weakOperation.url];
+            
         }];
-        	
+        
+        
+        
         [imageLoadingQueue addOperation:operation];
+        
+//        NSLog(@"imageLoadingQueue Count = %d", imageLoadingQueue.operationCount);
     }
+}
+
+-(float)progressForImage:(NSURL *)url
+{
+    DataLoadingOperation *dlo = [imageLoadingOperations objectForKey:url];
+    float v = dlo ? dlo.percent : 0.0f;
+    return v;
 }
 
 /*        NSLog(@"Add Image to operation queue %@", url);
@@ -154,5 +193,16 @@ static ESImageLoader *loader;
     return size;
 }
 
+-(void)pauseOrUnpauseProcess:(NSURL*)url
+{
+    DataLoadingOperation *dlo = [imageLoadingOperations objectForKey:url];
+    if (!dlo)
+    {
+        NSLog(@"image is loaded, it can't be paused");
+    } else
+    {
+        
+    }
+}
 
 @end
