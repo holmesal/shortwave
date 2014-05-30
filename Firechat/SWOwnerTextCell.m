@@ -95,13 +95,13 @@
 //debug methods & | custom touches
 -(void)addTapDebugGestureIfNecessary
 {
-    if (!self.debugTap)
-    {
-        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
-//        if (self.doubleTap)
-//            [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
-        [self addGestureRecognizer:self.debugTap];
-    }
+//    if (!self.debugTap)
+//    {
+//        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
+////        if (self.doubleTap)
+////            [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
+//        [self addGestureRecognizer:self.debugTap];
+//    }
 }
 
 //-(void)initializeLongPress

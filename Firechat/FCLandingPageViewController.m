@@ -136,17 +136,9 @@ typedef enum
 
 -(void)reanimate
 {
-    NSLog(@"reanimate");
+
     [self.spinnerImageView.layer removeAllAnimations];
     
-//    [UIView animateWithDuration:40.0f
-//                          delay:0.0f
-//                        options:UIViewAnimationOptionRepeat | UIViewAnimationOptionCurveLinear
-//                     animations:^{
-//                         self.spinnerImageView.transform = CGAffineTransformMakeRotation(M_PI);
-//                     }
-//                     completion:nil
-//     ];
 
 
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"opacity"];

@@ -54,7 +54,6 @@
 
 - (void)setMessage:(FCMessage *)message
 {
-
     ownerID = message.ownerID;
     messageText.text = message.text;
 

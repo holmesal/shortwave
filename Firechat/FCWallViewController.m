@@ -22,6 +22,7 @@
 #import "ESImageLoader.h"
 #import "ESShortbotOverlay.h"
 #import "ESSpringFlowLayout.h"
+#import "AnimatedGif.h"
 
 #import "SWTextCell.h"
 #import "SWOwnerTextCell.h"
@@ -103,7 +104,7 @@
 @property (nonatomic) CGRect originalRectOfIcon;
 
 
-@property (strong, nonatomic) NSTimer *postToSelfTimer;
+//@property (strong, nonatomic) NSTimer *postToSelfTimer;
 
 @end
 
@@ -323,18 +324,18 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 
 
--(void)postSpam:(NSTimer*)timer
-{
-    
-    [self sendMessageAsSelf:@"shortbot image me dogsforarms"];
-}
+//-(void)postSpam:(NSTimer*)timer
+//{
+//    
+//    [self sendMessageAsSelf:@"shortbot image me dogsforarms"];
+//}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.postToSelfTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(postSpam:) userInfo:nil repeats:YES];
-    [[NSRunLoop mainRunLoop] addTimer:self.postToSelfTimer forMode:NSRunLoopCommonModes];
+//    self.postToSelfTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(postSpam:) userInfo:nil repeats:YES];
+//    [[NSRunLoop mainRunLoop] addTimer:self.postToSelfTimer forMode:NSRunLoopCommonModes];
     
     
     //compose bar is set to the subclass ESViewController, intialized from the nib
@@ -674,14 +675,15 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     tracking = Tracking;
     
-    for (UITableViewCell *messageCell in tableView.visibleCells)
+    
+    for (UICollectionViewCell *unknownTypeOfCell in wallCollectionView.visibleCells)
     {
-        if ([messageCell isKindOfClass:[FCMessageCell class]])
+        if ([unknownTypeOfCell isKindOfClass:[SWTextCell class]])
         {
-            FCMessageCell *fcMssageCell = (FCMessageCell*)messageCell;
-            BOOL isTracked = [self isUserBeingTracked:fcMssageCell.ownerID];
+            FCMessageCell *fcMessageCell = (FCMessageCell*)unknownTypeOfCell;
+            BOOL isTracked = [self isUserBeingTracked:fcMessageCell.ownerID];
             
-            [fcMssageCell setFaded:!isTracked animated:YES];
+            [fcMessageCell setFaded:!isTracked animated:YES];
         }
     }
 }
@@ -743,7 +745,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)setFirstSnapshotFromWall:(FDataSnapshot *)fSFW
 {
-    NSLog(@"firstSnapshotSet snapshot.name %@", fSFW.name);
     firstSnapshotFromWall = fSFW;
     
     FQuery *query = [self.wallRef queryEndingAtPriority:nil andChildName:fSFW.name];
@@ -781,10 +782,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [wall addObjectsFromArray:wallQueue];
         [wallQueue removeAllObjects];
         [wallCollectionView reloadData];
-        
+
         CGRect visibleRect = wallCollectionView.frame;
         visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
-        [wallCollectionView scrollRectToVisible:visibleRect animated:NO];
+        [wallCollectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+        
         
     }
 }
@@ -1025,33 +1027,63 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.tableView setContentInset:edgeInsets];
     [self.tableView setContentOffset:contentOffset];
 
-    
 }
 
 
 
-//-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-//{
-////    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
-//    
-//    if (scrollView == self.tableView && !decelerate)
-//    {
+-(void)collectionViewIsStopped
+{
+    for (UICollectionViewCell *cell in wallCollectionView.visibleCells)
+    {
+        if ([cell isKindOfClass:[SWImageCell class]])
+        {
+            SWImageCell *imageCell = (SWImageCell*)cell;
+            [imageCell showFingerAnimDelayed];
+        }
+    }
+}
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (scrollView == self.wallCollectionView)
+    {
+        for (UICollectionViewCell *cell in wallCollectionView.visibleCells)
+        {
+            if ([cell isKindOfClass:[SWImageCell class]])
+            {
+                SWImageCell *imageCell = (SWImageCell*)cell;
+                [imageCell invalidateShowFingerTimer];
+            }
+        }
+    }
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+//    NSLog(@"scrollViewDidEndDragging:willDecelerate:%d", decelerate);
+    
+    if (scrollView == self.wallCollectionView && !decelerate)
+    {
+        [self collectionViewIsStopped];
 //        [self ifTableViewIsNotAtBottomStartATimer];
-//    }
-//}
-//-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-//{
-////    NSLog(@"scrollViewDidEndDecelerating");
-//    [self ifTableViewIsNotAtBottomStartATimer];
-//}
-//-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-//{
-////    NSLog(@"scrollViewDidEndScrollingAnimation");
-//    if (scrollView == self.tableView)
-//    {
+    }
+}
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+//    NSLog(@"scrollViewDidEndDecelerating");
+    if (scrollView == self.wallCollectionView)
+    {
+        [self collectionViewIsStopped];
+    }
+}
+-(void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+//    NSLog(@"scrollViewDidEndScrollingAnimation");
+    if (scrollView == self.tableView)
+    {
+        [self collectionViewIsStopped];
 //        [self ifTableViewIsNotAtBottomStartATimer];
-//    }
-//}
+    }
+}
 
 -(void)ifTableViewIsNotAtBottomStartATimer
 {
@@ -1188,7 +1220,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)iconButtonAction:(UIButton*)iconButtonThe
 {
-    [self.postToSelfTimer invalidate];
+//    [self.postToSelfTimer invalidate];
     if (keyboardIsVisible)
     {
         [self.composeBarView.textView resignFirstResponder];
@@ -1347,23 +1379,27 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             ESImageMessage *imageMessage = unknownTypeOfMessage;
             
             SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-
-            [imageCell setImage:nil];
+            NSURL *imgUrl = [NSURL URLWithString:imageMessage.src];
+            float p = [[ESImageLoader sharedImageLoader] progressForImage:imgUrl];
+            
+            
+            [imageCell setImageNil];
             CGRect aTempRect = imageCell.frame;
             aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
             [imageCell setFrame:aTempRect];
             [imageCell setMessage:imageMessage]; //does everything short of loading an image.
             [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:self.wallCollectionView];
-            
+            [imageCell updateProgress:p]; //when fetched, it should display last percent for upload, or 0.
             /*
              * load image here
              */
-            [[ESImageLoader sharedImageLoader] loadImage:[NSURL URLWithString:imageMessage.src] completionBlock:^(UIImage *image, NSURL *url, BOOL synchronous)
-             {
+            [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
+            {
                  if (synchronous)
                  {
-                     BOOL isOversized = (image.size.height * 320/image.size.width > kMAX_IMAGE_HEIGHT);
-                     [imageCell setImage:image animated:NO isOversized:isOversized];
+                     CGSize size = imageMessage.size;
+                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+                     [imageCell setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
                  } else
                  {
                      NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
@@ -1388,21 +1424,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                                 
                                  if (retrievedImageCell)
                                  {
-                                     BOOL isOversized = (image.size.height * 320/image.size.width > kMAX_IMAGE_HEIGHT);
-                                     [retrievedImageCell setImage:image animated:YES isOversized:isOversized];
-                                     ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+                                     CGSize size = againmessage.size;
+                                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+                                     [retrievedImageCell setImageOrGif:imageOrGif animated:YES isOversized:isOversized];
                                      
-//                                     //animateChangeHeight block ran by transitionWithView
-//                                     void (^animateChangeHeight)() = ^()
-//                                     {
-//                                         CGRect frame = cell.frame;
-//                                         frame.size.height = 250;
-//                                         cell.frame = frame;
-//                                     };
-//                                     
-//                                     // Animate
-//                                     currentImageMessage.isExpanded = YES;
-//                                     [UIView transitionWithView:imageCell duration:0.6f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
+                                     ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+
                                      
                                  }
                                  break;
@@ -1410,7 +1437,34 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                          }
                      }//end of NSIndexPath visible loop
                  }
-             } isGif:imageMessage.isGif];
+             } updateBlock:^(NSURL *theUrl, float p)
+            {
+                NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+                for (NSIndexPath *idxPth in visibleIndexPaths)
+                {
+                    //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+                    id aMessage = [wall objectAtIndex:idxPth.row];
+                    if ([aMessage isKindOfClass:[ESImageMessage class]])
+                    {
+                        ESImageMessage *currMsg = aMessage;
+                        if ([theUrl.absoluteString isEqualToString:currMsg.src])
+                        {
+                            //                                 NSLog(@"%@", url.absoluteString);
+                            //                                 NSLog(@"%@", currentImageMessage.src);
+                            
+                            SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:idxPth];
+                            if (retrievedImageCell)
+                            {
+                                [retrievedImageCell updateProgress:p];
+                            }
+                            
+                            break;
+                        }
+                    }
+                }//end of NSIndexPath visible loop
+            
+             
+            } isGif:imageMessage.isGif];
             
             unknownCell = imageCell;
             
@@ -1430,6 +1484,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
             
             //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
             [textCell setMessage:textMessage];
+            
+            
+            //non animated refresh of cell's fadedState
+
+            BOOL isTracked = [self isUserBeingTracked:textCell.ownerID];
+            [textCell setFaded:!isTracked animated:NO];
             
             unknownCell = textCell;
         } else
@@ -1473,7 +1533,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     FCMessage *message = [wall objectAtIndex:indexPath.row];
     NSNumber *alpha = [NSNumber numberWithFloat:[wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha];
     NSLog(@"message = %@, icon = %@ color = %@. alpha = %@", message.text, message.icon, message.color, alpha);
-    [self.postToSelfTimer invalidate];
+//    [self.postToSelfTimer invalidate];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -1668,13 +1728,18 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)collectionView:(UICollectionView *)collectionView didLongPressDragItemAtIndexPath:(NSIndexPath*)indexPath
 {
-    NSLog(@"STATE CHANGED DRAGGE!");
+//    NSLog(@"STATE CHANGED DRAGGE!");
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
 //    NSLog(@"boop!");
-
+    id unknownMessage = [wall objectAtIndex:indexPath.row];
+    if ([unknownMessage isKindOfClass:[ESImageMessage class]])
+    {
+        ESImageMessage *imageMessage = unknownMessage;
+        [[ESImageLoader sharedImageLoader ] pauseOrUnpauseProcess:[NSURL URLWithString:imageMessage.src] ];
+    }
     
 //    [springFlowLayout invalidateLayout];
 //    __weak UICollectionViewCell *cell = imageCell;

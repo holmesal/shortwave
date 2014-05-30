@@ -100,11 +100,11 @@
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="Hello world" translatesAutoresizingMaskIntoConstraints="NO" id="LSb-91-EIH">
-                                                            <rect key="frame" x="69" y="11" width="236" height="40"/>
+                                                            <rect key="frame" x="69" y="11" width="236" height="44"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" constant="40" id="rV0-dW-g1k"/>
+                                                                <constraint firstAttribute="height" constant="44" id="rV0-dW-g1k"/>
                                                             </constraints>
                                                             <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
@@ -135,6 +135,17 @@
                                                             <rect key="frame" x="0.0" y="59" width="320" height="151"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <subviews>
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BVz-pw-b8P">
+                                                                    <rect key="frame" x="87" y="32" width="146" height="88"/>
+                                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                    <constraints>
+                                                                        <constraint firstAttribute="width" constant="146" id="A2b-LU-ezG"/>
+                                                                        <constraint firstAttribute="height" constant="88" id="Ow3-a4-yU2"/>
+                                                                    </constraints>
+                                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="54"/>
+                                                                    <color key="textColor" white="0.85999999999999999" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    <nil key="highlightedColor"/>
+                                                                </label>
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8ui-05-ws2">
                                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -163,25 +174,10 @@
                                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nei-Nw-xCK">
                                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="151"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <subviews>
-                                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sLg-vq-2IT">
-                                                                            <rect key="frame" x="135" y="51" width="50" height="50"/>
-                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                            <color key="backgroundColor" red="0.26955976279999999" green="0.6588235294" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                                            <constraints>
-                                                                                <constraint firstAttribute="width" constant="50" id="eN6-eO-Kb2"/>
-                                                                                <constraint firstAttribute="height" constant="50" id="pSP-G6-qNt"/>
-                                                                            </constraints>
-                                                                        </imageView>
-                                                                    </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                                    <constraints>
-                                                                        <constraint firstAttribute="centerX" secondItem="sLg-vq-2IT" secondAttribute="centerX" id="4eK-pV-4af"/>
-                                                                        <constraint firstAttribute="centerY" secondItem="sLg-vq-2IT" secondAttribute="centerY" constant="-0.5" id="ahx-bQ-F5w"/>
-                                                                    </constraints>
                                                                 </view>
                                                             </subviews>
-                                                            <color key="backgroundColor" red="0.94901967050000002" green="0.94901967050000002" blue="0.94901967050000002" alpha="1" colorSpace="deviceRGB"/>
+                                                            <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="centerX" secondItem="jrC-65-JFz" secondAttribute="centerX" id="1CA-h2-Av7"/>
                                                                 <constraint firstAttribute="bottom" secondItem="jrC-65-JFz" secondAttribute="bottom" constant="1" id="5Nt-vY-TTl"/>
@@ -189,8 +185,10 @@
                                                                 <constraint firstAttribute="centerX" secondItem="L84-gL-m1P" secondAttribute="centerX" id="Lmi-NX-9Ux"/>
                                                                 <constraint firstAttribute="centerY" secondItem="nei-Nw-xCK" secondAttribute="centerY" id="PLd-2p-adm"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="Wxr-t8-emV"/>
+                                                                <constraint firstAttribute="centerY" secondItem="BVz-pw-b8P" secondAttribute="centerY" constant="-0.5" id="XeF-It-Kvl"/>
                                                                 <constraint firstAttribute="width" secondItem="jrC-65-JFz" secondAttribute="width" id="Zr4-px-we2"/>
                                                                 <constraint firstItem="nei-Nw-xCK" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="bDk-Cn-Hhm"/>
+                                                                <constraint firstAttribute="centerX" secondItem="BVz-pw-b8P" secondAttribute="centerX" constant="-0.5" id="qYb-Ay-ndz"/>
                                                                 <constraint firstItem="8ui-05-ws2" firstAttribute="width" secondItem="PEM-gm-LfV" secondAttribute="width" id="uHP-WE-4j4"/>
                                                                 <constraint firstItem="nei-Nw-xCK" firstAttribute="height" secondItem="PEM-gm-LfV" secondAttribute="height" id="wyn-Rq-Vze"/>
                                                                 <constraint firstItem="L84-gL-m1P" firstAttribute="top" secondItem="PEM-gm-LfV" secondAttribute="top" id="xLB-BH-2A1"/>
@@ -219,6 +217,7 @@
                                                     <outlet property="imageView" destination="L84-gL-m1P" id="H8O-HS-1h6"/>
                                                     <outlet property="imageViewConstraintHeigt" destination="LlN-PD-8YB" id="2W9-bX-cDg"/>
                                                     <outlet property="oversizedOverlay" destination="nei-Nw-xCK" id="E9W-NF-7Sc"/>
+                                                    <outlet property="progressLabel" destination="BVz-pw-b8P" id="eo9-Uo-7Sl"/>
                                                     <outlet property="textLabel" destination="LSb-91-EIH" id="hRr-gL-5LS"/>
                                                 </connections>
                                             </collectionViewCell>
@@ -429,8 +428,8 @@
                                     <constraint firstAttribute="width" constant="320" id="z0H-Ek-aVA"/>
                                 </constraints>
                             </view>
-                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YjD-TY-2Ne" userLabel="Shortbot Overlay">
+                                <rect key="frame" x="-320" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3LV-xj-Ecd">

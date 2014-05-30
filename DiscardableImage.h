@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "AnimatedGif.h"
 
 @interface DiscardableImage : NSObject <NSDiscardableContent>
 
 @property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) AnimatedGif *gif;
 
 -(id)initWithImage:(UIImage*)daImage;
+-(id)initWithGif:(AnimatedGif*)daGif;
 
 
 - (BOOL)beginContentAccess;
@@ -21,5 +24,6 @@
 - (void)discardContentIfPossible;
 - (BOOL)isContentDiscarded;
 
+-(BOOL)isGif;
 
 @end

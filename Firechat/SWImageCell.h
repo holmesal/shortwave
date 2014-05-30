@@ -16,13 +16,18 @@
 @property (nonatomic, readonly, strong) NSString *ownerID; //for ease of blurring & lookup
 -(BOOL)hasImage;
 -(void)setMessage:(ESImageMessage*)message;
--(void)setImage:(UIImage *)image;
+-(void)setImageNil;
+
 -(void)resetWithImageSize:(CGSize)size;
--(void)setImage:(UIImage *)image animated:(BOOL)animated isOversized:(BOOL)ovrsz;
+-(void)setImageOrGif:(id)imageOrGif animated:(BOOL)animated isOversized:(BOOL)ovrsz;
 -(void)initializeTouchGesturesFromCollectionViewIfNecessary:(UICollectionView*)collectionView;
 -(UIImage*)getImage;
 
+-(void)showFingerAnimDelayed;
+-(void)invalidateShowFingerTimer;
+
 -(CGRect)imageViewRect;
+-(void)updateProgress:(float)p;
 
 #define SWImageCellIdentifier @"SWImageCell"
 

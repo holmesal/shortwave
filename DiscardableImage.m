@@ -18,6 +18,8 @@
 
 @implementation DiscardableImage
 @synthesize contentHasBeenAccessed;
+
+@synthesize gif;
 @synthesize image;
 
 -(id)initWithImage:(UIImage *)daImage
@@ -29,18 +31,32 @@
     }
     return self;
 }
+-(id)initWithGif:(AnimatedGif *)daGif
+{
+    if (self = [super init])
+    {
+        self.gif = daGif;
+        contentHasBeenAccessed = NO;
+    }
+    return self;
+}
 
 -(UIImage*)image
 {
     contentHasBeenAccessed = YES;
     return image;
 }
+-(AnimatedGif*)gif
+{
+    contentHasBeenAccessed = YES;
+    return gif;
+}
 
 #pragma mark NSDiscardableContent stuff
 
 - (BOOL)beginContentAccess
 {
-    return contentHasBeenAccessed && self.image;
+    return contentHasBeenAccessed && (image || gif);
 }
 - (void)endContentAccess
 {
@@ -55,9 +71,17 @@
 - (void)discardContentIfPossible
 {
     self.image = nil;
+    self.gif = nil;
 }
 - (BOOL)isContentDiscarded
 {
-    return (!self.image);
+    return (!image);
 }
+
+
+-(BOOL)isGif
+{
+    return gif ? YES : NO;
+}
+
 @end

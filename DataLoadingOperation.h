@@ -10,19 +10,22 @@
 
 @interface DataLoadingOperation : NSOperation
 
+
 @property (strong, nonatomic, readonly) NSURL *url;
 @property (strong, nonatomic, readonly) NSError *error;
 @property (assign, nonatomic, readonly) float percent;
 @property (strong, nonatomic, readonly) NSData *receivedData;
-@property (strong, nonatomic, readonly) NSURLResponse *response;
+@property (strong, nonatomic, readonly) NSHTTPURLResponse *response;
 @property (assign, nonatomic, readonly) BOOL wasCancelled;
 
 
--(id)initWithUrl:(NSURL *)theUrl
-      completion:(void(^)(DataLoadingOperation *this))completion
-         failure:(void(^)(DataLoadingOperation *this))failure
-        progress:(void(^)(DataLoadingOperation *this))progress
-           began:(void(^)(DataLoadingOperation *this))began;
+//-(id)initWithUrl:(NSURL *)theUrl
+//      completion:(void(^)(DataLoadingOperation *this))completionBlock
+//         failure:(void(^)(DataLoadingOperation *this))failureBlock
+//        progress:(void(^)(DataLoadingOperation *this))progressBlock
+//           began:(void(^)(DataLoadingOperation *this))beganBlock;
+
+-(id)initWithUrl:(NSURL *)theUrl progress:(void(^)(DataLoadingOperation *this))progressBlock;
 
 
 @end
