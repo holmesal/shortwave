@@ -26,6 +26,7 @@
 		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
 		AA51ED5D19384F1E00F27DF1 /* AnimatedGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED5A19384F1E00F27DF1 /* AnimatedGif.m */; };
 		AA51ED5E19384F1E00F27DF1 /* UIImageView+AnimatedGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED5C19384F1E00F27DF1 /* UIImageView+AnimatedGif.m */; };
+		AA51ED611939058900F27DF1 /* DataLoadingParcel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED601939058900F27DF1 /* DataLoadingParcel.m */; };
 		AA524845193683F700EE6F4B /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */; };
 		AA5248481936D99200EE6F4B /* finger-mask.png in Resources */ = {isa = PBXBuildFile; fileRef = AA5248461936D99100EE6F4B /* finger-mask.png */; };
 		AA5248491936D99200EE6F4B /* finger.png in Resources */ = {isa = PBXBuildFile; fileRef = AA5248471936D99100EE6F4B /* finger.png */; };
@@ -161,6 +162,8 @@
 		AA51ED5A19384F1E00F27DF1 /* AnimatedGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedGif.m; sourceTree = "<group>"; };
 		AA51ED5B19384F1E00F27DF1 /* UIImageView+AnimatedGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AnimatedGif.h"; sourceTree = "<group>"; };
 		AA51ED5C19384F1E00F27DF1 /* UIImageView+AnimatedGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AnimatedGif.m"; sourceTree = "<group>"; };
+		AA51ED5F1939058900F27DF1 /* DataLoadingParcel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoadingParcel.h; sourceTree = "<group>"; };
+		AA51ED601939058900F27DF1 /* DataLoadingParcel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataLoadingParcel.m; sourceTree = "<group>"; };
 		AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
 		AA5248461936D99100EE6F4B /* finger-mask.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "finger-mask.png"; sourceTree = "<group>"; };
 		AA5248471936D99100EE6F4B /* finger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = finger.png; sourceTree = "<group>"; };
@@ -455,12 +458,14 @@
 				AA51ED5A19384F1E00F27DF1 /* AnimatedGif.m */,
 				AA51ED5B19384F1E00F27DF1 /* UIImageView+AnimatedGif.h */,
 				AA51ED5C19384F1E00F27DF1 /* UIImageView+AnimatedGif.m */,
-				AA9D3151192A9712003D010F /* DataLoadingOperation.h */,
-				AA9D3152192A9712003D010F /* DataLoadingOperation.m */,
 				AA9D3153192A9712003D010F /* DiscardableImage.h */,
 				AA9D3154192A9712003D010F /* DiscardableImage.m */,
 				AA9D3155192A9712003D010F /* ESImageLoader.h */,
 				AA9D3156192A9712003D010F /* ESImageLoader.m */,
+				AA51ED5F1939058900F27DF1 /* DataLoadingParcel.h */,
+				AA51ED601939058900F27DF1 /* DataLoadingParcel.m */,
+				AA9D3151192A9712003D010F /* DataLoadingOperation.h */,
+				AA9D3152192A9712003D010F /* DataLoadingOperation.m */,
 			);
 			name = "image loader";
 			sourceTree = "<group>";
@@ -852,6 +857,7 @@
 				AA411B2119381DB10031100C /* ASIFormDataRequest.m in Sources */,
 				AA411B1D19381DB10031100C /* ASIAuthenticationDialog.m in Sources */,
 				AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */,
+				AA51ED611939058900F27DF1 /* DataLoadingParcel.m in Sources */,
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
 				AA9D31A4192AF10C003D010F /* SWImageCell.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,

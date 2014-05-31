@@ -12,11 +12,10 @@
 
 @interface DiscardableImage : NSObject <NSDiscardableContent>
 
-@property (strong, nonatomic) UIImage *image;
-@property (strong, nonatomic) AnimatedGif *gif;
-
--(id)initWithImage:(UIImage*)daImage;
--(id)initWithGif:(AnimatedGif*)daGif;
+@property (strong, nonatomic) id imageOrGif;
+//-(id)initWithImage:(UIImage*)daImage;
+//-(id)initWithGif:(AnimatedGif*)daGif;
+-(id)initWithImageOrGif:(id)imageOrGif isGif:(BOOL)isGif;
 
 
 - (BOOL)beginContentAccess;
@@ -24,6 +23,6 @@
 - (void)discardContentIfPossible;
 - (BOOL)isContentDiscarded;
 
--(BOOL)isGif;
+@property (assign, nonatomic, readonly) BOOL isGif;
 
 @end

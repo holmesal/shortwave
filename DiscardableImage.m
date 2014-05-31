@@ -19,44 +19,31 @@
 @implementation DiscardableImage
 @synthesize contentHasBeenAccessed;
 
-@synthesize gif;
-@synthesize image;
+@synthesize imageOrGif;
+@synthesize isGif;
 
--(id)initWithImage:(UIImage *)daImage
+-(id)initWithImageOrGif:(id)obj isGif:(BOOL)isGifff
 {
     if (self = [super init])
     {
-        self.image = daImage;
+        imageOrGif = obj;
+        isGif = isGifff;
         contentHasBeenAccessed = NO;
     }
     return self;
 }
--(id)initWithGif:(AnimatedGif *)daGif
+-(id)imageOrGif
 {
-    if (self = [super init])
-    {
-        self.gif = daGif;
-        contentHasBeenAccessed = NO;
-    }
-    return self;
+    contentHasBeenAccessed = YES;
+    return imageOrGif;
 }
 
--(UIImage*)image
-{
-    contentHasBeenAccessed = YES;
-    return image;
-}
--(AnimatedGif*)gif
-{
-    contentHasBeenAccessed = YES;
-    return gif;
-}
 
 #pragma mark NSDiscardableContent stuff
 
 - (BOOL)beginContentAccess
 {
-    return contentHasBeenAccessed && (image || gif);
+    return contentHasBeenAccessed && (imageOrGif);
 }
 - (void)endContentAccess
 {
@@ -70,18 +57,19 @@
 }
 - (void)discardContentIfPossible
 {
-    self.image = nil;
-    self.gif = nil;
+    imageOrGif = nil;
 }
 - (BOOL)isContentDiscarded
 {
-    return (!image);
+    return (!imageOrGif);
 }
 
 
--(BOOL)isGif
+
+
+-(void)dealloc
 {
-    return gif ? YES : NO;
+    NSLog(@"DiscardableImage");
 }
 
 @end

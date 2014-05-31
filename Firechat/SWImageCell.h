@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ESImageMessage.h"
 
-
+#import "AnimatedGif.h"
 
 @interface SWImageCell : UICollectionViewCell
 
@@ -21,7 +21,9 @@
 -(void)resetWithImageSize:(CGSize)size;
 -(void)setImageOrGif:(id)imageOrGif animated:(BOOL)animated isOversized:(BOOL)ovrsz;
 -(void)initializeTouchGesturesFromCollectionViewIfNecessary:(UICollectionView*)collectionView;
+
 -(UIImage*)getImage;
+-(AnimatedGif*)getAnimatedGif;
 
 -(void)showFingerAnimDelayed;
 -(void)invalidateShowFingerTimer;

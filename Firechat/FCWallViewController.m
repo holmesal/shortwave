@@ -22,7 +22,9 @@
 #import "ESImageLoader.h"
 #import "ESShortbotOverlay.h"
 #import "ESSpringFlowLayout.h"
+
 #import "AnimatedGif.h"
+#import "UIImageView+AnimatedGif.h"
 
 #import "SWTextCell.h"
 #import "SWOwnerTextCell.h"
@@ -1464,7 +1466,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                 }//end of NSIndexPath visible loop
             
              
-            } isGif:imageMessage.isGif];
+            } isGif:imageMessage.isGif withMetric:indexPath.row];
             
             unknownCell = imageCell;
             
@@ -1632,11 +1634,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    CALayer *maskLayer = self.maskLayer;// [imageView.layer mask];
 //    [maskLayer setFrame:CGRectMake(0, 0, cellRect.size.width, cellRect.size.height)];
 //
-//    
-    [imageView setImage:img];
-    CGSize imgSize = imageView.image.size;
+//
+    ESImageMessage *imageMessage = [wall objectAtIndex:indexPath.row];
+    if (imageMessage.isGif)
+    {
+        [imageView setAnimatedGif:[imageCell getAnimatedGif]];
+    } else
+    {
+        [imageView setImage:img];
+    }
+    
+//    [imageView setImage:img];
+    CGSize imgSize = imageMessage.size;
     NSLog(@"imgSize = %@", NSStringFromCGSize(imgSize));
-    CGSize fullImgSize = CGSizeMake(320, imageView.image.size.height*320/imageView.image.size.width);
+    CGSize fullImgSize = CGSizeMake(320, imgSize.height*320/imgSize.width);
     cellRect.size = fullImgSize;
     [imageView setFrame:cellRect];
 //

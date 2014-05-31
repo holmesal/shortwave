@@ -8,7 +8,6 @@
 //
 
 #import "SWImageCell.h"
-#import "AnimatedGif.h"
 #import "UIImageView+AnimatedGif.h"
 
 @interface SWImageCell()
@@ -80,6 +79,8 @@
     
 //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTap:)];
 //    [self addGestureRecognizer:tap];
+    
+    [progressLabel setTextColor:[UIColor redColor]];
     
     [super awakeFromNib];
 
@@ -287,7 +288,7 @@
 
 -(void)setImageOrGif:(id)imageOrGif animated:(BOOL)animated isOversized:(BOOL)ovrsz;
 {
-    
+    [self.imageView setHidden:NO];
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
         [fingerScene setHidden:YES];
@@ -435,6 +436,10 @@
     }
 }
 
+-(AnimatedGif*)getAnimatedGif
+{
+    return imageView.animatedGif;
+}
 -(UIImage*)getImage
 {
     return imageView.image;
@@ -442,7 +447,12 @@
 -(void)setImageNil
 {
 //    [self setImage:nil animated:NO isOversized:NO];
+    
     [self setImageOrGif:nil animated:NO isOversized:NO];
+//    [self.imageView setImage:nil];
+//    [self.imageView setAnimatedGif:nil];
+    [self.imageView setHidden:YES];
+
 }
 -(BOOL)hasImage
 {
