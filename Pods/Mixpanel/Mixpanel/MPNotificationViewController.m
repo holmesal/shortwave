@@ -1,3 +1,7 @@
+#if ! __has_feature(objc_arc)
+#error This file must be compiled with ARC. Either turn on ARC for the project or use -fobjc-arc flag on this file.
+#endif
+
 #import "MPNotificationViewController.h"
 
 #import "MPNotification.h"
@@ -24,7 +28,7 @@
 
 @end
 
-@interface GradientMaskLayer : CALayer {}
+@interface GradientMaskLayer : CAGradientLayer {}
 
 @end
 
@@ -226,7 +230,7 @@
         _touching = NO;
         CGPoint viewEnd = _imageView.layer.position;
         CGPoint viewDistance = CGPointMake(viewEnd.x - _viewStart.x, viewEnd.y - _viewStart.y);
-        CGFloat distance = sqrtf(viewDistance.x * viewDistance.x + viewDistance.y * viewDistance.y);
+        CGFloat distance = (CGFloat)sqrt(viewDistance.x * viewDistance.x + viewDistance.y * viewDistance.y);
         [UIView animateWithDuration:(distance / 500.0f) delay:0.0f options:UIViewAnimationOptionCurveEaseOut animations:^{
             _imageView.layer.position = _viewStart;
         } completion:nil];
@@ -327,12 +331,31 @@
 
     // Position body label
     CGSize constraintSize = CGSizeMake(self.view.frame.size.width - MPNotifHeight - 12.5f, CGFLOAT_MAX);
-    CGSize sizeToFit = [_bodyLabel.text
-                        sizeWithFont:_bodyLabel.font
-                                   constrainedToSize:constraintSize
-                                       lineBreakMode:_bodyLabel.lineBreakMode];
+    CGSize sizeToFit;
+    // Use boundingRectWithSize for iOS 7 and above, sizeWithFont otherwise.
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 70000
+    if ([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending) {
+        sizeToFit = [_bodyLabel.text boundingRectWithSize:constraintSize
+                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                               attributes:@{NSFontAttributeName: _bodyLabel.font}
+                                                  context:nil].size;
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated"
 
-    _bodyLabel.frame = CGRectMake(MPNotifHeight, ceilf((MPNotifHeight - sizeToFit.height) / 2.0f) - 2.0f, ceilf(sizeToFit.width), ceilf(sizeToFit.height));
+        sizeToFit = [_bodyLabel.text sizeWithFont:_bodyLabel.font
+                                constrainedToSize:constraintSize
+                                    lineBreakMode:_bodyLabel.lineBreakMode];
+
+#pragma clang diagnostic pop
+    }
+#else
+        sizeToFit = [_bodyLabel.text sizeWithFont:_bodyLabel.font
+                                constrainedToSize:constraintSize
+                                    lineBreakMode:_bodyLabel.lineBreakMode];
+#endif
+
+    _bodyLabel.frame = CGRectMake(MPNotifHeight, (CGFloat)ceil((MPNotifHeight - sizeToFit.height) / 2.0f) - 2.0f, (CGFloat)ceil(sizeToFit.width), (CGFloat)ceil(sizeToFit.height));
 }
 
 - (UIView *)getTopView
@@ -340,9 +363,11 @@
     UIView *topView = nil;
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     if(window) {
-        if(window.subviews.count > 0)
-        {
-            topView = [window.subviews objectAtIndex:0];
+        for (UIView *subview in window.subviews) {
+            if (!subview.hidden && subview.alpha > 0 && subview.frame.size.width > 0 && subview.frame.size.height > 0) {
+                topView = subview;
+                break;
+            }
         }
     }
     return topView;

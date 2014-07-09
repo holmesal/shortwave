@@ -18,7 +18,7 @@ NSString *const PHFComposeBarViewAnimationCurveUserInfoKey    = @"PHFComposeBarV
 
 
 CGFloat const kHorizontalSpacing          =  8.0f;
-CGFloat const kFontSize                   = 15.0f;
+CGFloat const kFontSize                   = 17.0f;
 CGFloat const kTextContainerTopMargin     =  8.0f;
 CGFloat const kTextContainerBottomMargin  =  8.0f;
 CGFloat const kTextContainerLeftPadding   =  3.0f;
@@ -32,8 +32,8 @@ CGFloat const kPlaceholderTopMargin       =  2.0f;
 CGFloat const kButtonHeight               = 26.0f;
 CGFloat const kButtonTouchableOverlap     =  6.0f;
 CGFloat const kButtonRightMargin          = -2.0f;
-CGFloat const kButtonBottomMargin         =  4.0f;
-CGFloat const kUtilityButtonWidth         = 30.0f;
+CGFloat const kButtonBottomMargin         =  8.0f;
+CGFloat const kUtilityButtonWidth         = 25.0f;
 CGFloat const kUtilityButtonHeight        = 25.0f;
 CGFloat const kUtilityButtonBottomMargin  =  9.0f;
 CGFloat const kCaretYOffset               =  7.0f;
@@ -304,7 +304,7 @@ static CGFloat kTextViewToSuperviewHeightDelta;
         [_button addTarget:self action:@selector(didPressButton) forControlEvents:UIControlEventTouchUpInside];
 
         UILabel *label = [_button titleLabel];
-        [label setFont:[UIFont fontWithName:@"Helvetica Neue Medium" size:15.0f]];
+        [label setFont:[UIFont boldSystemFontOfSize:kFontSize]];
     }
 
     return _button;
