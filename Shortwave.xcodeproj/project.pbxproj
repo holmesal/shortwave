@@ -67,7 +67,6 @@
 		AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */; };
 		AAE3744018DC098B006A9C82 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE3743F18DC098B006A9C82 /* CoreData.framework */; };
 		AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF40AC218F12FD6000526BE /* UIImage+Resize.m */; };
-		C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8318FF857500C8050B /* Firebase.framework */; };
 		C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */; };
 		C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8718FF877E00C8050B /* AdSupport.framework */; };
 		C0064BED192C48BA00877CDF /* ESShortbotOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */; };
@@ -103,6 +102,7 @@
 		C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C057427E187BA603002509DB /* CoreBluetooth.framework */; };
 		C05742E718831F73002509DB /* FCBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = C05742E618831F73002509DB /* FCBeacon.m */; };
 		C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */; };
+		C0583C15196CDA1300F45BEE /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0583C14196CDA1300F45BEE /* Firebase.framework */; };
 		C05E124B186D3B3600BA89EA /* FCPostMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */; };
 		C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */ = {isa = PBXBuildFile; fileRef = C05E124D186D3D5F00BA89EA /* FCUser.m */; };
 		C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A1FE18EF54C3000C9D3C /* CBCentralManager+Ext.m */; };
@@ -229,7 +229,6 @@
 		AAE3743F18DC098B006A9C82 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		AAF40AC118F12FD6000526BE /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
 		AAF40AC218F12FD6000526BE /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
-		C0032A8318FF857500C8050B /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Firebase.framework; sourceTree = "<group>"; };
 		C0032A8718FF877E00C8050B /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		C0064BEB192C48BA00877CDF /* ESShortbotOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESShortbotOverlay.h; sourceTree = "<group>"; };
@@ -279,6 +278,7 @@
 		C05742E618831F73002509DB /* FCBeacon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCBeacon.m; path = Firechat/FCBeacon.m; sourceTree = "<group>"; };
 		C05742EB188394C8002509DB /* FCSurroundingsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCSurroundingsTableViewController.h; path = Firechat/FCSurroundingsTableViewController.h; sourceTree = "<group>"; };
 		C05742EC188394C8002509DB /* FCSurroundingsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCSurroundingsTableViewController.m; path = Firechat/FCSurroundingsTableViewController.m; sourceTree = "<group>"; };
+		C0583C14196CDA1300F45BEE /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Firebase.framework; path = Pods/Firebase/Firebase.framework; sourceTree = "<group>"; };
 		C05E1249186D3B3600BA89EA /* FCPostMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCPostMessageViewController.h; path = Firechat/FCPostMessageViewController.h; sourceTree = "<group>"; };
 		C05E124A186D3B3600BA89EA /* FCPostMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCPostMessageViewController.m; path = Firechat/FCPostMessageViewController.m; sourceTree = "<group>"; };
 		C05E124C186D3D5F00BA89EA /* FCUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCUser.h; sourceTree = "<group>"; };
@@ -294,6 +294,7 @@
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		C0E6FE0A196CD4C300CFF724 /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
 		D45A069EAF964C748607E8B9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -309,7 +310,6 @@
 				C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */,
 				C0032A8C18FF89BD00C8050B /* libsqlite3.dylib in Frameworks */,
 				C020259318735B3D00883A38 /* Social.framework in Frameworks */,
-				C0032A8418FF857500C8050B /* Firebase.framework in Frameworks */,
 				C020259118735B3300883A38 /* Accounts.framework in Frameworks */,
 				AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */,
 				C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */,
@@ -318,6 +318,7 @@
 				C02CE396186808B000305FC9 /* Security.framework in Frameworks */,
 				AA524845193683F700EE6F4B /* FirebaseSimpleLogin.framework in Frameworks */,
 				C02CE3CE1868096600305FC9 /* libc++.dylib in Frameworks */,
+				C0583C15196CDA1300F45BEE /* Firebase.framework in Frameworks */,
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
@@ -576,6 +577,7 @@
 				C02CE38C186808B000305FC9 /* Frameworks */,
 				C02CE38B186808B000305FC9 /* Products */,
 				A23697464CBE4C1081D30A27 /* Pods.xcconfig */,
+				C0E6FE0A196CD4C300CFF724 /* Shortwave-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -592,10 +594,10 @@
 			isa = PBXGroup;
 			children = (
 				AA411B2819381EF20031100C /* libz.dylib */,
+				C0583C14196CDA1300F45BEE /* Firebase.framework */,
 				AA524844193683F700EE6F4B /* FirebaseSimpleLogin.framework */,
 				C0032A8B18FF89BD00C8050B /* libsqlite3.dylib */,
 				C0032A8718FF877E00C8050B /* AdSupport.framework */,
-				C0032A8318FF857500C8050B /* Firebase.framework */,
 				C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */,
 				AAA3779A18F87BBC00B70B00 /* MessageUI.framework */,
 				AAE3743F18DC098B006A9C82 /* CoreData.framework */,
@@ -1038,9 +1040,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/Firebase",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1054,6 +1060,7 @@
 				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
@@ -1065,6 +1072,8 @@
 				);
 				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1076,9 +1085,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Pods/Firebase",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Shortwave-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -1092,6 +1105,7 @@
 				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Pods/build/Debug-iphoneos",
@@ -1103,6 +1117,7 @@
 				);
 				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
