@@ -9,6 +9,14 @@
 import UIKit
 import Social
 
+//class ShareViewController {
+//    
+//    init() {
+//        println("hi there!")
+//    }
+//    
+//}
+
 class ShareViewController: SLComposeServiceViewController {
 
     override func isContentValid() -> Bool {

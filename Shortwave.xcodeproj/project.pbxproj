@@ -112,6 +112,11 @@
 		C0BB9F811970587400D024AC /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9F801970587400D024AC /* ShareViewController.swift */; };
 		C0BB9F831970587400D024AC /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BB9F821970587400D024AC /* MainInterface.storyboard */; };
 		C0BB9F861970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */; };
+		C0BB9F971970599600D024AC /* ShortwaveiOSFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = C0BB9F961970599600D024AC /* ShortwaveiOSFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C0BB9F9D1970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
+		C0BB9FA41970599600D024AC /* ShortwaveiOSFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9FA31970599600D024AC /* ShortwaveiOSFrameworkTests.swift */; };
+		C0BB9FA71970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
+		C0BB9FA81970599600D024AC /* ShortwaveiOSFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
@@ -138,6 +143,34 @@
 			remoteGlobalIDString = C0BB9F7B1970587400D024AC;
 			remoteInfo = ShortwaveShare;
 		};
+		C0BB9F9E1970599600D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F911970599600D024AC;
+			remoteInfo = ShortwaveiOSFramework;
+		};
+		C0BB9FA51970599600D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F911970599600D024AC;
+			remoteInfo = ShortwaveiOSFramework;
+		};
+		C0BB9FA91970599600D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F911970599600D024AC;
+			remoteInfo = ShortwaveiOSFramework;
+		};
+		C0BB9FB21970599800D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F911970599600D024AC;
+			remoteInfo = ShortwaveiOSFramework;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -150,6 +183,17 @@
 				C0BB9F861970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9FAE1970599700D024AC /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C0BB9FA81970599600D024AC /* ShortwaveiOSFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -326,6 +370,12 @@
 		C0BB9F7F1970587400D024AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0BB9F801970587400D024AC /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		C0BB9F821970587400D024AC /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
+		C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ShortwaveiOSFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0BB9F951970599600D024AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0BB9F961970599600D024AC /* ShortwaveiOSFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortwaveiOSFramework.h; sourceTree = "<group>"; };
+		C0BB9F9C1970599600D024AC /* ShortwaveiOSFrameworkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortwaveiOSFrameworkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0BB9FA21970599600D024AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0BB9FA31970599600D024AC /* ShortwaveiOSFrameworkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortwaveiOSFrameworkTests.swift; sourceTree = "<group>"; };
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -357,6 +407,7 @@
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
+				C0BB9FA71970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */,
 				C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */,
 				C02CE38E186808B000305FC9 /* Foundation.framework in Frameworks */,
 				14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */,
@@ -377,6 +428,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F8E1970599600D024AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F991970599600D024AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BB9F9D1970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -617,6 +683,8 @@
 				C02CE397186808B000305FC9 /* Firechat */,
 				C02CE3BB186808B000305FC9 /* FirechatTests */,
 				C0BB9F7D1970587400D024AC /* ShortwaveShare */,
+				C0BB9F931970599600D024AC /* ShortwaveiOSFramework */,
+				C0BB9FA01970599600D024AC /* ShortwaveiOSFrameworkTests */,
 				C02CE38C186808B000305FC9 /* Frameworks */,
 				C02CE38B186808B000305FC9 /* Products */,
 				A23697464CBE4C1081D30A27 /* Pods.xcconfig */,
@@ -630,6 +698,8 @@
 				C02CE38A186808B000305FC9 /* Shortwave.app */,
 				C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */,
 				C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */,
+				C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */,
+				C0BB9F9C1970599600D024AC /* ShortwaveiOSFrameworkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -742,7 +812,52 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C0BB9F931970599600D024AC /* ShortwaveiOSFramework */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9F961970599600D024AC /* ShortwaveiOSFramework.h */,
+				C0BB9F941970599600D024AC /* Supporting Files */,
+			);
+			path = ShortwaveiOSFramework;
+			sourceTree = "<group>";
+		};
+		C0BB9F941970599600D024AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9F951970599600D024AC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C0BB9FA01970599600D024AC /* ShortwaveiOSFrameworkTests */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9FA31970599600D024AC /* ShortwaveiOSFrameworkTests.swift */,
+				C0BB9FA11970599600D024AC /* Supporting Files */,
+			);
+			path = ShortwaveiOSFrameworkTests;
+			sourceTree = "<group>";
+		};
+		C0BB9FA11970599600D024AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9FA21970599600D024AC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		C0BB9F8F1970599600D024AC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BB9F971970599600D024AC /* ShortwaveiOSFramework.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		C02CE389186808B000305FC9 /* Shortwave */ = {
@@ -756,12 +871,15 @@
 				763DCE940D534E579150B7E1 /* Copy Pods Resources */,
 				C0E64E0B18FDECD900D05EDC /* ShellScript */,
 				C0BB9F8C1970587400D024AC /* Embed App Extensions */,
+				C0BB9FAE1970599700D024AC /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				C0BB9F851970587400D024AC /* PBXTargetDependency */,
 				C0BB9F881970587400D024AC /* PBXTargetDependency */,
+				C0BB9FA61970599600D024AC /* PBXTargetDependency */,
+				C0BB9FAA1970599600D024AC /* PBXTargetDependency */,
 			);
 			name = Shortwave;
 			productName = Firechat;
@@ -803,6 +921,43 @@
 			productReference = C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
+		C0BB9F911970599600D024AC /* ShortwaveiOSFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0BB9FAB1970599700D024AC /* Build configuration list for PBXNativeTarget "ShortwaveiOSFramework" */;
+			buildPhases = (
+				C0BB9F8D1970599600D024AC /* Sources */,
+				C0BB9F8E1970599600D024AC /* Frameworks */,
+				C0BB9F8F1970599600D024AC /* Headers */,
+				C0BB9F901970599600D024AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShortwaveiOSFramework;
+			productName = ShortwaveiOSFramework;
+			productReference = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		C0BB9F9B1970599600D024AC /* ShortwaveiOSFrameworkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0BB9FAF1970599700D024AC /* Build configuration list for PBXNativeTarget "ShortwaveiOSFrameworkTests" */;
+			buildPhases = (
+				C0BB9F981970599600D024AC /* Sources */,
+				C0BB9F991970599600D024AC /* Frameworks */,
+				C0BB9F9A1970599600D024AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C0BB9F9F1970599600D024AC /* PBXTargetDependency */,
+				C0BB9FB31970599800D024AC /* PBXTargetDependency */,
+			);
+			name = ShortwaveiOSFrameworkTests;
+			productName = ShortwaveiOSFrameworkTests;
+			productReference = C0BB9F9C1970599600D024AC /* ShortwaveiOSFrameworkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -828,6 +983,14 @@
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = SQ4LKA86HJ;
 					};
+					C0BB9F911970599600D024AC = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = SQ4LKA86HJ;
+					};
+					C0BB9F9B1970599600D024AC = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = C0BB9F911970599600D024AC;
+					};
 				};
 			};
 			buildConfigurationList = C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Shortwave" */;
@@ -846,6 +1009,8 @@
 				C02CE389186808B000305FC9 /* Shortwave */,
 				C02CE3B3186808B000305FC9 /* ShortwaveTests */,
 				C0BB9F7B1970587400D024AC /* ShortwaveShare */,
+				C0BB9F911970599600D024AC /* ShortwaveiOSFramework */,
+				C0BB9F9B1970599600D024AC /* ShortwaveiOSFrameworkTests */,
 			);
 		};
 /* End PBXProject section */
@@ -889,6 +1054,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0BB9F831970587400D024AC /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F901970599600D024AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F9A1970599600D024AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1023,6 +1202,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0BB9F8D1970599600D024AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F981970599600D024AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BB9FA41970599600D024AC /* ShortwaveiOSFrameworkTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1040,6 +1234,26 @@
 			isa = PBXTargetDependency;
 			target = C0BB9F7B1970587400D024AC /* ShortwaveShare */;
 			targetProxy = C0BB9F871970587400D024AC /* PBXContainerItemProxy */;
+		};
+		C0BB9F9F1970599600D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F911970599600D024AC /* ShortwaveiOSFramework */;
+			targetProxy = C0BB9F9E1970599600D024AC /* PBXContainerItemProxy */;
+		};
+		C0BB9FA61970599600D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F911970599600D024AC /* ShortwaveiOSFramework */;
+			targetProxy = C0BB9FA51970599600D024AC /* PBXContainerItemProxy */;
+		};
+		C0BB9FAA1970599600D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F911970599600D024AC /* ShortwaveiOSFramework */;
+			targetProxy = C0BB9FA91970599600D024AC /* PBXContainerItemProxy */;
+		};
+		C0BB9FB31970599800D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F911970599600D024AC /* ShortwaveiOSFramework */;
+			targetProxy = C0BB9FB21970599800D024AC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1319,6 +1533,104 @@
 			};
 			name = Release;
 		};
+		C0BB9FAC1970599700D024AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveiOSFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		C0BB9FAD1970599700D024AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveiOSFramework/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		C0BB9FB01970599700D024AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveiOSFrameworkTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C0BB9FB11970599700D024AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveiOSFrameworkTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1354,6 +1666,22 @@
 			buildConfigurations = (
 				C0BB9F891970587400D024AC /* Debug */,
 				C0BB9F8A1970587400D024AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C0BB9FAB1970599700D024AC /* Build configuration list for PBXNativeTarget "ShortwaveiOSFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0BB9FAC1970599700D024AC /* Debug */,
+				C0BB9FAD1970599700D024AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C0BB9FAF1970599700D024AC /* Build configuration list for PBXNativeTarget "ShortwaveiOSFrameworkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0BB9FB01970599700D024AC /* Debug */,
+				C0BB9FB11970599700D024AC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};

@@ -23,6 +23,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import <Crashlytics/Crashlytics.h>
 //#import <ESImageLoader/ESImagßeLoader.h>
+#import "Shortwave-Swift.h"
 
 
 @interface FCAppDelegate () <UIAlertViewDelegate, CLLocationManagerDelegate>
@@ -168,6 +169,10 @@
 
 - (void)attemptToStartBeacon
 {
+    
+    // Stub for new swift class
+    SWTransponderManager *mgr = [[SWTransponderManager alloc] init];
+    
     FCUser *owner = [FCUser owner];
     if (owner && owner.id) {
 //        NSLog(@"The user has an ID - starting the transponder!");
