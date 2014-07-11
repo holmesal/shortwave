@@ -109,6 +109,9 @@
 		C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A20018EF54C3000C9D3C /* CBPeripheralManager+Ext.m */; };
 		C070A20518EF54C3000C9D3C /* CBUUID+Ext.m in Sources */ = {isa = PBXBuildFile; fileRef = C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */; };
 		C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */ = {isa = PBXBuildFile; fileRef = C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */; };
+		C0BB9F811970587400D024AC /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9F801970587400D024AC /* ShareViewController.swift */; };
+		C0BB9F831970587400D024AC /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BB9F821970587400D024AC /* MainInterface.storyboard */; };
+		C0BB9F861970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */; };
 /* End PBXBuildFile section */
@@ -121,7 +124,35 @@
 			remoteGlobalIDString = C02CE389186808B000305FC9;
 			remoteInfo = Firechat;
 		};
+		C0BB9F841970587400D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F7B1970587400D024AC;
+			remoteInfo = ShortwaveShare;
+		};
+		C0BB9F871970587400D024AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C02CE382186808B000305FC9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0BB9F7B1970587400D024AC;
+			remoteInfo = ShortwaveShare;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C0BB9F8C1970587400D024AC /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C0BB9F861970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A23697464CBE4C1081D30A27 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
@@ -291,6 +322,10 @@
 		C070A20218EF54C3000C9D3C /* CBUUID+Ext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CBUUID+Ext.m"; sourceTree = "<group>"; };
 		C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESTransponder.h; sourceTree = "<group>"; };
 		C0ACBCB218EB6A2E00BBFCDF /* ESTransponder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESTransponder.m; sourceTree = "<group>"; };
+		C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = com.alonsoholmes.Shortwave.ShortwaveShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0BB9F7F1970587400D024AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0BB9F801970587400D024AC /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		C0BB9F821970587400D024AC /* MainInterface.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -335,6 +370,13 @@
 				C02CE3B6186808B000305FC9 /* XCTest.framework in Frameworks */,
 				C02CE3B8186808B000305FC9 /* UIKit.framework in Frameworks */,
 				C02CE3B7186808B000305FC9 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F791970587400D024AC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -574,6 +616,7 @@
 				AA2B98391900D625002C0BC7 /* icongradient.png */,
 				C02CE397186808B000305FC9 /* Firechat */,
 				C02CE3BB186808B000305FC9 /* FirechatTests */,
+				C0BB9F7D1970587400D024AC /* ShortwaveShare */,
 				C02CE38C186808B000305FC9 /* Frameworks */,
 				C02CE38B186808B000305FC9 /* Products */,
 				A23697464CBE4C1081D30A27 /* Pods.xcconfig */,
@@ -586,6 +629,7 @@
 			children = (
 				C02CE38A186808B000305FC9 /* Shortwave.app */,
 				C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */,
+				C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -680,6 +724,24 @@
 			path = Firechat/AsyncImageView;
 			sourceTree = "<group>";
 		};
+		C0BB9F7D1970587400D024AC /* ShortwaveShare */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9F801970587400D024AC /* ShareViewController.swift */,
+				C0BB9F821970587400D024AC /* MainInterface.storyboard */,
+				C0BB9F7E1970587400D024AC /* Supporting Files */,
+			);
+			path = ShortwaveShare;
+			sourceTree = "<group>";
+		};
+		C0BB9F7E1970587400D024AC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C0BB9F7F1970587400D024AC /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -693,10 +755,13 @@
 				C02CE388186808B000305FC9 /* Resources */,
 				763DCE940D534E579150B7E1 /* Copy Pods Resources */,
 				C0E64E0B18FDECD900D05EDC /* ShellScript */,
+				C0BB9F8C1970587400D024AC /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C0BB9F851970587400D024AC /* PBXTargetDependency */,
+				C0BB9F881970587400D024AC /* PBXTargetDependency */,
 			);
 			name = Shortwave;
 			productName = Firechat;
@@ -721,6 +786,23 @@
 			productReference = C02CE3B4186808B000305FC9 /* ShortwaveTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C0BB9F7B1970587400D024AC /* ShortwaveShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0BB9F8B1970587400D024AC /* Build configuration list for PBXNativeTarget "ShortwaveShare" */;
+			buildPhases = (
+				C0BB9F781970587400D024AC /* Sources */,
+				C0BB9F791970587400D024AC /* Frameworks */,
+				C0BB9F7A1970587400D024AC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShortwaveShare;
+			productName = ShortwaveShare;
+			productReference = C0BB9F7C1970587400D024AC /* com.alonsoholmes.Shortwave.ShortwaveShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -742,6 +824,10 @@
 					C02CE3B3186808B000305FC9 = {
 						TestTargetID = C02CE389186808B000305FC9;
 					};
+					C0BB9F7B1970587400D024AC = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = SQ4LKA86HJ;
+					};
 				};
 			};
 			buildConfigurationList = C02CE385186808B000305FC9 /* Build configuration list for PBXProject "Shortwave" */;
@@ -759,6 +845,7 @@
 			targets = (
 				C02CE389186808B000305FC9 /* Shortwave */,
 				C02CE3B3186808B000305FC9 /* ShortwaveTests */,
+				C0BB9F7B1970587400D024AC /* ShortwaveShare */,
 			);
 		};
 /* End PBXProject section */
@@ -794,6 +881,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				C02CE3C0186808B000305FC9 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0BB9F7A1970587400D024AC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BB9F831970587400D024AC /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -920,6 +1015,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0BB9F781970587400D024AC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0BB9F811970587400D024AC /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -927,6 +1030,16 @@
 			isa = PBXTargetDependency;
 			target = C02CE389186808B000305FC9 /* Shortwave */;
 			targetProxy = C02CE3B9186808B000305FC9 /* PBXContainerItemProxy */;
+		};
+		C0BB9F851970587400D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F7B1970587400D024AC /* ShortwaveShare */;
+			targetProxy = C0BB9F841970587400D024AC /* PBXContainerItemProxy */;
+		};
+		C0BB9F881970587400D024AC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0BB9F7B1970587400D024AC /* ShortwaveShare */;
+			targetProxy = C0BB9F871970587400D024AC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1165,6 +1278,47 @@
 			};
 			name = Release;
 		};
+		C0BB9F891970587400D024AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "com.alonsoholmes.Shortwave.$(TARGET_NAME:rfc1034identifier)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		C0BB9F8A1970587400D024AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = ShortwaveShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "com.alonsoholmes.Shortwave.$(TARGET_NAME:rfc1034identifier)";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1194,6 +1348,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		C0BB9F8B1970587400D024AC /* Build configuration list for PBXNativeTarget "ShortwaveShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0BB9F891970587400D024AC /* Debug */,
+				C0BB9F8A1970587400D024AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 
