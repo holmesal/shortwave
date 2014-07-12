@@ -114,13 +114,18 @@ static FCUser *currentUser;
             
             Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
             
+            // Let's start off with a spotify track
+            
             Firebase *one = [[wall childByAppendingPath:@"wall"] childByAutoId];
             [one setValue:@{@"color": @"292929" ,
                              @"icon":@"shortbot",
-                             @"type":@"link-app",
+                             @"type":@"spotify_track",
+                             @"text": @"shared a song with you:",
                              @"content":@{
-                                     @"text": @"shared a track with you on Spotify",
-                                     @"deeplink": @"spotify:track:0Qp37xG9JmlpYURi8xJl3E"
+                                    @"title":@"I Am A Hologram",
+                                    @"artist":@"Mister Heavenly",
+                                    @"uri":@"spotify:track:1OpkIbqR0fKlRSt33oiIGa",
+                                    @"album_image":@"https://i.scdn.co/image/31d501956beee416abc15c9d7709977afe473634"
                                      },
                              @"meta":@{@"ownerID":@"shortbot"}
                              }];
