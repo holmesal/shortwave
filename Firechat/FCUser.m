@@ -107,6 +107,64 @@ static FCUser *currentUser;
             [self postHello:@"You can see how many people are in range above."];
             [self postHello:@"Tap your icon in the upper right to change your icon/color."];
             [self postHello:@"That's it - have fun!"];
+            
+            
+            // Create a few dummy types of posts to show off the functionality of Shortwave
+            // Everthing is coming from Shortbot for now, to keep things simple-like
+            
+            Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
+            
+            Firebase *one = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            [one setValue:@{@"color": @"292929" ,
+                             @"icon":@"shortbot",
+                             @"type":@"link-app",
+                             @"content":@{
+                                     @"text": @"shared a track with you on Spotify",
+                                     @"deeplink": @"spotify:track:0Qp37xG9JmlpYURi8xJl3E"
+                                     },
+                             @"meta":@{@"ownerID":@"shortbot"}
+                             }];
+            [[one childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+            
+            // And now a gif
+            Firebase *two = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            [two setValue:@{@"color": @"292929" ,
+                             @"icon":@"shortbot",
+                             @"type":@"image",
+                             @"content":@{
+                                     @"src": @"http://i.imgur.com/cKLrCik.jpg"
+                                     },
+                             @"meta":@{@"ownerID":@"shortbot"}
+                             }];
+            [[two childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+            
+            // And finally an image
+            Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            [three setValue:@{@"color": @"292929" ,
+                             @"icon":@"shortbot",
+                             @"type":@"gif",
+                             @"content":@{
+                                     @"src": @"http://i.imgur.com/dupSbtr.gif"
+                                     },
+                             @"meta":@{@"ownerID":@"shortbot"}
+                             }];
+            [[three childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+            
+            // Oh yeah and a web link
+            Firebase *four = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            [four setValue:@{@"color": @"292929" ,
+                             @"icon":@"shortbot",
+                             @"type":@"link-web",
+                             @"content":@{
+                                     @"url":@"http://google.com",
+                                     @"title":@"Google - We're Not Evil, We Promise!",
+                                     @"description":@"Something awful."
+                                     },
+                             @"meta":@{@"ownerID":@"shortbot"}
+                             }];
+            [[four childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+            
+            
         }
     }
     
