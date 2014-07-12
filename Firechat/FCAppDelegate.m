@@ -171,12 +171,12 @@
 {
     
     // Stub for new swift class
-    SWTransponderManager *mgr = [[SWTransponderManager alloc] init];
+//    SWTransponderManager *mgr = [[SWTransponderManager alloc] init];
     
     FCUser *owner = [FCUser owner];
     if (owner && owner.id) {
 //        NSLog(@"The user has an ID - starting the transponder!");
-//        [owner.beacon startAwesome];
+        [owner.beacon startAwesome];
     }
 }
 

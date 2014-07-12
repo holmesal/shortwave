@@ -125,6 +125,7 @@
 		C0BB9FC71970785B00D024AC /* ShortwaveiOSFramework.framework in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */; };
+		C0E6E4341970EF6D006EEE68 /* regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6E4331970EF6D006EEE68 /* regex.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -410,6 +411,8 @@
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		C0E6E4331970EF6D006EEE68 /* regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = regex.swift; sourceTree = "<group>"; };
+		C0E6E4351970EFCF006EEE68 /* play.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = play.playground; sourceTree = "<group>"; };
 		C0E6FE0A196CD4C300CFF724 /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
 		D45A069EAF964C748607E8B9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -853,7 +856,9 @@
 			children = (
 				C0BB9FC01970706D00D024AC /* TestTransponder.swift */,
 				C0BB9F961970599600D024AC /* ShortwaveiOSFramework.h */,
+				C0E6E4331970EF6D006EEE68 /* regex.swift */,
 				C0BB9F941970599600D024AC /* Supporting Files */,
+				C0E6E4351970EFCF006EEE68 /* play.playground */,
 			);
 			path = ShortwaveiOSFramework;
 			sourceTree = "<group>";
@@ -1250,6 +1255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0BB9FC11970706D00D024AC /* TestTransponder.swift in Sources */,
+				C0E6E4341970EF6D006EEE68 /* regex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1445,7 +1451,7 @@
 					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
 				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1490,7 +1496,7 @@
 					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
 				);
 				INFOPLIST_FILE = "Firechat/Shortwave-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
