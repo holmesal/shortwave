@@ -20,6 +20,10 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>${CURRENT_PROJECT_VERSION}</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Detecting other Shortwave users</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Doing all the things</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
 </dict>

@@ -10,12 +10,19 @@
 // Specifically, UIApplication does not exist in the extension, so we're moving wakeup / sleep functionality out to here.
 
 import Foundation
+import CoreLocation
+import CoreBluetooth
+import ShortwaveiOSFramework
 
 @objc class SWTransponderManager : NSObject {
     
+//    let CentralManager: CBCentralManager
+    
     @objc init(){
         // Handle app sleep/wakeup
+        var trans = Transponder()
         println("hello there!")
+        trans.authorize()
     }
     
 }

@@ -8,16 +8,14 @@
 
 import UIKit
 import Social
+import ShortwaveiOSFramework
 
-//class ShareViewController {
-//    
-//    init() {
-//        println("hi there!")
-//    }
-//    
-//}
 
 class ShareViewController: SLComposeServiceViewController {
+    
+    override func presentationAnimationDidFinish() {
+        println("hi there!")
+    }
 
     override func isContentValid() -> Bool {
         // Do validation of contentText and/or NSExtensionContext attachments here
@@ -28,7 +26,12 @@ class ShareViewController: SLComposeServiceViewController {
         // This is called after the user selects Post. Do the upload of contentText and/or NSExtensionContext attachments.
     
         // Inform the host that we're done, so it un-blocks its UI. Note: Alternatively you could call super's -didSelectPost, which will similarly complete the extension context.
-        self.extensionContext.completeRequestReturningItems(nil, completionHandler: nil)
+        var trans = Transponder()
+        println("ok done")
+//        println(trans.description)
+        
+        
+//        self.extensionContext.completeRequestReturningItems(nil, completionHandler: nil)
     }
 
     override func configurationItems() -> AnyObject[]! {
