@@ -42,9 +42,12 @@ typedef enum
 @property (strong, nonatomic) NSString *ownerID;
 @property (strong, nonatomic) NSString *text;
 
+
+
 @property (assign, nonatomic) MessageModelType type;
 
 //for posting, use init to be safe that you've initialized all fields
 -(id)initWithIcon:(NSString*)icon color:(NSString*)color ownerID:(NSString*)ownerID text:(NSString*)text;
+-(void)postToAll;
 
 @end

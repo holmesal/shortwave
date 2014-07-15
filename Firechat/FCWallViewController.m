@@ -710,22 +710,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     __weak typeof(self) weakSelf = self;
     self.bindToWallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
     {
-        
-//        NSLog(@"b2w snapshot.priority %@", snapshot.priority);
-//        NSLog(@"b2w snapshot.name %@", snapshot.name);
-        
         if ([snapshot.value isKindOfClass:[NSDictionary class]])
         {
             if (!firstSnapshotFromWall)
-            {
                 self.firstSnapshotFromWall = snapshot;
-            }
             
-            id unknownTypeOfMessage = [self snapshotToMessage:snapshot];
+            //some kind of message model: image, gif, plain_text, spotify_track
+            MessageModel *messageModel = [MessageModel messageModelFromDictionary:snapshot.value];
 
-            if (unknownTypeOfMessage)
+            if (messageModel)
             {
-                [weakSelf addMessageToWallEventually:unknownTypeOfMessage];
+                [weakSelf addMessageToWallEventually:messageModel];
+            } else
+            {
+                NSLog(@"Could not find MessageModel for data : %@", snapshot.value);
             }
             
         }
@@ -734,15 +732,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         NSLog(@"error = %@", someError.localizedDescription);
     }];
     
-//    NSDate *date = [NSDate date];
-//    
-//    self.wallRefQueryDelete = [self.wallRef queryEndingAtPriority:[ummmm]];
-//    self.bindToWallHandleDelete = [self.wallRefQueryDelete observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snap)
-//    {
-//        [snap.ref removeValue];
-//    }];
-    
-//    wait here
 }
 
 
@@ -764,7 +753,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
 }
 //queue it in dat der wallQueue array until wallQueue reached maximum capacity then print in the event that.. just do it
--(void)addMessageToWallEventually:(id)unknownTypeOfMessage
+-(void)addMessageToWallEventually:(MessageModel*)messageModel
 {
     if (wallQueueInsertTimer)
     {
@@ -772,7 +761,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         wallQueueInsertTimer = nil;
     }
     
-    [wallQueue addObject:unknownTypeOfMessage];
+    [wallQueue addObject:messageModel];
     if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
     {
 //        NSLog(@"begin timer to insert animated");
@@ -799,7 +788,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
     NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
     int row = wall.count;
-    for (id msg in wallQueue)
+    for (int i = 0; i < wallQueue.count; i++)
     {
         [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
         row++;
@@ -856,36 +845,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
     }];
     
-}
-
-//helper method for inserting wallCollectionView
--(MessageModel*)snapshotToMessage:(FDataSnapshot*)snapshot
-{
-
-    //may be nil if it didn't match any.
-    MessageModel *model = [MessageModel messageModelFromDictionary:snapshot.value];
-    
-//    if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
-//    {
-//        
-//        MessageImage *img = [[MessageImage alloc] init];
-//        [img setData:(NSDictionary*)snapshot.value];
-//        
-////        ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
-////        unknownTypeOfMessage = imageMessage;
-//        
-//    }
-////    else
-////    if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
-////    {
-////        ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
-////        unknownTypeOfMessage = swapMsg;
-////    } else
-////    {
-////        FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
-////        unknownTypeOfMessage = fcMessage;
-////    }
-    return model;
 }
 
 
@@ -1796,3 +1755,34 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    [wallCollectionView performBatchUpdates:nil completion:nil];
 }
 @end
+
+
+////helper method for inserting wallCollectionView
+//-(MessageModel*)snapshotToMessage:(FDataSnapshot*)snapshot
+//{
+//
+//    //may be nil if it didn't match any.
+//    MessageModel *model = [MessageModel messageModelFromDictionary:snapshot.value];
+//
+////    if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
+////    {
+////
+////        MessageImage *img = [[MessageImage alloc] init];
+////        [img setData:(NSDictionary*)snapshot.value];
+////
+//////        ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
+//////        unknownTypeOfMessage = imageMessage;
+////
+////    }
+//////    else
+//////    if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
+//////    {
+//////        ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+//////        unknownTypeOfMessage = swapMsg;
+//////    } else
+//////    {
+//////        FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
+//////        unknownTypeOfMessage = fcMessage;
+//////    }
+//    return model;
+//}
