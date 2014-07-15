@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Buildco. All rights reserved.
 //
 
+#import "MessageModel.h"
 
 #import "FCWallViewController.h"
 #import "FCAppDelegate.h"
@@ -858,26 +859,33 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 //helper method for inserting wallCollectionView
--(id)snapshotToMessage:(FDataSnapshot*)snapshot
+-(MessageModel*)snapshotToMessage:(FDataSnapshot*)snapshot
 {
-    id unknownTypeOfMessage = nil;
+
+    //may be nil if it didn't match any.
+    MessageModel *model = [MessageModel messageModelFromDictionary:snapshot.value];
     
-    if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
-    {
-        ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
-        unknownTypeOfMessage = imageMessage;
-        
-    } else
-    if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
-    {
-        ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
-        unknownTypeOfMessage = swapMsg;
-    } else
-    {
-        FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
-        unknownTypeOfMessage = fcMessage;
-    }
-    return unknownTypeOfMessage;
+//    if ([snapshot.value objectForKey:@"type"] && ([[snapshot.value objectForKey:@"type"] rangeOfString:@"image"].location != NSNotFound))
+//    {
+//        
+//        MessageImage *img = [[MessageImage alloc] init];
+//        [img setData:(NSDictionary*)snapshot.value];
+//        
+////        ESImageMessage *imageMessage = [[ESImageMessage alloc] initWithSnapshot:snapshot];
+////        unknownTypeOfMessage = imageMessage;
+//        
+//    }
+////    else
+////    if ([[snapshot.value objectForKey:@"type"] isEqualToString:@"ESSwapUserStateMessage"])
+////    {
+////        ESSwapUserStateMessage *swapMsg = [[ESSwapUserStateMessage alloc] initWithSnapshot:snapshot];
+////        unknownTypeOfMessage = swapMsg;
+////    } else
+////    {
+////        FCMessage *fcMessage = [[FCMessage alloc] initWithSnapshot:snapshot];
+////        unknownTypeOfMessage = fcMessage;
+////    }
+    return model;
 }
 
 

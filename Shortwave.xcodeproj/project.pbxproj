@@ -38,6 +38,8 @@
 		AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
+		AA98A0181974C9030057460F /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A0171974C9030057460F /* MessageImage.m */; };
+		AA98A01B1974CA260057460F /* MessageSpotifyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */; };
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
 		AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3152192A9712003D010F /* DataLoadingOperation.m */; };
 		AA9D3158192A9712003D010F /* DiscardableImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3154192A9712003D010F /* DiscardableImage.m */; };
@@ -47,6 +49,8 @@
 		AA9D31A7192AF285003D010F /* SWTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D31A6192AF285003D010F /* SWTextCell.m */; };
 		AA9D31AA192AF90C003D010F /* SWOwnerTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */; };
 		AAA3779B18F87BBD00B70B00 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAA3779A18F87BBC00B70B00 /* MessageUI.framework */; };
+		AAAA35EF1974998700F4D03E /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA35EE1974998700F4D03E /* MessageModel.m */; };
+		AAAA35F21974A45700F4D03E /* MessageGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AAAA35F11974A45700F4D03E /* MessageGif.m */; };
 		AAC6506718FA00700010916D /* RadarView.m in Sources */ = {isa = PBXBuildFile; fileRef = AAC6506618FA00700010916D /* RadarView.m */; };
 		AAC6506A18FA15F60010916D /* message.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506818FA15F60010916D /* message.png */; };
 		AAC6506B18FA15F60010916D /* message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AAC6506918FA15F60010916D /* message@2x.png */; };
@@ -116,7 +120,6 @@
 		C0BB9F971970599600D024AC /* ShortwaveiOSFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = C0BB9F961970599600D024AC /* ShortwaveiOSFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0BB9F9D1970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
 		C0BB9FA41970599600D024AC /* ShortwaveiOSFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9FA31970599600D024AC /* ShortwaveiOSFrameworkTests.swift */; };
-		C0BB9FA71970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
 		C0BB9FA81970599600D024AC /* ShortwaveiOSFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		C0BB9FB8197059C400D024AC /* ESTransponder.h in Headers */ = {isa = PBXBuildFile; fileRef = C0ACBCB118EB6A2E00BBFCDF /* ESTransponder.h */; };
 		C0BB9FBD19705D5C00D024AC /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9FBC19705D5C00D024AC /* Firebase.framework */; };
@@ -287,6 +290,10 @@
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
 		AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCOwnerMessageCell.h; path = Firechat/FCOwnerMessageCell.h; sourceTree = "<group>"; };
 		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCOwnerMessageCell.m; path = Firechat/FCOwnerMessageCell.m; sourceTree = "<group>"; };
+		AA98A0161974C9030057460F /* MessageImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageImage.h; sourceTree = "<group>"; };
+		AA98A0171974C9030057460F /* MessageImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageImage.m; sourceTree = "<group>"; };
+		AA98A0191974CA260057460F /* MessageSpotifyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSpotifyTrack.h; sourceTree = "<group>"; };
+		AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSpotifyTrack.m; sourceTree = "<group>"; };
 		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		AA9D3151192A9712003D010F /* DataLoadingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoadingOperation.h; sourceTree = "<group>"; };
@@ -304,6 +311,10 @@
 		AA9D31A8192AF90C003D010F /* SWOwnerTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWOwnerTextCell.h; sourceTree = "<group>"; };
 		AA9D31A9192AF90C003D010F /* SWOwnerTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWOwnerTextCell.m; sourceTree = "<group>"; };
 		AAA3779A18F87BBC00B70B00 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		AAAA35ED1974998700F4D03E /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		AAAA35EE1974998700F4D03E /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		AAAA35F01974A45700F4D03E /* MessageGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGif.h; sourceTree = "<group>"; };
+		AAAA35F11974A45700F4D03E /* MessageGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageGif.m; sourceTree = "<group>"; };
 		AAC6506518FA00700010916D /* RadarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadarView.h; sourceTree = "<group>"; };
 		AAC6506618FA00700010916D /* RadarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadarView.m; sourceTree = "<group>"; };
 		AAC6506818FA15F60010916D /* message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = message.png; sourceTree = "<group>"; };
@@ -417,7 +428,6 @@
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		C0E6E4331970EF6D006EEE68 /* regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = regex.swift; sourceTree = "<group>"; };
 		C0E6E4351970EFCF006EEE68 /* play.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = play.playground; sourceTree = "<group>"; };
-		C0E6FE0A196CD4C300CFF724 /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
 		D45A069EAF964C748607E8B9 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -446,7 +456,6 @@
 				C057427F187BA603002509DB /* CoreBluetooth.framework in Frameworks */,
 				C057427D187BA5FE002509DB /* CoreLocation.framework in Frameworks */,
 				C02CE3CC1868095900305FC9 /* libicucore.dylib in Frameworks */,
-				C0BB9FA71970599600D024AC /* ShortwaveiOSFramework.framework in Frameworks */,
 				C02CE392186808B000305FC9 /* UIKit.framework in Frameworks */,
 				14DC052B221B47DD82AD6F81 /* libPods.a in Frameworks */,
 			);
@@ -523,7 +532,8 @@
 		AA1F2DEE18C3D9070087AAF7 /* models */ = {
 			isa = PBXGroup;
 			children = (
-				AA2F919919296235005081C4 /* messages */,
+				AA2F8C4A197390390091CC74 /* new messages */,
+				AA2F919919296235005081C4 /* old messages */,
 				C05E124C186D3D5F00BA89EA /* FCUser.h */,
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
 			);
@@ -559,7 +569,22 @@
 			name = viewcontrollers;
 			sourceTree = "<group>";
 		};
-		AA2F919919296235005081C4 /* messages */ = {
+		AA2F8C4A197390390091CC74 /* new messages */ = {
+			isa = PBXGroup;
+			children = (
+				AAAA35ED1974998700F4D03E /* MessageModel.h */,
+				AAAA35EE1974998700F4D03E /* MessageModel.m */,
+				AAAA35F01974A45700F4D03E /* MessageGif.h */,
+				AAAA35F11974A45700F4D03E /* MessageGif.m */,
+				AA98A0161974C9030057460F /* MessageImage.h */,
+				AA98A0171974C9030057460F /* MessageImage.m */,
+				AA98A0191974CA260057460F /* MessageSpotifyTrack.h */,
+				AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */,
+			);
+			name = "new messages";
+			sourceTree = "<group>";
+		};
+		AA2F919919296235005081C4 /* old messages */ = {
 			isa = PBXGroup;
 			children = (
 				C02CE3D9186814A700305FC9 /* FCMessage.h */,
@@ -569,7 +594,7 @@
 				AA2F919A19296263005081C4 /* ESImageMessage.h */,
 				AA2F919B19296263005081C4 /* ESImageMessage.m */,
 			);
-			name = messages;
+			name = "old messages";
 			sourceTree = "<group>";
 		};
 		AA411B0819381D6A0031100C /* asihttpreq */ = {
@@ -729,7 +754,6 @@
 				C02CE38C186808B000305FC9 /* Frameworks */,
 				C02CE38B186808B000305FC9 /* Products */,
 				A23697464CBE4C1081D30A27 /* Pods.xcconfig */,
-				C0E6FE0A196CD4C300CFF724 /* Shortwave-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1200,10 +1224,12 @@
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
 				AA9D31AA192AF90C003D010F /* SWOwnerTextCell.m in Sources */,
+				AA98A0181974C9030057460F /* MessageImage.m in Sources */,
 				AAF40AC318F12FD6000526BE /* UIImage+Resize.m in Sources */,
 				AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */,
 				C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */,
 				C0064BED192C48BA00877CDF /* ESShortbotOverlay.m in Sources */,
+				AA98A01B1974CA260057460F /* MessageSpotifyTrack.m in Sources */,
 				AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */,
 				AA51ED5D19384F1E00F27DF1 /* AnimatedGif.m in Sources */,
 				C070A20318EF54C3000C9D3C /* CBCentralManager+Ext.m in Sources */,
@@ -1221,6 +1247,7 @@
 				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,
+				AAAA35F21974A45700F4D03E /* MessageGif.m in Sources */,
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
 				AA51ED5E19384F1E00F27DF1 /* UIImageView+AnimatedGif.m in Sources */,
 				C05E124E186D3D5F00BA89EA /* FCUser.m in Sources */,
@@ -1237,6 +1264,7 @@
 				C05742E718831F73002509DB /* FCBeacon.m in Sources */,
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
+				AAAA35EF1974998700F4D03E /* MessageModel.m in Sources */,
 				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
 				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				AA2F919C19296263005081C4 /* ESImageMessage.m in Sources */,
@@ -1477,6 +1505,7 @@
 				);
 				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1522,6 +1551,7 @@
 				);
 				PRODUCT_NAME = Shortwave;
 				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -1533,6 +1563,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Firechat.app/Firechat";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1545,7 +1576,10 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "FirechatTests/ShortwaveTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = ShortwaveTests;
+				SWIFT_OBJC_BRIDGING_HEADER = "Firechat/ShortwaveTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -1556,6 +1590,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Firechat.app/Firechat";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1564,7 +1599,9 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Firechat/Firechat-Prefix.pch";
 				INFOPLIST_FILE = "FirechatTests/ShortwaveTests-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = ShortwaveTests;
+				SWIFT_OBJC_BRIDGING_HEADER = "Firechat/ShortwaveTests-Bridging-Header.h";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
