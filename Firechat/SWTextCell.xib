@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6154.21" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6153.13"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWTextCell" id="ovw-QC-w1m" customClass="SWTextCell">
+            <rect key="frame" x="0.0" y="284" width="320" height="74"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yXl-NJ-r9a">
+                        <rect key="frame" x="10" y="10" width="34" height="34"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X1i-tP-0Vc">
+                                <rect key="frame" x="6" y="6" width="23" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="23" id="AJV-VG-rFj"/>
+                                    <constraint firstAttribute="width" constant="23" id="x6B-iv-11R"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="34" id="73f-vI-yu6"/>
+                            <constraint firstAttribute="centerY" secondItem="X1i-tP-0Vc" secondAttribute="centerY" id="FJf-yj-Wik"/>
+                            <constraint firstAttribute="centerX" secondItem="X1i-tP-0Vc" secondAttribute="centerX" id="ae5-At-GDx"/>
+                            <constraint firstAttribute="height" constant="34" id="txy-xv-9kh"/>
+                        </constraints>
+                    </view>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S1x-dI-oeo">
+                        <rect key="frame" x="55" y="12" width="212" height="47"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                        <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            </view>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="yXl-NJ-r9a" firstAttribute="top" secondItem="ovw-QC-w1m" secondAttribute="top" constant="10" id="0x6-tS-OPV"/>
+                <constraint firstItem="S1x-dI-oeo" firstAttribute="leading" secondItem="ovw-QC-w1m" secondAttribute="leading" constant="55" id="LHo-Us-Xy6"/>
+                <constraint firstAttribute="trailing" secondItem="S1x-dI-oeo" secondAttribute="trailing" constant="53" id="PIB-24-wzx"/>
+                <constraint firstItem="S1x-dI-oeo" firstAttribute="top" secondItem="ovw-QC-w1m" secondAttribute="top" constant="12" id="oan-vy-MIx"/>
+                <constraint firstAttribute="bottom" secondItem="S1x-dI-oeo" secondAttribute="bottom" constant="15" id="pnw-Q6-xrf"/>
+                <constraint firstItem="yXl-NJ-r9a" firstAttribute="leading" secondItem="ovw-QC-w1m" secondAttribute="leading" constant="10" id="v3s-3K-Bq1"/>
+            </constraints>
+            <size key="customSize" width="320" height="74"/>
+            <connections>
+                <outlet property="iconImageView" destination="X1i-tP-0Vc" id="iHq-KE-MqS"/>
+                <outlet property="iconImageViewContainer" destination="yXl-NJ-r9a" id="RPG-MS-wsw"/>
+                <outlet property="messageText" destination="S1x-dI-oeo" id="OBH-lS-A5b"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

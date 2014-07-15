@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "FCMessage.h"
 
-@interface SWTextCell : UICollectionViewCell
+#import "MessageCell.h"
+
+@interface SWTextCell : MessageCell
 
 @property (nonatomic, readonly, strong) NSString *ownerID; //for ease of blurring & lookup
 //set message sets icon, color, text

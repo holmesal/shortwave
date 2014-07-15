@@ -140,11 +140,11 @@ static FCUser *currentUser;
             
             
             // Let's start off with a spotify track
-            
+/*
             Firebase *one = [[wall childByAppendingPath:@"wall"] childByAutoId];
             MessageSpotifyTrack *spotifyTrack = [[MessageSpotifyTrack alloc] initWithTitle:@"I am a Hologram" uri:@"spotify:track:1OpkIbqR0fKlRSt33oiIGa" artist:@"Mister Heavenly" albumImage:@"https://i.scdn.co/image/31d501956beee416abc15c9d7709977afe473634" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"shared a song with you:"];
             [one setValue:[spotifyTrack toDictionary]];
-            
+  */          
             
 //            [one setValue:@{@"color": @"292929" ,
 //                             @"icon":@"shortbot",
@@ -163,6 +163,7 @@ static FCUser *currentUser;
 
             
             // And finally an image
+            /*
             Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
             [three setValue:@{@"color": @"292929" ,
                              @"icon":@"shortbot",
@@ -173,6 +174,7 @@ static FCUser *currentUser;
                              @"meta":@{@"ownerID":@"shortbot"}
                              }];
             [[three childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+             */
             
 //            // Oh yeah and a web link
 //            Firebase *four = [[wall childByAppendingPath:@"wall"] childByAutoId];

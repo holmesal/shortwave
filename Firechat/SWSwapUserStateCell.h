@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "ESSwapUserStateMessage.h"
 
-@interface SWSwapUserStateCell : UICollectionViewCell
+#import "MessageCell.h"
+
+@interface SWSwapUserStateCell : MessageCell
 
 -(void)setMessage:(ESSwapUserStateMessage*)swapUserStateMessage;
 -(void)doFirstTimeAnimation;

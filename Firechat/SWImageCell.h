@@ -8,10 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ESImageMessage.h"
-
 #import "AnimatedGif.h"
 
-@interface SWImageCell : UICollectionViewCell
+#import "MessageCell.h"
+
+@interface SWImageCell : MessageCell
 
 @property (nonatomic, readonly, strong) NSString *ownerID; //for ease of blurring & lookup
 -(BOOL)hasImage;

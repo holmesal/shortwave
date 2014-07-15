@@ -40,6 +40,9 @@
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA98A0181974C9030057460F /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A0171974C9030057460F /* MessageImage.m */; };
 		AA98A01B1974CA260057460F /* MessageSpotifyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */; };
+		AA98A01F1974F0010057460F /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A01E1974F0010057460F /* MessageCell.m */; };
+		AA98A0211974F2E00057460F /* SWTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA98A0201974F2E00057460F /* SWTextCell.xib */; };
+		AA98A023197509330057460F /* SWImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA98A022197509320057460F /* SWImageCell.xib */; };
 		AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9A9A0618F3184B00A01BB3 /* Reachability.m */; };
 		AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3152192A9712003D010F /* DataLoadingOperation.m */; };
 		AA9D3158192A9712003D010F /* DiscardableImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9D3154192A9712003D010F /* DiscardableImage.m */; };
@@ -294,6 +297,10 @@
 		AA98A0171974C9030057460F /* MessageImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageImage.m; sourceTree = "<group>"; };
 		AA98A0191974CA260057460F /* MessageSpotifyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSpotifyTrack.h; sourceTree = "<group>"; };
 		AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSpotifyTrack.m; sourceTree = "<group>"; };
+		AA98A01D1974F0010057460F /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
+		AA98A01E1974F0010057460F /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
+		AA98A0201974F2E00057460F /* SWTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWTextCell.xib; sourceTree = "<group>"; };
+		AA98A022197509320057460F /* SWImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWImageCell.xib; sourceTree = "<group>"; };
 		AA9A9A0518F3184B00A01BB3 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA9A9A0618F3184B00A01BB3 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		AA9D3151192A9712003D010F /* DataLoadingOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataLoadingOperation.h; sourceTree = "<group>"; };
@@ -543,11 +550,14 @@
 		AA1F2DEF18C3D91A0087AAF7 /* views */ = {
 			isa = PBXGroup;
 			children = (
+				AA98A01C1974EF770057460F /* MessageCells */,
 				AA9D31A1192AF0DA003D010F /* collection view cells */,
 				AAC6506518FA00700010916D /* RadarView.h */,
 				AAC6506618FA00700010916D /* RadarView.m */,
 				AA69A5E818D7AD27000E6781 /* FCLiveBlurButton.h */,
 				AA69A5E918D7AD27000E6781 /* FCLiveBlurButton.m */,
+				C0064BEE192C5DE400877CDF /* ESCommandTableViewCell.h */,
+				C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */,
 			);
 			name = views;
 			sourceTree = "<group>";
@@ -669,6 +679,17 @@
 			name = extensions;
 			sourceTree = "<group>";
 		};
+		AA98A01C1974EF770057460F /* MessageCells */ = {
+			isa = PBXGroup;
+			children = (
+				AA98A0201974F2E00057460F /* SWTextCell.xib */,
+				AA98A022197509320057460F /* SWImageCell.xib */,
+				AA98A01D1974F0010057460F /* MessageCell.h */,
+				AA98A01E1974F0010057460F /* MessageCell.m */,
+			);
+			name = MessageCells;
+			sourceTree = "<group>";
+		};
 		AA9A9A0118F3166800A01BB3 /* services */ = {
 			isa = PBXGroup;
 			children = (
@@ -684,8 +705,6 @@
 		AA9D31A1192AF0DA003D010F /* collection view cells */ = {
 			isa = PBXGroup;
 			children = (
-				C0064BEE192C5DE400877CDF /* ESCommandTableViewCell.h */,
-				C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */,
 				AA9D31A2192AF10C003D010F /* SWImageCell.h */,
 				AA9D31A3192AF10C003D010F /* SWImageCell.m */,
 				AA9D31A8192AF90C003D010F /* SWOwnerTextCell.h */,
@@ -1114,9 +1133,11 @@
 				AA5248481936D99200EE6F4B /* finger-mask.png in Resources */,
 				AAC6506B18FA15F60010916D /* message@2x.png in Resources */,
 				AA2B983C1900E56A002C0BC7 /* radar.png in Resources */,
+				AA98A023197509330057460F /* SWImageCell.xib in Resources */,
 				AA2B983A1900D625002C0BC7 /* icongradient.png in Resources */,
 				AAC6506A18FA15F60010916D /* message.png in Resources */,
 				AAC6507218FA1E3D0010916D /* plug.png in Resources */,
+				AA98A0211974F2E00057460F /* SWTextCell.xib in Resources */,
 				AAC6507118FA1E3D0010916D /* cordmask.png in Resources */,
 				AA643414190105E400419043 /* plugline.png in Resources */,
 			);
@@ -1222,6 +1243,7 @@
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,
 				C0ACBCB318EB6A2E00BBFCDF /* ESTransponder.m in Sources */,
 				C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */,
+				AA98A01F1974F0010057460F /* MessageCell.m in Sources */,
 				C05742ED188394C8002509DB /* FCSurroundingsTableViewController.m in Sources */,
 				AA9D31AA192AF90C003D010F /* SWOwnerTextCell.m in Sources */,
 				AA98A0181974C9030057460F /* MessageImage.m in Sources */,

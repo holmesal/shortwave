@@ -27,6 +27,7 @@
 #import "AnimatedGif.h"
 #import "UIImageView+AnimatedGif.h"
 
+#import "MessageCell.h"
 #import "SWTextCell.h"
 #import "SWOwnerTextCell.h"
 #import "SWImageCell.h"
@@ -171,6 +172,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     wallCollectionView.delegate = self;
     wallCollectionView.dataSource = self;
+    [MessageCell registerCollectionViewCellsForCollectionView:wallCollectionView];
     wallCollectionView.alwaysBounceVertical = YES;
     [wallCollectionView setShowsVerticalScrollIndicator:NO];
     [wallCollectionView setBackgroundColor:[UIColor clearColor]];
@@ -1334,11 +1336,20 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UICollectionViewCell *otherCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
-//    return otherCell;
+
+    
     
     if (collectionView == wallCollectionView)
     {
+        MessageModel *messageModel = wall[indexPath.row];
+        MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath];
+        return messageCell;
+        
+        //
+        //
+        //
+        UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size , NO, [UIScreen mainScreen].scale);
+        
         
         id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
         UICollectionViewCell *unknownCell = nil;
@@ -1754,6 +1765,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    [wallCollectionView reloadData];
 //    [wallCollectionView performBatchUpdates:nil completion:nil];
 }
+
+
+
+
+
 @end
 
 
