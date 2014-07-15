@@ -28,17 +28,14 @@
 {
     if (self = [super initWithDictionary:dictionary])
     {
-        if (![self setDictionary:dictionary])
-        {
-            return nil;
-        }
+
     }
     return self;
 }
 
 -(BOOL)setDictionary:(NSDictionary *)dictionary
 {
-    BOOL succcess = YES;
+    BOOL succcess = [super setDictionary:dictionary];
     NSDictionary *content = dictionary[@"content"];
     /*
      @{

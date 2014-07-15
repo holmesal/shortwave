@@ -9,6 +9,11 @@
 
 #import "SWImageCell.h"
 #import "UIImageView+AnimatedGif.h"
+#import "MessageImage.h"
+
+#import "ESImageLoader.h"
+
+#define kMAX_IMAGE_HEIGHT 520/2.0f
 
 @interface SWImageCell()
 
@@ -80,7 +85,7 @@
 //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTap:)];
 //    [self addGestureRecognizer:tap];
     
-    [progressLabel setTextColor:[UIColor redColor]];
+//    [progressLabel setTextColor:[UIColor redColor]];
     
     [super awakeFromNib];
 
@@ -268,13 +273,14 @@
         
         NSArray *gestures = collectionView.gestureRecognizers;
         
-        
         [longPress requireGestureRecognizerToFail:gestures.firstObject];
         [oversizedOverlay addGestureRecognizer:longPress];
     }
 }
+
 -(void)setMessage:(ESImageMessage*)message
 {
+    NSAssert(NO, @"set content using setModel:");
     self.didShowFingerAnim = NO;
     textLabel.text = message.text;
     [iconImageView setImage:[UIImage imageNamed:message.icon]];
@@ -283,7 +289,18 @@
     ownerID = message.ownerID;
     
     [self resetWithImageSize:message.size];
+}
 
+-(void)setModel:(MessageImage *)model
+{
+    self.didShowFingerAnim = NO;
+    textLabel.text = model.text;
+    [iconImageView setImage:[UIImage imageNamed:model.icon]];
+    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
+    ownerID = model.ownerID;
+    [self resetWithImageSize:model.size];
+    
+    super.model = model;
 }
 
 -(void)setImageOrGif:(id)imageOrGif animated:(BOOL)animated isOversized:(BOOL)ovrsz;
@@ -446,6 +463,7 @@
 }
 -(void)setImageNil
 {
+    NSAssert(NO, @"not calleda anymore");
 //    [self setImage:nil animated:NO isOversized:NO];
     
     [self setImageOrGif:nil animated:NO isOversized:NO];
@@ -473,8 +491,105 @@
 {
     
     [self.progressLabel setText:[NSString stringWithFormat:@"%.f", p*100]];
-
     
+}
+
+
++(CGFloat)heightWithMessageModel:(MessageImage *)messageModel //collectionView:(UICollectionView *)collectionView
+{
+    CGSize imgSize = messageModel.size;
+    static float topImgOffset = 59;
+    CGFloat height = topImgOffset + imgSize.height*320/imgSize.width;
+    
+    if (height > topImgOffset+kMAX_IMAGE_HEIGHT)
+    {
+        
+        height = 380/2.0f;
+    }
+    return height;
+}
+
+-(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageImage*)imageMessage collectionView:(UICollectionView*)wallCollectionView wall:(NSArray*)wall andIndexPath:(NSIndexPath*)indexPath;
+{
+    NSURL *imgUrl = [NSURL URLWithString:imageUrlString];
+    
+    BOOL isGif = ![imageMessage isKindOfClass:[MessageImage class]];
+    
+    NSLog(@"url = %@", imgUrl);
+    NSLog(@"imageUrlString = %@", imageUrlString);
+    
+    [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
+     {
+         if (synchronous)
+         {
+             CGSize size = imageMessage.size;
+             BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+             [imageCell setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
+         } else
+         {
+             NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+             for (NSIndexPath *currentIndexPath in visibleIndexPaths)
+             {
+                 //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+                 MessageModel *aMessage = (MessageModel *)[wall objectAtIndex:currentIndexPath.row];
+                 if ([aMessage isKindOfClass:[MessageImage class]])
+                 {
+                     MessageImage *currentImageMessage = (MessageImage*)aMessage;
+                     if ([url.absoluteString isEqualToString:currentImageMessage.src])
+                     {
+                         //                                 NSLog(@"%@", url.absoluteString);
+                         //                                 NSLog(@"%@", currentImageMessage.src);
+                         
+                         SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
+                         MessageImage *againmessage = (MessageImage*)[wall objectAtIndex:currentIndexPath.row];
+                         //                                 NSLog(@"againMessage = %@", againmessage.src);
+                         //ready to animate also invalidate layout for increased width
+                         //                                [springFlowLayout invalidateLayout];
+                         //                                 __weak UICollectionViewCell *cell = imageCell;
+                         
+                         if (retrievedImageCell)
+                         {
+                             CGSize size = againmessage.size;
+                             BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+                             [retrievedImageCell setImageOrGif:imageOrGif animated:YES isOversized:isOversized];
+                             
+                             ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+                             
+                             
+                         }
+                         break;
+                     }
+                 }
+             }//end of NSIndexPath visible loop
+         }
+     } updateBlock:^(NSURL *theUrl, float p)
+     {
+         NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+         for (NSIndexPath *idxPth in visibleIndexPaths)
+         {
+             //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+             MessageModel *aMessage = (MessageModel *)[wall objectAtIndex:idxPth.row];
+             if ([aMessage isKindOfClass:[MessageImage class]])
+             {
+                 MessageImage *currMsg = (MessageImage*)aMessage;
+                 if ([theUrl.absoluteString isEqualToString:currMsg.src])
+                 {
+                     //                                 NSLog(@"%@", url.absoluteString);
+                     //                                 NSLog(@"%@", currentImageMessage.src);
+                     
+                     SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:idxPth];
+                     if (retrievedImageCell)
+                     {
+                         [retrievedImageCell updateProgress:p];
+                     }
+                     
+                     break;
+                 }
+             }
+         }//end of NSIndexPath visible loop
+         
+         
+     } isGif:isGif withMetric:indexPath.row];
 }
 
 @end

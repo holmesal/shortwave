@@ -117,12 +117,11 @@ static FCUser *currentUser;
             // Everthing is coming from Shortbot for now, to keep things simple-like
             
             Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
-            
             // And now a gif
             Firebase *two = [[wall childByAppendingPath:@"wall"] childByAutoId];
             
-            MessageImage *messageImage = [[MessageImage alloc] initWithSrc:@"http://i.imgur.com/cKLrCik.jpg" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@""];
-            [two setValue:[messageImage toDictionary]];
+            MessageImage *messageImage = [[MessageImage alloc] initWithSrc:@"http://i.imgur.com/cKLrCik.jpg" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"" width:@480 height:@455];
+            [two setValue:[messageImage toDictionary] ];
 
 //            [two setValue:@{@"color": @"292929" ,
 //                            @"icon":@"shortbot",
@@ -140,11 +139,12 @@ static FCUser *currentUser;
             
             
             // Let's start off with a spotify track
-/*
+            
+
             Firebase *one = [[wall childByAppendingPath:@"wall"] childByAutoId];
             MessageSpotifyTrack *spotifyTrack = [[MessageSpotifyTrack alloc] initWithTitle:@"I am a Hologram" uri:@"spotify:track:1OpkIbqR0fKlRSt33oiIGa" artist:@"Mister Heavenly" albumImage:@"https://i.scdn.co/image/31d501956beee416abc15c9d7709977afe473634" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"shared a song with you:"];
             [one setValue:[spotifyTrack toDictionary]];
-  */          
+          
             
 //            [one setValue:@{@"color": @"292929" ,
 //                             @"icon":@"shortbot",
@@ -175,6 +175,10 @@ static FCUser *currentUser;
                              }];
             [[three childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
              */
+            Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            MessageGif *messageGif = [[MessageGif alloc] initWithSrc:@"http://i.imgur.com/dupSbtr.gif" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"" width:@400 height:@300];
+            [three setValue:[messageGif toDictionary]];
+            
             
 //            // Oh yeah and a web link
 //            Firebase *four = [[wall childByAppendingPath:@"wall"] childByAutoId];

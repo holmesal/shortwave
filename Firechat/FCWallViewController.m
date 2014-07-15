@@ -1338,17 +1338,17 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
 
     
-    
     if (collectionView == wallCollectionView)
     {
         MessageModel *messageModel = wall[indexPath.row];
-        MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath];
-        return messageCell;
+        MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWall:wall];
         
-        //
-        //
-        //
-        UIGraphicsBeginImageContextWithOptions([UIScreen mainScreen].bounds.size , NO, [UIScreen mainScreen].scale);
+        CGRect aTempRect = messageCell.frame;
+        aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
+        [messageCell setFrame:aTempRect];
+        
+        return messageCell;
+
         
         
         id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
@@ -1417,7 +1417,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
                          }
                      }//end of NSIndexPath visible loop
                  }
-             } updateBlock:^(NSURL *theUrl, float p)
+            } updateBlock:^(NSURL *theUrl, float p)
             {
                 NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
                 for (NSIndexPath *idxPth in visibleIndexPaths)
@@ -1502,7 +1502,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
 
         unknownCell.tag = indexPath.row;
-//        [unknownCell setBackgroundColor:[UIColor clearColor]];
         
         return unknownCell;
     }
@@ -1513,11 +1512,16 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     FCMessage *message = [wall objectAtIndex:indexPath.row];
     NSNumber *alpha = [NSNumber numberWithFloat:[wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha];
     NSLog(@"message = %@, icon = %@ color = %@. alpha = %@", message.text, message.icon, message.color, alpha);
-//    [self.postToSelfTimer invalidate];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
+//    NSLog(@"height = %f", height);
+    return CGSizeMake(320, height);
+    
+    
     id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
     CGSize size = CGSizeZero;
     if ([unknownTypeOfMessage isKindOfClass:[FCMessage class] ])
@@ -1574,11 +1578,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         [imageView setContentMode:UIViewContentModeScaleToFill];
         imageView.tag = 5;
         
-//        CALayer *maskLayer = [CALayer layer];
-//        [maskLayer setAnchorPoint:CGPointMake(0, 0)];
-//        maskLayer.backgroundColor = [UIColor whiteColor].CGColor;
-//        [imageView.layer setMask:maskLayer];
-//        self.maskLayer = maskLayer;
         [fullScreenImageView addSubview:imageView];
     }
     
@@ -1660,8 +1659,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         
 //        [CATransaction begin];
 //        [CATransaction setDisableActions: NO];
-//        
 //        [CATransaction commit];
+        
     }];
     
     

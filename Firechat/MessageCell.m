@@ -12,11 +12,23 @@
 #import "SWImageCell.h"
 #import "SWTextCell.h"
 
+#import "ESImageLoader.h"
+#import "MessageImage.h"
+#import "SWSpotifyTrackCell.h"
+
+
 @implementation MessageCell
+
+@synthesize model;
+
++(NSArray*)cellIds
+{
+    return @[SWTextCellIdentifier, SWImageCellIdentifier, SWSpotifyTrackCellIdentifier];
+}
 
 +(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView
 {
-    NSArray *cellIds = @[SWTextCellIdentifier, SWImageCellIdentifier];
+    NSArray *cellIds = [MessageCell cellIds];
     
     for (NSString *cellId in cellIds)
     {
@@ -26,42 +38,41 @@
 
 }
 
-+(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath
++(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath andWall:(NSArray*)wall;
 {
-    
+    MessageCell *messageCell = nil;
     switch (messageModel.type)
     {
         case MessageModelTypePlainText:
         {//no owner differentiation
             
-            
-            
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
-            return textCell;
-            
-            NSLog(@"textCell = %@", textCell);
-            
+            messageCell = textCell;
+        
         }
         break;
         
         case MessageModelTypeImage:
         {
-            NSLog(@"MessageModelTypeImage");
-            
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-            return imageCell;
+            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
+            messageCell = imageCell;
+            
         }
         break;
         
         case MessageModelTypeGif:
         {
-            NSLog(@"MessageModelTypeGif");
+            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
+            messageCell = imageCell;
         }
         break;
         
         case MessageModelTypeSpotifyTrack:
         {
-            NSLog(@"MessageModelTypeSpotifyTrack");
+            SWSpotifyTrackCell *spotifyTrackCell = (SWSpotifyTrackCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWSpotifyTrackCellIdentifier forIndexPath:indexPath];
+            messageCell = spotifyTrackCell;
         }
         break;
             
@@ -92,18 +103,122 @@
         default:
         {
             NSLog(@"NONE!");
-            return nil;
+
         }
         break;
     }
+    //should always be non nil
+    [messageCell setModel:messageModel];
     
-    return nil;
+    return messageCell;
 
 }
 
--(void)setMessageModel:(MessageModel*)messageModel
+
+
+
+//BOOL hasCalculatedHeights;
++(CGFloat)heightOfMessageCellForModel:(MessageModel*)messageModel collectionView:(UICollectionView*)collectionView
 {
+    CGFloat height = 0;
+    
+//    if (!hasCalculatedHeights)
+//    {
+//        hasCalculatedHeights = YES;
+//        for (NSString* cellId in [MessageCell cellIds])
+//        {
+//            //to initialize fonts and other things specified by xib, ensure fonts and frames & static values are initialized.
+//            UITableViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellId forIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+//            [cell setFrame:CGRectMake(0, 0, 320, 100)];
+//        }
+//    }
+    
+    switch (messageModel.type)
+    {
+        
+        
+        case MessageModelTypePlainText:
+        {
+            height = [SWTextCell heightWithMessageModel:messageModel];
+        }
+            break;
+            
+        case MessageModelTypeImage:
+        {
+            height = [SWImageCell heightWithMessageModel:messageModel];
+        }
+            break;
+            
+        case MessageModelTypeGif:
+        {
+            height = [SWImageCell heightWithMessageModel:messageModel];
+        }
+            break;
+            
+        case MessageModelTypeSpotifyTrack:
+        {
+            height = [SWSpotifyTrackCell heightWithMessageModel:messageModel];
+        }
+            break;
+            
+        case MessageModelTypeLinkWeb:
+        {
+            NSLog(@"MessageModelTypeLinkWeb");
+        }
+            break;
+            
+        case MessageModelTypePersonalPhoto:
+        {
+            NSLog(@"MessageModelTypePersonalPhoto");
+        }
+            break;
+            
+        case MessageModelTypePersonalVideo:
+        {
+            NSLog(@"MessageModelTypePersonalVideo");
+        }
+            break;
+            
+        case MessageModelTypeYoutubeVideo:
+        {
+            NSLog(@"MessageModelTypeYoutubeVideo");
+        }
+            break;
+            
+        default:
+            break;
+    }
+
+    
+    
+    return height;
     
 }
+
+//fill data, reset content & 
+-(void)setModel:(MessageModel*)messageModel
+{
+    model = messageModel;
+}
+
+
+//programmatic counterpart ot resize logic
++(CGFloat)heightWithMessageModel:(MessageModel*)model
+{
+
+    NSString *text = model.text;
+    
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
+                                         @{ NSFontAttributeName: font }] ;
+    
+    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    
+    size.height = (12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
+    
+    return size.height;
+}
+
+
 
 @end

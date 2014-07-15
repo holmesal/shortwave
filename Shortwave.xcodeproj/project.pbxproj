@@ -67,6 +67,9 @@
 		AADAB29F18F62C5F00E61579 /* Phone-cord-export-03.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29C18F62C5F00E61579 /* Phone-cord-export-03.png */; };
 		AADAB2A018F62C5F00E61579 /* Phone-cord-export-04.png in Resources */ = {isa = PBXBuildFile; fileRef = AADAB29D18F62C5F00E61579 /* Phone-cord-export-04.png */; };
 		AADE169118C52C8100F70F75 /* ESApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = AADE169018C52C8100F70F75 /* ESApplication.m */; };
+		AADF94BB1975DEC20048EF5D /* SWSpotifyTrackCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AADF94BA1975DEC20048EF5D /* SWSpotifyTrackCell.xib */; };
+		AADF94BE1975DF400048EF5D /* SWSpotifyTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AADF94BD1975DF400048EF5D /* SWSpotifyTrackCell.m */; };
+		AADF94C01975E55C0048EF5D /* spotify.png in Resources */ = {isa = PBXBuildFile; fileRef = AADF94BF1975E55C0048EF5D /* spotify.png */; };
 		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
 		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
 		AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743518DC0520006A9C82 /* myCoreDataModel.xcdatamodeld */; };
@@ -339,6 +342,10 @@
 		AADAB29D18F62C5F00E61579 /* Phone-cord-export-04.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Phone-cord-export-04.png"; sourceTree = "<group>"; };
 		AADE168F18C52C8100F70F75 /* ESApplication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESApplication.h; sourceTree = "<group>"; };
 		AADE169018C52C8100F70F75 /* ESApplication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESApplication.m; sourceTree = "<group>"; };
+		AADF94BA1975DEC20048EF5D /* SWSpotifyTrackCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWSpotifyTrackCell.xib; sourceTree = "<group>"; };
+		AADF94BC1975DF400048EF5D /* SWSpotifyTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSpotifyTrackCell.h; sourceTree = "<group>"; };
+		AADF94BD1975DF400048EF5D /* SWSpotifyTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSpotifyTrackCell.m; sourceTree = "<group>"; };
+		AADF94BF1975E55C0048EF5D /* spotify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spotify.png; sourceTree = "<group>"; };
 		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileCollectionViewCell.h; path = Firechat/ProfileCollectionViewCell.h; sourceTree = "<group>"; };
 		AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileCollectionViewCell.m; path = Firechat/ProfileCollectionViewCell.m; sourceTree = "<group>"; };
 		AAE1028A18C469EC00BC7269 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
@@ -684,6 +691,7 @@
 			children = (
 				AA98A0201974F2E00057460F /* SWTextCell.xib */,
 				AA98A022197509320057460F /* SWImageCell.xib */,
+				AADF94BA1975DEC20048EF5D /* SWSpotifyTrackCell.xib */,
 				AA98A01D1974F0010057460F /* MessageCell.h */,
 				AA98A01E1974F0010057460F /* MessageCell.m */,
 			);
@@ -713,6 +721,8 @@
 				AA9D31A6192AF285003D010F /* SWTextCell.m */,
 				AA422B3C192BBD7900AE8C2A /* SWSwapUserStateCell.h */,
 				AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */,
+				AADF94BC1975DF400048EF5D /* SWSpotifyTrackCell.h */,
+				AADF94BD1975DF400048EF5D /* SWSpotifyTrackCell.m */,
 			);
 			name = "collection view cells";
 			sourceTree = "<group>";
@@ -759,6 +769,7 @@
 				AAC6507418FA1E420010916D /* no internet assets */,
 				AA0B651A18C3CC7000600108 /* unused  */,
 				C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */,
+				AADF94BF1975E55C0048EF5D /* spotify.png */,
 				AA5248461936D99100EE6F4B /* finger-mask.png */,
 				AA5248471936D99100EE6F4B /* finger.png */,
 				AA2B983B1900E56A002C0BC7 /* radar.png */,
@@ -1124,6 +1135,7 @@
 				AAC6507318FA1E3D0010916D /* plugmask.png in Resources */,
 				C02CE3D218680A5F00305FC9 /* main.storyboard in Resources */,
 				AADAB2A018F62C5F00E61579 /* Phone-cord-export-04.png in Resources */,
+				AADF94C01975E55C0048EF5D /* spotify.png in Resources */,
 				AA5248491936D99200EE6F4B /* finger.png in Resources */,
 				C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */,
 				C02CE3AD186808B000305FC9 /* FCViewController.xib in Resources */,
@@ -1135,6 +1147,7 @@
 				AA2B983C1900E56A002C0BC7 /* radar.png in Resources */,
 				AA98A023197509330057460F /* SWImageCell.xib in Resources */,
 				AA2B983A1900D625002C0BC7 /* icongradient.png in Resources */,
+				AADF94BB1975DEC20048EF5D /* SWSpotifyTrackCell.xib in Resources */,
 				AAC6506A18FA15F60010916D /* message.png in Resources */,
 				AAC6507218FA1E3D0010916D /* plug.png in Resources */,
 				AA98A0211974F2E00057460F /* SWTextCell.xib in Resources */,
@@ -1238,6 +1251,7 @@
 				AA411B1D19381DB10031100C /* ASIAuthenticationDialog.m in Sources */,
 				AA9A9A0718F3184B00A01BB3 /* Reachability.m in Sources */,
 				AA51ED611939058900F27DF1 /* DataLoadingParcel.m in Sources */,
+				AADF94BE1975DF400048EF5D /* SWSpotifyTrackCell.m in Sources */,
 				C02CE39E186808B000305FC9 /* main.m in Sources */,
 				AA9D31A4192AF10C003D010F /* SWImageCell.m in Sources */,
 				C02CE3A2186808B000305FC9 /* FCAppDelegate.m in Sources */,

@@ -117,6 +117,7 @@
 //bool success?  Override this to set more data!
 -(BOOL)setDictionary:(NSDictionary*)dictionary
 {
+
     NSDictionary *meta = dictionary[@"meta"];
     BOOL success = YES;
     

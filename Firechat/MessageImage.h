@@ -11,8 +11,12 @@
 @interface MessageImage : MessageModel
 
 @property (strong, nonatomic) NSString *src;
+@property (strong, nonatomic) NSNumber *width;
+@property (strong, nonatomic) NSNumber *height;
+
+@property (assign, nonatomic) CGSize size;
 
 //to initialize a message with raw values, so as not to forget any
--(id)initWithSrc:(NSString*)src andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text;
+-(id)initWithSrc:(NSString*)src andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text width:(NSNumber*)w height:(NSNumber*)h;
 
 @end

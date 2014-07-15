@@ -12,8 +12,13 @@
 @interface MessageCell : UICollectionViewCell
 
 +(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView;
-+(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath;
++(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath andWall:(NSArray*)wall;
++(CGFloat)heightOfMessageCellForModel:(MessageModel*)messageModel collectionView:(UICollectionView*)collectionView;
 
 -(void)setMessageModel:(MessageModel*)messageModel;
+
++(CGFloat)heightWithMessageModel:(MessageModel*)model;
+
+@property (weak, nonatomic) MessageModel *model;
 
 @end

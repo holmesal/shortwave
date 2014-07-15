@@ -16,6 +16,9 @@
 @property (nonatomic, readonly, strong) NSString *ownerID; //for ease of blurring & lookup
 //set message sets icon, color, text
 -(void)setMessage:(FCMessage *)message;
+
+
+-(void)setMessageModel:(MessageModel *)messageModel;
 -(void)setFaded:(BOOL)faded animated:(BOOL)animated;
 
 #define SWTextCellIdentifier @"SWTextCell"

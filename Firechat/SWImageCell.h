@@ -12,12 +12,13 @@
 
 #import "MessageCell.h"
 
+
 @interface SWImageCell : MessageCell
 
 @property (nonatomic, readonly, strong) NSString *ownerID; //for ease of blurring & lookup
 -(BOOL)hasImage;
--(void)setMessage:(ESImageMessage*)message;
--(void)setImageNil;
+-(void)setMessage:(ESImageMessage*)message; //no more
+-(void)setImageNil; //no more
 
 -(void)resetWithImageSize:(CGSize)size;
 -(void)setImageOrGif:(id)imageOrGif animated:(BOOL)animated isOversized:(BOOL)ovrsz;
@@ -37,5 +38,7 @@
 #define SWImageCell_ImageViewOffset CGPointMake(40, 65)
 #define SWImageCell_NoImageHeight 40+17*2
 #define SWImageCell_FIXEDHEIGHT 174
+
+-(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageModel*)imageMessage collectionView:(UICollectionView*)wallCollectionView wall:(NSArray*)wall andIndexPath:(NSIndexPath*)indexPath;
 
 @end

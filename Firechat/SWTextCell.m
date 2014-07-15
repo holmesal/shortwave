@@ -30,6 +30,13 @@
 @synthesize iconImageViewContainer;
 @synthesize iconImageView;
 
+-(void)awakeFromNib
+{
+    [super awakeFromNib];
+    [iconImageView setContentMode:UIViewContentModeScaleAspectFit];
+    
+}
+
 -(CALayer*)coloredCircleLayer
 {
     if (!coloredCircleLayer)
@@ -54,10 +61,10 @@
 
 - (void)setMessage:(FCMessage *)message
 {
+    NSAssert(NO, @"Use MessageModel setter");
     ownerID = message.ownerID;
     messageText.text = message.text;
 
-    [iconImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.coloredCircleLayer setBackgroundColor:[UIColor colorWithHexString:message.color].CGColor];
     UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",message.icon]];
     iconImageView.image = img;
@@ -84,61 +91,16 @@
     }
 }
 
-
-
-
-//debug methods & | custom touches
-//-(void)addTapDebugGestureIfNecessary
-//{
-//    if (!self.debugTap)
-//    {
-//        self.debugTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(debugTapGesture:)];
-//        if (self.doubleTap)
-//            [self.debugTap requireGestureRecognizerToFail:self.doubleTap];
-//        [self addGestureRecognizer:self.debugTap];
-//    }
-//}
-
-//-(void)initializeLongPress
-//{
-//    if (self.longPress) return;
-//    self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressSelector)];
-//    [self addGestureRecognizer:self.longPress];
-//}
-//-(void)initializeDoubleTap
-//{
-//    if (self.doubleTap) return;
-//    self.doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapSelector)];
-//    [self.doubleTap setNumberOfTapsRequired:2];
-//    [self addGestureRecognizer:self.doubleTap];
-//}
-
-#pragma GCC diagnostic ignored "-Wundeclared-selector"
-//-(void)longPressSelector
-//{
-//    UITableView *tableView = (UITableView*)(self.superview.superview);
-//    if ([tableView.delegate respondsToSelector:@selector(tableView:didLongPressCellAtIndexPath:)])
-//    {
-//        
-//        NSIndexPath *indexPath = [tableView indexPathForCell:self];
-//        [tableView.delegate performSelector:@selector(tableView:didLongPressCellAtIndexPath:) withObject:tableView withObject:indexPath];
-//    }
-//}
-//-(void)doubleTapSelector
-//{
-//    UITableView *tableView = (UITableView*)(self.superview.superview);
-//    if ([tableView.delegate respondsToSelector:@selector(tableView:didDoubleTapCellAtIndexPath:)])
-//    {
-//        NSIndexPath *indexPath = [tableView indexPathForCell:self];
-//        [tableView.delegate performSelector:@selector(tableView:didDoubleTapCellAtIndexPath:) withObject:tableView withObject:indexPath];
-//   
-//    }
-//}
-
-//-(void)debugTapGesture:(UITapGestureRecognizer*)tap
-//{
-//    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Debug" message:self.ownerID delegate:nil cancelButtonTitle:@"ok" otherButtonTitles:nil];
-//    [alertView show];
-//}
+-(void)setModel:(MessageModel *)model
+{
+    ownerID = model.ownerID;
+    messageText.text = model.text;
+    
+    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
+    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];
+    iconImageView.image = img;
+    
+    super.model = model;
+}
 
 @end

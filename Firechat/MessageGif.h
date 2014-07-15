@@ -7,12 +7,12 @@
 //
 
 #import "MessageModel.h"
+#import "MessageImage.h"
 
-@interface MessageGif : MessageModel
+@interface MessageGif : MessageImage
 
-@property (strong, nonatomic) NSString *src;
 
 //to initialize a message with raw values, so as not to forget any
--(id)initWithSrc:(NSString*)src andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text;
+//-(id)initWithSrc:(NSString*)src andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text;
 
 @end
