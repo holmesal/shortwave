@@ -71,6 +71,7 @@
 		C0032A8D18FF89FB00C8050B /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0032A8718FF877E00C8050B /* AdSupport.framework */; };
 		C0064BED192C48BA00877CDF /* ESShortbotOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */; };
 		C0064BF0192C5DE400877CDF /* ESCommandTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */; };
+		C011ADC51974E95500CD2F18 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C011ADC41974E95500CD2F18 /* Media.xcassets */; };
 		C013C4F1189EB3D3001157E3 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */; };
 		C013C4FA189EF0C1001157E3 /* FCLandingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */; };
 		C013C4FD189EFF44001157E3 /* FCWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C013C4FC189EFF44001157E3 /* FCWallViewController.m */; };
@@ -123,6 +124,7 @@
 		C0BB9FC11970706D00D024AC /* TestTransponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9FC01970706D00D024AC /* TestTransponder.swift */; };
 		C0BB9FC2197075A900D024AC /* ShortwaveiOSFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
 		C0BB9FC71970785B00D024AC /* ShortwaveiOSFramework.framework in Sources */ = {isa = PBXBuildFile; fileRef = C0BB9F921970599600D024AC /* ShortwaveiOSFramework.framework */; };
+		C0D42AA91974D0920082E286 /* ShareSheet.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0D42AA81974D0920082E286 /* ShareSheet.storyboard */; };
 		C0DC3DE3188B1BBB002342B9 /* imageassets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */; };
 		C0E64E0E18FDED7100D05EDC /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */; };
 		C0E6E4341970EF6D006EEE68 /* regex.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0E6E4331970EF6D006EEE68 /* regex.swift */; };
@@ -338,6 +340,7 @@
 		C0064BEC192C48BA00877CDF /* ESShortbotOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESShortbotOverlay.m; sourceTree = "<group>"; };
 		C0064BEE192C5DE400877CDF /* ESCommandTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ESCommandTableViewCell.h; sourceTree = "<group>"; };
 		C0064BEF192C5DE400877CDF /* ESCommandTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ESCommandTableViewCell.m; sourceTree = "<group>"; };
+		C011ADC41974E95500CD2F18 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		C013C4F0189EB3D3001157E3 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		C013C4F8189EF0C1001157E3 /* FCLandingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCLandingViewController.h; path = Firechat/FCLandingViewController.h; sourceTree = "<group>"; };
 		C013C4F9189EF0C1001157E3 /* FCLandingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCLandingViewController.m; path = Firechat/FCLandingViewController.m; sourceTree = "<group>"; };
@@ -409,6 +412,7 @@
 		C0BB9FBE197063FB00D024AC /* SWTransponderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWTransponderManager.swift; sourceTree = "<group>"; };
 		C0BB9FC01970706D00D024AC /* TestTransponder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TestTransponder.swift; path = ../ShortwaveShare/TestTransponder.swift; sourceTree = "<group>"; };
 		C0C75B2518F5EF0E004E1FB5 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
+		C0D42AA81974D0920082E286 /* ShareSheet.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = ShareSheet.storyboard; sourceTree = "<group>"; };
 		C0DC3DE2188B1BBB002342B9 /* imageassets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = imageassets.xcassets; sourceTree = "<group>"; };
 		C0E64E0D18FDED7100D05EDC /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		C0E6E4331970EF6D006EEE68 /* regex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = regex.swift; sourceTree = "<group>"; };
@@ -838,6 +842,7 @@
 			children = (
 				C0BB9F801970587400D024AC /* ShareViewController.swift */,
 				C0BB9F821970587400D024AC /* MainInterface.storyboard */,
+				C0D42AA81974D0920082E286 /* ShareSheet.storyboard */,
 				C0BB9F7E1970587400D024AC /* Supporting Files */,
 			);
 			path = ShortwaveShare;
@@ -847,6 +852,7 @@
 			isa = PBXGroup;
 			children = (
 				C0BB9F7F1970587400D024AC /* Info.plist */,
+				C011ADC41974E95500CD2F18 /* Media.xcassets */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -1028,6 +1034,11 @@
 					C0BB9F7B1970587400D024AC = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = SQ4LKA86HJ;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 					C0BB9F911970599600D024AC = {
 						CreatedOnToolsVersion = 6.0;
@@ -1099,6 +1110,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0D42AA91974D0920082E286 /* ShareSheet.storyboard in Resources */,
+				C011ADC51974E95500CD2F18 /* Media.xcassets in Resources */,
 				C0BB9F831970587400D024AC /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
