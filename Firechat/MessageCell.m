@@ -72,6 +72,7 @@
             
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
             [imageCell setModel:messageModel];
+            
             [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
             [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
             imageCell.tag = indexPath.row;

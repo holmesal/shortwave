@@ -19,6 +19,8 @@
 
 @property (strong, nonatomic) NSTimer *fingAnimDelayTimer;
 
+@property (strong, nonatomic) UIImageView *realImageView;
+
 @property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 @property (weak, nonatomic) IBOutlet UITextView *textLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -63,6 +65,7 @@
 @synthesize progressLabel;
 @synthesize circleScene;
 
+@synthesize realImageView;
 
 
 -(void)awakeFromNib
@@ -321,12 +324,16 @@
 
     [CATransaction commit];
 
+    realImageView = [[UIImageView alloc] initWithFrame:imageView.frame];
+    [realImageView setBackgroundColor:[UIColor redColor]];
+    [realImageView setContentMode:imageView.contentMode];
+    [imageView.superview insertSubview:realImageView belowSubview:imageView];
     
     //silly fix for double loading pics. in future don't double load imgs with same context
     if (animated && !self.hasImage)
     {
 
-        self.imageView.alpha = 0.0f;
+        realImageView.alpha = 0.0f;
         
         
         [UIView animateWithDuration:0.52f animations:^
@@ -335,7 +342,7 @@
             {
                 oversizedOverlay.alpha = 1.0f;
             }
-             imageView.alpha = 1.0f;
+             realImageView.alpha = 1.0f;
          }];
         
     }
@@ -347,18 +354,26 @@
 //        [gif start];
         //        [gif start];
         
-        [self.imageView setAnimatedGif:gif startImmediately:YES];
+        [realImageView setAnimatedGif:gif startImmediately:YES];
+
+//        NSLog(@"self.imageView.alpha = %f", self.imageView.alpha);
+//        NSLog(@"self.imageView.hidden = %d", self.imageView.isHidden);
+//        
+//        NSLog(@"self.imageView.superView.alpha = %f", self.imageView.superview.alpha);
+//        NSLog(@"self.imageView.superView.hidden = %d", self.imageView.superview.isHidden);
+        
+        
+        
         
     } else
     if ([imageOrGif isKindOfClass:[UIImage class]])
     {
         UIImage *image = imageOrGif;
-        [self.imageView setImage:image];
+        [realImageView setImage:image];
     }
-    
     else
     {
-        self.imageView.alpha = 0.0f;
+        realImageView.alpha = 0.0f;
     }
     
     if (!ovrsz)
@@ -373,7 +388,7 @@
     
     if (!animated)
     {
-        self.imageView.alpha = 1.0f;
+        realImageView.alpha = 1.0f;
     }
     
 }
@@ -464,10 +479,17 @@
 }
 -(void)setImageNil
 {
+    if (realImageView)
+    {
+        [realImageView stopAnimating];
+        [realImageView removeFromSuperview];
+        realImageView = nil;
+    }
+    return;
 //    [self setImage:nil animated:NO isOversized:NO];
-    
-    [self setImageOrGif:nil animated:NO isOversized:NO];
-    [self.imageView setAnimatedGif:nil];
+//    [self setImageOrGif:nil animated:NO isOversized:NO];
+    [self.imageView stopAnimating];
+    self.imageView.image = nil;
 //    [self.imageView setImage:nil];
 //    [self.imageView setAnimatedGif:nil];
     [self.imageView setHidden:YES];
@@ -522,8 +544,8 @@
     [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
      {
 //         NSLog(@"finished:");
-//          NSLog(@"isGif = %@", (isGif? @"YES": @"NO"));
-//         NSLog(@"data = %@", imageOrGif);
+        NSLog(@"isGif = %@", (isGif? @"YES": @"NO"));
+        NSLog(@"data = %@", imageOrGif);
          
          if (synchronous)
          {
