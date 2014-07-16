@@ -962,17 +962,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 - (void)sendMessageAsSelf:(NSString *)text
 {
-    // Send the message
-    
-    FCMessage *message = [[FCMessage alloc] init];
-    
-    FCUser *owner = [FCUser owner];
-    CLLocation *location = [owner.beacon getLocation];
-    message.location = location;
-    
-    //    message.lat =
-    //    message.lon = ;
-    [message postText:text asOwner:[FCUser owner]];
+    MessageModel *messageModel = [[MessageModel alloc] initWithIcon:[FCUser owner].icon color:[FCUser owner].color ownerID:[FCUser owner].id text:text];
+    [messageModel postToAll];
 }
 
 // Handle growing/shrinking
@@ -1611,7 +1602,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    CALayer *maskLayer = self.maskLayer;// [imageView.layer mask];
 //    [maskLayer setFrame:CGRectMake(0, 0, cellRect.size.width, cellRect.size.height)];
 //
-//
+
     ESImageMessage *imageMessage = [wall objectAtIndex:indexPath.row];
     if (imageMessage.isGif)
     {

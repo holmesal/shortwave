@@ -1,4 +1,4 @@
-//
+ //
 //  MessageModel.m
 //  Shortwave
 //
@@ -30,14 +30,14 @@
 @synthesize text;
 
 
--(id)initWithIcon:(NSString*)icon color:(NSString*)colorString ownerID:(NSString*)ownerID text:(NSString*)text
+-(id)initWithIcon:(NSString*)Icon color:(NSString*)colorString ownerID:(NSString*)OwnerID text:(NSString*)Text
 {
     if (self = [super init])
     {
-        self.icon = icon;
+        self.icon = Icon;
         self.color = [UIColor colorWithHexString:colorString];
-        self.ownerID = ownerID;
-        self.text = text;
+        self.ownerID = OwnerID;
+        self.text = Text;
     }
     return self;
 }
@@ -59,7 +59,6 @@
         if ([type isEqualToString:@"gif"])
         {
             return [[MessageGif alloc] initWithDictionary:dictionary];
-            
         } else
         if ([type isEqualToString:@"image"])
         {

@@ -51,7 +51,7 @@
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7dq-6b-gjc">
                                 <rect key="frame" x="83" y="28" width="157" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -66,7 +66,7 @@
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tkl-Wu-ghm">
                                 <rect key="frame" x="83" y="46" width="157" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -86,7 +86,10 @@
             <size key="customSize" width="320" height="135"/>
             <connections>
                 <outlet property="artistLabel" destination="tkl-Wu-ghm" id="Ofl-rg-SvB"/>
+                <outlet property="iconImageView" destination="osX-1O-G7d" id="2pS-Eo-gu7"/>
+                <outlet property="iconImageViewContainer" destination="MMk-q0-2nP" id="6BR-TY-kqf"/>
                 <outlet property="playButton" destination="hZ9-p1-kEj" id="W1l-ES-YJk"/>
+                <outlet property="textLabel" destination="Vr2-IA-9GO" id="paB-Yk-oBm"/>
                 <outlet property="titleLabel" destination="7dq-6b-gjc" id="m1S-1c-FQ4"/>
             </connections>
             <point key="canvasLocation" x="465" y="223.5"/>

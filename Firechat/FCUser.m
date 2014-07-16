@@ -120,7 +120,7 @@ static FCUser *currentUser;
             // And now a gif
             Firebase *two = [[wall childByAppendingPath:@"wall"] childByAutoId];
             
-            MessageImage *messageImage = [[MessageImage alloc] initWithSrc:@"http://i.imgur.com/cKLrCik.jpg" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"" width:@480 height:@455];
+            MessageImage *messageImage = [[MessageImage alloc] initWithSrc:@"http://i.imgur.com/cKLrCik.jpg" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"Lol look at this" width:@480 height:@455];
             [two setValue:[messageImage toDictionary] ];
 
 //            [two setValue:@{@"color": @"292929" ,
@@ -176,7 +176,7 @@ static FCUser *currentUser;
             [[three childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
              */
             Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
-            MessageGif *messageGif = [[MessageGif alloc] initWithSrc:@"http://i.imgur.com/dupSbtr.gif" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"" width:@400 height:@300];
+            MessageGif *messageGif = [[MessageGif alloc] initWithSrc:@"http://i.imgur.com/dupSbtr.gif" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"woaaah" width:@400 height:@300];
             [three setValue:[messageGif toDictionary]];
             
             

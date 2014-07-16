@@ -65,6 +65,7 @@
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
             [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
+            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
             messageCell = imageCell;
         }
         break;
@@ -73,6 +74,7 @@
         {
             SWSpotifyTrackCell *spotifyTrackCell = (SWSpotifyTrackCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWSpotifyTrackCellIdentifier forIndexPath:indexPath];
             messageCell = spotifyTrackCell;
+            
         }
         break;
             
