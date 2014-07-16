@@ -41,6 +41,9 @@
 +(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath andWall:(NSArray*)wall;
 {
     MessageCell *messageCell = nil;
+    
+    
+    
     switch (messageModel.type)
     {
         case MessageModelTypePlainText:
@@ -48,25 +51,31 @@
             
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
             messageCell = textCell;
-        
+            
         }
         break;
         
         case MessageModelTypeImage:
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell setModel:messageModel];
             [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
-            messageCell = imageCell;
             
+            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
+            imageCell.tag = indexPath.row;
+            return imageCell;
         }
         break;
         
         case MessageModelTypeGif:
         {
+            
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell setModel:messageModel];
             [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wall:wall andIndexPath:indexPath];
             [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
-            messageCell = imageCell;
+            imageCell.tag = indexPath.row;
+            return imageCell;
         }
         break;
         
@@ -111,7 +120,7 @@
     }
     //should always be non nil
     [messageCell setModel:messageModel];
-    
+    messageCell.tag = indexPath.row;
     return messageCell;
 
 }

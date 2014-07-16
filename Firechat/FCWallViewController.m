@@ -31,6 +31,7 @@
 #import "SWTextCell.h"
 #import "SWOwnerTextCell.h"
 #import "SWImageCell.h"
+#import "MessageImage.h"
 
 #import "SWSwapUserStateCell.h"
 #define kMAX_NUMBER_OF_MESSAGES 100
@@ -1599,12 +1600,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [self.view addSubview:    self.fullScreenImageView];
     [self.fullScreenImageView setBackgroundColor:[UIColor clearColor]];
     UIImageView *imageView = (UIImageView *)[self.fullScreenImageView viewWithTag:5];
-//    CALayer *maskLayer = self.maskLayer;// [imageView.layer mask];
-//    [maskLayer setFrame:CGRectMake(0, 0, cellRect.size.width, cellRect.size.height)];
-//
 
-    ESImageMessage *imageMessage = [wall objectAtIndex:indexPath.row];
-    if (imageMessage.isGif)
+
+    MessageImage *imageMessage = [wall objectAtIndex:indexPath.row];
+    if (imageMessage.type == MessageModelTypeGif)
     {
         [imageView setAnimatedGif:[imageCell getAnimatedGif]];
     } else
@@ -1618,22 +1617,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     CGSize fullImgSize = CGSizeMake(320, imgSize.height*320/imgSize.width);
     cellRect.size = fullImgSize;
     [imageView setFrame:cellRect];
-//
-//
-//    
-//    CGRect endMaskFrame = imageView.bounds;
-//    endMaskFrame.origin.y = endMaskFrame.size.height*0.5f;
-//    
-//    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
-//    frameAnimation.duration = 0.07;
-//    frameAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    NSLog(@"animate from %@ to %@", NSStringFromCGRect(maskLayer.frame), NSStringFromCGRect(endMaskFrame));
-//    frameAnimation.fromValue = [NSValue valueWithCGRect:maskLayer.frame];
-//    frameAnimation.toValue = [NSValue valueWithCGRect:endMaskFrame];
-//    frameAnimation.fillMode = kCAFillModeForwards;
-//    frameAnimation.removedOnCompletion = NO;
-//    [maskLayer addAnimation:frameAnimation forKey:@"sz"];
-    
+
     
     imageView.alpha = 0.0f;
     
@@ -1677,12 +1661,12 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     UIImageView *imageView = (UIImageView *)[self.fullScreenImageView viewWithTag:5];
     CGSize fullImgSize = CGSizeMake(320, imageView.image.size.height*320/imageView.image.size.width);
     cellRect.size = fullImgSize;
-//    
+
+    
 //    CALayer *maskLayer = self.maskLayer;
 //    CGRect maskLayerFrame = maskLayer.frame;
 //    maskLayerFrame.size.height = fullImgSize.height;
-//    
-//    
+//
 //    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
 //    frameAnimation.duration = 0.03;
 //    frameAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
@@ -1712,13 +1696,19 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSLog(@"boop!");
-    id unknownMessage = [wall objectAtIndex:indexPath.row];
-    if ([unknownMessage isKindOfClass:[ESImageMessage class]])
-    {
-        ESImageMessage *imageMessage = unknownMessage;
-        [[ESImageLoader sharedImageLoader ] pauseOrUnpauseProcess:[NSURL URLWithString:imageMessage.src] ];
-    }
+//    MessageModel *messageModel = wall[indexPath.row];
+//    if (messageModel.type == MessageModelTypeImage ||messageModel.type == MessageModelTypeGif)
+//    {
+//        //expand this cell
+//        [self collectionView:collectionView didEndLongPressForItemAtIndexPath:indexPath];
+//    }
+    
+//    MessageModel *messageModel = (MessageModel *)wall[indexPath.row];
+//    if (messageModel.type == MessageModelTypeGif || messageModel.type == MessageModelTypeImage )
+//    {
+//        MessageImage *imageModel = (MessageImage*)messageModel;
+//        [[ESImageLoader sharedImageLoader ] pauseOrUnpauseProcess:[NSURL URLWithString:imageModel.src] ];
+//    }
     
 //    [springFlowLayout invalidateLayout];
 //    __weak UICollectionViewCell *cell = imageCell;

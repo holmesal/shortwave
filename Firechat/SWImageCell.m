@@ -100,7 +100,7 @@
     NSLog(@"currentSize = %@", NSStringFromCGSize(imageView.frame.size));
 }
 
--(void)longPressOccured:(UILongPressGestureRecognizer*)longPress
+-(void)longPressOccured:(UILongPressGestureRecognizer*)lP
 {
     if (self.oversizedOverlay.alpha)
     {
@@ -108,12 +108,14 @@
         {
             case UIGestureRecognizerStateBegan:
             {
+                NSLog(@"collectionView:didBeginLongPressForItemAtIndexPath:");
                 UICollectionView *collectionView = (UICollectionView*)self.superview;
                 [collectionView.delegate performSelector:@selector(collectionView:didBeginLongPressForItemAtIndexPath:) withObject:collectionView withObject:[NSIndexPath indexPathForItem:self.tag inSection:0]];
             }
             break;
             case UIGestureRecognizerStateEnded:
             {
+                NSLog(@"collectionView:didEndLongPressForItemAtIndexPath:");
                 UICollectionView *collectionView = (UICollectionView*)self.superview;
                 [collectionView.delegate performSelector:@selector(collectionView:didEndLongPressForItemAtIndexPath:) withObject:collectionView withObject:[NSIndexPath indexPathForItem:self.tag inSection:0]];
             }
@@ -121,6 +123,7 @@
             case UIGestureRecognizerStateChanged:
             {
                 //for movement
+                NSLog(@"collectionView:didLongPressDragItemAtIndexPath:");
                 UICollectionView *collectionView = (UICollectionView*)self.superview;
                 [collectionView.delegate performSelector:@selector(collectionView:didLongPressDragItemAtIndexPath:) withObject:collectionView withObject:[NSIndexPath indexPathForItem:self.tag inSection:0]];
             }
@@ -273,7 +276,7 @@
         
         NSArray *gestures = collectionView.gestureRecognizers;
         
-        [longPress requireGestureRecognizerToFail:gestures.firstObject];
+//        [longPress requireGestureRecognizerToFail:gestures.firstObject];
         [oversizedOverlay addGestureRecognizer:longPress];
     }
 }
@@ -293,12 +296,18 @@
 
 -(void)setModel:(MessageImage *)model
 {
+    [self setImageNil];
+    
     self.didShowFingerAnim = NO;
     textLabel.text = model.text;
     [iconImageView setImage:[UIImage imageNamed:model.icon]];
     [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
     ownerID = model.ownerID;
     [self resetWithImageSize:model.size];
+    
+    NSURL *imgUrl = [NSURL URLWithString:model.src];
+    float p = [[ESImageLoader sharedImageLoader] progressForImage:imgUrl];
+    [self updateProgress:p];
     
     super.model = model;
 }
@@ -309,12 +318,7 @@
     [CATransaction begin];
     [CATransaction setDisableActions:YES];
         [fingerScene setHidden:YES];
-//        CGFloat h = oversizedOverlay.frame.size.height;// - fingerLayer.frame.origin.y;
-//        fingerLayer.transform = CATransform3DMakeTranslation(0, h, 0);
-//        circleLayer.opacity = 0.0f;
-//        CGFloat r = 0.384615391f;
-//        CGFloat s = (75*r)/(75*r+10);
-//        circleLayer.transform = CATransform3DMakeScale(s, s, 1);
+
     [CATransaction commit];
 
     
@@ -323,11 +327,6 @@
     {
 
         self.imageView.alpha = 0.0f;
-        
-
-        
-        
-        
         
         
         [UIView animateWithDuration:0.52f animations:^
@@ -338,21 +337,23 @@
             }
              imageView.alpha = 1.0f;
          }];
+        
     }
-//    self.imageView.backgroundColor = [UIColor redColor];
+
+    
+    if ([imageOrGif isKindOfClass:[AnimatedGif class]])
+    {
+        AnimatedGif *gif = imageOrGif;
+//        [gif start];
+        //        [gif start];
+        
+        [self.imageView setAnimatedGif:gif startImmediately:YES];
+        
+    } else
     if ([imageOrGif isKindOfClass:[UIImage class]])
     {
         UIImage *image = imageOrGif;
         [self.imageView setImage:image];
-    } else
-    if ([imageOrGif isKindOfClass:[AnimatedGif class]])
-    {
-        AnimatedGif *gif = imageOrGif;
-        [gif start];
-//        [gif start];
-        
-        [self.imageView setAnimatedGif:gif];
-        [self.imageView startGifAnimation];
     }
     
     else
@@ -463,10 +464,10 @@
 }
 -(void)setImageNil
 {
-    NSAssert(NO, @"not calleda anymore");
 //    [self setImage:nil animated:NO isOversized:NO];
     
     [self setImageOrGif:nil animated:NO isOversized:NO];
+    [self.imageView setAnimatedGif:nil];
 //    [self.imageView setImage:nil];
 //    [self.imageView setAnimatedGif:nil];
     [self.imageView setHidden:YES];
@@ -513,18 +514,22 @@
 {
     NSURL *imgUrl = [NSURL URLWithString:imageUrlString];
     
-    BOOL isGif = ![imageMessage isKindOfClass:[MessageImage class]];
+    BOOL isGif = imageMessage.type == MessageModelTypeGif;
     
-    NSLog(@"url = %@", imgUrl);
-    NSLog(@"imageUrlString = %@", imageUrlString);
-    
+//    NSLog(@"imgUrl = %@", imgUrl);
+//    NSLog(@"isGif = %@", (isGif? @"YES": @"NO"));
+
     [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
      {
+//         NSLog(@"finished:");
+//          NSLog(@"isGif = %@", (isGif? @"YES": @"NO"));
+//         NSLog(@"data = %@", imageOrGif);
+         
          if (synchronous)
          {
              CGSize size = imageMessage.size;
              BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
-             [imageCell setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
+             [self setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
          } else
          {
              NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
@@ -537,15 +542,9 @@
                      MessageImage *currentImageMessage = (MessageImage*)aMessage;
                      if ([url.absoluteString isEqualToString:currentImageMessage.src])
                      {
-                         //                                 NSLog(@"%@", url.absoluteString);
-                         //                                 NSLog(@"%@", currentImageMessage.src);
                          
                          SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
                          MessageImage *againmessage = (MessageImage*)[wall objectAtIndex:currentIndexPath.row];
-                         //                                 NSLog(@"againMessage = %@", againmessage.src);
-                         //ready to animate also invalidate layout for increased width
-                         //                                [springFlowLayout invalidateLayout];
-                         //                                 __weak UICollectionViewCell *cell = imageCell;
                          
                          if (retrievedImageCell)
                          {
@@ -574,8 +573,6 @@
                  MessageImage *currMsg = (MessageImage*)aMessage;
                  if ([theUrl.absoluteString isEqualToString:currMsg.src])
                  {
-                     //                                 NSLog(@"%@", url.absoluteString);
-                     //                                 NSLog(@"%@", currentImageMessage.src);
                      
                      SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:idxPth];
                      if (retrievedImageCell)
