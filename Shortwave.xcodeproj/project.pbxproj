@@ -23,7 +23,6 @@
 		AA411B2919381EF20031100C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA411B2819381EF20031100C /* libz.dylib */; };
 		AA422B3E192BBD7900AE8C2A /* SWSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */; };
 		AA49D43618DE0E1500514DF5 /* FCLEErrorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */; };
-		AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */; };
 		AA51ED5D19384F1E00F27DF1 /* AnimatedGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED5A19384F1E00F27DF1 /* AnimatedGif.m */; };
 		AA51ED5E19384F1E00F27DF1 /* UIImageView+AnimatedGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED5C19384F1E00F27DF1 /* UIImageView+AnimatedGif.m */; };
 		AA51ED611939058900F27DF1 /* DataLoadingParcel.m in Sources */ = {isa = PBXBuildFile; fileRef = AA51ED601939058900F27DF1 /* DataLoadingParcel.m */; };
@@ -70,8 +69,6 @@
 		AADF94BB1975DEC20048EF5D /* SWSpotifyTrackCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AADF94BA1975DEC20048EF5D /* SWSpotifyTrackCell.xib */; };
 		AADF94BE1975DF400048EF5D /* SWSpotifyTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AADF94BD1975DF400048EF5D /* SWSpotifyTrackCell.m */; };
 		AADF94C01975E55C0048EF5D /* spotify.png in Resources */ = {isa = PBXBuildFile; fileRef = AADF94BF1975E55C0048EF5D /* spotify.png */; };
-		AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */; };
-		AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE1028B18C469EC00BC7269 /* UIView+Glow.m */; };
 		AAE3743718DC0520006A9C82 /* myCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743518DC0520006A9C82 /* myCoreDataModel.xcdatamodeld */; };
 		AAE3743B18DC05AB006A9C82 /* Beacon.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743A18DC05AB006A9C82 /* Beacon.m */; };
 		AAE3743E18DC05F2006A9C82 /* ESCoreDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE3743D18DC05F2006A9C82 /* ESCoreDataController.m */; };
@@ -270,8 +267,6 @@
 		AA422B3D192BBD7900AE8C2A /* SWSwapUserStateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSwapUserStateCell.m; sourceTree = "<group>"; };
 		AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FCLEErrorViewController.h; sourceTree = "<group>"; };
 		AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FCLEErrorViewController.m; sourceTree = "<group>"; };
-		AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESUserPMCell.h; path = Firechat/ESUserPMCell.h; sourceTree = "<group>"; };
-		AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESUserPMCell.m; path = Firechat/ESUserPMCell.m; sourceTree = "<group>"; };
 		AA51ED5919384F1E00F27DF1 /* AnimatedGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimatedGif.h; sourceTree = "<group>"; };
 		AA51ED5A19384F1E00F27DF1 /* AnimatedGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnimatedGif.m; sourceTree = "<group>"; };
 		AA51ED5B19384F1E00F27DF1 /* UIImageView+AnimatedGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AnimatedGif.h"; sourceTree = "<group>"; };
@@ -346,10 +341,6 @@
 		AADF94BC1975DF400048EF5D /* SWSpotifyTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSpotifyTrackCell.h; sourceTree = "<group>"; };
 		AADF94BD1975DF400048EF5D /* SWSpotifyTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSpotifyTrackCell.m; sourceTree = "<group>"; };
 		AADF94BF1975E55C0048EF5D /* spotify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spotify.png; sourceTree = "<group>"; };
-		AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileCollectionViewCell.h; path = Firechat/ProfileCollectionViewCell.h; sourceTree = "<group>"; };
-		AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileCollectionViewCell.m; path = Firechat/ProfileCollectionViewCell.m; sourceTree = "<group>"; };
-		AAE1028A18C469EC00BC7269 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
-		AAE1028B18C469EC00BC7269 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
 		AAE1028D18C4729200BC7269 /* Math.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Math.h; sourceTree = "<group>"; };
 		AAE3743618DC0520006A9C82 /* myCoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = myCoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		AAE3743918DC05AB006A9C82 /* Beacon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Beacon.h; sourceTree = "<group>"; };
@@ -521,14 +512,10 @@
 				C02CE3ED1868CD3000305FC9 /* FCMessageCell.m */,
 				AA6BB86F18ED180000EE6CF5 /* ESSwapUserStateCell.h */,
 				AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */,
-				AA4D93DE18EE16270051F8AE /* ESUserPMCell.h */,
-				AA4D93DF18EE16270051F8AE /* ESUserPMCell.m */,
 				AA2F91931929598B005081C4 /* ESImageCell.h */,
 				AA2F91941929598B005081C4 /* ESImageCell.m */,
 				C05742E518831F73002509DB /* FCBeacon.h */,
 				C05742E618831F73002509DB /* FCBeacon.m */,
-				AAE1028718C45E5000BC7269 /* ProfileCollectionViewCell.h */,
-				AAE1028818C45E5000BC7269 /* ProfileCollectionViewCell.m */,
 				C02CE3A7186808B000305FC9 /* FCViewController.m */,
 				C02CE3A6186808B000305FC9 /* FCViewController.h */,
 				C02CE3AB186808B000305FC9 /* FCViewController.xib */,
@@ -674,8 +661,6 @@
 				AA69A5EC18D7B4D4000E6781 /* UIImage+ImageEffects.m */,
 				AA69A5E518D7A9C7000E6781 /* UIColor+HexString.h */,
 				AA69A5E618D7A9C7000E6781 /* UIColor+HexString.m */,
-				AAE1028A18C469EC00BC7269 /* UIView+Glow.h */,
-				AAE1028B18C469EC00BC7269 /* UIView+Glow.m */,
 				AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */,
 				AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */,
 				AAF40AC118F12FD6000526BE /* UIImage+Resize.h */,
@@ -1280,7 +1265,6 @@
 				AA69A5EA18D7AD27000E6781 /* FCLiveBlurButton.m in Sources */,
 				AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */,
 				AA9D31A7192AF285003D010F /* SWTextCell.m in Sources */,
-				AAE1028C18C469EC00BC7269 /* UIView+Glow.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
 				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,
 				AAAA35F21974A45700F4D03E /* MessageGif.m in Sources */,
@@ -1301,8 +1285,6 @@
 				AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */,
 				AA69A5E718D7A9C7000E6781 /* UIColor+HexString.m in Sources */,
 				AAAA35EF1974998700F4D03E /* MessageModel.m in Sources */,
-				AA4D93E018EE16270051F8AE /* ESUserPMCell.m in Sources */,
-				AAE1028918C45E5000BC7269 /* ProfileCollectionViewCell.m in Sources */,
 				AA2F919C19296263005081C4 /* ESImageMessage.m in Sources */,
 				C0064BF0192C5DE400877CDF /* ESCommandTableViewCell.m in Sources */,
 				C070A20418EF54C3000C9D3C /* CBPeripheralManager+Ext.m in Sources */,

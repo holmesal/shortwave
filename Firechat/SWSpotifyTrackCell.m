@@ -69,9 +69,9 @@
     titleLabel.text = spotifyTrack.title;
     artistLabel.text = spotifyTrack.artist;
     
-    [self.coloredCircleLayer setBackgroundColor:spotifyTrack.color.CGColor];
-    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", spotifyTrack.icon] ];
-    iconImageView.image = img;
+//    [self.coloredCircleLayer setBackgroundColor:spotifyTrack.color.CGColor];
+//    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", spotifyTrack.icon] ];
+//    iconImageView.image = img;
     
     super.model = spotifyTrack;
 }

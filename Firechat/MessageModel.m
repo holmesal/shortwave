@@ -24,18 +24,29 @@
 
 @implementation MessageModel
 
-@synthesize icon;
-@synthesize color;
+//@synthesize icon;
+//@synthesize color;
 @synthesize ownerID;
 @synthesize text;
 
+
+-(id)initWithOwnerID:(NSString*)OwnerID andText:(NSString*)Text
+{
+    if (self = [super init])
+    {
+        self.ownerID = OwnerID;
+        self.text = Text;
+    }
+    return self;
+}
 
 -(id)initWithIcon:(NSString*)Icon color:(NSString*)colorString ownerID:(NSString*)OwnerID text:(NSString*)Text
 {
     if (self = [super init])
     {
-        self.icon = Icon;
-        self.color = [UIColor colorWithHexString:colorString];
+        NSAssert(NO, @"no longer accessible");
+//        self.icon = Icon;
+//        self.color = [UIColor colorWithHexString:colorString];
         self.ownerID = OwnerID;
         self.text = Text;
     }
@@ -116,24 +127,23 @@
 //bool success?  Override this to set more data!
 -(BOOL)setDictionary:(NSDictionary*)dictionary
 {
-
     NSDictionary *meta = dictionary[@"meta"];
     BOOL success = YES;
     
-    icon = dictionary[@"icon"];
-    success = success && (icon && [icon isKindOfClass:[NSString class]]);
+//    icon = dictionary[@"icon"];
+//    success = success && (icon && [icon isKindOfClass:[NSString class]]);
     
     text = dictionary[@"text"];
     success = success && (text && [text isKindOfClass:[NSString class]]);
     
-    NSString *colorString = dictionary[@"color"];
-    if (colorString && [colorString isKindOfClass:[NSString class]])
-    {
-        color = [UIColor colorWithHexString:colorString];
-    } else
-    {
-        success = NO;
-    }
+//    NSString *colorString = dictionary[@"color"];
+//    if (colorString && [colorString isKindOfClass:[NSString class]])
+//    {
+//        color = [UIColor colorWithHexString:colorString];
+//    } else
+//    {
+//        success = NO;
+//    }
     
     if (meta && [meta isKindOfClass:[NSDictionary class]])
     {
@@ -166,8 +176,8 @@
     }
     
     return @{
-                @"color": color.toHexString,
-                @"icon": icon,
+//                @"color": color.toHexString,
+//                @"icon": icon,
                 @"type": typeString,
                 @"text": text,
                 @"content": content,
@@ -190,6 +200,56 @@
 }
 
 -(void)postToAll
+{
+    FCUser *owner = [FCUser owner];
+    //get all ibeacon users
+    NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
+    
+    if (IS_ON_SIMULATOR) {
+        earshotIdsWithoutMe = @[];
+    }
+    
+    NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
+    
+
+    
+    Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
+    NSDictionary *message = [self toDictionary];
+    NSDictionary *messageValue = @{@"message": message,
+                                   @"ownerID": owner.id,
+                                   @"usersWithReadAccess":earshotIds};
+    [messageFB setValue:messageValue];
+
+    // Loop through and post to the firebase of every beacon in range (including self) add to PushQueue (excluding self)
+    for (NSString *earshotId in earshotIds)
+    {
+        // Post to the firebase wall of this beacon
+        //[[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
+        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId];
+        Firebase *userPersonMessageRef = [[Firebase alloc] initWithUrl:userPersonMessageUrl];
+        [userPersonMessageRef setValue:messageFB.name];
+        
+        if (![earshotId isEqualToString:owner.id])
+        {
+            // Send a push notification to this user
+            Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
+            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+                // Make the push notification IF the user allows it
+                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
+                {
+                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+                                                       @"alert": text};
+                    // Set the push notification
+                    Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+                    [pushQueueRef setValue:pushNotification];
+                }
+            }];
+        }
+    }
+    
+}
+
+-(void)OLDpostToAll
 {
     FCUser *owner = [FCUser owner];
     // Grab the current list of earshot users

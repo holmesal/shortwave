@@ -303,8 +303,8 @@
     
     self.didShowFingerAnim = NO;
     textLabel.text = model.text;
-    [iconImageView setImage:[UIImage imageNamed:model.icon]];
-    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
+//    [iconImageView setImage:[UIImage imageNamed:model.icon]];
+//    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
     ownerID = model.ownerID;
     [self resetWithImageSize:model.size];
     

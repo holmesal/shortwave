@@ -33,7 +33,8 @@
 #define ESAssert(b, s) { NSAssert(b, s);}
 
 // Use the dev firebase
-#define FIREBASE_ROOT_URL @"https://earshot-dev.firebaseio.com"
+#define FIREBASE_ROOT_URL @"https://earshot-denormalize.firebaseio.com/"
+//@"https://earshot-dev.firebaseio.com"
 // Show user ids on single tap
 #define DEBUG_SHOW_USER_ID_SINGLE_TAP YES
 // Show debug local notifications

@@ -37,8 +37,8 @@ typedef enum
 +(MessageModel*)messageModelFromDictionary:(NSDictionary*)dictionary;
 
 //inherited properties
-@property (strong, nonatomic) NSString *icon;
-@property (strong, nonatomic) UIColor *color;
+//@property (strong, nonatomic) NSString *icon;
+//@property (strong, nonatomic) UIColor *color;
 @property (strong, nonatomic) NSString *ownerID;
 @property (strong, nonatomic) NSString *text;
 
@@ -48,6 +48,8 @@ typedef enum
 
 //for posting, use init to be safe that you've initialized all fields
 -(id)initWithIcon:(NSString*)icon color:(NSString*)color ownerID:(NSString*)ownerID text:(NSString*)text;
+
+-(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text;
 -(void)postToAll;
 
 @end

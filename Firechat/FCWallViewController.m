@@ -13,10 +13,8 @@
 #import <Firebase/Firebase.h>
 #import "FCMessage.h"
 #import "FCMessageCell.h"
-#import "ProfileCollectionViewCell.h"
 #import "ESSwapUserStateMessage.h"
 #import "ESSwapUserStateCell.h"
-#import "ESUserPMCell.h"
 #import "FCLandingPageViewController.h"
 #import "ESImageCell.h"
 #import "ESImageMessage.h"
