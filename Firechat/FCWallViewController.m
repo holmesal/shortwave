@@ -173,6 +173,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     wallCollectionView.delegate = self;
     wallCollectionView.dataSource = self;
+    
+    springFlowLayout.minimumInteritemSpacing = 50;
+    
+    
+    
     [MessageCell registerCollectionViewCellsForCollectionView:wallCollectionView];
     wallCollectionView.alwaysBounceVertical = YES;
     [wallCollectionView setShowsVerticalScrollIndicator:NO];
@@ -339,6 +344,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
     
 //    self.postToSelfTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(postSpam:) userInfo:nil repeats:YES];
 //    [[NSRunLoop mainRunLoop] addTimer:self.postToSelfTimer forMode:NSRunLoopCommonModes];

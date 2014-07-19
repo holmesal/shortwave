@@ -475,7 +475,7 @@
 }
 -(UIImage*)getImage
 {
-    return imageView.image;
+    return realImageView.image;
 }
 -(void)setImageNil
 {
