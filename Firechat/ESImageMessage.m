@@ -80,29 +80,29 @@
 #warning remove these methods, they were only for definining dictionaries anyway.
 -(void)testImageStaticMessage
 {
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSDictionary *dict = @{@"text": @"",
-                           @"meta": @{@"ownerID" : [FCUser owner].id},
-                           @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
-                           @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
-                           @"type": @"image",
-                           @"src": @"http://cdn3.whatculture.com/wp-content/uploads/2013/03/url-711.jpeg"};
-    Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
-    [mywall setValue:dict];
+//    
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    NSDictionary *dict = @{@"text": @"",
+//                           @"meta": @{@"ownerID" : [FCUser owner].id},
+//                           @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
+//                           @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
+//                           @"type": @"image",
+//                           @"src": @"http://cdn3.whatculture.com/wp-content/uploads/2013/03/url-711.jpeg"};
+//    Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
+//    [mywall setValue:dict];
 }
 #warning remove these methods, they were only for definining dictionaries anyway.
 -(void)testImageGifMessage
 {
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    NSDictionary *dict = @{@"text": @"",
-                            @"meta": @{@"ownerID" : [FCUser owner].id},
-                           @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
-                           @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
-                           @"type": @"gif",
-                           @"src": @"http://a.gifb.in/1601003555.gif"};
-    Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
-    [mywall setValue:dict];
+//    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+//    NSDictionary *dict = @{@"text": @"",
+//                            @"meta": @{@"ownerID" : [FCUser owner].id},
+//                           @"icon": [prefs objectForKey:kNSUSER_DEFAULTS_ICON],
+//                           @"color": [prefs objectForKey:kNSUSER_DEFAULTS_COLOR],
+//                           @"type": @"gif",
+//                           @"src": @"http://a.gifb.in/1601003555.gif"};
+//    Firebase *mywall = [[[[[FCUser owner].rootRef childByAppendingPath:@"users"] childByAppendingPath:[FCUser owner].id] childByAppendingPath:@"wall"] childByAutoId];
+//    [mywall setValue:dict];
 }
 -(CGSize)size
 {

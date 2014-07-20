@@ -509,6 +509,7 @@
 		AA0B651A18C3CC7000600108 /* unused  */ = {
 			isa = PBXGroup;
 			children = (
+				AA2F919919296235005081C4 /* old messages */,
 				AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */,
 				AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */,
 				C02CE3EC1868CD3000305FC9 /* FCMessageCell.h */,
@@ -537,7 +538,6 @@
 			isa = PBXGroup;
 			children = (
 				AA2F8C4A197390390091CC74 /* new messages */,
-				AA2F919919296235005081C4 /* old messages */,
 				C05E124C186D3D5F00BA89EA /* FCUser.h */,
 				C05E124D186D3D5F00BA89EA /* FCUser.m */,
 			);
@@ -604,6 +604,7 @@
 				AA2F919B19296263005081C4 /* ESImageMessage.m */,
 			);
 			name = "old messages";
+			path = Firechat;
 			sourceTree = "<group>";
 		};
 		AA411B0819381D6A0031100C /* asihttpreq */ = {

@@ -134,9 +134,11 @@
         owner = [FCUser createOwner];
     }
     
+    Firebase *rootRef = [[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL];
+    
     if (!self.authClient)
     {
-        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:owner.rootRef];
+        self.authClient = [[FirebaseSimpleLogin alloc] initWithRef:rootRef];
     }
     
 
@@ -151,7 +153,7 @@
         } else
         {
             owner.fuser = user; // We are now logged in
-            Firebase* authRef = [owner.rootRef childByAppendingPath:@".info/authenticated"];
+            Firebase* authRef = [rootRef childByAppendingPath:@".info/authenticated"];
             __block FirebaseHandle isAuthenticatedHandle = [authRef observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
             {
                 BOOL isAuthenticated = [snap.value boolValue];

@@ -20,57 +20,23 @@
 #import "MessageSpotifyTrack.h"
 #import "MessageGif.h"
 
-typedef void (^CompletionBlockType)(id);
-
 @interface FCUser ()
-@property (nonatomic, copy) CompletionBlockType completionBlock;
-@property (strong, nonatomic) Firebase *wall;
 @end
 
 @implementation FCUser
 @synthesize color, icon;
-@synthesize fuser;
+@synthesize fuser;//
 @synthesize deviceToken;
 
 static FCUser *currentUser;
 
-/*
- {
- "rules":
- {
- ".read":true,
- ".write":true,
- 
- "users":
- {
- "$user":{
- 
- "userId":{
- ".read":"auth != null && auth.id == data.val()",
- ".write":true
- },
- 
- "$attr":{
- ".read":"auth != null",
- ".write":"auth != null && auth.id == data.parent().child('userId').val()"
- }
- 
- 
- 
- 
- }
- }
- }
- 
- }
- */
 
 
 +(FCUser*)owner
 {
-//    NSAssert(currentUser, @"must have owner");
     return currentUser;
 }
+
 +(FCUser*)createOwner
 {
     if (![FCUser owner])
@@ -152,8 +118,8 @@ static FCUser *currentUser;
 - (id)init
 {
     self = [super init];
-    if (self) {
-        // This should probably happen earlier, depending on where we want to pop up permissions
+    if (self)
+    {
     }
     return self;
 }
@@ -181,29 +147,17 @@ static FCUser *currentUser;
         {
             self.beacon = [[ESTransponder alloc] initWithEarshotID:self.id andFirebaseRootURL:FIREBASE_ROOT_URL];
         }
-        // Listen for beacon discover events
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bluetoothDiscover:) name:kTransponderEventEarshotUserDiscovered object:nil];
     }
     
     return self;
 }
 
-// Initialize with an ID, pull data from firebase, and run the callback block
-//- (id) initWithId:(NSString *)id
-//{
-////    [self initFirebase];
-//    return self;
-//}
 
 // Set up the firebase reference
 - (void) initFirebase:(NSString *)id
 {
-    self.rootRef = [[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL];
-    self.ref = [[self.rootRef childByAppendingPath:@"users"] childByAppendingPath:self.id];
-    
-    // Start listening to the wall, just to see if it persists better
-    self.wall = [self.ref childByAppendingPath:@"wall"];
-
+    NSString *refUrl = [NSString stringWithFormat:@"%@users/%@", FIREBASE_ROOT_URL, self.id];
+    self.ref = [[Firebase alloc] initWithUrl:refUrl];
 }
 
 # pragma mark - push notification registration
@@ -249,26 +203,13 @@ static FCUser *currentUser;
 	return hex;
 }
 
-# pragma mark - bluetooth discover events
-- (void)bluetoothDiscover:(NSNotification *)note
-{
-    // Got a beacon from the bluetooth stack
-//    NSLog(@"Got a discover event!");
-//    NSLog(@"%@",note.userInfo);
-    // Check if this user already exists in this array
-}
-
-
 
 # pragma mark - generate user
 - (void) generateNewUser
 {
-    NSLog(@"Generating new user...");
     // Random icon and color
-    self.icon = [self getRandomIcon];
-    self.color = [self getRandomColor];
-    // Display color for things
-    self.displayColor = [UIColor colorWithHexString:self.color];
+    self.icon = @"profilepic";
+    self.color = @"#1A8DE6";
     
     // Generate the id
     [self generateIds];
@@ -282,7 +223,6 @@ static FCUser *currentUser;
     // Log the new user to mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
     [mixpanel track:@"User generated" properties:@{}];
-    
 }
 
 - (void) updateUserData
@@ -295,12 +235,7 @@ static FCUser *currentUser;
     // Icon
     [[self.ref childByAppendingPath:@"icon"] setValue:self.icon];
     [prefs setValue:self.icon forKey:@"icon"];
-    // Major/minor
-//    [[self.ref childByAppendingPath:@"major"] setValue:self.major];
-//    [[self.ref childByAppendingPath:@"minor"] setValue:self.minor];
-//    [prefs setValue:self.major forKey:@"major"];
-//    [prefs setValue:self.minor forKey:@"minor"];
-    
+
     [prefs setValue:self.id forKey:@"id"];
     
     // Synchronize preferences
@@ -309,73 +244,53 @@ static FCUser *currentUser;
 
 - (void) pullFromDefaults
 {
-    // Init
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    // Color
-    self.color = [prefs valueForKey:@"color"];
-    self.displayColor = [UIColor colorWithHexString:self.color];
-    // Icon
-    self.icon = [prefs valueForKey:@"icon"];
-    // Major/minor
-//    self.major = [prefs valueForKey:@"major"];
-//    self.minor = [prefs valueForKey:@"minor"];
-    // id
+    color = [prefs valueForKey:@"color"];
+    icon = [prefs valueForKey:@"icon"];
     self.id = [prefs valueForKey:@"id"];
-    
-//    NSLog(@"COLOR IS %@",self.color);
-//    NSLog(@"Got id: %@:%@",self.major,self.minor);
 }
 
 -(void)setColor:(NSString *)clr
 {
-    color = clr;
-    if ([self isOwner])
+    
+    if (![clr isEqualToString:color] && [self isOwner])
     {
         //post to firebase
-        [[NSUserDefaults standardUserDefaults] setObject:color forKey:@"color"];
+        [[NSUserDefaults standardUserDefaults] setObject:clr forKey:@"color"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         if (self.fuser)
         {
             Firebase *colorRef = [self.ref childByAppendingPath:@"color"];
-            [colorRef setValue:color];
+            [colorRef setValue:clr];
         }
         
         // Set via mixpanel
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel.people set:@{@"color": clr}];
     }
+    color = clr;
 }
 
 -(void)setIcon:(NSString *)icn
 {
-//    NSLog(@"icon set as %@", icn);
-    icon = icn;
-    if ([self isOwner])
+    if (![icn isEqualToString:icon] && [self isOwner])
     {
         //post to firebase
-//        [[self.ref childByAppendingPath:@"icon"] setValue:icon];
-        [[NSUserDefaults standardUserDefaults] setObject:icon forKey:@"icon"];
+        [[NSUserDefaults standardUserDefaults] setObject:icn forKey:@"icon"];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         if (self.fuser)
         {
             Firebase *colorRef = [self.ref childByAppendingPath:@"icon"];
-            [colorRef setValue:icon];
+            [colorRef setValue:icn];
         }
         
         // Set via mixpanel
         Mixpanel *mixpanel = [Mixpanel sharedInstance];
         [mixpanel.people set:@{@"icon": icn}];
     }
-}
-
--(void)synchWithFirebase
-{
-    if ([self isOwner] && self.fuser && self.fuser.userId)
-    {
-        [[self.ref childByAppendingPath:@"color"] setValue:color];
-    }
+    icon = icn;
 }
 
 -(BOOL)isOwner
@@ -383,12 +298,9 @@ static FCUser *currentUser;
     return self == [FCUser owner];
 }
 
-
 //generatesIds but also posts to wall a greeting message!
 - (void) generateIds
 {
-    
-    
     NSArray *syms = [NSThread  callStackSymbols];
     NSString *caller = [[NSString alloc] init];
     if ([syms count] > 1)
@@ -407,11 +319,7 @@ static FCUser *currentUser;
     
     // Generate an id
     NSInteger idInt = esRandomNumberIn(0, 99999999);
-    
-//    if (IS_ON_SIMULATOR)
-//    {
-//        idInt = 77541575;
-//    }
+
     
     self.id = [NSString stringWithFormat:@"%ld",(long)idInt];
     [[NSUserDefaults standardUserDefaults] setValue:self.id forKey:@"id"];
@@ -423,20 +331,9 @@ static FCUser *currentUser;
 -(void)postTextFromHubot:(NSString *)message
 {
     MessageModel *messageModel = [[MessageModel alloc] initWithOwnerID:@"ownerID" andText:message];
-    
     [messageModel postToAll];
 }
 
-
-- (NSString *)getRandomColor
-{
-    return @"#1A8DE6";
-}
-
-- (NSString *)getRandomIcon
-{
-    return @"profilepic";
-}
 
 
 

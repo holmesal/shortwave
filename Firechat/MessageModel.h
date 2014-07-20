@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FCUser.h"
+
 @interface MessageModel : NSObject
 
 typedef enum
@@ -25,6 +27,7 @@ typedef enum
 } MessageModelType;
 
 //returns nil if it failed to grab all data
+-(void)setUserData:(FCUser*)user;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 
 //bool success?  Override this to set more data!
@@ -37,8 +40,9 @@ typedef enum
 +(MessageModel*)messageModelFromValue:(id)value;
 
 //inherited properties
-//@property (strong, nonatomic) NSString *icon;
-//@property (strong, nonatomic) UIColor *color;
+@property (strong, nonatomic) NSString *icon;
+@property (strong, nonatomic) UIColor *color;
+
 @property (strong, nonatomic) NSString *ownerID;
 @property (strong, nonatomic) NSString *text;
 
@@ -54,5 +58,8 @@ typedef enum
 
 -(void)postToAll;
 -(void)postToUsers:(NSArray*)earshotIds;
+
+
+-(BOOL)hasAllData;
 
 @end

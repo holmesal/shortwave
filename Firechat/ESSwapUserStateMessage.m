@@ -51,69 +51,69 @@
 
 -(void)postMessageAsOwner
 {
-    FCUser *owner = [FCUser owner];
-  
-    
-    
-//    NSDictionary *message = @{@"ownerID": owner.id,
-//                              @"color": owner.color,
-//                              @"icon": owner.icon,
-//                              @"text": text,
-//                              @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy} };
-    
-    NSNumber *accuracy = @-1.0;
-    NSNumber *lat = @0;
-    NSNumber *lon = @0;
-    CLLocation *location = [owner.beacon getLocation];
-    if (location)
-    {
-        accuracy = [NSNumber numberWithDouble:location.horizontalAccuracy];
-        lat = [NSNumber numberWithDouble:location.coordinate.latitude];
-        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
-    }
-    
-    NSDictionary *message = @{@"type": @"ESSwapUserStateMessage",
-                              @"fromColor":self.fromColor,
-                              @"toColor":self.toColor,
-                              @"fromIcon":self.fromIcon,
-                              @"toIcon":self.toIcon,
-                              @"meta":
-                                    @{@"ownerID": owner.id, @"location":
-                                          @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
-                                      }
-                              };
-    
-    // Grab the current list of earshot ids
-    NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
-    
-    // Loop through and post to the firebase of every beacon in range
-    for (NSString *earshotId in earshotIds)
-    {
-        NSLog(@"Posting message to %@",earshotId);
-        // Post to the firebase wall of this beacon
-        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-        
-        [otherPersonMessageRef setValue:message];
-        [self setTimestampAsNow:otherPersonMessageRef];
-        
-//        // Send a push notification to this user
-//        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"deviceToken"];
-////        [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-////            // Make the push notification
-//////            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-//////                                               @"alert": text};
-//////            // Set the push notification
-//////            Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
-//////            [pushQueueRef setValue:pushNotification];
-////        }];
-    }
-    
-    //also post to yourself
-    //I actually don't want these posting to my wall.
-    
-    //Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
-    //[ownerMessageRef setValue:message];
-    //[self setTimestampAsNow:ownerMessageRef];
+//    FCUser *owner = [FCUser owner];
+//  
+//    
+//    
+////    NSDictionary *message = @{@"ownerID": owner.id,
+////                              @"color": owner.color,
+////                              @"icon": owner.icon,
+////                              @"text": text,
+////                              @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy} };
+//    
+//    NSNumber *accuracy = @-1.0;
+//    NSNumber *lat = @0;
+//    NSNumber *lon = @0;
+//    CLLocation *location = [owner.beacon getLocation];
+//    if (location)
+//    {
+//        accuracy = [NSNumber numberWithDouble:location.horizontalAccuracy];
+//        lat = [NSNumber numberWithDouble:location.coordinate.latitude];
+//        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
+//    }
+//    
+//    NSDictionary *message = @{@"type": @"ESSwapUserStateMessage",
+//                              @"fromColor":self.fromColor,
+//                              @"toColor":self.toColor,
+//                              @"fromIcon":self.fromIcon,
+//                              @"toIcon":self.toIcon,
+//                              @"meta":
+//                                    @{@"ownerID": owner.id, @"location":
+//                                          @{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
+//                                      }
+//                              };
+//    
+//    // Grab the current list of earshot ids
+//    NSArray *earshotIds = [owner.beacon.earshotUsers allKeys];
+//    
+//    // Loop through and post to the firebase of every beacon in range
+//    for (NSString *earshotId in earshotIds)
+//    {
+//        NSLog(@"Posting message to %@",earshotId);
+//        // Post to the firebase wall of this beacon
+//        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
+//        
+//        [otherPersonMessageRef setValue:message];
+//        [self setTimestampAsNow:otherPersonMessageRef];
+//        
+////        // Send a push notification to this user
+////        Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:beaconId] childByAppendingPath:@"deviceToken"];
+//////        [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+//////            // Make the push notification
+////////            NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+////////                                               @"alert": text};
+////////            // Set the push notification
+////////            Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
+////////            [pushQueueRef setValue:pushNotification];
+//////        }];
+//    }
+//    
+//    //also post to yourself
+//    //I actually don't want these posting to my wall.
+//    
+//    //Firebase *ownerMessageRef = [[owner.ref childByAppendingPath:@"wall"] childByAutoId];
+//    //[ownerMessageRef setValue:message];
+//    //[self setTimestampAsNow:ownerMessageRef];
 }
 
 - (void)setTimestampAsNow:(Firebase *)ref
