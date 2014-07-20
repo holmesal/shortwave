@@ -32,6 +32,10 @@
 #import "MessageImage.h"
 
 #import "SWSwapUserStateCell.h"
+
+#import "WallSource.h"
+
+
 #define kMAX_NUMBER_OF_MESSAGES 100
 #define kMAX_IMAGE_HEIGHT 520/2.0f
 #define kWallCollectionView_MAX_CELLS_INSERT 20
@@ -48,18 +52,18 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *wallCollectionView;
 
 @property (strong, nonatomic) Firebase *wallRef;
-@property (strong, nonatomic) FQuery *wallRefQueryLimit;
+@property (strong, nonatomic) FQuery *wallRefQueryLimit; //r
 @property (nonatomic, assign) FirebaseHandle bindToWallHandle;
 @property (nonatomic, assign) FirebaseHandle bindToWallHandleDelete;
 //@property (strong, nonatomic) CALayer *maskLayer;
 
-
+@property (strong, nonatomic) WallSource *wallSource;
 @property (nonatomic, strong) NSArray *hideCells;
 @property (atomic, strong) NSMutableArray *wallQueue;
 @property (atomic, strong) NSMutableArray *wall;
-@property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
+@property (strong, nonatomic) NSTimer *wallQueueInsertTimer; //r
 
-@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
+@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall; //r
 
 @property (nonatomic) BOOL initializedTableView;
 @property (nonatomic) CGRect lastFrameForSelfView;
@@ -168,9 +172,11 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 {
     [super viewDidAppear:animated];
     self.lastFrameForSelfView = self.view.frame;
-    
-    wallCollectionView.delegate = self;
-    wallCollectionView.dataSource = self;
+
+    NSString *wallUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, [FCUser owner].id];
+    _wallSource = [[WallSource alloc] initWithUrl:wallUrl collectionView:wallCollectionView andLayout:springFlowLayout];
+    wallCollectionView.delegate = _wallSource;
+    wallCollectionView.dataSource = _wallSource;
     
     springFlowLayout.minimumInteritemSpacing = 50;
     
@@ -331,14 +337,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     [alertView show];
 }
 
-
-
-//-(void)postSpam:(NSTimer*)timer
-//{
-//    
-//    [self sendMessageAsSelf:@"shortbot image me dogsforarms"];
-//}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -416,13 +414,10 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     // Hide the scroll indicator TEHEHEHEHEHEHE
     [self.tableView setShowsVerticalScrollIndicator:NO];
-    
-    // Hide the back button
-    [self.navigationItem setHidesBackButton:YES];
+
     
     // Bind to the owner's wall
-    [self bindToWall];
-    
+//    [self bindToWall];
     
     // Bind to the owner's tracking, updates UI cells
     [self bindToTracking];
@@ -710,36 +705,37 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     return results.count;
 }
 
-- (void)bindToWall
-{
-    self.wallRef = [[FCUser owner].ref childByAppendingPath:@"wall"] ;
-    self.wallRefQueryLimit = [self.wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
-    __weak typeof(self) weakSelf = self;
-    self.bindToWallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
-    {
-        if ([snapshot.value isKindOfClass:[NSDictionary class]])
-        {
-            if (!firstSnapshotFromWall)
-                self.firstSnapshotFromWall = snapshot;
-            
-            //some kind of message model: image, gif, plain_text, spotify_track
-            MessageModel *messageModel = [MessageModel messageModelFromDictionary:snapshot.value];
-
-            if (messageModel)
-            {
-                [weakSelf addMessageToWallEventually:messageModel];
-            } else
-            {
-                NSLog(@"Could not find MessageModel for data : %@", snapshot.value);
-            }
-            
-        }
-    } withCancelBlock:^(NSError *someError)
-    {
-        NSLog(@"error = %@", someError.localizedDescription);
-    }];
-    
-}
+//- (void)bindToWall
+//{
+//    self.wallRef = [[FCUser owner].ref childByAppendingPath:@"wall"] ;
+//    self.wallRefQueryLimit = [self.wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
+//    __weak typeof(self) weakSelf = self;
+//    self.bindToWallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeValue andPreviousSiblingNameWithBlock:^(FDataSnapshot *snapshot, NSString *previous)
+//    {
+//        NSLog(@"snap.value = %@", snapshot.value);
+//        if ([snapshot.value isKindOfClass:[NSDictionary class]])
+//        {
+//            if (!firstSnapshotFromWall)
+//                self.firstSnapshotFromWall = snapshot;
+//            
+//            //some kind of message model: image, gif, plain_text, spotify_track
+//            MessageModel *messageModel = [MessageModel messageModelFromValue:snapshot.value];
+//
+//            if (messageModel)
+//            {
+//                [weakSelf addMessageToWallEventually:messageModel];
+//            } else
+//            {
+//                NSLog(@"Could not find MessageModel for data : %@", snapshot.value);
+//            }
+//            
+//        }
+//    } withCancelBlock:^(NSError *someError)
+//    {
+//        NSLog(@"error = %@", someError.localizedDescription);
+//    }];
+//    
+//}
 
 
 -(void)setFirstSnapshotFromWall:(FDataSnapshot *)fSFW
@@ -759,102 +755,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     
     
 }
-//queue it in dat der wallQueue array until wallQueue reached maximum capacity then print in the event that.. just do it
--(void)addMessageToWallEventually:(MessageModel*)messageModel
-{
-    if (wallQueueInsertTimer)
-    {
-        [wallQueueInsertTimer invalidate];
-        wallQueueInsertTimer = nil;
-    }
-    
-    [wallQueue addObject:messageModel];
-    if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
-    {
-//        NSLog(@"begin timer to insert animated");
-//        [self insertMessagesToWallNow];
-        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
-        [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
-    } else
-    {//drain wallQueue now without animation
-        NSLog(@"&&&Drain wallqueue no animation&&&");
-        [wall addObjectsFromArray:wallQueue];
-        [wallQueue removeAllObjects];
-        [wallCollectionView reloadData];
-
-        CGRect visibleRect = wallCollectionView.frame;
-        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
-        [wallCollectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
-        
-        
-    }
-}
--(void)insertMessagesToWallNow
-{
-//    NSLog(@"+TIMER END");
-
-    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
-    int row = wall.count;
-    for (int i = 0; i < wallQueue.count; i++)
-    {
-        [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
-        row++;
-    }
-    
-    [self.wallCollectionView performBatchUpdates:^
-     {
-//         [springFlowLayout invalidateLayout];
-         
-         self.hideCells = [NSArray arrayWithArray:paths];
-         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
-         [self.wallCollectionView insertItemsAtIndexPaths:paths];
-         [wallQueue removeAllObjects];
-//         NSLog(@"last indexPath = %@", [paths lastObject]);
-//         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
-         
-     } completion:^(BOOL finished)
-    {
-
-//        CGRect tempRect = self.wallCollectionView.frame;
-//        tempRect.size.height -= 100;
-//        self.wallCollectionView.frame = tempRect;
-//
-//        CGPoint wallOffset = wallCollectionView.contentOffset;
-//        wallOffset.y += 100;
-//        wallCollectionView.contentOffset = wallOffset;
-        
-        
-
-        for (NSIndexPath *indexPath in self.hideCells)
-        {
-            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-        }
-        self.hideCells = @[];
-        CGRect visibleRect = wallCollectionView.frame;
-        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
-        
-//        NSLog(@"visibleRect = %@", NSStringFromCGRect(visibleRect));
-//        NSLog(@"contentOffset = %@", NSStringFromCGPoint(wallCollectionView.contentOffset));
-//        NSLog(@"contentSize = %@", NSStringFromCGSize(wallCollectionView.contentSize));
-//        NSLog(@"collview size = %@", NSStringFromCGSize(wallCollectionView.frame.size));
-        
-        if (wallCollectionView.contentSize.height < wallCollectionView.frame.size.height)
-        {
-            NSLog(@"NO SCROLL!");
-            return;
-        }
-        
-        
-        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
-        
-
-        
-//        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
-    }];
-    
-}
-
-
 
 #pragma mark - Table view data source
 
@@ -1078,57 +978,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 }
 
 #pragma mark UICollectionViewDelegate, UICollectionViewDataSource start
-
-//-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
-//{
-//    return 1;
-//}
-
-//-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-//{
-//    
-//    FCUser *owner = [FCUser owner];
-//    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon earshotUsers].count;
-//    
-//    NSInteger returnValue = numberOfBecons + 1;//change this value for now
-//    
-//    if (returnValue != lastNumberOfPeopleInCollectionView)
-//    {
-//        lastNumberOfPeopleInCollectionView = returnValue;
-//        CGFloat span = 50*returnValue+(10*returnValue-1);
-//        CGFloat leftInset = MAX((self.view.frame.size.width - span)/2, 10); //center the cells
-//        
-////        [UIView animateWithDuration:1 delay:0.0f usingSpringWithDamping:1 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
-////        {
-//            [collectionView setContentInset:UIEdgeInsetsMake(0, leftInset, 0, 0)];
-////        } completion:^(BOOL finished){}];
-//    }
-//    
-//    return returnValue;
-//}
-//-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    UICollectionViewCell *collectionViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ProfileCollectionViewCell" forIndexPath:indexPath];
-//    
-//    NSLog(@"collectionViewCell = %@", collectionViewCell);
-//    return collectionViewCell;
-//}
-//
-//-(void)randomBing
-//{
-//    NSLog(@"randomBing");
-//    NSInteger randomInteger = esRandomNumberIn(0, [self collectionView:whoIsHereCollectionView numberOfItemsInSection:0]);
-//    
-//    ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:randomInteger inSection:0]];
-//    if (!pcvc)
-//    {
-//        return;
-//    }
-//    [pcvc boop];
-//    
-//}
-
-
 #pragma mark UICollectionViewDelegate, UICollectionViewDataSource end
 
 
@@ -1330,179 +1179,8 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //}
 
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
 
-    
-    if (collectionView == wallCollectionView)
-    {
-        MessageModel *messageModel = wall[indexPath.row];
-        MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWall:wall];
-        
-        CGRect aTempRect = messageCell.frame;
-        aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
-        [messageCell setFrame:aTempRect];
-        
-        return messageCell;
 
-        
-        
-        id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
-        UICollectionViewCell *unknownCell = nil;
-        if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
-        {
-            //image message
-            ESImageMessage *imageMessage = unknownTypeOfMessage;
-            
-            SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-            NSURL *imgUrl = [NSURL URLWithString:imageMessage.src];
-            float p = [[ESImageLoader sharedImageLoader] progressForImage:imgUrl];
-            
-            
-            [imageCell setImageNil];
-            CGRect aTempRect = imageCell.frame;
-            aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
-            [imageCell setFrame:aTempRect];
-            [imageCell setMessage:imageMessage]; //does everything short of loading an image.
-            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:self.wallCollectionView];
-            [imageCell updateProgress:p]; //when fetched, it should display last percent for upload, or 0.
-            /*
-             * load image here
-             */
-            [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
-            {
-                 if (synchronous)
-                 {
-                     CGSize size = imageMessage.size;
-                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
-                     [imageCell setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
-                 } else
-                 {
-                     NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
-                     for (NSIndexPath *currentIndexPath in visibleIndexPaths)
-                     {
-                         //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
-                         id aMessage = [wall objectAtIndex:currentIndexPath.row];
-                         if ([aMessage isKindOfClass:[ESImageMessage class]])
-                         {
-                             ESImageMessage *currentImageMessage = aMessage;
-                             if ([url.absoluteString isEqualToString:currentImageMessage.src])
-                             {
-//                                 NSLog(@"%@", url.absoluteString);
-//                                 NSLog(@"%@", currentImageMessage.src);
-                                 
-                                 SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
-                                 ESImageMessage *againmessage = [wall objectAtIndex:currentIndexPath.row];
-//                                 NSLog(@"againMessage = %@", againmessage.src);
-                                 //ready to animate also invalidate layout for increased width
-//                                [springFlowLayout invalidateLayout];
-//                                 __weak UICollectionViewCell *cell = imageCell;
-                                
-                                 if (retrievedImageCell)
-                                 {
-                                     CGSize size = againmessage.size;
-                                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
-                                     [retrievedImageCell setImageOrGif:imageOrGif animated:YES isOversized:isOversized];
-                                     
-                                     ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
-
-                                     
-                                 }
-                                 break;
-                             }
-                         }
-                     }//end of NSIndexPath visible loop
-                 }
-            } updateBlock:^(NSURL *theUrl, float p)
-            {
-                NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
-                for (NSIndexPath *idxPth in visibleIndexPaths)
-                {
-                    //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
-                    id aMessage = [wall objectAtIndex:idxPth.row];
-                    if ([aMessage isKindOfClass:[ESImageMessage class]])
-                    {
-                        ESImageMessage *currMsg = aMessage;
-                        if ([theUrl.absoluteString isEqualToString:currMsg.src])
-                        {
-                            //                                 NSLog(@"%@", url.absoluteString);
-                            //                                 NSLog(@"%@", currentImageMessage.src);
-                            
-                            SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:idxPth];
-                            if (retrievedImageCell)
-                            {
-                                [retrievedImageCell updateProgress:p];
-                            }
-                            
-                            break;
-                        }
-                    }
-                }//end of NSIndexPath visible loop
-            
-             
-            } isGif:imageMessage.isGif withMetric:indexPath.row];
-            
-            unknownCell = imageCell;
-            
-        } else
-        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
-        {
-            FCMessage *textMessage = unknownTypeOfMessage;
-            SWTextCell *textCell = nil;
-            if ([textMessage.ownerID isEqualToString:[FCUser owner].id])
-            {
-                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWOwnerTextCellIdentifier forIndexPath:indexPath];
-                [(SWOwnerTextCell*)textCell addTapDebugGestureIfNecessary];
-            } else
-            {
-                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
-            }
-            
-            //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
-            [textCell setMessage:textMessage];
-            
-            
-            //non animated refresh of cell's fadedState
-
-            BOOL isTracked = [self isUserBeingTracked:textCell.ownerID];
-            [textCell setFaded:!isTracked animated:NO];
-            
-            unknownCell = textCell;
-        } else
-        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
-        {
-            ESSwapUserStateMessage *swapUserMessage = unknownTypeOfMessage;
-            
-            SWSwapUserStateCell *swapCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWSwapUserStateCellIdentifier forIndexPath:indexPath];
-           
-            
-            [swapCell setMessage:swapUserMessage];
-            
-            if (!swapUserMessage.hasDoneFirstTimeAnimation)
-            {
-                swapUserMessage.hasDoneFirstTimeAnimation = YES;
-                
-                [swapCell doFirstTimeAnimation];
-            }
-            
-            unknownCell = swapCell;
-        }
-        
-        if (self.hideCells && self.hideCells.count && [self.hideCells containsObject:indexPath])
-        {
-            unknownCell.contentView.alpha = 0.0f;
-        } else
-        {
-            unknownCell.contentView.alpha = 1.0f;
-        }
-        
-
-        unknownCell.tag = indexPath.row;
-        
-        return unknownCell;
-    }
-    return nil;
-}
 -(void)tapCell:(NSIndexPath*)indexPath
 {
     FCMessage *message = [wall objectAtIndex:indexPath.row];
@@ -1510,59 +1188,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     NSLog(@"message = %@, icon = %@ color = %@. alpha = %@", message.text, message.icon, message.color, alpha);
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-    CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
-//    NSLog(@"height = %f", height);
-    return CGSizeMake(320, height);
-    
-    
-    id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
-    CGSize size = CGSizeZero;
-    if ([unknownTypeOfMessage isKindOfClass:[FCMessage class] ])
-    {
-        FCMessage *message = unknownTypeOfMessage;
-        NSString *text = message.text;
-        
-        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
-        NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
-                                             @{ NSFontAttributeName: font }] ;
-        
-        size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
-        
-        size.height = (12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
 
-        
-    } else
-    if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
-    {
-        ESImageMessage *imageMessage = unknownTypeOfMessage;
-        
-        
-        CGSize imgSize = imageMessage.size;
-        static float topImgOffset = 59;
-        CGFloat height = topImgOffset + imgSize.height*320/imgSize.width;
-        
-        if (height > topImgOffset+kMAX_IMAGE_HEIGHT)
-        {
-            
-            height = 380/2.0f;
-        }
-        size.height = height;
-        
-        
-
-    } else
-    if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
-    {
-        size.height = 60;
-    }
-    size.width = 320;
-//    NSLog(@"size = %@ of %@", NSStringFromCGSize(size), unknownTypeOfMessage);
-//    size.height = 75;
-    return size;
-}
 
 -(UIView*)fullScreenImageView
 {
@@ -1636,9 +1262,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
         imageView.alpha = 1.0f;
 
         
-//        [CATransaction begin];
-//        [CATransaction setDisableActions: NO];
-//        [CATransaction commit];
         
     }];
     
@@ -1667,21 +1290,6 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
     cellRect.size = fullImgSize;
 
     
-//    CALayer *maskLayer = self.maskLayer;
-//    CGRect maskLayerFrame = maskLayer.frame;
-//    maskLayerFrame.size.height = fullImgSize.height;
-//
-//    CABasicAnimation *frameAnimation = [CABasicAnimation animationWithKeyPath:@"bounds"];
-//    frameAnimation.duration = 0.03;
-//    frameAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-//    CGRect s = maskLayer.frame;
-//    s.size.height = fullImgSize.height;
-//    frameAnimation.fromValue = [NSValue valueWithCGRect:s];
-//    frameAnimation.toValue = [NSValue valueWithCGRect:maskStartFrame];
-//    frameAnimation.fillMode = kCAFillModeForwards;
-//    frameAnimation.removedOnCompletion = NO;
-//    [maskLayer addAnimation:frameAnimation forKey:@"frame animate"];
-    
     
     [UIView animateWithDuration:0.3 animations:^
     {
@@ -1698,57 +1306,7 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //    NSLog(@"STATE CHANGED DRAGGE!");
 }
 
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-//    MessageModel *messageModel = wall[indexPath.row];
-//    if (messageModel.type == MessageModelTypeImage ||messageModel.type == MessageModelTypeGif)
-//    {
-//        //expand this cell
-//        [self collectionView:collectionView didEndLongPressForItemAtIndexPath:indexPath];
-//    }
-    
-//    MessageModel *messageModel = (MessageModel *)wall[indexPath.row];
-//    if (messageModel.type == MessageModelTypeGif || messageModel.type == MessageModelTypeImage )
-//    {
-//        MessageImage *imageModel = (MessageImage*)messageModel;
-//        [[ESImageLoader sharedImageLoader ] pauseOrUnpauseProcess:[NSURL URLWithString:imageModel.src] ];
-//    }
-    
-//    [springFlowLayout invalidateLayout];
-//    __weak UICollectionViewCell *cell = imageCell;
-//    //animateChangeHeight block ran by transitionWithView
-//    void (^animateChangeHeight)() = ^()
-//    {
-//        CGRect frame = cell.frame;
-//        frame.size.height = 250;
-//        cell.frame = frame;
-//    };
-    
-    // Animate
-//    ESImageMessage *currentImageMessage = [wall objectAtIndex:indexPath.row];
-////    currentImageMessage.isExpanded = YES;
-////    [UIView transitionWithView:imageCell duration:0.6f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
-//    
-//    
-//    [springFlowLayout invalidateLayout];
-//    __weak UICollectionViewCell *cell = [wallCollectionView cellForItemAtIndexPath:indexPath]; // Avoid retain cycles
-//    void (^animateChangeHeight)() = ^()
-//    {
-//        currentImageMessage.isExpanded = YES;
-//        CGRect frame = cell.frame;
-//        frame.size.height = 250;
-//        cell.frame = frame;
-//        [springFlowLayout invalidateLayout];
-//    };
-//
-//    // Animate
-//
-//    [UIView transitionWithView:cell duration:3.1f options: UIViewAnimationOptionCurveEaseIn animations:animateChangeHeight completion:nil];
 
-//    currentImageMessage.isExpanded = YES;
-//    [wallCollectionView reloadData];
-//    [wallCollectionView performBatchUpdates:nil completion:nil];
-}
 
 
 
@@ -1786,3 +1344,383 @@ static CGFloat HeightOfWhoIsHereView = 20 + 50.0f;//20 is for the status bar.  E
 //////    }
 //    return model;
 //}
+
+//-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+//{
+//    return 1;
+//}
+
+//-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+//{
+//
+//    FCUser *owner = [FCUser owner];
+//    NSInteger numberOfBecons = (!owner) ? 0 :  [owner.beacon earshotUsers].count;
+//
+//    NSInteger returnValue = numberOfBecons + 1;//change this value for now
+//
+//    if (returnValue != lastNumberOfPeopleInCollectionView)
+//    {
+//        lastNumberOfPeopleInCollectionView = returnValue;
+//        CGFloat span = 50*returnValue+(10*returnValue-1);
+//        CGFloat leftInset = MAX((self.view.frame.size.width - span)/2, 10); //center the cells
+//
+////        [UIView animateWithDuration:1 delay:0.0f usingSpringWithDamping:1 initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveLinear animations:^
+////        {
+//            [collectionView setContentInset:UIEdgeInsetsMake(0, leftInset, 0, 0)];
+////        } completion:^(BOOL finished){}];
+//    }
+//
+//    return returnValue;
+//}
+//-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    UICollectionViewCell *collectionViewCell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ProfileCollectionViewCell" forIndexPath:indexPath];
+//
+//    NSLog(@"collectionViewCell = %@", collectionViewCell);
+//    return collectionViewCell;
+//}
+//
+//-(void)randomBing
+//{
+//    NSLog(@"randomBing");
+//    NSInteger randomInteger = esRandomNumberIn(0, [self collectionView:whoIsHereCollectionView numberOfItemsInSection:0]);
+//
+//    ProfileCollectionViewCell *pcvc = (ProfileCollectionViewCell *)[whoIsHereCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:randomInteger inSection:0]];
+//    if (!pcvc)
+//    {
+//        return;
+//    }
+//    [pcvc boop];
+//
+//}
+
+
+
+//- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//
+//    CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
+////    NSLog(@"height = %f", height);
+//    return CGSizeMake(320, height);
+//
+//
+//    id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+//    CGSize size = CGSizeZero;
+//    if ([unknownTypeOfMessage isKindOfClass:[FCMessage class] ])
+//    {
+//        FCMessage *message = unknownTypeOfMessage;
+//        NSString *text = message.text;
+//
+//        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+//        NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
+//                                             @{ NSFontAttributeName: font }] ;
+//
+//        size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+//
+//        size.height = (12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
+//
+//
+//    } else
+//    if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+//    {
+//        ESImageMessage *imageMessage = unknownTypeOfMessage;
+//
+//
+//        CGSize imgSize = imageMessage.size;
+//        static float topImgOffset = 59;
+//        CGFloat height = topImgOffset + imgSize.height*320/imgSize.width;
+//
+//        if (height > topImgOffset+kMAX_IMAGE_HEIGHT)
+//        {
+//
+//            height = 380/2.0f;
+//        }
+//        size.height = height;
+//
+//
+//
+//    } else
+//    if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+//    {
+//        size.height = 60;
+//    }
+//    size.width = 320;
+////    NSLog(@"size = %@ of %@", NSStringFromCGSize(size), unknownTypeOfMessage);
+////    size.height = 75;
+//    return size;
+//}
+
+
+
+//- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+//{
+//
+//
+//    if (collectionView == wallCollectionView)
+//    {
+////        MessageModel *messageModel = wall[indexPath.row];
+////        MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWall:wall];
+////
+////        CGRect aTempRect = messageCell.frame;
+////        aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
+////        [messageCell setFrame:aTempRect];
+////
+////        return messageCell;
+//
+//
+//
+//        id unknownTypeOfMessage = [wall objectAtIndex:indexPath.row];
+//        UICollectionViewCell *unknownCell = nil;
+//        if ([unknownTypeOfMessage isKindOfClass:[ESImageMessage class]])
+//        {
+//            //image message
+//            ESImageMessage *imageMessage = unknownTypeOfMessage;
+//
+//            SWImageCell *imageCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+//            NSURL *imgUrl = [NSURL URLWithString:imageMessage.src];
+//            float p = [[ESImageLoader sharedImageLoader] progressForImage:imgUrl];
+//
+//
+//            [imageCell setImageNil];
+//            CGRect aTempRect = imageCell.frame;
+//            aTempRect.size = [self collectionView:collectionView layout:springFlowLayout sizeForItemAtIndexPath:indexPath];
+//            [imageCell setFrame:aTempRect];
+//            [imageCell setMessage:imageMessage]; //does everything short of loading an image.
+//            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:self.wallCollectionView];
+//            [imageCell updateProgress:p]; //when fetched, it should display last percent for upload, or 0.
+//            /*
+//             * load image here
+//             */
+//            [[ESImageLoader sharedImageLoader] loadImage:imgUrl completionBlock:^(id imageOrGif, NSURL *url, BOOL synchronous)
+//            {
+//                 if (synchronous)
+//                 {
+//                     CGSize size = imageMessage.size;
+//                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+//                     [imageCell setImageOrGif:imageOrGif animated:NO isOversized:isOversized];
+//                 } else
+//                 {
+//                     NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+//                     for (NSIndexPath *currentIndexPath in visibleIndexPaths)
+//                     {
+//                         //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+//                         id aMessage = [wall objectAtIndex:currentIndexPath.row];
+//                         if ([aMessage isKindOfClass:[ESImageMessage class]])
+//                         {
+//                             ESImageMessage *currentImageMessage = aMessage;
+//                             if ([url.absoluteString isEqualToString:currentImageMessage.src])
+//                             {
+////                                 NSLog(@"%@", url.absoluteString);
+////                                 NSLog(@"%@", currentImageMessage.src);
+//
+//                                 SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
+//                                 ESImageMessage *againmessage = [wall objectAtIndex:currentIndexPath.row];
+////                                 NSLog(@"againMessage = %@", againmessage.src);
+//                                 //ready to animate also invalidate layout for increased width
+////                                [springFlowLayout invalidateLayout];
+////                                 __weak UICollectionViewCell *cell = imageCell;
+//
+//                                 if (retrievedImageCell)
+//                                 {
+//                                     CGSize size = againmessage.size;
+//                                     BOOL isOversized = (size.height * 320/size.width > kMAX_IMAGE_HEIGHT);
+//                                     [retrievedImageCell setImageOrGif:imageOrGif animated:YES isOversized:isOversized];
+//
+//                                     ESAssert([retrievedImageCell isKindOfClass:[SWImageCell class]], @"Supposed ESImageMessage must correspond kind of SWImageCell!");
+//
+//
+//                                 }
+//                                 break;
+//                             }
+//                         }
+//                     }//end of NSIndexPath visible loop
+//                 }
+//            } updateBlock:^(NSURL *theUrl, float p)
+//            {
+//                NSArray *visibleIndexPaths = [wallCollectionView indexPathsForVisibleItems];
+//                for (NSIndexPath *idxPth in visibleIndexPaths)
+//                {
+//                    //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
+//                    id aMessage = [wall objectAtIndex:idxPth.row];
+//                    if ([aMessage isKindOfClass:[ESImageMessage class]])
+//                    {
+//                        ESImageMessage *currMsg = aMessage;
+//                        if ([theUrl.absoluteString isEqualToString:currMsg.src])
+//                        {
+//                            //                                 NSLog(@"%@", url.absoluteString);
+//                            //                                 NSLog(@"%@", currentImageMessage.src);
+//
+//                            SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:idxPth];
+//                            if (retrievedImageCell)
+//                            {
+//                                [retrievedImageCell updateProgress:p];
+//                            }
+//
+//                            break;
+//                        }
+//                    }
+//                }//end of NSIndexPath visible loop
+//
+//
+//            } isGif:imageMessage.isGif withMetric:indexPath.row];
+//
+//            unknownCell = imageCell;
+//
+//        } else
+//        if ([unknownTypeOfMessage isKindOfClass:[FCMessage class]])
+//        {
+//            FCMessage *textMessage = unknownTypeOfMessage;
+//            SWTextCell *textCell = nil;
+//            if ([textMessage.ownerID isEqualToString:[FCUser owner].id])
+//            {
+//                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWOwnerTextCellIdentifier forIndexPath:indexPath];
+//                [(SWOwnerTextCell*)textCell addTapDebugGestureIfNecessary];
+//            } else
+//            {
+//                textCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
+//            }
+//
+//            //both SWTextCell & SWOwnerTextCell respond to the same methods & have the same external properties.
+//            [textCell setMessage:textMessage];
+//
+//
+//            //non animated refresh of cell's fadedState
+//
+//            BOOL isTracked = [self isUserBeingTracked:textCell.ownerID];
+//            [textCell setFaded:!isTracked animated:NO];
+//
+//            unknownCell = textCell;
+//        } else
+//        if ([unknownTypeOfMessage isKindOfClass:[ESSwapUserStateMessage class]])
+//        {
+//            ESSwapUserStateMessage *swapUserMessage = unknownTypeOfMessage;
+//
+//            SWSwapUserStateCell *swapCell = [wallCollectionView dequeueReusableCellWithReuseIdentifier:SWSwapUserStateCellIdentifier forIndexPath:indexPath];
+//
+//
+//            [swapCell setMessage:swapUserMessage];
+//
+//            if (!swapUserMessage.hasDoneFirstTimeAnimation)
+//            {
+//                swapUserMessage.hasDoneFirstTimeAnimation = YES;
+//
+//                [swapCell doFirstTimeAnimation];
+//            }
+//
+//            unknownCell = swapCell;
+//        }
+//
+//        if (self.hideCells && self.hideCells.count && [self.hideCells containsObject:indexPath])
+//        {
+//            unknownCell.contentView.alpha = 0.0f;
+//        } else
+//        {
+//            unknownCell.contentView.alpha = 1.0f;
+//        }
+//
+//
+//        unknownCell.tag = indexPath.row;
+//
+//        return unknownCell;
+//    }
+//    return nil;
+//}
+
+
+
+//queue it in dat der wallQueue array until wallQueue reached maximum capacity then print in the event that.. just do it
+//-(void)addMessageToWallEventually:(MessageModel*)messageModel
+//{
+//    if (wallQueueInsertTimer)
+//    {
+//        [wallQueueInsertTimer invalidate];
+//        wallQueueInsertTimer = nil;
+//    }
+//
+//    [wallQueue addObject:messageModel];
+//    if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
+//    {
+////        NSLog(@"begin timer to insert animated");
+////        [self insertMessagesToWallNow];
+//        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
+//        [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
+//    } else
+//    {//drain wallQueue now without animation
+//        NSLog(@"&&&Drain wallqueue no animation&&&");
+//        [wall addObjectsFromArray:wallQueue];
+//        [wallQueue removeAllObjects];
+//        [wallCollectionView reloadData];
+//
+//        CGRect visibleRect = wallCollectionView.frame;
+//        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+//        [wallCollectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+//
+//
+//    }
+//}
+//-(void)insertMessagesToWallNow
+//{
+////    NSLog(@"+TIMER END");
+//
+//    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
+//    int row = wall.count;
+//    for (int i = 0; i < wallQueue.count; i++)
+//    {
+//        [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+//        row++;
+//    }
+//
+//    [self.wallCollectionView performBatchUpdates:^
+//     {
+////         [springFlowLayout invalidateLayout];
+//
+//         self.hideCells = [NSArray arrayWithArray:paths];
+//         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+//         [self.wallCollectionView insertItemsAtIndexPaths:paths];
+//         [wallQueue removeAllObjects];
+////         NSLog(@"last indexPath = %@", [paths lastObject]);
+////         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+//
+//     } completion:^(BOOL finished)
+//    {
+//
+////        CGRect tempRect = self.wallCollectionView.frame;
+////        tempRect.size.height -= 100;
+////        self.wallCollectionView.frame = tempRect;
+////
+////        CGPoint wallOffset = wallCollectionView.contentOffset;
+////        wallOffset.y += 100;
+////        wallCollectionView.contentOffset = wallOffset;
+//
+//
+//
+//        for (NSIndexPath *indexPath in self.hideCells)
+//        {
+//            [wallCollectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+//        }
+//        self.hideCells = @[];
+//        CGRect visibleRect = wallCollectionView.frame;
+//        visibleRect.origin.y = wallCollectionView.contentSize.height-visibleRect.size.height;
+//
+////        NSLog(@"visibleRect = %@", NSStringFromCGRect(visibleRect));
+////        NSLog(@"contentOffset = %@", NSStringFromCGPoint(wallCollectionView.contentOffset));
+////        NSLog(@"contentSize = %@", NSStringFromCGSize(wallCollectionView.contentSize));
+////        NSLog(@"collview size = %@", NSStringFromCGSize(wallCollectionView.frame.size));
+//
+//        if (wallCollectionView.contentSize.height < wallCollectionView.frame.size.height)
+//        {
+//            NSLog(@"NO SCROLL!");
+//            return;
+//        }
+//
+//
+//        [wallCollectionView scrollRectToVisible:visibleRect animated:YES];
+//
+//
+//
+////        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+//    }];
+//
+//}
+
+

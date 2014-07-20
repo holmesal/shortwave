@@ -40,29 +40,30 @@
     return self;
 }
 
+#warning remove this method soon
 -(id)initWithIcon:(NSString*)Icon color:(NSString*)colorString ownerID:(NSString*)OwnerID text:(NSString*)Text
 {
-    if (self = [super init])
+    if (self = [self initWithOwnerID:OwnerID andText:Text])
     {
-        NSAssert(NO, @"no longer accessible");
-//        self.icon = Icon;
-//        self.color = [UIColor colorWithHexString:colorString];
-        self.ownerID = OwnerID;
-        self.text = Text;
+//        NSAssert(NO, @"no longer accessible");
+////        self.icon = Icon;
+////        self.color = [UIColor colorWithHexString:colorString];
+//        self.ownerID = OwnerID;
+//        self.text = Text;
     }
     return self;
 }
 
-+(MessageModel*)messageModelFromDictionary:(NSDictionary*)dictionary
++(MessageModel*)messageModelFromValue:(id)value
 {
-    if (dictionary && [dictionary isKindOfClass:[NSDictionary class]])
-    {
+    if ([value isKindOfClass:[NSDictionary class]])
+    {//receiving message itself.
         
+        NSDictionary *dictionary = value;
         //parse what kind of message it is here
         NSString *type = dictionary[@"type"];
         
-        NSLog(@"type = %@", type);
-        
+
         if ([type isEqualToString:@"text"])
         {
             return [[MessageModel alloc] initWithDictionary:dictionary];
@@ -214,6 +215,7 @@
 
     
     Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
+    NSNumber *priority = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]; //priority in wall of receiver
     NSDictionary *message = [self toDictionary];
     NSDictionary *messageValue = @{@"message": message,
                                    @"ownerID": owner.id,
@@ -225,9 +227,10 @@
     {
         // Post to the firebase wall of this beacon
         //[[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId];
-        Firebase *userPersonMessageRef = [[Firebase alloc] initWithUrl:userPersonMessageUrl];
+        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId] ;
+        Firebase *userPersonMessageRef = [[[Firebase alloc] initWithUrl:userPersonMessageUrl] childByAutoId];
         [userPersonMessageRef setValue:messageFB.name];
+        [userPersonMessageRef setPriority:priority];
         
         if (![earshotId isEqualToString:owner.id])
         {

@@ -34,7 +34,7 @@ typedef enum
 -(NSDictionary*)toDictionary;
 -(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString;
 
-+(MessageModel*)messageModelFromDictionary:(NSDictionary*)dictionary;
++(MessageModel*)messageModelFromValue:(id)value;
 
 //inherited properties
 //@property (strong, nonatomic) NSString *icon;

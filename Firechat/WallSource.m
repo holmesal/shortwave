@@ -1,0 +1,232 @@
+//
+//  WallSource.m
+//  Shortwave
+//
+//  Created by Ethan Sherr on 7/19/14.
+//  Copyright (c) 2014 Buildco. All rights reserved.
+//
+
+#import "WallSource.h"
+#import "MessageModel.h"
+#import "MessageCell.h"
+
+#define kMAX_NUMBER_OF_MESSAGES 100
+#define kWallCollectionView_MAX_CELLS_INSERT 20
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
+
+@interface WallSource ()
+
+@property (strong, nonatomic) NSMutableArray *wall;
+@property (weak, nonatomic) ESSpringFlowLayout *layout;
+@property (weak, nonatomic) UICollectionView *collectionView;
+
+@property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
+
+//firebase management
+@property (assign, nonatomic) FirebaseHandle wallHandle;
+@property (strong, nonatomic) FQuery *wallRefQueryLimit;
+@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
+@property (atomic, strong) NSMutableArray *wallQueue; //when inserting cells to fast
+
+@property (nonatomic, strong) NSArray *hideCells;
+@property (strong, nonatomic) NSMutableDictionary *messageIdsToReplacingId; //messages are stored
+
+
+@end
+
+@implementation WallSource
+
+@synthesize wall;
+@synthesize layout;
+@synthesize collectionView;
+@synthesize url;
+@synthesize firstSnapshotFromWall;
+@synthesize wallQueueInsertTimer;
+@synthesize wallQueue;
+
+@synthesize messageIdsToReplacingId;
+
+
+-(id)initWithUrl:(NSString*)URL collectionView:(UICollectionView*)cv andLayout:(ESSpringFlowLayout*)lay
+{
+    if (self = [super init])
+    {
+        url = URL;
+        collectionView = cv;
+        layout = lay;
+        
+        wall = [[NSMutableArray alloc] init];
+        wallQueue = [[NSMutableArray alloc] initWithCapacity:kWallCollectionView_MAX_CELLS_INSERT];
+        messageIdsToReplacingId = [[NSMutableDictionary alloc] init];
+        
+        
+        [self bindToWall];
+    }
+    return self;
+}
+
+-(void)bindToWall
+{
+    Firebase *wallRef = [[Firebase alloc] initWithUrl:url];
+    
+    
+    _wallRefQueryLimit = [wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
+    __weak typeof(self) weakSelf = self;
+    self.wallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageIdSnapshot, NSString *previous)
+    {
+     NSLog(@"snap.value = %@", messageIdSnapshot.value);
+     if ([messageIdSnapshot.value isKindOfClass:[NSString class]])
+     {
+         if (!firstSnapshotFromWall)
+             firstSnapshotFromWall = messageIdSnapshot;
+         
+         if (previous)
+             [messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
+
+         NSString *messageID = messageIdSnapshot.value;
+         NSString *messageUrl = [NSString stringWithFormat:@"%@messages/%@/message", FIREBASE_ROOT_URL, messageID];
+         Firebase *messageFB = [[Firebase alloc] initWithUrl:messageUrl];
+         [messageFB observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot* messageSnapshot)
+          {
+              if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
+              {
+                  MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value];
+                  if (model)
+                      [weakSelf addMessageToWallEventually:model];
+              }
+          }];
+
+     }
+    } withCancelBlock:^(NSError *someError)
+    {
+        NSLog(@"error = %@", someError.localizedDescription);
+    }];
+    
+    
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return wall.count;
+}
+-(UICollectionViewCell*)collectionView:(UICollectionView *)cV cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MessageModel *messageModel = wall[indexPath.row];
+    MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWall:wall];
+    
+    CGRect aTempRect = messageCell.frame;
+    [messageCell setFrame:aTempRect];
+    
+    return messageCell;
+}
+- (CGSize)collectionView:(UICollectionView *)cV layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
+    return CGSizeMake(320, height);
+}
+
+-(void)dealloc
+{
+    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandle];
+}
+
+
+-(void)addMessageToWallEventually:(MessageModel*)messageModel
+{
+    if (wallQueueInsertTimer)
+    {
+        [wallQueueInsertTimer invalidate];
+        wallQueueInsertTimer = nil;
+    }
+    
+    [wallQueue addObject:messageModel];
+    if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
+    {
+        //        NSLog(@"begin timer to insert animated");
+        //        [self insertMessagesToWallNow];
+        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
+        [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
+    } else
+    {//drain wallQueue now without animation
+        NSLog(@"&&&Drain wallqueue no animation&&&");
+        [wall addObjectsFromArray:wallQueue];
+        [wallQueue removeAllObjects];
+        [collectionView reloadData];
+        
+        CGRect visibleRect = collectionView.frame;
+        visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
+        [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+        
+        
+    }
+}
+
+-(void)insertMessagesToWallNow
+{
+    //    NSLog(@"+TIMER END");
+    
+    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
+    int row = wall.count;
+    for (int i = 0; i < wallQueue.count; i++)
+    {
+        [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
+        row++;
+    }
+    
+    [collectionView performBatchUpdates:^
+     {
+         
+         self.hideCells = [NSArray arrayWithArray:paths];
+         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+         [collectionView insertItemsAtIndexPaths:paths];
+         [wallQueue removeAllObjects];
+         //         NSLog(@"last indexPath = %@", [paths lastObject]);
+         //         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
+         
+     } completion:^(BOOL finished)
+     {
+         
+         //        CGRect tempRect = self.wallCollectionView.frame;
+         //        tempRect.size.height -= 100;
+         //        self.wallCollectionView.frame = tempRect;
+         //
+         //        CGPoint wallOffset = wallCollectionView.contentOffset;
+         //        wallOffset.y += 100;
+         //        wallCollectionView.contentOffset = wallOffset;
+         
+         
+         
+         for (NSIndexPath *indexPath in self.hideCells)
+         {
+             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+         }
+         self.hideCells = @[];
+         CGRect visibleRect = collectionView.frame;
+         visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
+         
+         //        NSLog(@"visibleRect = %@", NSStringFromCGRect(visibleRect));
+         //        NSLog(@"contentOffset = %@", NSStringFromCGPoint(wallCollectionView.contentOffset));
+         //        NSLog(@"contentSize = %@", NSStringFromCGSize(wallCollectionView.contentSize));
+         //        NSLog(@"collview size = %@", NSStringFromCGSize(wallCollectionView.frame.size));
+         
+         if (collectionView.contentSize.height < collectionView.frame.size.height)
+         {
+             NSLog(@"NO SCROLL!");
+             return;
+         }
+         
+         
+         [collectionView scrollRectToVisible:visibleRect animated:YES];
+         
+         
+         
+         //        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+     }];
+}
+
+
+@end

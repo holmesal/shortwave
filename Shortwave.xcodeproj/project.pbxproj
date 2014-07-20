@@ -36,6 +36,7 @@
 		AA6BB86E18ED141E00EE6CF5 /* ESSwapUserStateMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB86D18ED141E00EE6CF5 /* ESSwapUserStateMessage.m */; };
 		AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */; };
 		AA8EC98E18C503BB00A8C4DC /* UIImage+AverageColor.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */; };
+		AA912E03197B560300D73B12 /* WallSource.m in Sources */ = {isa = PBXBuildFile; fileRef = AA912E02197B560300D73B12 /* WallSource.m */; };
 		AA95952718ED4AA3002D7514 /* FCOwnerMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */; };
 		AA98A0181974C9030057460F /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A0171974C9030057460F /* MessageImage.m */; };
 		AA98A01B1974CA260057460F /* MessageSpotifyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AA98A01A1974CA260057460F /* MessageSpotifyTrack.m */; };
@@ -289,6 +290,8 @@
 		AA6BB87018ED180000EE6CF5 /* ESSwapUserStateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSwapUserStateCell.m; path = Firechat/ESSwapUserStateCell.m; sourceTree = "<group>"; };
 		AA8EC98C18C503BB00A8C4DC /* UIImage+AverageColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AverageColor.h"; sourceTree = "<group>"; };
 		AA8EC98D18C503BB00A8C4DC /* UIImage+AverageColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AverageColor.m"; sourceTree = "<group>"; };
+		AA912E01197B560300D73B12 /* WallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WallSource.h; sourceTree = "<group>"; };
+		AA912E02197B560300D73B12 /* WallSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WallSource.m; sourceTree = "<group>"; };
 		AA95952518ED4AA3002D7514 /* FCOwnerMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FCOwnerMessageCell.h; path = Firechat/FCOwnerMessageCell.h; sourceTree = "<group>"; };
 		AA95952618ED4AA3002D7514 /* FCOwnerMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FCOwnerMessageCell.m; path = Firechat/FCOwnerMessageCell.m; sourceTree = "<group>"; };
 		AA98A0161974C9030057460F /* MessageImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageImage.h; sourceTree = "<group>"; };
@@ -567,6 +570,8 @@
 				AA9D319F192AC154003D010F /* ESSpringFlowLayout.m */,
 				C013C4FB189EFF44001157E3 /* FCWallViewController.h */,
 				C013C4FC189EFF44001157E3 /* FCWallViewController.m */,
+				AA912E01197B560300D73B12 /* WallSource.h */,
+				AA912E02197B560300D73B12 /* WallSource.m */,
 				AA49D43418DE0E1500514DF5 /* FCLEErrorViewController.h */,
 				AA49D43518DE0E1500514DF5 /* FCLEErrorViewController.m */,
 			);
@@ -1266,6 +1271,7 @@
 				AA9D3157192A9712003D010F /* DataLoadingOperation.m in Sources */,
 				AA9D31A7192AF285003D010F /* SWTextCell.m in Sources */,
 				C02CE3EE1868CD3000305FC9 /* FCMessageCell.m in Sources */,
+				AA912E03197B560300D73B12 /* WallSource.m in Sources */,
 				AA6BB87118ED180000EE6CF5 /* ESSwapUserStateCell.m in Sources */,
 				AAAA35F21974A45700F4D03E /* MessageGif.m in Sources */,
 				C02CE3A8186808B000305FC9 /* FCViewController.m in Sources */,
