@@ -206,14 +206,19 @@
     //get all ibeacon users
     NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
     
-    if (IS_ON_SIMULATOR) {
+    if (IS_ON_SIMULATOR)
+    {
         earshotIdsWithoutMe = @[];
     }
-    
     NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
     
+    [self postToUsers:earshotIds];
+}
 
-    
+-(void)postToUsers:(NSArray*)earshotIds
+{
+    FCUser *owner = [FCUser owner];
+
     Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
     NSNumber *priority = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]; //priority in wall of receiver
     NSDictionary *message = [self toDictionary];

@@ -50,6 +50,9 @@ typedef enum
 -(id)initWithIcon:(NSString*)icon color:(NSString*)color ownerID:(NSString*)ownerID text:(NSString*)text;
 
 -(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text;
+
+
 -(void)postToAll;
+-(void)postToUsers:(NSArray*)earshotIds;
 
 @end

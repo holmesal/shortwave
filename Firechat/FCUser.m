@@ -115,70 +115,16 @@ static FCUser *currentUser;
             
             // Create a few dummy types of posts to show off the functionality of Shortwave
             // Everthing is coming from Shortbot for now, to keep things simple-like
-            
-            Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
-            // And now a gif
-            Firebase *two = [[wall childByAppendingPath:@"wall"] childByAutoId];
+            NSArray *me = @[[FCUser owner].id];
             
             MessageImage *messageImage = [[MessageImage alloc] initWithSrc:@"http://i.imgur.com/cKLrCik.jpg" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"Lol look at this" width:@480 height:@455];
-            [two setValue:[messageImage toDictionary] ];
+            [messageImage postToUsers:me];
 
-//            [two setValue:@{@"color": @"292929" ,
-//                            @"icon":@"shortbot",
-//                            @"type":@"image",
-//                            @"content":@{
-//                                    @"src": @"http://i.imgur.com/cKLrCik.jpg"
-//                                    },
-//                            @"meta":@{@"ownerID":@"shortbot"}
-//                            }];
-//            [[two childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
-    
-
- 
-            
-            
-            
-            // Let's start off with a spotify track
-            
-
-            Firebase *one = [[wall childByAppendingPath:@"wall"] childByAutoId];
             MessageSpotifyTrack *spotifyTrack = [[MessageSpotifyTrack alloc] initWithTitle:@"I am a Hologram" uri:@"spotify:track:1OpkIbqR0fKlRSt33oiIGa" artist:@"Mister Heavenly" albumImage:@"https://i.scdn.co/image/31d501956beee416abc15c9d7709977afe473634" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"shared a song with you:"];
-            [one setValue:[spotifyTrack toDictionary]];
+            [spotifyTrack postToUsers:me];
           
-            
-//            [one setValue:@{@"color": @"292929" ,
-//                             @"icon":@"shortbot",
-//                             @"type":@"spotify_track",
-//                             @"text": @"shared a song with you:",
-//                             @"content":@{
-//                                    @"title":@"I Am A Hologram",
-//                                    @"artist":@"Mister Heavenly",
-//                                    @"uri":@"spotify:track:1OpkIbqR0fKlRSt33oiIGa",
-//                                    @"album_image":@"https://i.scdn.co/image/31d501956beee416abc15c9d7709977afe473634"
-//                                     },
-//                             @"meta":@{@"ownerID":@"shortbot"}
-//                             }];
-//            [[one childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
-            
-
-            
-            // And finally an image
-            /*
-            Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
-            [three setValue:@{@"color": @"292929" ,
-                             @"icon":@"shortbot",
-                             @"type":@"gif",
-                             @"content":@{
-                                     @"src": @"http://i.imgur.com/dupSbtr.gif"
-                                     },
-                             @"meta":@{@"ownerID":@"shortbot"}
-                             }];
-            [[three childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
-             */
-            Firebase *three = [[wall childByAppendingPath:@"wall"] childByAutoId];
             MessageGif *messageGif = [[MessageGif alloc] initWithSrc:@"http://i.imgur.com/dupSbtr.gif" andIcon:@"shortbot" color:@"292929" ownerID:@"shortbot" text:@"woaaah" width:@400 height:@300];
-            [three setValue:[messageGif toDictionary]];
-            
+            [messageGif postToUsers:me];
             
 //            // Oh yeah and a web link
 //            Firebase *four = [[wall childByAppendingPath:@"wall"] childByAutoId];
@@ -476,17 +422,11 @@ static FCUser *currentUser;
 
 -(void)postTextFromHubot:(NSString *)message
 {
-    Firebase *wall = [[[[Firebase alloc] initWithUrl:FIREBASE_ROOT_URL] childByAppendingPath:@"users"] childByAppendingPath:self.id];
-    Firebase *post = [[wall childByAppendingPath:@"wall"] childByAutoId];
-    [post setValue:[self generateFirstPost:message]];
-    [[post childByAppendingPath:@"timestamp"] setValue:kFirebaseServerValueTimestamp];
+    MessageModel *messageModel = [[MessageModel alloc] initWithOwnerID:@"ownerID" andText:message];
+    
+    [messageModel postToAll];
 }
 
--(NSDictionary*)generateFirstPost:(NSString *)message
-{
-    MessageModel *messageModel = [[MessageModel alloc] initWithIcon:@"shortbot" color:@"292929" ownerID:@"ownerID" text:message];
-    return [messageModel toDictionary];
-}
 
 - (NSString *)getRandomColor
 {
