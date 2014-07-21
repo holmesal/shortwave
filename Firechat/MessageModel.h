@@ -12,6 +12,8 @@
 
 @interface MessageModel : NSObject
 
+@property (strong, nonatomic) NSString *name;
+
 typedef enum
 {
     MessageModelTypePlainText,

@@ -16,7 +16,9 @@
 
 @interface WallSource ()
 
-@property (strong, nonatomic) NSMutableArray *wall;
+@property (strong, nonatomic) NSMutableArray *wall; //what is actually displayed (models)
+@property (strong, nonatomic) NSMutableArray *wallNames; //the order of all cells, some may still be loading
+
 @property (weak, nonatomic) ESSpringFlowLayout *layout;
 @property (weak, nonatomic) UICollectionView *collectionView;
 
@@ -29,8 +31,9 @@
 @property (atomic, strong) NSMutableArray *wallQueue; //when inserting cells to fast
 
 @property (nonatomic, strong) NSArray *hideCells;
-@property (strong, nonatomic) NSMutableDictionary *messageIdsToReplacingId; //messages are stored
-
+//@property (strong, nonatomic) NSMutableDictionary *messageIdsToReplacingId; //messages are stored
+@property (strong, nonatomic) NSMutableDictionary *usersDictionary;
+@property (strong, nonatomic) NSMutableDictionary *userNameToModelsArray;
 
 @end
 
@@ -44,7 +47,10 @@
 @synthesize wallQueueInsertTimer;
 @synthesize wallQueue;
 
-@synthesize messageIdsToReplacingId;
+@synthesize userNameToModelsArray;
+@synthesize wallNames;
+//@synthesize messageIdsToReplacingId;
+@synthesize usersDictionary;
 
 
 -(id)initWithUrl:(NSString*)URL collectionView:(UICollectionView*)cv andLayout:(ESSpringFlowLayout*)lay
@@ -57,9 +63,12 @@
         
         wall = [[NSMutableArray alloc] init];
         wallQueue = [[NSMutableArray alloc] initWithCapacity:kWallCollectionView_MAX_CELLS_INSERT];
-        messageIdsToReplacingId = [[NSMutableDictionary alloc] init];
+        wallNames = [[NSMutableArray alloc] init];
+//        messageIdsToReplacingId = [[NSMutableDictionary alloc] init];
         
+        userNameToModelsArray = [[NSMutableDictionary alloc] init];
         
+        usersDictionary = [[NSMutableDictionary alloc] init];
         [self bindToWall];
     }
     return self;
@@ -74,15 +83,32 @@
     __weak typeof(self) weakSelf = self;
     self.wallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageIdSnapshot, NSString *previous)
     {
-     NSLog(@"snap.value = %@", messageIdSnapshot.value);
-     if ([messageIdSnapshot.value isKindOfClass:[NSString class]])
-     {
+        NSLog(@"&&");
+        
+        NSLog(@"snap.name = %@", messageIdSnapshot.name);
+        NSLog(@"previous = %@", previous);
+        
+        if ([messageIdSnapshot.value isKindOfClass:[NSString class]])
+        {
          if (!firstSnapshotFromWall)
              firstSnapshotFromWall = messageIdSnapshot;
          
-         if (previous)
-             [messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
-
+         //lookup where to place this name..
+         NSInteger index = wallNames.count;
+         if (previous) //make block to observe child moved events on messages
+         {
+             //[messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
+             NSInteger integer = [wallNames indexOfObject:previous];
+             if (integer < wallNames.count)
+             {
+                 NSLog(@"was found! %d", index);
+                 index = integer;
+             } else {NSAssert(NO, @"You needed to found it!");}
+         }
+         [wallNames insertObject:messageIdSnapshot.name atIndex:index];
+         NSLog(@"wallNames = %@", wallNames);
+         
+         //lookup the message content!...
          NSString *messageID = messageIdSnapshot.value;
          NSString *messageUrl = [NSString stringWithFormat:@"%@messages/%@/message", FIREBASE_ROOT_URL, messageID];
          Firebase *messageFB = [[Firebase alloc] initWithUrl:messageUrl];
@@ -92,11 +118,62 @@
               {
                   MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value];
                   if (model)
-                      [weakSelf addMessageToWallEventually:model];
+                  {
+                      model.name = messageSnapshot.name;
+                      
+                      FCUser *user = [usersDictionary objectForKey:model.ownerID];
+                      if (user)
+                      {
+                          [model setUserData:user];
+                          [weakSelf addMessageToWallEventually:model];
+                      } else
+                      {
+                          //save this model!
+                          NSMutableArray *arrayOfModelsForUser = [userNameToModelsArray objectForKey:model.ownerID];
+                          if (!arrayOfModelsForUser)
+                          {
+                              arrayOfModelsForUser = [[NSMutableArray alloc] init];
+                              [userNameToModelsArray setObject:arrayOfModelsForUser forKey:model.ownerID];
+                          }
+                          
+                          //setting models
+                          [arrayOfModelsForUser addObject:model];
+                          
+                          //lookup user meta
+                          //create user
+                          //save user in usersDictionary
+                      
+                          Firebase *userMetaFB = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/meta", FIREBASE_ROOT_URL, model.ownerID] ];
+                          [userMetaFB observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
+                          {
+                              if ([snap.value isKindOfClass:[NSDictionary class]])
+                              {
+                                  NSDictionary *dictionary = snap.value;
+                                  NSString *color = dictionary[@"color"];
+                                  NSString *icon = dictionary[@"icon"];
+                                  FCUser *user = [[FCUser alloc] init];
+                                  user.icon = icon;
+                                  user.color = color;
+                                  user.id = model.ownerID;
+                                  
+                                  [usersDictionary setObject:user forKey:user.id];
+                                  
+                                  NSMutableArray *arrayOfModelsForUser = [userNameToModelsArray objectForKey:user.id];
+                                  for (MessageModel *messageModel in arrayOfModelsForUser)
+                                  {
+                                      [messageModel setUserData:user];
+                                      [self addMessageToWallEventually:messageModel];
+                                  }
+                                  [userNameToModelsArray removeObjectForKey:user.id];
+                              }
+                          }];
+                          
+                      }
+                  }
               }
           }];
 
-     }
+        }
     } withCancelBlock:^(NSError *someError)
     {
         NSLog(@"error = %@", someError.localizedDescription);

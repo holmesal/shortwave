@@ -96,8 +96,8 @@
     ownerID = model.ownerID;
     messageText.text = model.text;
     
-    [self.coloredCircleLayer setBackgroundColor:[UIColor redColor].CGColor];
-    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", @"1"] ];
+    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
+    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];
     iconImageView.image = img;
     
     super.model = model;

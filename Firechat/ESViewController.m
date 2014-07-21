@@ -446,7 +446,14 @@ typedef enum
         noInternetView = [[UIView alloc] initWithFrame:noInternetViewRect];
         
         
-        UIColor *userColor = [UIColor colorWithHexString:[[NSUserDefaults standardUserDefaults] objectForKey:@"color"]];
+        NSString *coiov = [[NSUserDefaults standardUserDefaults] objectForKey:@"color"];
+        
+        if (!coiov)
+        {
+            coiov = @"FFFFFF";
+        }
+        
+        UIColor *userColor = [UIColor colorWithHexString:coiov];
         [noInternetView setBackgroundColor:userColor];
         
         

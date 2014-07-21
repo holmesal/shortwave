@@ -270,7 +270,7 @@
 @end
 
 
-//-(void)OLDpostToAll
+//-(void)OLDpostToAll/Users/ethan/Documents/iPhone workspace/earshot/Firechat/MessageModel.m
 //{
 //    FCUser *owner = [FCUser owner];
 //    // Grab the current list of earshot users

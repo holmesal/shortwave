@@ -207,10 +207,6 @@ static FCUser *currentUser;
 # pragma mark - generate user
 - (void) generateNewUser
 {
-    // Random icon and color
-    self.icon = @"profilepic";
-    self.color = @"#1A8DE6";
-    
     // Generate the id
     [self generateIds];
     
@@ -219,6 +215,10 @@ static FCUser *currentUser;
     
     // Call update to set these values on firebase, and save to NSUserDefaults
     [self updateUserData];
+    
+    // Random icon and color
+    self.icon = @"profilepic";
+    self.color = @"#1A8DE6";
     
     // Log the new user to mixpanel
     Mixpanel *mixpanel = [Mixpanel sharedInstance];
@@ -229,15 +229,14 @@ static FCUser *currentUser;
 {
     // Init user defaults
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    // Color
-    [[self.ref childByAppendingPath:@"color"] setValue:self.color];
+//    // Color
+    [[[self.ref childByAppendingPath:@"meta"] childByAppendingPath:@"color"] setValue:self.color];
     [prefs setValue:self.color forKey:@"color"];
     // Icon
-    [[self.ref childByAppendingPath:@"icon"] setValue:self.icon];
+    [[[self.ref childByAppendingPath:@"meta"] childByAppendingPath:@"icon"] setValue:self.icon];
     [prefs setValue:self.icon forKey:@"icon"];
 
     [prefs setValue:self.id forKey:@"id"];
-    
     // Synchronize preferences
     [prefs synchronize];
 }
@@ -261,7 +260,7 @@ static FCUser *currentUser;
         
         if (self.fuser)
         {
-            Firebase *colorRef = [self.ref childByAppendingPath:@"color"];
+            Firebase *colorRef = [[self.ref childByAppendingPath:@"meta"] childByAppendingPath:@"color"];
             [colorRef setValue:clr];
         }
         
@@ -282,7 +281,7 @@ static FCUser *currentUser;
         
         if (self.fuser)
         {
-            Firebase *colorRef = [self.ref childByAppendingPath:@"icon"];
+            Firebase *colorRef = [[self.ref childByAppendingPath:@"meta"] childByAppendingPath:@"icon"];
             [colorRef setValue:icn];
         }
         
@@ -330,7 +329,7 @@ static FCUser *currentUser;
 
 -(void)postTextFromHubot:(NSString *)message
 {
-    MessageModel *messageModel = [[MessageModel alloc] initWithOwnerID:@"ownerID" andText:message];
+    MessageModel *messageModel = [[MessageModel alloc] initWithOwnerID:@"shortbot" andText:message];
     [messageModel postToAll];
 }
 
