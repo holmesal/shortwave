@@ -532,7 +532,7 @@
     return height;
 }
 
--(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageImage*)imageMessage collectionView:(UICollectionView*)wallCollectionView wall:(NSArray*)wall andIndexPath:(NSIndexPath*)indexPath;
+-(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageImage*)imageMessage collectionView:(UICollectionView*)wallCollectionView wallSource:(WallSource*)wallSource andIndexPath:(NSIndexPath*)indexPath;
 {
     NSURL *imgUrl = [NSURL URLWithString:imageUrlString];
     
@@ -558,7 +558,7 @@
              for (NSIndexPath *currentIndexPath in visibleIndexPaths)
              {
                  //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
-                 MessageModel *aMessage = (MessageModel *)[wall objectAtIndex:currentIndexPath.row];
+                 MessageModel *aMessage = [wallSource wallObjectAtIndex:currentIndexPath.row];// (MessageModel *)[wall objectAtIndex:(currentIndexPath.row)];
                  if ([aMessage isKindOfClass:[MessageImage class]])
                  {
                      MessageImage *currentImageMessage = (MessageImage*)aMessage;
@@ -566,7 +566,7 @@
                      {
                          
                          SWImageCell *retrievedImageCell = (SWImageCell *)[wallCollectionView cellForItemAtIndexPath:currentIndexPath];
-                         MessageImage *againmessage = (MessageImage*)[wall objectAtIndex:currentIndexPath.row];
+                         MessageImage *againmessage = (MessageImage*)[wallSource wallObjectAtIndex:currentIndexPath.row];//(MessageImage*)[wall objectAtIndex:currentIndexPath.row];
                          
                          if (retrievedImageCell)
                          {
@@ -589,7 +589,7 @@
          for (NSIndexPath *idxPth in visibleIndexPaths)
          {
              //scan the current visible messages for an ESImageMessage and retrieve corresponding SWImageCell (if it exists) to give it the UIImage
-             MessageModel *aMessage = (MessageModel *)[wall objectAtIndex:idxPth.row];
+             MessageModel *aMessage =  [wallSource wallObjectAtIndex:idxPth.row];//(MessageModel *)[wall objectAtIndex:idxPth.row];
              if ([aMessage isKindOfClass:[MessageImage class]])
              {
                  MessageImage *currMsg = (MessageImage*)aMessage;

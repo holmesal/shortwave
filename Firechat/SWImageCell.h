@@ -11,6 +11,7 @@
 #import "AnimatedGif.h"
 
 #import "MessageCell.h"
+#import "MessageImage.h"
 
 
 @interface SWImageCell : MessageCell
@@ -39,6 +40,6 @@
 #define SWImageCell_NoImageHeight 40+17*2
 #define SWImageCell_FIXEDHEIGHT 174
 
--(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageModel*)imageMessage collectionView:(UICollectionView*)wallCollectionView wall:(NSArray*)wall andIndexPath:(NSIndexPath*)indexPath;
+-(void)loadImage:(NSString*)imageUrlString withImageCell:(SWImageCell*)imageCell imageMessage:(MessageImage*)imageMessage collectionView:(UICollectionView*)wallCollectionView wallSource:(WallSource*)wall andIndexPath:(NSIndexPath*)indexPath;
 
 @end

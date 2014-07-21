@@ -258,8 +258,8 @@
 }
 -(UICollectionViewCell*)collectionView:(UICollectionView *)cV cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MessageModel *messageModel = wall[indexPath.row];
-    MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWall:wall];
+    MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row]; //wall[indexPath.row];
+    MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWallSource:self];
     
     CGRect aTempRect = messageCell.frame;
     [messageCell setFrame:aTempRect];
@@ -268,8 +268,15 @@
 }
 - (CGSize)collectionView:(UICollectionView *)cV layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
+    MessageModel *model = [self wallObjectAtIndex:indexPath.row]; //wall[indexPath.row]
+    CGFloat height = [MessageCell heightOfMessageCellForModel:model collectionView:(UICollectionView*)collectionView];
     return CGSizeMake(320, height);
+}
+
+//reverse
+-(MessageModel*)wallObjectAtIndex:(NSInteger)index
+{
+    return wall[(wall.count-1)-index];
 }
 
 -(void)addMessageToWallEventually:(MessageModel*)messageModel

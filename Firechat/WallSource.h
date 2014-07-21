@@ -8,11 +8,13 @@
 
 #import <Foundation/Foundation.h>
 #import "ESSpringFlowLayout.h"
+#import "MessageModel.h"
 
 @interface WallSource : NSObject <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic, readonly) NSString *url;
 
 -(id)initWithUrl:(NSString*)url collectionView:(UICollectionView*)cv andLayout:(ESSpringFlowLayout*)lay;
+-(MessageModel*)wallObjectAtIndex:(NSInteger)index;
 
 @end

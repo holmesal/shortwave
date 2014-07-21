@@ -30,8 +30,10 @@
 
 
 - (void)sendProviderDeviceToken:(NSData *)bytes;
+
+//listeners to color and icon
 -(void)registerListenersToMeta;
-//- (id) initAsOwner;
+-(void)unregisterMetaListener;
 
 +(FCUser*)owner;
 +(FCUser*)createOwner;
