@@ -25,7 +25,8 @@
 @property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
 
 //firebase management
-@property (assign, nonatomic) FirebaseHandle wallHandle;
+@property (assign, nonatomic) FirebaseHandle wallHandleInsert;
+@property (assign, nonatomic) FirebaseHandle wallHandleMove;
 @property (strong, nonatomic) FQuery *wallRefQueryLimit;
 @property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
 @property (atomic, strong) NSMutableArray *wallQueue; //when inserting cells to fast
@@ -81,7 +82,7 @@
     
     _wallRefQueryLimit = [wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
     __weak typeof(self) weakSelf = self;
-    self.wallHandle = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageIdSnapshot, NSString *previous)
+    self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageIdSnapshot, NSString *previous)
     {
         NSLog(@"&&");
         
@@ -179,6 +180,33 @@
         NSLog(@"error = %@", someError.localizedDescription);
     }];
     
+    self.wallHandleMove = [self.wallRefQueryLimit observeEventType:FEventTypeChildMoved andPreviousSiblingNameWithBlock:^(FDataSnapshot *snap, NSString *previous)
+    {
+        if ([snap.value isKindOfClass:[NSString class]])
+        {
+            //current index
+//            NSInteger indexOfName = [wallNames indexOfObject:snap.value];
+            [wallNames removeObject:snap.value];
+            
+            //where is the previous child? or last position
+            NSInteger indexOfPrevious = wallNames.count;
+            if (previous) //make block to observe child moved events on messages
+            {
+                //[messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
+                NSInteger integer = [wallNames indexOfObject:previous];
+                if (integer < wallNames.count)
+                {
+                    NSLog(@"was found! %d", index);
+                    indexOfPrevious = integer;
+                } else {NSAssert(NO, @"You needed to found it!");}
+            }
+            
+            //ok now it is time to move object at indexOfName, inserted to indexOfPrevious
+            [wallNames insertObject:snap.name atIndex:indexOfPrevious];
+            
+        }
+    } withCancelBlock:^(NSError *error){}];
+    
     
 }
 
@@ -208,7 +236,8 @@
 
 -(void)dealloc
 {
-    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandle];
+    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleInsert];
+    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleMove];
 }
 
 
