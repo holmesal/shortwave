@@ -30,6 +30,7 @@
 
 
 - (void)sendProviderDeviceToken:(NSData *)bytes;
+-(void)registerListenersToMeta;
 //- (id) initAsOwner;
 
 +(FCUser*)owner;

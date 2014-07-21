@@ -161,6 +161,13 @@
                                   NSString *color = dictionary[@"color"];
                                   NSString *icon = dictionary[@"icon"];
                                   FCUser *user = [[FCUser alloc] init];
+                                  
+                                  //listen for value changes in color and icon
+                                  [user registerListenersToMeta]; //when icon and color change, observe
+                                  [user addObserver:self forKeyPath:@"color" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+                                  [user addObserver:self forKeyPath:@"icon" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+                                  
+                                  
                                   user.icon = icon;
                                   user.color = color;
                                   user.id = model.ownerID;
@@ -264,13 +271,6 @@
     CGFloat height = [MessageCell heightOfMessageCellForModel:wall[indexPath.row] collectionView:(UICollectionView*)collectionView];
     return CGSizeMake(320, height);
 }
-
--(void)dealloc
-{
-    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleInsert];
-    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleMove];
-}
-
 
 -(void)addMessageToWallEventually:(MessageModel*)messageModel
 {
@@ -380,6 +380,50 @@
         MessageModel *model = wQ[i];
         
         [wall insertObject:model atIndex:indexPath.row];
+    }
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([object isKindOfClass:[FCUser class]])
+    {
+        FCUser *user = object;
+        //gather all relevant models
+        NSArray *modelsFromWall = [wall filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.ownerID == %@)", user.id]];
+        
+        NSMutableArray *arrayOfIndexPaths = [[NSMutableArray alloc] init];
+        for (MessageModel *model in modelsFromWall)
+        {
+            [model setUserData:user];
+            NSInteger row = [wall indexOfObject:model];
+            row = (row < wall.count) ? row : -1;
+            
+            //if row is valid
+            if (row >= 0)
+            {
+                [arrayOfIndexPaths addObject:[NSIndexPath indexPathForItem:row inSection:0]];
+            }
+
+        } //now the models are updated, and arrayOfIndexPaths is an array of all index paths that must be updated!
+        
+        
+#warning time to perform a reload operation on the cells that are visible
+        
+
+        
+    }
+}
+
+-(void)dealloc
+{
+    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleInsert];
+    [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleMove];
+    
+    for (FCUser *user in [usersDictionary allValues])
+    {
+        [user unregisterMetaListener];
+        [user removeObserver:self forKeyPath:@"color"];
+        [user removeObserver:self forKeyPath:@"icon"];
     }
 }
 

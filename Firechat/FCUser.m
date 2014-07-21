@@ -21,6 +21,13 @@
 #import "MessageGif.h"
 
 @interface FCUser ()
+
+@property (assign, nonatomic) FirebaseHandle colorHandle;
+@property (strong, nonatomic) Firebase *metaColorFB;
+
+@property (assign, nonatomic) FirebaseHandle iconHandle;
+@property (strong, nonatomic) Firebase *metaIconFB;
+
 @end
 
 @implementation FCUser
@@ -28,8 +35,38 @@
 @synthesize fuser;//
 @synthesize deviceToken;
 
+//firebase variables
+@synthesize colorHandle;
+@synthesize metaColorFB;
+
+@synthesize iconHandle;
+@synthesize metaIconFB;
+
 static FCUser *currentUser;
 
+
+-(void)unregisterMetaListener
+{
+    [metaColorFB removeObserverWithHandle:colorHandle];
+    [metaIconFB removeObserverWithHandle:iconHandle];
+}
+
+-(void)registerListenersToMeta
+{
+    metaColorFB = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/meta/color", FIREBASE_ROOT_URL, self.id]];
+    colorHandle = [metaColorFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        color = snapshot.value;
+    }];
+    
+    
+    metaIconFB = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/meta/icon", FIREBASE_ROOT_URL, self.id]];
+    iconHandle = [metaIconFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        icon = snapshot.value;
+    }];
+    
+}
 
 
 +(FCUser*)owner
