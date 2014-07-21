@@ -36,6 +36,8 @@
 @property (strong, nonatomic) NSMutableDictionary *usersDictionary;
 @property (strong, nonatomic) NSMutableDictionary *userNameToModelsArray;
 
+@property (strong, nonatomic) NSMutableArray *namesOfPendingMessages;
+
 @end
 
 @implementation WallSource
@@ -52,6 +54,7 @@
 @synthesize wallNames;
 //@synthesize messageIdsToReplacingId;
 @synthesize usersDictionary;
+@synthesize namesOfPendingMessages;
 
 
 -(id)initWithUrl:(NSString*)URL collectionView:(UICollectionView*)cv andLayout:(ESSpringFlowLayout*)lay
@@ -70,6 +73,9 @@
         userNameToModelsArray = [[NSMutableDictionary alloc] init];
         
         usersDictionary = [[NSMutableDictionary alloc] init];
+        
+        namesOfPendingMessages = [[NSMutableArray alloc] init];
+        
         [self bindToWall];
     }
     return self;
@@ -110,6 +116,8 @@
          NSLog(@"wallNames = %@", wallNames);
          
          //lookup the message content!...
+            [namesOfPendingMessages addObject:messageIdSnapshot.name];
+            
          NSString *messageID = messageIdSnapshot.value;
          NSString *messageUrl = [NSString stringWithFormat:@"%@messages/%@/message", FIREBASE_ROOT_URL, messageID];
          Firebase *messageFB = [[Firebase alloc] initWithUrl:messageUrl];
@@ -120,8 +128,8 @@
                   MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value];
                   if (model)
                   {
+                    
                       model.name = messageSnapshot.name;
-                      
                       FCUser *user = [usersDictionary objectForKey:model.ownerID];
                       if (user)
                       {
@@ -210,6 +218,29 @@
     
 }
 
+-(NSInteger)indexInWallToInsertNewModelIn:(NSString*)name
+{
+    
+    
+    NSInteger i = 0;
+    for (NSString *otherName in wallNames)
+    {
+        if (otherName == name)
+        {
+            break;
+        } else
+        if (![namesOfPendingMessages containsObject:otherName])
+        {//then this cell is loaded
+            i++;
+        }
+    }
+    
+    //now i is the index that "name" should be inserted into, and also "name" is no longer loading
+    
+    
+    return i;
+}
+
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -273,21 +304,28 @@
 
 -(void)insertMessagesToWallNow
 {
-    //    NSLog(@"+TIMER END");
+    //no longer consider messages in queue as 'pending'
+    for (MessageModel *messageModel in wallQueue)
+    {
+        [namesOfPendingMessages removeObject:messageModel.name];
+    }
     
     NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
-    int row = wall.count;
     for (int i = 0; i < wallQueue.count; i++)
     {
-        [paths addObject:[NSIndexPath indexPathForRow:row inSection:0]];
-        row++;
+        MessageModel *messageModel = wallQueue[i];
+        
+        NSInteger row = [self indexInWallToInsertNewModelIn:messageModel.name];
+        [paths addObject: [NSIndexPath indexPathForRow:row inSection:0] ];
     }
     
     [collectionView performBatchUpdates:^
      {
          
          self.hideCells = [NSArray arrayWithArray:paths];
-         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+//         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
+         [self insertToWall:wallQueue inOrder:paths];
+         
          [collectionView insertItemsAtIndexPaths:paths];
          [wallQueue removeAllObjects];
          //         NSLog(@"last indexPath = %@", [paths lastObject]);
@@ -332,6 +370,17 @@
          
          //        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
      }];
+}
+
+-(void)insertToWall:(NSArray*)wQ inOrder:(NSArray*)paths
+{
+    for (NSInteger i = 0 ; i < wallQueue.count; i++)
+    {
+        NSIndexPath *indexPath = paths[i];
+        MessageModel *model = wQ[i];
+        
+        [wall insertObject:model atIndex:indexPath.row];
+    }
 }
 
 
