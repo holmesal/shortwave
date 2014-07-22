@@ -380,12 +380,7 @@
              return;
          }
          
-         
-//         [collectionView scrollRectToVisible:visibleRect animated:YES];
-         
-         
-         
-         //        [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionBottom animated:YES];
+        
      }];
 }
 
