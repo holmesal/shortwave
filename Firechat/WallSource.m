@@ -408,7 +408,7 @@
         //gather all relevant models
         NSArray *modelsFromWall = [wall filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.ownerID == %@)", user.id]];
         
-        NSMutableArray *arrayOfIndexPaths = [[NSMutableArray alloc] init];
+//        NSMutableArray *arrayOfIndexPaths = [[NSMutableArray alloc] init];
         for (MessageModel *model in modelsFromWall)
         {
             [model setUserData:user];
@@ -418,13 +418,16 @@
             //if row is valid
             if (row >= 0)
             {
-                [arrayOfIndexPaths addObject:[NSIndexPath indexPathForItem:row inSection:0]];
+//                [arrayOfIndexPaths addObject:[NSIndexPath indexPathForItem:row inSection:0]];
+                MessageCell *messageCell = (MessageCell*)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:row inSection:0]];
+                if (messageCell)
+                {//live update!
+                    [messageCell setMessageModel:model]; //will update cell
+                }
             }
 
         } //now the models are updated, and arrayOfIndexPaths is an array of all index paths that must be updated!
         
-        
-#warning time to perform a reload operation on the cells that are visible
         
 
         
