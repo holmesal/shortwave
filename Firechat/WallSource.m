@@ -162,15 +162,15 @@
                                   NSString *icon = dictionary[@"icon"];
                                   FCUser *user = [[FCUser alloc] init];
                                   
+                                  user.icon = icon;
+                                  user.color = color;
+                                  user.id = model.ownerID;
+                                  
                                   //listen for value changes in color and icon
                                   [user registerListenersToMeta]; //when icon and color change, observe
                                   [user addObserver:self forKeyPath:@"color" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
                                   [user addObserver:self forKeyPath:@"icon" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
                                   
-                                  
-                                  user.icon = icon;
-                                  user.color = color;
-                                  user.id = model.ownerID;
                                   
                                   [usersDictionary setObject:user forKey:user.id];
                                   
@@ -258,7 +258,12 @@
 }
 -(UICollectionViewCell*)collectionView:(UICollectionView *)cV cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    
     MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row]; //wall[indexPath.row];
+    NSLog(@"cellForItemAtIndexPath %d", indexPath.row);
+    NSLog(@"messageModel = %@, %@", messageModel.text, messageModel.ownerID);
+    
     MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:collectionView forIndexPath:indexPath andWallSource:self];
     
     CGRect aTempRect = messageCell.frame;
@@ -276,7 +281,7 @@
 //reverse
 -(MessageModel*)wallObjectAtIndex:(NSInteger)index
 {
-    return wall[(wall.count-1)-index];
+    return wall[index];//wall[(wall.count-1)-index];
 }
 
 -(void)addMessageToWallEventually:(MessageModel*)messageModel
@@ -325,15 +330,20 @@
         NSInteger row = [self indexInWallToInsertNewModelIn:messageModel.name];
         [paths addObject: [NSIndexPath indexPathForRow:row inSection:0] ];
     }
-    
+
     [collectionView performBatchUpdates:^
      {
          
          self.hideCells = [NSArray arrayWithArray:paths];
 //         [self.wall addObjectsFromArray:wallQueue];//insertObject:unknownTypeOfMessage atIndex:weakSelf.wall.count];
-         [self insertToWall:wallQueue inOrder:paths];
          
          [collectionView insertItemsAtIndexPaths:paths];
+         NSLog(@"**before wall = %@", wall);
+         [self insertToWall:wallQueue inOrder:paths];
+//         NSLog(@"indexPaths = %@", paths);
+         NSLog(@"wallQueue = %@", wallQueue);
+         NSLog(@"wall = %@", wall);
+         
          [wallQueue removeAllObjects];
          //         NSLog(@"last indexPath = %@", [paths lastObject]);
          //         [wallCollectionView scrollToItemAtIndexPath:[paths lastObject] atScrollPosition:UICollectionViewScrollPositionTop animated:YES];
@@ -366,12 +376,12 @@
          
          if (collectionView.contentSize.height < collectionView.frame.size.height)
          {
-             NSLog(@"NO SCROLL!");
+//             NSLog(@"NO SCROLL!");
              return;
          }
          
          
-         [collectionView scrollRectToVisible:visibleRect animated:YES];
+//         [collectionView scrollRectToVisible:visibleRect animated:YES];
          
          
          
@@ -384,9 +394,14 @@
     for (NSInteger i = 0 ; i < wallQueue.count; i++)
     {
         NSIndexPath *indexPath = paths[i];
+        NSInteger row = indexPath.row;
+//        if (wall.count == 1)
+//        {
+//            row ++;
+//        }
         MessageModel *model = wQ[i];
         
-        [wall insertObject:model atIndex:indexPath.row];
+        [wall insertObject:model atIndex:row];
     }
 }
 
