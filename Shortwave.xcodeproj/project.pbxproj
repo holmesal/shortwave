@@ -1,0 +1,396 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC0919819F0500DD2F78 /* AppDelegate.swift */; };
+		AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AACEBC0B19819F0500DD2F78 /* Images.xcassets */; };
+		AACEBC1819819F0600DD2F78 /* ShortwaveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AACEBC1219819F0600DD2F78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AACEBBFC19819F0400DD2F78 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AACEBC0319819F0500DD2F78;
+			remoteInfo = Shortwave;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		AACEBC0419819F0500DD2F78 /* Shortwave.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortwave.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AACEBC0819819F0500DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AACEBC0919819F0500DD2F78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AACEBC0B19819F0500DD2F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		AACEBC1119819F0600DD2F78 /* ShortwaveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortwaveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AACEBC1619819F0600DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortwaveTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AACEBC0119819F0500DD2F78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AACEBC0E19819F0600DD2F78 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AACEBBFB19819F0400DD2F78 = {
+			isa = PBXGroup;
+			children = (
+				AACEBC0619819F0500DD2F78 /* Shortwave */,
+				AACEBC1419819F0600DD2F78 /* ShortwaveTests */,
+				AACEBC0519819F0500DD2F78 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AACEBC0519819F0500DD2F78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AACEBC0419819F0500DD2F78 /* Shortwave.app */,
+				AACEBC1119819F0600DD2F78 /* ShortwaveTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AACEBC0619819F0500DD2F78 /* Shortwave */ = {
+			isa = PBXGroup;
+			children = (
+				AACEBC0919819F0500DD2F78 /* AppDelegate.swift */,
+				AACEBC0B19819F0500DD2F78 /* Images.xcassets */,
+				AACEBC0719819F0500DD2F78 /* Supporting Files */,
+			);
+			path = Shortwave;
+			sourceTree = "<group>";
+		};
+		AACEBC0719819F0500DD2F78 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AACEBC0819819F0500DD2F78 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AACEBC1419819F0600DD2F78 /* ShortwaveTests */ = {
+			isa = PBXGroup;
+			children = (
+				AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */,
+				AACEBC1519819F0600DD2F78 /* Supporting Files */,
+			);
+			path = ShortwaveTests;
+			sourceTree = "<group>";
+		};
+		AACEBC1519819F0600DD2F78 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				AACEBC1619819F0600DD2F78 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AACEBC0319819F0500DD2F78 /* Shortwave */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACEBC1B19819F0600DD2F78 /* Build configuration list for PBXNativeTarget "Shortwave" */;
+			buildPhases = (
+				AACEBC0019819F0500DD2F78 /* Sources */,
+				AACEBC0119819F0500DD2F78 /* Frameworks */,
+				AACEBC0219819F0500DD2F78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Shortwave;
+			productName = Shortwave;
+			productReference = AACEBC0419819F0500DD2F78 /* Shortwave.app */;
+			productType = "com.apple.product-type.application";
+		};
+		AACEBC1019819F0600DD2F78 /* ShortwaveTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AACEBC1E19819F0600DD2F78 /* Build configuration list for PBXNativeTarget "ShortwaveTests" */;
+			buildPhases = (
+				AACEBC0D19819F0600DD2F78 /* Sources */,
+				AACEBC0E19819F0600DD2F78 /* Frameworks */,
+				AACEBC0F19819F0600DD2F78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AACEBC1319819F0600DD2F78 /* PBXTargetDependency */,
+			);
+			name = ShortwaveTests;
+			productName = ShortwaveTests;
+			productReference = AACEBC1119819F0600DD2F78 /* ShortwaveTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AACEBBFC19819F0400DD2F78 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = "Ethan Sherr";
+				TargetAttributes = {
+					AACEBC0319819F0500DD2F78 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+					AACEBC1019819F0600DD2F78 = {
+						CreatedOnToolsVersion = 6.0;
+						TestTargetID = AACEBC0319819F0500DD2F78;
+					};
+				};
+			};
+			buildConfigurationList = AACEBBFF19819F0400DD2F78 /* Build configuration list for PBXProject "Shortwave" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AACEBBFB19819F0400DD2F78;
+			productRefGroup = AACEBC0519819F0500DD2F78 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AACEBC0319819F0500DD2F78 /* Shortwave */,
+				AACEBC1019819F0600DD2F78 /* ShortwaveTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AACEBC0219819F0500DD2F78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AACEBC0F19819F0600DD2F78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AACEBC0019819F0500DD2F78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AACEBC0D19819F0600DD2F78 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AACEBC1819819F0600DD2F78 /* ShortwaveTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AACEBC1319819F0600DD2F78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AACEBC0319819F0500DD2F78 /* Shortwave */;
+			targetProxy = AACEBC1219819F0600DD2F78 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		AACEBC1919819F0600DD2F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				METAL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		AACEBC1A19819F0600DD2F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				METAL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AACEBC1C19819F0600DD2F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = Shortwave/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		AACEBC1D19819F0600DD2F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = Shortwave/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		AACEBC1F19819F0600DD2F78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Shortwave.app/Shortwave";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ShortwaveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Debug;
+		};
+		AACEBC2019819F0600DD2F78 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Shortwave.app/Shortwave";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = ShortwaveTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AACEBBFF19819F0400DD2F78 /* Build configuration list for PBXProject "Shortwave" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACEBC1919819F0600DD2F78 /* Debug */,
+				AACEBC1A19819F0600DD2F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACEBC1B19819F0600DD2F78 /* Build configuration list for PBXNativeTarget "Shortwave" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACEBC1C19819F0600DD2F78 /* Debug */,
+				AACEBC1D19819F0600DD2F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AACEBC1E19819F0600DD2F78 /* Build configuration list for PBXNativeTarget "ShortwaveTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AACEBC1F19819F0600DD2F78 /* Debug */,
+				AACEBC2019819F0600DD2F78 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AACEBBFC19819F0400DD2F78 /* Project object */;
+}
