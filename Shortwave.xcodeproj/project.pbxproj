@@ -170,7 +170,7 @@
 			children = (
 				AAC79F091982F8AF005961D1 /* extension */,
 				AA4013101982DAF900C6853D /* view */,
-				AAD651D81981C87D00BA0127 /* channel model */,
+				AAD651D81981C87D00BA0127 /* model */,
 				AA3B8D601981A55E00F4D3CC /* viewcontrollers */,
 				AACEBC0919819F0500DD2F78 /* AppDelegate.swift */,
 				AA3B8D631981ADAD00F4D3CC /* Constants.swift */,
@@ -207,7 +207,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		AAD651D81981C87D00BA0127 /* channel model */ = {
+		AAD651D81981C87D00BA0127 /* model */ = {
 			isa = PBXGroup;
 			children = (
 				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
@@ -223,7 +223,7 @@
 				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
 				AAC79F0C198375CA005961D1 /* SWMessageModel.swift */,
 			);
-			name = "channel model";
+			name = model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

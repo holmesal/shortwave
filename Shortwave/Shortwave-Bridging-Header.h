@@ -4,4 +4,8 @@
 
 #import <Firebase/Firebase.h>
 #import <FirebaseSimpleLogin/FirebaseSimpleLogin.h>
-
+#import "MessageModel.h" //text
+#import "MessageImage.h" //img
+#import "MessageGif.h"   //gif
+#import "MessageCell.h"  //a cell!
+#import "MessageSpotifyTrack.h" //track model

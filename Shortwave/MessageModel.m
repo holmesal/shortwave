@@ -13,7 +13,7 @@
 #import "MessageImage.h"
 #import "MessageSpotifyTrack.h"
 #import <CoreLocation/CoreLocation.h>
-
+#import <Firebase/Firebase.h>
 
 @interface MessageModel ()
 
@@ -163,17 +163,17 @@
         content = @{};
     
     //location stuff filled in from CLLocationManager
-    CLLocation *location = [[FCUser owner].beacon getLocation];
+//    CLLocation *location = [[FCUser owner].beacon getLocation];
     
     NSNumber *accuracy = [NSNumber numberWithDouble:-1];
     NSNumber *lat = [NSNumber numberWithDouble:0];// [NSNumber numberWithDouble:self.location.coordinate.latitude];
     NSNumber *lon = [NSNumber numberWithDouble:0];//[NSNumber numberWithDouble:self.location.coordinate.longitude];
-    if (location)
-    {
-        accuracy = [NSNumber numberWithDouble:location.horizontalAccuracy];
-        lat = [NSNumber numberWithDouble:location.coordinate.latitude];
-        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
-    }
+//    if (location)
+//    {
+//        accuracy = [NSNumber numberWithDouble:location.horizontalAccuracy];
+//        lat = [NSNumber numberWithDouble:location.coordinate.latitude];
+//        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
+//    }
     
     return @{
 //                @"color": color.toHexString,
@@ -201,66 +201,66 @@
 
 -(void)postToAll
 {
-    FCUser *owner = [FCUser owner];
-    //get all ibeacon users
-    NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
-    
-    if (IS_ON_SIMULATOR)
-    {
-        earshotIdsWithoutMe = @[];
-    }
-    NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
-    
-    [self postToUsers:earshotIds];
+//    FCUser *owner = [FCUser owner];
+//    //get all ibeacon users
+//    NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
+//    
+//    if (IS_ON_SIMULATOR)
+//    {
+//        earshotIdsWithoutMe = @[];
+//    }
+//    NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
+//    
+//    [self postToUsers:earshotIds];
 }
 
--(void)postToUsers:(NSArray*)earshotIds
-{
-    FCUser *owner = [FCUser owner];
+//-(void)postToUsers:(NSArray*)earshotIds
+//{
+//    FCUser *owner = [FCUser owner];
+//
+//    Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
+//    NSNumber *priority = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]; //priority in wall of receiver
+//    NSDictionary *message = [self toDictionary];
+//    NSDictionary *messageValue = @{@"message": message,
+//                                   @"ownerID": owner.id,
+//                                   @"usersWithReadAccess":earshotIds};
+//    [messageFB setValue:messageValue];
+//
+//    // Loop through and post to the firebase of every beacon in range (including self) add to PushQueue (excluding self)
+//    for (NSString *earshotId in earshotIds)
+//    {
+//        // Post to the firebase wall of this beacon
+//        //[[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
+//        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId] ;
+//        Firebase *userPersonMessageRef = [[[Firebase alloc] initWithUrl:userPersonMessageUrl] childByAutoId];
+//        [userPersonMessageRef setValue:messageFB.name];
+//        [userPersonMessageRef setPriority:priority];
+//        
+//        if (![earshotId isEqualToString:owner.id])
+//        {
+//            // Send a push notification to this user
+//            NSString *otherPersonTokenUrl = [NSString stringWithFormat:@"%@users/%@/deviceToken", FIREBASE_ROOT_URL, earshotId];
+//            Firebase *otherPersonTokenRef = [[Firebase alloc] initWithUrl:otherPersonTokenUrl];
+//            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
+//                // Make the push notification IF the user allows it
+//                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
+//                {
+//                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
+//                                                       @"alert": text};
+//                    // Set the push notification
+//                    Firebase *pushQueueRef = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@pushQueue", FIREBASE_ROOT_URL]];
+//                    [pushQueueRef setValue:pushNotification];
+//                }
+//            }];
+//        }
+//    }
+//}
 
-    Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
-    NSNumber *priority = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]; //priority in wall of receiver
-    NSDictionary *message = [self toDictionary];
-    NSDictionary *messageValue = @{@"message": message,
-                                   @"ownerID": owner.id,
-                                   @"usersWithReadAccess":earshotIds};
-    [messageFB setValue:messageValue];
-
-    // Loop through and post to the firebase of every beacon in range (including self) add to PushQueue (excluding self)
-    for (NSString *earshotId in earshotIds)
-    {
-        // Post to the firebase wall of this beacon
-        //[[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId] ;
-        Firebase *userPersonMessageRef = [[[Firebase alloc] initWithUrl:userPersonMessageUrl] childByAutoId];
-        [userPersonMessageRef setValue:messageFB.name];
-        [userPersonMessageRef setPriority:priority];
-        
-        if (![earshotId isEqualToString:owner.id])
-        {
-            // Send a push notification to this user
-            NSString *otherPersonTokenUrl = [NSString stringWithFormat:@"%@users/%@/deviceToken", FIREBASE_ROOT_URL, earshotId];
-            Firebase *otherPersonTokenRef = [[Firebase alloc] initWithUrl:otherPersonTokenUrl];
-            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-                // Make the push notification IF the user allows it
-                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
-                {
-                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-                                                       @"alert": text};
-                    // Set the push notification
-                    Firebase *pushQueueRef = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@pushQueue", FIREBASE_ROOT_URL]];
-                    [pushQueueRef setValue:pushNotification];
-                }
-            }];
-        }
-    }
-}
-
--(void)setUserData:(FCUser*)user
-{
-    _color = [UIColor colorWithHexString:user.color];
-    _icon = [user icon];
-}
+//-(void)setUserData:(FCUser*)user
+//{
+//    _color = [UIColor colorWithHexString:user.color];
+//    _icon = [user icon];
+//}
 
 -(BOOL)hasAllData
 {

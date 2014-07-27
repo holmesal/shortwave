@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
-#import "FCUser.h"
+#import <UIKit/UIKit.h>
+//#import "FCUser.h"
 
 @interface MessageModel : NSObject
 
@@ -29,7 +29,7 @@ typedef enum
 } MessageModelType;
 
 //returns nil if it failed to grab all data
--(void)setUserData:(FCUser*)user;
+//-(void)setUserData:(FCUser*)user;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 
 //bool success?  Override this to set more data!
