@@ -9,21 +9,22 @@
 import Foundation
 import UIKit
 
+
 class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSource
 {
     var isExpanded:Bool = false
     
-    let name: String
+    var name: String?
     //store url because I may want to modify this entity later
-    let url:String
+    var url:String?
     
 
-    let channelRoot:Firebase; //reference to the messages
+    var channelRoot:Firebase? //reference to the messages
     
-    let messagesRoot:Firebase;
+    var messagesRoot:Firebase?
     var messages:Array<SWMessageModel> = [SWMessageModel]() //this model becomes the wall source for the interior UICollectionView for messages
     
-    
+    var temporary:Bool = false
     //collectionView
     var messageCollectionView:UICollectionView {
         get
@@ -35,30 +36,36 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
             newValue.delegate = self
             newValue.dataSource = self
             newValue.reloadData()
-            
-                println("hey!!!")
-            
-//            self.messageCollectionView = newValue
     }
+    }
+    
+    init(temporary:Bool)
+    {
+        self.temporary = temporary
+        super.init()
     }
 
     init(dictionary:NSDictionary, url:String)
     {
+        super.init()
+     
+        initialize(dictionary: dictionary, andUrl: url)
+        bindToWall()
+    }
+    
+    func initialize(#dictionary:NSDictionary, andUrl url:String)
+    {
         self.url = url;
         self.name = url.componentsSeparatedByString("/").last as String
         
-        self.channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(name)")
-        self.messagesRoot = Firebase(url: "\(kROOT_FIREBASE)messages/\(name)")
-        
-        super.init()
-        
-        bindToWall()
-        
+        self.channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(name!)")
+        self.messagesRoot = Firebase(url: "\(kROOT_FIREBASE)messages/\(name!)")
+        println("\(kROOT_FIREBASE)messages/\(name!)")
     }
     
     func bindToWall()
     {
-        messagesRoot.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
+        messagesRoot!.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
         {(snap:FDataSnapshot!, previous:String!) in
             println("snap.value = \(snap.value)")
             if let dictionary = snap.value as? Dictionary<String, AnyObject>
@@ -84,7 +91,7 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     {
         //TODO, fetch cells
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cellulare", forIndexPath: indexPath) as UICollectionViewCell
-        cell.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.6)
+        cell.backgroundColor = indexPath.item%2 == 0 ? UIColor(red: 1, green: 0, blue: 0, alpha: 0.6) : UIColor(red: 1, green: 0, blue: 0, alpha: 1.0)
         return cell
     }
     
@@ -99,7 +106,31 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     
+    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
+    {
+        println("selected \(indexPath)")
+    }
 
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
+    {
+        return CGSizeMake(320, 52)
+    }
     
+    //UICollectionViewDelegateFlowLayout
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets
+    {
+        
+        return UIEdgeInsetsMake(0, 0, 0, 0)
+    }
+    
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
+        return 0
+    }
+    
+    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
+    {
+        return 0
+    }
 }
 

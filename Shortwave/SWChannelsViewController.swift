@@ -9,12 +9,11 @@
 import Foundation
 import UIKit
 
-class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate
+class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, UITextFieldDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
     
     @IBOutlet var channelsCollectionView: UICollectionView!
-    
     var channels:Array<SWChannelModel> = [SWChannelModel]()
     
     @IBOutlet weak var layout: SWChannelsLayout!
@@ -28,13 +27,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
         
-        println("gesture recognizer = \(channelsCollectionView.gestureRecognizers)")
-//        for gesture in channelsCollectionView.gestureRecognizers as [UIGestureRecognizer]
-//        {
-////            gesture.delegate = self
-//        }
         
-        channelsCollectionView.viewForBaselineLayout().layer.speed = 0.4
+
+        channelsCollectionView.viewForBaselineLayout().layer.speed = 1
         
         navigationItem.hidesBackButton = true
         bindToChannels()
@@ -85,36 +80,49 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     //collectionView delegate and datasource methods
     func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int
     {
-//        println("numberOfSections \(channels.count)")
-        return channels.count
+        return channels.count + 1
     }
     
     func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int
     {
+        if section == channels.count
+        {
+            return 1
+        }
         let channelMode = channels[section]
-//        println("numberOfRows 1 in section \(section)")
         return 1 + (channelMode.isExpanded ? 1 : 0)
     }
     
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell!
     {
-        
-//        println("cell4Row at \(indexPath.item), \(indexPath.section)" )
+        if indexPath.row == 0 && indexPath.section == channels.count
+        {
+            // add-channel cell
+            let cell = channelsCollectionView.dequeueReusableCellWithReuseIdentifier("AddChannel", forIndexPath: indexPath) as UICollectionViewCell
+            
+            return cell
+            
+        } else
         if indexPath.row == 0
         {
             let channelCell = collectionView.dequeueReusableCellWithReuseIdentifier("SWChannelCell", forIndexPath: indexPath) as SWChannelCell
-//            println("SWChannelCell cell!")
+            
             channelCell.channelModel = channels[indexPath.section]
+            if channelCell.channelModel!.temporary
+            {
+                //this cell takes focus!
+                channelCell.textField.delegate = self
+                channelCell.textField.becomeFirstResponder()
+            }
+            
             return channelCell
         } else
         {
             let inceptionCell = collectionView.dequeueReusableCellWithReuseIdentifier("SWInceptionCell", forIndexPath: indexPath) as SWInceptionCell
+            inceptionCell.messagesCollectionView.scrollEnabled = true
+            inceptionCell.contentView.frame.size = CGSizeMake(320, self.view.frame.size.height - 52 - 20)//idk why!
             
-            
-            if let gestures = inceptionCell.gestureRecognizers as? Array<UIGestureRecognizer>
-            {
-                inceptionCell.requireToFail(gestures)
-            }
+
             let channel = channels[indexPath.section]
             channel.messageCollectionView = inceptionCell.messagesCollectionView //setup delegate datasource and reloads
       
@@ -130,16 +138,11 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
     {
-        if indexPath.row == 0
+        if indexPath.row == 0 && indexPath.section != channels.count
         {
 
-            
-//            self.channelsCollectionView.scrollEnabled = false
-            //scroll to someplace
-            println("collectionView.cellForItemAtIndexPath(indexPath)?.frame \(collectionView.cellForItemAtIndexPath(indexPath)?.frame)")
             let height = collectionView.cellForItemAtIndexPath(indexPath)!.frame.origin.y - 20
-            
-            println("height = \(height)")
+
             
             UIView.animateWithDuration(0.3)
                 {
@@ -158,7 +161,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                         if channel.isExpanded
                         {
                             self.indexPathsToListenFor[NSIndexPath(forItem: 1, inSection: indexPath.section)] = true
-//                            self.channelsCollectionView.scrollEnabled = false
+                            self.channelsCollectionView.scrollEnabled = false
                             collectionView.insertItemsAtIndexPaths(targetIndexPaths)
                         } else
                         {
@@ -175,9 +178,21 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                 })
         }
         else
+        if indexPath.section == channels.count
         {
-            println("lol no expando")
+            beginAddingAChannel()
         }
+    }
+    
+    func beginAddingAChannel()
+    {
+//        let indexPaths = [NSIndexPath(forItem: 0, inSection: channels.count)]
+        let tempChannelModel = SWChannelModel(temporary: true)
+        channelsCollectionView.performBatchUpdates(
+            {
+                self.channels += tempChannelModel
+                self.channelsCollectionView.insertSections(NSIndexSet(index: self.channels.count - 1))
+            }, completion: {(b:Bool) in })
     }
     
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
@@ -209,8 +224,6 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     
-    
-    
     func targetContentOffsetForProposedContentOffset(contentOffset:CGPoint) -> CGPoint
     {
         let collectionViewContentSize = self.view.bounds.size;
@@ -221,22 +234,27 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         return contentOffset
     }
     
-    
-//    func scrollViewDidScroll(scrollView: UIScrollView!)
-//    {
-//        println("scrollView offset = \(scrollView.contentOffset.y)")
-//    }
-    
-    
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool
+    // MARK: textFieldDelegate method!
+    func textFieldShouldReturn(textField: UITextField!) -> Bool
     {
-        let location = touch.locationInView(channelsCollectionView)
-        let indexPath = channelsCollectionView.indexPathForItemAtPoint(location)
-        if (indexPath.row != 0)
-        {
-            return false
-        }
+        textField .resignFirstResponder()
         return true
     }
+
     
+//    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool
+//    {
+//        let location = touch.locationInView(channelsCollectionView)
+//        let indexPath = channelsCollectionView.indexPathForItemAtPoint(location)
+//        if (indexPath.row != 0)
+//        {
+//            return false
+//        }
+//        return true
+//    }
+    
+//    func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool
+//    {
+//        return (indexPath.row == 0)
+//    }
 }

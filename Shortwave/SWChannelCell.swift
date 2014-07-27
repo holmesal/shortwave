@@ -25,7 +25,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     var channelModel:SWChannelModel? = nil {
     didSet {
         //do UI update here
-        println("setting channelModel with name \(channelModel!.name)")
+//        println("setting channelModel with name \(channelModel!.name)")
         textField.text = channelModel!.name
         
     }
@@ -113,6 +113,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         }
         
     }
+    
     
     
     

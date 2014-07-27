@@ -103,6 +103,23 @@
                                             <outlet property="textField" destination="erI-1n-REu" id="30A-Mq-Ics"/>
                                         </connections>
                                     </collectionViewCell>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AddChannel" id="hBr-xx-FUg">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="+ channel" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gl2-Un-I5e">
+                                                    <rect key="frame" x="122" y="14" width="76" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" restorationIdentifier="SWInceptionCell" reuseIdentifier="SWInceptionCell" id="vtN-JZ-zn3" customClass="SWInceptionCell" customModule="Shortwave" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -110,14 +127,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fWw-CP-FlB">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fWw-CP-FlB">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                                     <subviews>
-                                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="evf-7z-XnB">
-                                                            <rect key="frame" x="15" y="0.0" width="291" height="230"/>
+                                                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="evf-7z-XnB" customClass="MessagesCollectionView" customModule="Shortwave" customModuleProvider="target">
+                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                                             <color key="backgroundColor" red="0.0" green="0.62745098040000002" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kaX-oz-8fB">
-                                                                <size key="itemSize" width="290" height="50"/>
+                                                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="kaX-oz-8fB" customClass="SWMessagesLayout" customModule="Shortwave" customModuleProvider="target">
+                                                                <size key="itemSize" width="305" height="50"/>
                                                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                                                 <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -127,10 +144,11 @@
                                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="290" height="50"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
                                                                         <autoresizingMask key="autoresizingMask"/>
                                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                     </view>
+                                                                    <size key="customSize" width="320" height="50"/>
                                                                 </collectionViewCell>
                                                             </cells>
                                                         </collectionView>
@@ -140,13 +158,14 @@
                                                         <constraint firstAttribute="bottom" secondItem="evf-7z-XnB" secondAttribute="bottom" id="ISu-EK-GO6"/>
                                                         <constraint firstItem="evf-7z-XnB" firstAttribute="top" secondItem="fWw-CP-FlB" secondAttribute="top" id="LfM-bm-Ww9"/>
                                                         <constraint firstAttribute="height" constant="230" id="djh-J6-jEJ"/>
-                                                        <constraint firstAttribute="trailing" secondItem="evf-7z-XnB" secondAttribute="trailing" constant="14" id="h4a-sZ-BIV"/>
-                                                        <constraint firstItem="evf-7z-XnB" firstAttribute="leading" secondItem="fWw-CP-FlB" secondAttribute="leading" constant="15" id="px4-aS-U4S"/>
+                                                        <constraint firstAttribute="trailing" secondItem="evf-7z-XnB" secondAttribute="trailing" id="h4a-sZ-BIV"/>
+                                                        <constraint firstItem="evf-7z-XnB" firstAttribute="leading" secondItem="fWw-CP-FlB" secondAttribute="leading" id="px4-aS-U4S"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="fWw-CP-FlB" firstAttribute="top" secondItem="vtN-JZ-zn3" secondAttribute="top" id="OgH-mu-JGE"/>
                                             <constraint firstAttribute="trailing" secondItem="fWw-CP-FlB" secondAttribute="trailing" id="Pms-e4-gMV"/>
@@ -178,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ydN-BZ-3ub" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="986" y="-90"/>
+            <point key="canvasLocation" x="993" y="-90"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
