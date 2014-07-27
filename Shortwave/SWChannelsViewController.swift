@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
+class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
     
@@ -28,16 +28,18 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
         
+        println("gesture recognizer = \(channelsCollectionView.gestureRecognizers)")
+//        for gesture in channelsCollectionView.gestureRecognizers as [UIGestureRecognizer]
+//        {
+////            gesture.delegate = self
+//        }
         
-//        let newActions = ["onOrderOut":NSNull(),
-//                          "sublayers":NSNull(),
-//                          "contents":NSNull(),
-//                          "bounds":NSNull()]
-//        channelsCollectionView.viewForBaselineLayout().layer.actions = newActions
-        channelsCollectionView.viewForBaselineLayout().layer.speed = 0.1
+        channelsCollectionView.viewForBaselineLayout().layer.speed = 0.4
         
         navigationItem.hidesBackButton = true
         bindToChannels()
+        
+        
     }
     
     func bindToChannels()
@@ -107,6 +109,14 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         } else
         {
             let inceptionCell = collectionView.dequeueReusableCellWithReuseIdentifier("SWInceptionCell", forIndexPath: indexPath) as SWInceptionCell
+            
+            
+            if let gestures = inceptionCell.gestureRecognizers as? Array<UIGestureRecognizer>
+            {
+                inceptionCell.requireToFail(gestures)
+            }
+            let channel = channels[indexPath.section]
+            channel.messageCollectionView = inceptionCell.messagesCollectionView //setup delegate datasource and reloads
       
             let animateToFull = indexPathsToListenFor[indexPath]
             if animateToFull
@@ -148,7 +158,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                         if channel.isExpanded
                         {
                             self.indexPathsToListenFor[NSIndexPath(forItem: 1, inSection: indexPath.section)] = true
-                            self.channelsCollectionView.scrollEnabled = false
+//                            self.channelsCollectionView.scrollEnabled = false
                             collectionView.insertItemsAtIndexPaths(targetIndexPaths)
                         } else
                         {
@@ -218,6 +228,15 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 //    }
     
     
-    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool
+    {
+        let location = touch.locationInView(channelsCollectionView)
+        let indexPath = channelsCollectionView.indexPathForItemAtPoint(location)
+        if (indexPath.row != 0)
+        {
+            return false
+        }
+        return true
+    }
     
 }

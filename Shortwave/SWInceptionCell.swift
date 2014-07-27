@@ -17,10 +17,37 @@ class SWInceptionCell:UICollectionViewCell
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
     
+    
+    var requiredGestureRecognizersToFail:Bool = false
+    
+    func requireToFail(gestureRecognizers:Array<UIGestureRecognizer>)
+    {
+        println("gestureRecognizers = \(gestureRecognizers)")
+        
+        if let messageGestures = messagesCollectionView?.gestureRecognizers as? [AnyObject]
+        {
+        
+            if !requiredGestureRecognizersToFail
+            {
+                requiredGestureRecognizersToFail = true
+                for channelGesture in gestureRecognizers
+                {
+                    for messageGesture in messageGestures as [UIGestureRecognizer]
+                    {
+                        channelGesture.requireGestureRecognizerToFail(messageGesture)
+                    }
+
+                }
+            }
+        }
+    }
+    
     override func awakeFromNib()
     {
         super.awakeFromNib()
         heightConstraint.constant = 0
+        
+        messagesCollectionView.alwaysBounceVertical = true
     }
     
     func animateInceptionCell(expanded isExpanded:Bool)
