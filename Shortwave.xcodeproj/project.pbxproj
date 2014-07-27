@@ -9,11 +9,28 @@
 /* Begin PBXBuildFile section */
 		92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CC4E4F31BF44CAB751BD14 /* libPods.a */; };
 		AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */; };
-		AA3B8D5F1981A55100F4D3CC /* SWChannelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B8D5E1981A55100F4D3CC /* SWChannelViewController.swift */; };
+		AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */; };
 		AA3B8D621981A75900F4D3CC /* SWAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B8D611981A75900F4D3CC /* SWAuthViewController.swift */; };
+		AA3B8D641981ADAD00F4D3CC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3B8D631981ADAD00F4D3CC /* Constants.swift */; };
+		AA3B8D661981B01F00F4D3CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3B8D651981B01E00F4D3CC /* CFNetwork.framework */; };
+		AA3B8D681981B17900F4D3CC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3B8D671981B17900F4D3CC /* Foundation.framework */; };
+		AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4013111982DB0600C6853D /* SWChannelCell.swift */; };
+		AA9B7A731982058700C17494 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A721982058700C17494 /* Accounts.framework */; };
+		AA9B7A751982059700C17494 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A741982059700C17494 /* Social.framework */; };
+		AA9B7A791982356A00C17494 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */; };
+		AAC79F0B1982F8BE005961D1 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0A1982F8BE005961D1 /* Extension.swift */; };
+		AAC79F0D198375CA005961D1 /* SWMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0C198375CA005961D1 /* SWMessageModel.swift */; };
+		AAC79F0F1983767D005961D1 /* SWInceptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */; };
+		AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */; };
 		AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC0919819F0500DD2F78 /* AppDelegate.swift */; };
 		AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AACEBC0B19819F0500DD2F78 /* Images.xcassets */; };
 		AACEBC1819819F0600DD2F78 /* ShortwaveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */; };
+		AAD651D71981C86200BA0127 /* SWChannelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD651D61981C86200BA0127 /* SWChannelModel.swift */; };
+		AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87531984AAAF004AD3BA /* MessageCell.m */; };
+		AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87551984AAAF004AD3BA /* MessageGif.m */; };
+		AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87571984AAAF004AD3BA /* MessageImage.m */; };
+		AAFE875F1984AAAF004AD3BA /* MessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87591984AAAF004AD3BA /* MessageModel.m */; };
+		AAFE87601984AAAF004AD3BA /* MessageSpotifyTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE875B1984AAAF004AD3BA /* MessageSpotifyTrack.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +48,19 @@
 		81CC4E4F31BF44CAB751BD14 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
 		AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		AA3B8D5E1981A55100F4D3CC /* SWChannelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelViewController.swift; sourceTree = "<group>"; };
+		AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelsViewController.swift; sourceTree = "<group>"; };
 		AA3B8D611981A75900F4D3CC /* SWAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWAuthViewController.swift; sourceTree = "<group>"; };
+		AA3B8D631981ADAD00F4D3CC /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		AA3B8D651981B01E00F4D3CC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		AA3B8D671981B17900F4D3CC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		AA4013111982DB0600C6853D /* SWChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelCell.swift; sourceTree = "<group>"; };
+		AA9B7A721982058700C17494 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		AA9B7A741982059700C17494 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
+		AAC79F0A1982F8BE005961D1 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		AAC79F0C198375CA005961D1 /* SWMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessageModel.swift; sourceTree = "<group>"; };
+		AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWInceptionCell.swift; sourceTree = "<group>"; };
+		AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelsLayout.swift; sourceTree = "<group>"; };
 		AACEBC0419819F0500DD2F78 /* Shortwave.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortwave.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AACEBC0819819F0500DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AACEBC0919819F0500DD2F78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -40,6 +68,17 @@
 		AACEBC1119819F0600DD2F78 /* ShortwaveTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShortwaveTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AACEBC1619819F0600DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortwaveTests.swift; sourceTree = "<group>"; };
+		AAD651D61981C86200BA0127 /* SWChannelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelModel.swift; sourceTree = "<group>"; };
+		AAFE87521984AAAF004AD3BA /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
+		AAFE87531984AAAF004AD3BA /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
+		AAFE87541984AAAF004AD3BA /* MessageGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGif.h; sourceTree = "<group>"; };
+		AAFE87551984AAAF004AD3BA /* MessageGif.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageGif.m; sourceTree = "<group>"; };
+		AAFE87561984AAAF004AD3BA /* MessageImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageImage.h; sourceTree = "<group>"; };
+		AAFE87571984AAAF004AD3BA /* MessageImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageImage.m; sourceTree = "<group>"; };
+		AAFE87581984AAAF004AD3BA /* MessageModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageModel.h; sourceTree = "<group>"; };
+		AAFE87591984AAAF004AD3BA /* MessageModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageModel.m; sourceTree = "<group>"; };
+		AAFE875A1984AAAF004AD3BA /* MessageSpotifyTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSpotifyTrack.h; sourceTree = "<group>"; };
+		AAFE875B1984AAAF004AD3BA /* MessageSpotifyTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageSpotifyTrack.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +86,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA9B7A751982059700C17494 /* Social.framework in Frameworks */,
+				AA9B7A791982356A00C17494 /* FirebaseSimpleLogin.framework in Frameworks */,
+				AA9B7A731982058700C17494 /* Accounts.framework in Frameworks */,
+				AA3B8D661981B01F00F4D3CC /* CFNetwork.framework in Frameworks */,
+				AA3B8D681981B17900F4D3CC /* Foundation.framework in Frameworks */,
 				92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,6 +108,11 @@
 		60BD743EE2294589A6862653 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */,
+				AA9B7A741982059700C17494 /* Social.framework */,
+				AA9B7A721982058700C17494 /* Accounts.framework */,
+				AA3B8D671981B17900F4D3CC /* Foundation.framework */,
+				AA3B8D651981B01E00F4D3CC /* CFNetwork.framework */,
 				81CC4E4F31BF44CAB751BD14 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -72,10 +121,28 @@
 		AA3B8D601981A55E00F4D3CC /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
-				AA3B8D5E1981A55100F4D3CC /* SWChannelViewController.swift */,
 				AA3B8D611981A75900F4D3CC /* SWAuthViewController.swift */,
+				AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */,
+				AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */,
 			);
 			name = viewcontrollers;
+			sourceTree = "<group>";
+		};
+		AA4013101982DAF900C6853D /* view */ = {
+			isa = PBXGroup;
+			children = (
+				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
+				AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */,
+			);
+			name = view;
+			sourceTree = "<group>";
+		};
+		AAC79F091982F8AF005961D1 /* extension */ = {
+			isa = PBXGroup;
+			children = (
+				AAC79F0A1982F8BE005961D1 /* Extension.swift */,
+			);
+			name = extension;
 			sourceTree = "<group>";
 		};
 		AACEBBFB19819F0400DD2F78 = {
@@ -101,8 +168,12 @@
 		AACEBC0619819F0500DD2F78 /* Shortwave */ = {
 			isa = PBXGroup;
 			children = (
+				AAC79F091982F8AF005961D1 /* extension */,
+				AA4013101982DAF900C6853D /* view */,
+				AAD651D81981C87D00BA0127 /* channel model */,
 				AA3B8D601981A55E00F4D3CC /* viewcontrollers */,
 				AACEBC0919819F0500DD2F78 /* AppDelegate.swift */,
+				AA3B8D631981ADAD00F4D3CC /* Constants.swift */,
 				AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */,
 				AACEBC0B19819F0500DD2F78 /* Images.xcassets */,
 				AACEBC0719819F0500DD2F78 /* Supporting Files */,
@@ -134,6 +205,25 @@
 				AACEBC1619819F0600DD2F78 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AAD651D81981C87D00BA0127 /* channel model */ = {
+			isa = PBXGroup;
+			children = (
+				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
+				AAFE87531984AAAF004AD3BA /* MessageCell.m */,
+				AAFE87541984AAAF004AD3BA /* MessageGif.h */,
+				AAFE87551984AAAF004AD3BA /* MessageGif.m */,
+				AAFE87561984AAAF004AD3BA /* MessageImage.h */,
+				AAFE87571984AAAF004AD3BA /* MessageImage.m */,
+				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
+				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
+				AAFE875A1984AAAF004AD3BA /* MessageSpotifyTrack.h */,
+				AAFE875B1984AAAF004AD3BA /* MessageSpotifyTrack.m */,
+				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
+				AAC79F0C198375CA005961D1 /* SWMessageModel.swift */,
+			);
+			name = "channel model";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,9 +359,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA3B8D5F1981A55100F4D3CC /* SWChannelViewController.swift in Sources */,
+				AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */,
+				AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */,
+				AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */,
 				AA3B8D621981A75900F4D3CC /* SWAuthViewController.swift in Sources */,
+				AAC79F0B1982F8BE005961D1 /* Extension.swift in Sources */,
+				AAD651D71981C86200BA0127 /* SWChannelModel.swift in Sources */,
+				AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */,
+				AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */,
 				AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */,
+				AA3B8D641981ADAD00F4D3CC /* Constants.swift in Sources */,
+				AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */,
+				AAC79F0F1983767D005961D1 /* SWInceptionCell.swift in Sources */,
+				AAFE87601984AAAF004AD3BA /* MessageSpotifyTrack.m in Sources */,
+				AAC79F0D198375CA005961D1 /* SWMessageModel.swift in Sources */,
+				AAFE875F1984AAAF004AD3BA /* MessageModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +480,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -394,6 +500,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
