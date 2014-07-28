@@ -17,7 +17,7 @@ enum AddChannelState
     case Pending(isJoining:Bool, String)
 }
 
-class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, UITextFieldDelegate
+class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, UITextFieldDelegate, SWComposeBarViewDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
     
@@ -35,6 +35,8 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     //the current state of the addChannel button/cell
     var addChannelState:AddChannelState = .Ready
     
+    var selectedChannel:SWChannelModel?
+    
     
     override func viewDidLoad()
     {
@@ -43,6 +45,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.delegate = self
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
+        composeBar.delegate = self
         
         
 
@@ -176,16 +179,20 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 
             
             UIView.animateWithDuration(0.3)
-                {
+            {
                     self.channelsCollectionView.contentOffset = self.targetContentOffsetForProposedContentOffset(CGPoint(x: 0,y:height))
             }
+            
+            let channel = self.channels[indexPath.section];
+            channel.isExpanded = !channel.isExpanded
+            selectedChannel = (channel.isExpanded ? channel : nil)
             
             collectionView.performBatchUpdates(
                 {
                     
                     
-                    let channel = self.channels[indexPath.section];
-                    channel.isExpanded = !channel.isExpanded
+                    
+                    
                     let targetIndexPaths = [NSIndexPath(forItem: 1, inSection: indexPath.section)];
                     
                     
@@ -457,7 +464,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         let frameBeginV = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
         let frameEndV = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
 
-        println("duration \(duration) \ncurve \(curve) \nbegin \(frameBeginV) \nframeEnd \(frameEndV)")
+//        println("duration \(duration) \ncurve \(curve) \nbegin \(frameBeginV) \nframeEnd \(frameEndV)")
         
         let frameBegin = frameBeginV!.CGRectValue()
         let frameEnd = frameEndV!.CGRectValue()
@@ -465,9 +472,28 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         let dy = frameBegin.origin.y - frameEnd.origin.y
         let constraintHeight = (dy < 0 ? 0 : dy )
 
-        println("constraint height = \(constraintHeight)")
+//        println("constraint height = \(constraintHeight)")
         
         bottomConstraintComposeBar.constant = constraintHeight
     
     }
+    
+    // MARK: SWComposeBarViewDelegate
+    func composeBarView(composeBarView: SWComposeBarView, sendMessage message: String)
+    {
+        let userID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        let message = SWMessageModel(userID: userID, text: message)
+        
+        message.sendMessageToChannel(selectedChannel!.name!)
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

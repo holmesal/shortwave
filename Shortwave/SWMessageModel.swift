@@ -38,16 +38,65 @@ class SWMessageModel
     }
     
     
-    let userID:String
-    let text:String
+    let userID:String?
+    let text:String?
+    let type = "text"
+    
+    var isValid:Bool
     
     init(dict:[String: AnyObject])
     {
-        println("dict = \(dict)")
         
-        userID = ""
-        text = ""
+        userID = dict["owner"] as? NSString
+        
+        let contentObj: AnyObject? = dict["content"]
+        if contentObj?
+        {
+            if let content = contentObj as Dictionary<String, AnyObject>?
+            {
+                text = content["text"] as? NSString
+            }
+        }
+        
+        isValid = userID? && text?
     }
     
+    init(userID:String, text:String)
+    {
+        self.userID = userID
+        self.text = text
+        isValid = true
+    }
+
+    func sendMessageToChannel(channel:String)
+    {
+        let priority:Double = NSDate().timeIntervalSince1970 * 1000
+        
+        let val =
+        [
+            "type": type,
+            "content": self.getContentDictionary(),
+            "owner":userID!,
+            "raw":text!,
+            "parsed":false
+        ]
+        
+        println("sending val = \(val)")
+
+        let messagesChannel = Firebase(url: "\(kROOT_FIREBASE)messages/\(channel)").childByAutoId()
+        println("messagesChannel \(messagesChannel)")
+        
+        messagesChannel.setValue(val, andPriority: priority, withCompletionBlock:
+                {(error:NSError!, firebase:Firebase!) in
+                    println("omgomgomg error \(error) firebase \(firebase)")
+                })
+        
+
+    }
+    
+    func getContentDictionary() -> NSDictionary
+    {
+        return ["text": text!]
+    }
     
 }

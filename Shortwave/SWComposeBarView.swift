@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol SWComposeBarViewDelegate
+{
+    func composeBarView(composeBarView:SWComposeBarView, sendMessage:String)
+}
+
 class SWComposeBarView: UIView, UITextFieldDelegate
 {
     
     var textField:UITextField
     var send:UIButton
+    var delegate:SWComposeBarViewDelegate?
     
     init(coder aDecoder: NSCoder!)
     {
@@ -67,23 +73,19 @@ class SWComposeBarView: UIView, UITextFieldDelegate
     {
         textField.resignFirstResponder()
         
+        if textField.text != ""
+        {
+            delegate?.composeBarView(self, sendMessage:textField.text)
+        }
+        
+        textField.text = ""
+        
         return true
     }
     
     
-//        var textFieldDelegate:UITextFieldDelegate?
-//    {
-//        get
-//        {
-//            println("cycle when setting textFieldDelegate??")
-//            return self.textFieldDelegate
-//    }
-//        set
-//        {
-//            textField.delegate = newValue
-//    }
-//    }
     
+
     
     
 }
