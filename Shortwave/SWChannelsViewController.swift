@@ -292,12 +292,13 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             {//join
                 println("time to join \(textField.text)")
                 self.addChannelState = .Pending(isJoining:true, textField.text)
+                self.joinChannel(self.temporaryModel!)
                 
             } else
             {//create
                 println("time to create \(textField.text)")
-                self.createChannel(self.temporaryModel!)
                 self.addChannelState = .Pending(isJoining:false, textField.text)
+                self.createChannel(self.temporaryModel!)
             }
             
             self.temporaryModel = nil
@@ -307,6 +308,42 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         return true
     }
     
+    func joinChannel(channel:SWChannelModel)
+    {
+        let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        
+        //1 set myself as a moderator
+        let membersFB = Firebase(url: "\(kROOT_FIREBASE)channels/\(channel.name!)/members/\(userId)")
+//        println("moderatorsFB \(moderatorsFB)")
+    
+        membersFB.setValue(true, withCompletionBlock:
+            {(error:NSError!, firebase:Firebase!) in
+                if error
+                {
+                    println("error adding myself to a channel \(error)")
+                } else
+                {
+                    //continue joining it by adding to my users/userID/channels
+                    let myChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(channel.name!)")
+                    myChannels.setValue(["lastSeen":0, "muted":false], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
+                        {(error:NSError!, firebase:Firebase!) in
+                            if error
+                            {
+                                println("error getting my user to join channel \(error)")
+                            } else
+                            {
+                                self.addChannelState = .Ready
+                                self.addChannelCell!.curlDownAMessage("+ Channel", animated: true)
+                                //index of channel?
+                                let section = find(self.channels, channel)!
+                                
+                                //expand this index
+                                self.collectionView(self.channelsCollectionView, didSelectItemAtIndexPath: NSIndexPath(forItem: 0, inSection: section) )
+                            }
+                        })
+                }
+            })
+    }
     
     func createChannel(channel:SWChannelModel)
     {
