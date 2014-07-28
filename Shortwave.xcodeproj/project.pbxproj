@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CC4E4F31BF44CAB751BD14 /* libPods.a */; };
+		AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */; };
 		AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA23134619858F6500002719 /* SWMessagesLayout.swift */; };
 		AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2313481985B4A800002719 /* SWAddChannelCell.swift */; };
 		AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */; };
@@ -48,6 +49,7 @@
 /* Begin PBXFileReference section */
 		67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		81CC4E4F31BF44CAB751BD14 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWComposeBarView.swift; sourceTree = "<group>"; };
 		AA23134619858F6500002719 /* SWMessagesLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessagesLayout.swift; sourceTree = "<group>"; };
 		AA2313481985B4A800002719 /* SWAddChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWAddChannelCell.swift; sourceTree = "<group>"; };
 		AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
 				AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */,
 				AA2313481985B4A800002719 /* SWAddChannelCell.swift */,
+				AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -378,6 +381,7 @@
 				AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */,
 				AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */,
 				AA3B8D621981A75900F4D3CC /* SWAuthViewController.swift in Sources */,
+				AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */,
 				AAC79F0B1982F8BE005961D1 /* Extension.swift in Sources */,
 				AAD651D71981C86200BA0127 /* SWChannelModel.swift in Sources */,
 				AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */,

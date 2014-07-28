@@ -24,7 +24,10 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     @IBOutlet var channelsCollectionView: UICollectionView!
     var channels:Array<SWChannelModel> = [SWChannelModel]()
     
+    
+    @IBOutlet weak var composeBar: SWComposeBarView!
     @IBOutlet weak var layout: SWChannelsLayout!
+    @IBOutlet weak var bottomConstraintComposeBar: NSLayoutConstraint!
     
     var addChannelCell:SWAddChannelCell?
     var temporaryModel:SWChannelModel?
@@ -48,6 +51,8 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         navigationItem.hidesBackButton = true
         bindToChannels()
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
         
     }
     
@@ -186,11 +191,13 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                     
                         if channel.isExpanded
                         {
+                            self.bottomConstraintComposeBar.constant = 0
                             self.indexPathsToListenFor[NSIndexPath(forItem: 1, inSection: indexPath.section)] = true
                             self.channelsCollectionView.scrollEnabled = false
                             collectionView.insertItemsAtIndexPaths(targetIndexPaths)
                         } else
                         {
+                            self.bottomConstraintComposeBar.constant = -48
                             self.channelsCollectionView.scrollEnabled = true
                             let inceptionCell = self.channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 1, inSection: indexPath.section)) as SWInceptionCell
                             inceptionCell.animateInceptionCell(expanded:false)
@@ -433,22 +440,34 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         return true
     }
     
-
+    
+    deinit
+    {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
 
     
-//    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool
-//    {
-//        let location = touch.locationInView(channelsCollectionView)
-//        let indexPath = channelsCollectionView.indexPathForItemAtPoint(location)
-//        if (indexPath.row != 0)
-//        {
-//            return false
-//        }
-//        return true
-//    }
+    // MARK: keyboardWillToggle for willShow and willHide
+    func keyboardWillToggle(notification:NSNotification)
+    {
+        let userInfo = notification.userInfo
+        
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]
+        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey]
+        let frameBeginV = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
+        let frameEndV = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
+
+        println("duration \(duration) \ncurve \(curve) \nbegin \(frameBeginV) \nframeEnd \(frameEndV)")
+        
+        let frameBegin = frameBeginV!.CGRectValue()
+        let frameEnd = frameEndV!.CGRectValue()
+        
+        let dy = frameBegin.origin.y - frameEnd.origin.y
+        let constraintHeight = (dy < 0 ? 0 : dy )
+
+        println("constraint height = \(constraintHeight)")
+        
+        bottomConstraintComposeBar.constant = constraintHeight
     
-//    func collectionView(collectionView: UICollectionView!, shouldSelectItemAtIndexPath indexPath: NSIndexPath!) -> Bool
-//    {
-//        return (indexPath.row == 0)
-//    }
+    }
 }

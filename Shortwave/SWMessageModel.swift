@@ -18,7 +18,7 @@ class SWMessageModel
             {
                 case "text":
                     println("messageModelFor \(msg) is 'text'")
-                    return SWMessageModel()
+                    return SWMessageModel(dict:msg)
                 
                 case "image":
                     break;
@@ -36,4 +36,18 @@ class SWMessageModel
         }
         return nil
     }
+    
+    
+    let userID:String
+    let text:String
+    
+    init(dict:[String: AnyObject])
+    {
+        println("dict = \(dict)")
+        
+        userID = ""
+        text = ""
+    }
+    
+    
 }
