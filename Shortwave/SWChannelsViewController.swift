@@ -18,6 +18,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     @IBOutlet weak var layout: SWChannelsLayout!
     
+    var addChannelCell:SWAddChannelCell?
+    var temporaryModel:SWChannelModel?
+    
     
     override func viewDidLoad()
     {
@@ -98,7 +101,11 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         if indexPath.row == 0 && indexPath.section == channels.count
         {
             // add-channel cell
-            let cell = channelsCollectionView.dequeueReusableCellWithReuseIdentifier("AddChannel", forIndexPath: indexPath) as UICollectionViewCell
+            let cell = channelsCollectionView.dequeueReusableCellWithReuseIdentifier("SWAddChannelCell", forIndexPath: indexPath) as UICollectionViewCell
+            if !addChannelCell
+            {
+                addChannelCell = cell as? SWAddChannelCell
+            }
             
             return cell
             
@@ -190,6 +197,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         let tempChannelModel = SWChannelModel(temporary: true)
         channelsCollectionView.performBatchUpdates(
             {
+                self.temporaryModel = tempChannelModel
                 self.channels += tempChannelModel
                 self.channelsCollectionView.insertSections(NSIndexSet(index: self.channels.count - 1))
             }, completion: {(b:Bool) in })
@@ -237,9 +245,83 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     // MARK: textFieldDelegate method!
     func textFieldShouldReturn(textField: UITextField!) -> Bool
     {
-        textField .resignFirstResponder()
+        textField.resignFirstResponder()
+        
+        self.performFirebaseFetchForChannel(textField.text)
+        {(exists:Bool) in
+            
+            // TODO: add filter to make sure that this is a valid name, break before this
+            
+            self.temporaryModel!.temporary = false
+            let url = kROOT_FIREBASE + "channels/" + textField.text
+            self.temporaryModel!.initialize(dictionary: NSDictionary(), andUrl: url)
+            self.temporaryModel!.bindToWall()
+            
+            
+            if (exists)
+            {//join
+                println("time to join \(textField.text)")
+            } else
+            {//create
+                println("time to create \(textField.text)")
+                self.createChannel(self.temporaryModel!)
+            }
+            
+            self.temporaryModel = nil
+            
+        }
+        
         return true
     }
+    
+    
+    func createChannel(channel:SWChannelModel)
+    {
+        
+    }
+    
+    
+    func performFirebaseFetchForChannel(channel:String, result:((exists:Bool)->()) )
+    {
+        let channelExistenceFetch = Firebase(url: kROOT_FIREBASE + "channels/" + channel + "/public")
+        channelExistenceFetch.observeSingleEventOfType(FEventTypeValue)
+            {(snap:FDataSnapshot!) in
+                
+                if let isPublic = snap.value as? Bool
+                {
+                    // TODO: add support for isPublic == false
+                    result(exists: true)
+                } else
+                {
+                    result(exists: false)
+                }
+        }
+    }
+    
+    func textField(textField: UITextField!, shouldChangeCharactersInRange range: NSRange, replacementString string: String!) -> Bool
+    {
+
+        
+        
+        var result = textField.text as NSString
+        result = result.stringByReplacingCharactersInRange(range, withString: string)
+        
+        performFirebaseFetchForChannel(result,
+            {(exists:Bool) in
+                println("channel \(result) exists? \(exists)")
+                if exists
+                {
+                    self.addChannelCell!.curlDownAMessage("Join '\(result)'?", animated:true)
+                } else
+                {
+                    self.addChannelCell!.curlDownAMessage("Create '\(result)'?", animated:true)
+                }
+            })
+        
+        return true
+    }
+    
+
 
     
 //    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer!, shouldReceiveTouch touch: UITouch!) -> Bool
