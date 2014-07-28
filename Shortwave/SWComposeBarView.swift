@@ -29,10 +29,9 @@ class SWComposeBarView: UIView, UITextFieldDelegate
         send = UIButton(frame: CGRectMake(320-50, 0, 50, 48))
         send.setTitle("Send", forState: .Normal)
         send.titleLabel.textColor = UIColor.blackColor()
-        
+        send.backgroundColor = UIColor.blueColor()
         
         super.init(coder: aDecoder)
-        
         
         textField.delegate = self
         addSubview(textField)

@@ -34,9 +34,8 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     //the current state of the addChannel button/cell
     var addChannelState:AddChannelState = .Ready
-    
+
     var selectedChannel:SWChannelModel?
-    
     
     override func viewDidLoad()
     {
@@ -45,6 +44,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.delegate = self
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
+        
         composeBar.delegate = self
         
         

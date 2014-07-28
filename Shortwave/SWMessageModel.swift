@@ -17,7 +17,7 @@ class SWMessageModel
             switch type
             {
                 case "text":
-                    println("messageModelFor \(msg) is 'text'")
+
                     return SWMessageModel(dict:msg)
                 
                 case "image":

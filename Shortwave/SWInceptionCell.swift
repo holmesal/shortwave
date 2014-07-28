@@ -9,20 +9,10 @@
 import Foundation
 import UIKit
 
-class MessagesCollectionView:UICollectionView
-{
-//    var touchesShouldBegin:Bool = true
- 
-//    override func touchesShouldBegin(touches: NSSet!, withEvent event: UIEvent!, inContentView view: UIView!) -> Bool
-//    {
-//        return true
-//    }
-}
-
 class SWInceptionCell:UICollectionViewCell
 {
     
-    @IBOutlet weak var messagesCollectionView: MessagesCollectionView!
+    @IBOutlet weak var messagesCollectionView: UICollectionView!
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var heightConstraint: NSLayoutConstraint!
@@ -34,32 +24,17 @@ class SWInceptionCell:UICollectionViewCell
     {
         println("gestureRecognizers = \(gestureRecognizers)")
         
-//        if let messageGestures = messagesCollectionView?.gestureRecognizers as? [AnyObject]
-//        {
-//        
-//            if !requiredGestureRecognizersToFail
-//            {
-//                requiredGestureRecognizersToFail = true
-//                for channelGesture in gestureRecognizers
-//                {
-//                    for messageGesture in messageGestures as [UIGestureRecognizer]
-//                    {
-//                        channelGesture.requireGestureRecognizerToFail(messageGesture)
-//                    }
-//
-//                }
-//            }
-//        }
+
     }
     
     override func awakeFromNib()
     {
         super.awakeFromNib()
-//        self.contentView.backgroundColor = UIColor .redColor()
         self.contentView.clipsToBounds = true
         heightConstraint.constant = 0
         
         messagesCollectionView.alwaysBounceVertical = true
+        messagesCollectionView.contentInset = UIEdgeInsetsMake(0, 0, 48, 0)
 
         
     }

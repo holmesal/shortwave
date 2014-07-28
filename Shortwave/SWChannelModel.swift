@@ -26,17 +26,14 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     
     var temporary:Bool = false
     //collectionView
-    var messageCollectionView:UICollectionView {
-        get
+    var messageCollectionView:UICollectionView? {
+    
+        didSet
         {
-            return self.messageCollectionView
-    }
-        set
-        {
-            newValue.delegate = self
-            newValue.dataSource = self
-            newValue.reloadData()
-    }
+            messageCollectionView!.delegate = self
+            messageCollectionView!.dataSource = self
+            messageCollectionView!.reloadData()
+        }
     }
     
     init(temporary:Bool)
@@ -67,15 +64,37 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     {
         messagesRoot!.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
         {(snap:FDataSnapshot!, previous:String!) in
-            println("snap.value = \(snap.value)")
+//            println("snap.value = \(snap.value)")
             if let dictionary = snap.value as? Dictionary<String, AnyObject>
             {
                 if let model = SWMessageModel.messageModelForDictionary(dictionary)
                 {
-                    self.messages += model
+                    self.insertChannel(model, atIndex: self.messages.count)
                 }
             }
         })
+    }
+    
+    
+    func insertChannel(channel: SWMessageModel, atIndex i:Int)
+    {
+
+        if let collectionView = messageCollectionView?
+        {
+            collectionView.performBatchUpdates(
+                {
+                    
+                    self.messages.insert(channel, atIndex: i)
+                    collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+                    
+                }, completion:
+                {(b:Bool) in
+                    
+                })
+        } else
+        {
+            messages.insert(channel, atIndex:i)
+        }
     }
     
     
@@ -90,13 +109,23 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell!
     {
         //TODO, fetch cells
+        println("index = \(indexPath.item)" )
         var cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cellulare", forIndexPath: indexPath) as UICollectionViewCell
         cell.backgroundColor = indexPath.item%2 == 0 ? UIColor(red: 1, green: 0, blue: 0, alpha: 0.6) : UIColor(red: 1, green: 0, blue: 0, alpha: 1.0)
+        
+        
+        let messageModel = messages[indexPath.row]
+        var label = cell.viewWithTag(5) as? UILabel
+        label!.text = messageModel.text!
+        
+        
         return cell
     }
     
     func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int
     {
+        let count = messages.count;
+        println("number of messages = \(count)")
         return messages.count
     }
     

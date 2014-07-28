@@ -15,7 +15,7 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
     {
         let attributes = super.layoutAttributesForItemAtIndexPath(indexPath)
 
-        attributes.frame.origin.y = collectionView.contentSize.height - attributes.frame.origin.y
+//        attributes.frame.origin.y = collectionView.contentSize.height - attributes.frame.origin.y
         
         return attributes
     }
@@ -23,12 +23,10 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
     override func collectionViewContentSize() -> CGSize
     {
         var size = super.collectionViewContentSize()
-//        println("proposed height = \(size.height)")
-        if size.height < collectionView.frame.size.height
-        {
-            size.height = collectionView.frame.size.height
-//            println("actual height = \(size.height)")
-        }
+//        if size.height < collectionView.frame.size.height
+//        {
+//            size.height = collectionView.frame.size.height
+//        }
         return size
         
     }
@@ -44,13 +42,9 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
         for attribute in attributes as [UICollectionViewLayoutAttributes]
         {
 //            println("b4 = \(attribute.frame)")
-            
-            attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
-            
-            
+//            attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
 //            println("aftr = \(attribute.frame)")
             
-            //            println("height \(size.height) - \(attribute.frame.origin.y) = \(attribute.frame.origin.y)")
         }
 
         return attributes;
