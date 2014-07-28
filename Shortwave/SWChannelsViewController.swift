@@ -9,6 +9,14 @@
 import Foundation
 import UIKit
 
+enum AddChannelState
+{
+    case Ready
+    case Typing
+    case Seeking(String) //"the name"
+    case Pending(isJoining:Bool, String)
+}
+
 class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, UITextFieldDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
@@ -20,6 +28,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     var addChannelCell:SWAddChannelCell?
     var temporaryModel:SWChannelModel?
+    
+    //the current state of the addChannel button/cell
+    var addChannelState:AddChannelState = .Ready
     
     
     override func viewDidLoad()
@@ -52,7 +63,15 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                 if let dictionary = snap?.value as? NSDictionary
                 {
                     let channelModel = SWChannelModel(dictionary: dictionary, url: "\(url)\(snap!.name)")
-
+                    //check if this already exists!
+                    let result = self.channels.filter { $0.name == channelModel.name }
+                    
+                    if (result.count != 0)
+                    {
+                        return
+                    }
+                    
+                    
                     let index = self.channels.count;
                     
                     self.insertChannel(channelModel, atIndex:index)
@@ -187,13 +206,20 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         else
         if indexPath.section == channels.count
         {
-            beginAddingAChannel()
+            switch addChannelState
+            {
+                case .Ready:
+                    beginAddingAChannel()
+                
+                default:
+                    break;
+            }
         }
     }
     
     func beginAddingAChannel()
     {
-//        let indexPaths = [NSIndexPath(forItem: 0, inSection: channels.count)]
+        addChannelState = .Typing
         let tempChannelModel = SWChannelModel(temporary: true)
         channelsCollectionView.performBatchUpdates(
             {
@@ -247,6 +273,11 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     {
         textField.resignFirstResponder()
         
+        // TODO: invalidate "" channel
+        
+        addChannelState = .Seeking(textField.text)
+        self.addChannelCell!.curlDownAMessage("Please wait...", animated: true)
+        
         self.performFirebaseFetchForChannel(textField.text)
         {(exists:Bool) in
             
@@ -257,14 +288,16 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             self.temporaryModel!.initialize(dictionary: NSDictionary(), andUrl: url)
             self.temporaryModel!.bindToWall()
             
-            
             if (exists)
             {//join
                 println("time to join \(textField.text)")
+                self.addChannelState = .Pending(isJoining:true, textField.text)
+                
             } else
             {//create
                 println("time to create \(textField.text)")
                 self.createChannel(self.temporaryModel!)
+                self.addChannelState = .Pending(isJoining:false, textField.text)
             }
             
             self.temporaryModel = nil
@@ -278,6 +311,48 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     func createChannel(channel:SWChannelModel)
     {
         
+        let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        
+        let value =
+        [
+            "moderators": [userId: true],
+            "members": [userId: true],
+            "public": true
+        ]
+        
+        channel.channelRoot!.setValue(value, withCompletionBlock:
+            {(error:NSError!, firebase:Firebase!) in
+                println("error \(error) and firebase \(firebase)")
+                if error
+                {
+                    //failure!
+                } else
+                {
+                    let priority = NSDate().timeIntervalSince1970*1000
+                    let yourChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(channel.name!)")
+                    yourChannels.setValue([
+                            "lastSeen":0,
+                            "muted":false
+                        ], andPriority:priority, withCompletionBlock:
+                        {(error:NSError!, firebase:Firebase!) in
+                            if error
+                            {
+                                
+                            } else
+                            {
+                                self.addChannelState = .Ready
+                                self.addChannelCell!.curlDownAMessage("+ Channel", animated: true)
+                                //index of channel?
+                                let section = find(self.channels, channel)!
+                                
+                                //expand this index
+                                self.collectionView(self.channelsCollectionView, didSelectItemAtIndexPath: NSIndexPath(forItem: 0, inSection: section) )
+                                
+                            }
+                        })
+                    
+                }
+            })
     }
     
     
