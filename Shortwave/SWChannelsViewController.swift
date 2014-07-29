@@ -454,28 +454,37 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     
-    // MARK: keyboardWillToggle for willShow and willHide
+    /// MARK: keyboardWillToggle for willShow and willHide
     func keyboardWillToggle(notification:NSNotification)
     {
+        if !composeBar.textField.isFirstResponder()
+        {
+            return
+        }
         let userInfo = notification.userInfo
-        
-        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey]
-        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey]
+    
+        let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
+        let curveV = userInfo[UIKeyboardAnimationCurveUserInfoKey] 
         let frameBeginV = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
         let frameEndV = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
 
-//        println("duration \(duration) \ncurve \(curve) \nbegin \(frameBeginV) \nframeEnd \(frameEndV)")
-        
+        let duration = durationV!.doubleValue as NSTimeInterval
         let frameBegin = frameBeginV!.CGRectValue()
         let frameEnd = frameEndV!.CGRectValue()
         
+        let curve:UInt = 7//curveV!.unsignedIntegerValue
+        let animationCurve = UIViewAnimationOptions.fromRaw(curve)
+
+        println("durationV = \(durationV) and curveV = \(curveV)")
+//        println("duration = \(duration) and curve = \(animationCurve)")
+        
         let dy = frameBegin.origin.y - frameEnd.origin.y
         let constraintHeight = (dy < 0 ? 0 : dy )
-
-//        println("constraint height = \(constraintHeight)")
-        
-        bottomConstraintComposeBar.constant = constraintHeight
-    
+        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.fromRaw(7 << 16)!, animations:
+            {
+                self.bottomConstraintComposeBar.constant = constraintHeight
+                self.composeBar.layoutIfNeeded()
+            }, completion: nil)
     }
     
     // MARK: SWComposeBarViewDelegate
