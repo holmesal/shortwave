@@ -52,6 +52,7 @@
 		AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWComposeBarView.swift; sourceTree = "<group>"; };
 		AA23134619858F6500002719 /* SWMessagesLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessagesLayout.swift; sourceTree = "<group>"; };
 		AA2313481985B4A800002719 /* SWAddChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWAddChannelCell.swift; sourceTree = "<group>"; };
+		AA2B545F19874C4E00E0E6CD /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = Shortwave/MyPlayground.playground; sourceTree = "<group>"; };
 		AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
 		AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelsViewController.swift; sourceTree = "<group>"; };
@@ -157,6 +158,7 @@
 		AACEBBFB19819F0400DD2F78 = {
 			isa = PBXGroup;
 			children = (
+				AA2B545F19874C4E00E0E6CD /* MyPlayground.playground */,
 				AACEBC0619819F0500DD2F78 /* Shortwave */,
 				AACEBC1419819F0600DD2F78 /* ShortwaveTests */,
 				AACEBC0519819F0500DD2F78 /* Products */,

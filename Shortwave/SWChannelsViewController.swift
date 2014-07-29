@@ -187,8 +187,12 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             channel.isExpanded = !channel.isExpanded
             selectedChannel = (channel.isExpanded ? channel : nil)
             
+            let myFloat = 0.0
+            println(String(format:"myFloat: %.2f", myFloat))
+            
             collectionView.performBatchUpdates(
                 {
+                    
                     
                     
                     
@@ -209,7 +213,11 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                             let inceptionCell = self.channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 1, inSection: indexPath.section)) as SWInceptionCell
                             inceptionCell.animateInceptionCell(expanded:false)
                             collectionView.deleteItemsAtIndexPaths(targetIndexPaths)
-                        }
+                            if self.composeBar.textField.isFirstResponder()
+                            {
+                                self.composeBar.textField.resignFirstResponder()
+                            }
+                    }
                     
                     
                 }, completion:

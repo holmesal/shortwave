@@ -19,6 +19,7 @@ class SWComposeBarView: UIView, UITextFieldDelegate
     var textField:UITextField
     var send:UIButton
     var delegate:SWComposeBarViewDelegate?
+    var highlighted:Bool = false
     
     init(coder aDecoder: NSCoder!)
     {
