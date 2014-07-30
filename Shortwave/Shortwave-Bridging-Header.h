@@ -9,3 +9,7 @@
 #import "MessageGif.h"   //gif
 #import "MessageCell.h"  //a cell!
 #import "MessageSpotifyTrack.h" //track model
+
+
+#import "ASIHTTPRequest.h"
+#import "ASIProgressDelegate.h"
