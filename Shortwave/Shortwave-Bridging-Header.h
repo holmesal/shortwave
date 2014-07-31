@@ -13,3 +13,9 @@
 
 #import "ASIHTTPRequest.h"
 #import "ASIProgressDelegate.h"
+
+#import "UIColor+HexString.h"
+
+#import "UILabel+CustomFont.h"
+#import "UIButton+CustomFont.h"
+#import "UITextField+CustomFont.h"

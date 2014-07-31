@@ -25,6 +25,11 @@
 		AAB650B6198894F7009D6D23 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B5198894F7009D6D23 /* MobileCoreServices.framework */; };
 		AAB650B819889502009D6D23 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B719889502009D6D23 /* libz.dylib */; };
 		AAB650BA1988950F009D6D23 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B91988950F009D6D23 /* CoreGraphics.framework */; };
+		AAB650BD19897C96009D6D23 /* UIColor+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650BC19897C96009D6D23 /* UIColor+HexString.m */; };
+		AAB650C419899988009D6D23 /* UIButton+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650BF19899988009D6D23 /* UIButton+CustomFont.m */; };
+		AAB650C519899988009D6D23 /* UILabel+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C119899988009D6D23 /* UILabel+CustomFont.m */; };
+		AAB650C619899988009D6D23 /* UITextField+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C319899988009D6D23 /* UITextField+CustomFont.m */; };
+		AAB650C81989AE6B009D6D23 /* SWNewChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */; };
 		AAB78ED91988829800E93D0C /* SWImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB78ED81988829800E93D0C /* SWImageLoader.swift */; };
 		AAB78EEF19888C2300E93D0C /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB78EDC19888C2300E93D0C /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AAB78EF019888C2300E93D0C /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB78EDF19888C2300E93D0C /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -85,6 +90,15 @@
 		AAB650B5198894F7009D6D23 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AAB650B719889502009D6D23 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		AAB650B91988950F009D6D23 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		AAB650BB19897C96009D6D23 /* UIColor+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexString.h"; sourceTree = "<group>"; };
+		AAB650BC19897C96009D6D23 /* UIColor+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexString.m"; sourceTree = "<group>"; };
+		AAB650BE19899988009D6D23 /* UIButton+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+CustomFont.h"; sourceTree = "<group>"; };
+		AAB650BF19899988009D6D23 /* UIButton+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+CustomFont.m"; sourceTree = "<group>"; };
+		AAB650C019899988009D6D23 /* UILabel+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UILabel+CustomFont.h"; sourceTree = "<group>"; };
+		AAB650C119899988009D6D23 /* UILabel+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UILabel+CustomFont.m"; sourceTree = "<group>"; };
+		AAB650C219899988009D6D23 /* UITextField+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+CustomFont.h"; sourceTree = "<group>"; };
+		AAB650C319899988009D6D23 /* UITextField+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+CustomFont.m"; sourceTree = "<group>"; };
+		AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWNewChannel.swift; sourceTree = "<group>"; };
 		AAB78ED81988829800E93D0C /* SWImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWImageLoader.swift; sourceTree = "<group>"; };
 		AAB78EDB19888C2300E93D0C /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		AAB78EDC19888C2300E93D0C /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
@@ -182,6 +196,7 @@
 		AA3B8D601981A55E00F4D3CC /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */,
 				AA3B8D611981A75900F4D3CC /* SWAuthViewController.swift */,
 				AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */,
 				AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */,
@@ -242,6 +257,14 @@
 		AAC79F091982F8AF005961D1 /* extension */ = {
 			isa = PBXGroup;
 			children = (
+				AAB650BE19899988009D6D23 /* UIButton+CustomFont.h */,
+				AAB650BF19899988009D6D23 /* UIButton+CustomFont.m */,
+				AAB650C019899988009D6D23 /* UILabel+CustomFont.h */,
+				AAB650C119899988009D6D23 /* UILabel+CustomFont.m */,
+				AAB650C219899988009D6D23 /* UITextField+CustomFont.h */,
+				AAB650C319899988009D6D23 /* UITextField+CustomFont.m */,
+				AAB650BB19897C96009D6D23 /* UIColor+HexString.h */,
+				AAB650BC19897C96009D6D23 /* UIColor+HexString.m */,
 				AAC79F0A1982F8BE005961D1 /* Extension.swift */,
 			);
 			name = extension;
@@ -470,6 +493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAB650BD19897C96009D6D23 /* UIColor+HexString.m in Sources */,
 				AAB78EF619888C2300E93D0C /* ASINetworkQueue.m in Sources */,
 				AAB78EF019888C2300E93D0C /* ASIDataCompressor.m in Sources */,
 				AAB78EF519888C2300E93D0C /* ASIInputStream.m in Sources */,
@@ -487,11 +511,15 @@
 				AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */,
 				AAC79F0B1982F8BE005961D1 /* Extension.swift in Sources */,
 				AAD651D71981C86200BA0127 /* SWChannelModel.swift in Sources */,
+				AAB650C519899988009D6D23 /* UILabel+CustomFont.m in Sources */,
+				AAB650C81989AE6B009D6D23 /* SWNewChannel.swift in Sources */,
 				AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */,
 				AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */,
 				AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */,
 				AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */,
+				AAB650C619899988009D6D23 /* UITextField+CustomFont.m in Sources */,
 				AA3B8D641981ADAD00F4D3CC /* Constants.swift in Sources */,
+				AAB650C419899988009D6D23 /* UIButton+CustomFont.m in Sources */,
 				AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */,
 				AAC79F0F1983767D005961D1 /* SWInceptionCell.swift in Sources */,
 				AAFE87601984AAAF004AD3BA /* MessageSpotifyTrack.m in Sources */,

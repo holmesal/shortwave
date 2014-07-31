@@ -22,3 +22,11 @@ let kFacebookOnAppStore = "https://itunes.apple.com/us/app/facebook/id284882215?
 let kFacebookAppId = "684979988223644"
 let kFacebookPermissions:Array<AnyObject> = []
 
+
+let kNiceColors = [
+    "blue":"4793E7",
+    "purple":"A550F3",
+    "red":"E15050",
+    "orange":"F1793A",
+    "yellow":"E8AD27",
+    "green":"02C263"]
