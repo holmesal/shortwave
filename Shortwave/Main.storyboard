@@ -225,11 +225,12 @@
                         <outlet property="channelsCollectionView" destination="ATT-u7-tu5" id="7so-Gd-ggl"/>
                         <outlet property="composeBar" destination="jHt-K1-JNb" id="lSP-yD-UN3"/>
                         <outlet property="layout" destination="K3T-OF-BIV" id="xJs-3x-ccp"/>
+                        <segue destination="Q7O-fX-TDX" kind="push" identifier="Messages" id="XUp-Kr-xna"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ydN-BZ-3ub" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="993" y="-90"/>
+            <point key="canvasLocation" x="993" y="-116"/>
         </scene>
         <!--New Channel-->
         <scene sceneID="rvt-fc-ba2">
@@ -406,6 +407,59 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T8F-bK-3Lp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="993" y="583"/>
+        </scene>
+        <!--Messages View Controller-->
+        <scene sceneID="Awk-oB-wjk">
+            <objects>
+                <viewController id="Q7O-fX-TDX" customClass="SWMessagesViewController" customModule="Shortwave" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="GfS-b4-V58"/>
+                        <viewControllerLayoutGuide type="bottom" id="u94-de-PMa"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="HCL-GD-LhJ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fzz-FH-RgB">
+                                <rect key="frame" x="0.0" y="64" width="320" height="464"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gqe-lC-XYr">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yo1-Fm-Pd3" customClass="PHFComposeBarView">
+                                <rect key="frame" x="0.0" y="528" width="320" height="40"/>
+                                <color key="backgroundColor" red="0.36470588240000001" green="0.6588235294" blue="0.12549019610000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="n5u-nr-5B6"/>
+                                    <constraint firstAttribute="width" constant="320" id="oFX-LN-TwJ"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="fzz-FH-RgB" firstAttribute="top" secondItem="GfS-b4-V58" secondAttribute="bottom" id="28T-HJ-q6R"/>
+                            <constraint firstAttribute="trailing" secondItem="fzz-FH-RgB" secondAttribute="trailing" id="AN6-QN-Bvw"/>
+                            <constraint firstItem="u94-de-PMa" firstAttribute="top" secondItem="fzz-FH-RgB" secondAttribute="bottom" constant="40" id="Psk-1S-wrK"/>
+                            <constraint firstAttribute="centerX" secondItem="yo1-Fm-Pd3" secondAttribute="centerX" id="UCz-l2-PdA"/>
+                            <constraint firstItem="fzz-FH-RgB" firstAttribute="leading" secondItem="HCL-GD-LhJ" secondAttribute="leading" id="gzB-II-eDK"/>
+                            <constraint firstItem="u94-de-PMa" firstAttribute="top" secondItem="yo1-Fm-Pd3" secondAttribute="bottom" id="h6V-U1-A5H"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="koM-eM-8un"/>
+                    <connections>
+                        <outlet property="collectionView" destination="fzz-FH-RgB" id="iN7-Sp-tAl"/>
+                        <outlet property="composeBarBottomConstraint" destination="h6V-U1-A5H" id="1ed-Fb-ia7"/>
+                        <outlet property="composeBarView" destination="yo1-Fm-Pd3" id="8D1-MG-mAS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TUb-yA-6Ox" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1495" y="-165"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

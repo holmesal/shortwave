@@ -18,7 +18,15 @@
 		AA3B8D661981B01F00F4D3CC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3B8D651981B01E00F4D3CC /* CFNetwork.framework */; };
 		AA3B8D681981B17900F4D3CC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA3B8D671981B17900F4D3CC /* Foundation.framework */; };
 		AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4013111982DB0600C6853D /* SWChannelCell.swift */; };
+		AA59F77B198AE8AB0023CFB4 /* SWImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA59F778198AE8AB0023CFB4 /* SWImageCell.xib */; };
+		AA59F77C198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */; };
+		AA59F77D198AE8AB0023CFB4 /* SWTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */; };
+		AA59F783198AEABE0023CFB4 /* SWSpotifyTrackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */; };
+		AA59F786198AEC4F0023CFB4 /* SWTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AA59F785198AEC4F0023CFB4 /* SWTextCell.m */; };
 		AA68937A1988927A0014B8F5 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6893791988927A0014B8F5 /* Reachability.m */; };
+		AA7DEA0B198B2112005154FE /* SWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA0A198B2112005154FE /* SWUserManager.m */; };
+		AA7DEA0E198B2124005154FE /* SWUser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA0D198B2124005154FE /* SWUser.m */; };
+		AA7DEA11198B3B09005154FE /* WallSource.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA10198B3B09005154FE /* WallSource.m */; };
 		AA9B7A731982058700C17494 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A721982058700C17494 /* Accounts.framework */; };
 		AA9B7A791982356A00C17494 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */; };
 		AAB650B4198894EA009D6D23 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B3198894EA009D6D23 /* SystemConfiguration.framework */; };
@@ -30,6 +38,7 @@
 		AAB650C519899988009D6D23 /* UILabel+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C119899988009D6D23 /* UILabel+CustomFont.m */; };
 		AAB650C619899988009D6D23 /* UITextField+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C319899988009D6D23 /* UITextField+CustomFont.m */; };
 		AAB650C81989AE6B009D6D23 /* SWNewChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */; };
+		AAB650CA1989CCF7009D6D23 /* SWMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB650C91989CCF7009D6D23 /* SWMessagesViewController.swift */; };
 		AAB78ED91988829800E93D0C /* SWImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB78ED81988829800E93D0C /* SWImageLoader.swift */; };
 		AAB78EEF19888C2300E93D0C /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB78EDC19888C2300E93D0C /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AAB78EF019888C2300E93D0C /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = AAB78EDF19888C2300E93D0C /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -42,7 +51,6 @@
 		AABE7AC71988131E00374023 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A741982059700C17494 /* Social.framework */; };
 		AABE7AC91988132500374023 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AABE7AC81988132500374023 /* MessageUI.framework */; };
 		AAC79F0B1982F8BE005961D1 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0A1982F8BE005961D1 /* Extension.swift */; };
-		AAC79F0D198375CA005961D1 /* SWMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0C198375CA005961D1 /* SWMessageModel.swift */; };
 		AAC79F0F1983767D005961D1 /* SWInceptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */; };
 		AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */; };
 		AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC0919819F0500DD2F78 /* AppDelegate.swift */; };
@@ -81,8 +89,21 @@
 		AA3B8D671981B17900F4D3CC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA4013111982DB0600C6853D /* SWChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelCell.swift; sourceTree = "<group>"; };
 		AA4DF4D919877CE600CA9AA3 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		AA59F778198AE8AB0023CFB4 /* SWImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWImageCell.xib; sourceTree = "<group>"; };
+		AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWSpotifyTrackCell.xib; sourceTree = "<group>"; };
+		AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWTextCell.xib; sourceTree = "<group>"; };
+		AA59F781198AEABE0023CFB4 /* SWSpotifyTrackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWSpotifyTrackCell.h; sourceTree = "<group>"; };
+		AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWSpotifyTrackCell.m; sourceTree = "<group>"; };
+		AA59F784198AEC4E0023CFB4 /* SWTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTextCell.h; sourceTree = "<group>"; };
+		AA59F785198AEC4F0023CFB4 /* SWTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTextCell.m; sourceTree = "<group>"; };
 		AA689378198892630014B8F5 /* Reachability.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		AA6893791988927A0014B8F5 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		AA7DEA09198B2112005154FE /* SWUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUserManager.h; sourceTree = "<group>"; };
+		AA7DEA0A198B2112005154FE /* SWUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUserManager.m; sourceTree = "<group>"; };
+		AA7DEA0C198B2124005154FE /* SWUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUser.h; sourceTree = "<group>"; };
+		AA7DEA0D198B2124005154FE /* SWUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUser.m; sourceTree = "<group>"; };
+		AA7DEA0F198B3B09005154FE /* WallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WallSource.h; sourceTree = "<group>"; };
+		AA7DEA10198B3B09005154FE /* WallSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WallSource.m; sourceTree = "<group>"; };
 		AA9B7A721982058700C17494 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AA9B7A741982059700C17494 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
@@ -99,6 +120,7 @@
 		AAB650C219899988009D6D23 /* UITextField+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+CustomFont.h"; sourceTree = "<group>"; };
 		AAB650C319899988009D6D23 /* UITextField+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextField+CustomFont.m"; sourceTree = "<group>"; };
 		AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWNewChannel.swift; sourceTree = "<group>"; };
+		AAB650C91989CCF7009D6D23 /* SWMessagesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessagesViewController.swift; sourceTree = "<group>"; };
 		AAB78ED81988829800E93D0C /* SWImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWImageLoader.swift; sourceTree = "<group>"; };
 		AAB78EDB19888C2300E93D0C /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		AAB78EDC19888C2300E93D0C /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
@@ -122,7 +144,6 @@
 		AAB78EEE19888C2300E93D0C /* ASIProgressDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIProgressDelegate.h; sourceTree = "<group>"; };
 		AABE7AC81988132500374023 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		AAC79F0A1982F8BE005961D1 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		AAC79F0C198375CA005961D1 /* SWMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessageModel.swift; sourceTree = "<group>"; };
 		AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWInceptionCell.swift; sourceTree = "<group>"; };
 		AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelsLayout.swift; sourceTree = "<group>"; };
 		AACEBC0419819F0500DD2F78 /* Shortwave.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortwave.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +217,7 @@
 		AA3B8D601981A55E00F4D3CC /* viewcontrollers */ = {
 			isa = PBXGroup;
 			children = (
+				AAB650C91989CCF7009D6D23 /* SWMessagesViewController.swift */,
 				AAB650C71989AE6B009D6D23 /* SWNewChannel.swift */,
 				AA3B8D611981A75900F4D3CC /* SWAuthViewController.swift */,
 				AA3B8D5E1981A55100F4D3CC /* SWChannelsViewController.swift */,
@@ -208,6 +230,15 @@
 		AA4013101982DAF900C6853D /* view */ = {
 			isa = PBXGroup;
 			children = (
+				AA59F784198AEC4E0023CFB4 /* SWTextCell.h */,
+				AA59F785198AEC4F0023CFB4 /* SWTextCell.m */,
+				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
+				AAFE87531984AAAF004AD3BA /* MessageCell.m */,
+				AA59F781198AEABE0023CFB4 /* SWSpotifyTrackCell.h */,
+				AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */,
+				AA59F778198AE8AB0023CFB4 /* SWImageCell.xib */,
+				AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */,
+				AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */,
 				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
 				AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */,
 				AA2313481985B4A800002719 /* SWAddChannelCell.swift */,
@@ -216,13 +247,15 @@
 			name = view;
 			sourceTree = "<group>";
 		};
-		AAB78EDA1988838400E93D0C /* ImageLoader */ = {
+		AAB78EDA1988838400E93D0C /* services */ = {
 			isa = PBXGroup;
 			children = (
 				AAB78EF7198890E100E93D0C /* all seeing i */,
 				AAB78ED81988829800E93D0C /* SWImageLoader.swift */,
+				AA7DEA09198B2112005154FE /* SWUserManager.h */,
+				AA7DEA0A198B2112005154FE /* SWUserManager.m */,
 			);
-			name = ImageLoader;
+			name = services;
 			sourceTree = "<group>";
 		};
 		AAB78EF7198890E100E93D0C /* all seeing i */ = {
@@ -293,7 +326,7 @@
 		AACEBC0619819F0500DD2F78 /* Shortwave */ = {
 			isa = PBXGroup;
 			children = (
-				AAB78EDA1988838400E93D0C /* ImageLoader */,
+				AAB78EDA1988838400E93D0C /* services */,
 				AAC79F091982F8AF005961D1 /* extension */,
 				AA4013101982DAF900C6853D /* view */,
 				AAD651D81981C87D00BA0127 /* model */,
@@ -336,9 +369,14 @@
 		AAD651D81981C87D00BA0127 /* model */ = {
 			isa = PBXGroup;
 			children = (
+				AA7DEA0F198B3B09005154FE /* WallSource.h */,
+				AA7DEA10198B3B09005154FE /* WallSource.m */,
 				AAFE87611984AE17004AD3BA /* old message stuff */,
 				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
-				AAC79F0C198375CA005961D1 /* SWMessageModel.swift */,
+				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
+				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
+				AA7DEA0C198B2124005154FE /* SWUser.h */,
+				AA7DEA0D198B2124005154FE /* SWUser.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -346,14 +384,10 @@
 		AAFE87611984AE17004AD3BA /* old message stuff */ = {
 			isa = PBXGroup;
 			children = (
-				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
-				AAFE87531984AAAF004AD3BA /* MessageCell.m */,
 				AAFE87541984AAAF004AD3BA /* MessageGif.h */,
 				AAFE87551984AAAF004AD3BA /* MessageGif.m */,
 				AAFE87561984AAAF004AD3BA /* MessageImage.h */,
 				AAFE87571984AAAF004AD3BA /* MessageImage.m */,
-				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
-				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
 				AAFE875A1984AAAF004AD3BA /* MessageSpotifyTrack.h */,
 				AAFE875B1984AAAF004AD3BA /* MessageSpotifyTrack.m */,
 			);
@@ -441,6 +475,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA59F77C198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib in Resources */,
+				AA59F77D198AE8AB0023CFB4 /* SWTextCell.xib in Resources */,
+				AA59F77B198AE8AB0023CFB4 /* SWImageCell.xib in Resources */,
 				AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */,
 				AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */,
 			);
@@ -502,6 +539,7 @@
 				AAB78EF319888C2300E93D0C /* ASIFormDataRequest.m in Sources */,
 				AAB78EEF19888C2300E93D0C /* ASIAuthenticationDialog.m in Sources */,
 				AAB78EF119888C2300E93D0C /* ASIDataDecompressor.m in Sources */,
+				AA7DEA0E198B2124005154FE /* SWUser.m in Sources */,
 				AA68937A1988927A0014B8F5 /* Reachability.m in Sources */,
 				AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */,
 				AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */,
@@ -515,16 +553,20 @@
 				AAB650C81989AE6B009D6D23 /* SWNewChannel.swift in Sources */,
 				AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */,
 				AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */,
+				AA7DEA0B198B2112005154FE /* SWUserManager.m in Sources */,
+				AA59F786198AEC4F0023CFB4 /* SWTextCell.m in Sources */,
+				AAB650CA1989CCF7009D6D23 /* SWMessagesViewController.swift in Sources */,
 				AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */,
 				AACEBC0A19819F0500DD2F78 /* AppDelegate.swift in Sources */,
+				AA7DEA11198B3B09005154FE /* WallSource.m in Sources */,
 				AAB650C619899988009D6D23 /* UITextField+CustomFont.m in Sources */,
 				AA3B8D641981ADAD00F4D3CC /* Constants.swift in Sources */,
+				AA59F783198AEABE0023CFB4 /* SWSpotifyTrackCell.m in Sources */,
 				AAB650C419899988009D6D23 /* UIButton+CustomFont.m in Sources */,
 				AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */,
 				AAC79F0F1983767D005961D1 /* SWInceptionCell.swift in Sources */,
 				AAFE87601984AAAF004AD3BA /* MessageSpotifyTrack.m in Sources */,
 				AAB78ED91988829800E93D0C /* SWImageLoader.swift in Sources */,
-				AAC79F0D198375CA005961D1 /* SWMessageModel.swift in Sources */,
 				AAFE875F1984AAAF004AD3BA /* MessageModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

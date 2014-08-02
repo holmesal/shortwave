@@ -14,13 +14,13 @@
 
 -(id)initWithTitle:(NSString*)Title uri:(NSString*)Uri artist:(NSString*)Artist albumImage:(NSString*)AlbumImage andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text
 {
-    if (self = [super initWithIcon:icon color:color ownerID:ownerID text:text])
-    {
-        self.title = Title;
-        self.artist = Artist;
-        self.uri = Uri;
-        self.albumImage = AlbumImage;
-    }
+//    if (self = [super initWithIcon:icon color:color ownerID:ownerID text:text])
+//    {
+//        self.title = Title;
+//        self.artist = Artist;
+//        self.uri = Uri;
+//        self.albumImage = AlbumImage;
+//    }
     return self;
 }
 

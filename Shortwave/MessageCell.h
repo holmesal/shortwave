@@ -8,18 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "MessageModel.h"
-//#import "WallSource.h"
+#import "WallSource.h"
 
 @interface MessageCell : UICollectionViewCell
 
-//+(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView;
-////+(MessageCell*)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath andWallSource:(WallSource*)wallSource;
-//+(CGFloat)heightOfMessageCellForModel:(MessageModel*)messageModel collectionView:(UICollectionView*)collectionView;
-//
-//-(void)setMessageModel:(MessageModel*)messageModel;
-//
-//+(CGFloat)heightWithMessageModel:(MessageModel*)model;
-//
-//@property (weak, nonatomic) MessageModel *model;
++(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView;
+
++(id)messageCellFromMessageModel:(MessageModel*)messageModel andCollectionView:(UICollectionView*)collectionView forIndexPath:(NSIndexPath*)indexPath andWallSource:(WallSource*)wallSource;
+
++(CGFloat)heightOfMessageCellForModel:(MessageModel*)messageModel collectionView:(UICollectionView*)collectionView;
+
+-(void)setMessageModel:(MessageModel*)messageModel;
+
++(CGFloat)heightWithMessageModel:(MessageModel*)model;
+
+@property (weak, nonatomic) MessageModel *model;
 
 @end

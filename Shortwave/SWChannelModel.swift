@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 
-class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSource
+class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
 {
     var isExpanded:Bool = false
     
@@ -22,18 +22,36 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     var channelRoot:Firebase? //reference to the messages
     
     var messagesRoot:Firebase?
-    var messages:Array<SWMessageModel> = [SWMessageModel]() //this model becomes the wall source for the interior UICollectionView for messages
+    var messages:Array<MessageModel> = [MessageModel]() //this model becomes the wall source for the interior UICollectionView for messages
     
     var temporary:Bool = false
+    var wallSource:WallSource!;
+    
     //collectionView
     var messageCollectionView:UICollectionView? {
     
         didSet
         {
-            messageCollectionView!.delegate = self
-            messageCollectionView!.dataSource = self
-            messageCollectionView!.reloadData()
-        }
+            if let collectionView = messageCollectionView
+            {
+                wallSource.collectionView = collectionView
+                collectionView.delegate = wallSource
+                collectionView.dataSource = wallSource
+                collectionView.reloadData()
+            }
+    }
+        willSet
+        {
+            if !newValue
+            {
+                if let collectionView = messageCollectionView
+                {
+                    wallSource.collectionView = nil
+                    collectionView.delegate = nil
+                    collectionView.dataSource = nil
+                }
+            }
+    }
     }
     
     init(temporary:Bool)
@@ -47,7 +65,11 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
         super.init()
      
         initialize(dictionary: dictionary, andUrl: url)
-        bindToWall()
+        let url = "\(kROOT_FIREBASE)messages/\(self.name!)/"
+        
+        
+        wallSource = WallSource(url: url)
+//        bindToWall()
     }
     
     func initialize(#dictionary:NSDictionary, andUrl url:String)
@@ -57,45 +79,49 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
         
         self.channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(name!)")
         self.messagesRoot = Firebase(url: "\(kROOT_FIREBASE)messages/\(name!)")
-        println("\(kROOT_FIREBASE)messages/\(name!)")
+//        println("\(kROOT_FIREBASE)messages/\(name!)")
     }
     
-    func bindToWall()
-    {
-        messagesRoot!.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
-        {(snap:FDataSnapshot!, previous:String!) in
-//            println("snap.value = \(snap.value)")
-            if let dictionary = snap.value as? Dictionary<String, AnyObject>
-            {
-                if let model = SWMessageModel.messageModelForDictionary(dictionary)
-                {
-                    self.insertChannel(model, atIndex: self.messages.count)
-                }
-            }
-        })
-    }
+//    func bindToWall()
+//    {
+//        messagesRoot!.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
+//        {(snap:FDataSnapshot!, previous:String!) in
+////            println("snap.value = \(snap.value)")
+//            if let dictionary = snap.value as? Dictionary<String, AnyObject>
+//            {
+//                if let model = MessageModel.messageModelFromValue(dictionary)? as? MessageModel
+//                {
+//                    self.insertMessage(model, atIndex: self.messages.count)
+//                }
+//                
+//                
+//            }
+//        })
+//    }
     
     
-    func insertChannel(channel: SWMessageModel, atIndex i:Int)
-    {
-
-        if let collectionView = messageCollectionView?
-        {
-            collectionView.performBatchUpdates(
-                {
-                    
-                    self.messages.insert(channel, atIndex: i)
-                    collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
-                    
-                }, completion:
-                {(b:Bool) in
-                    
-                })
-        } else
-        {
-            messages.insert(channel, atIndex:i)
-        }
-    }
+//    func insertMessage(message: MessageModel, atIndex i:Int)
+//    {
+//
+//        if let collectionView = messageCollectionView?
+//        {
+//            collectionView.performBatchUpdates(
+//                {
+//                    
+//                    self.messages.insert(message, atIndex: i)
+//                    collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
+//                    
+//                }, completion:
+//                {(b:Bool) in
+//                    
+//                    collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0), atScrollPosition: UICollectionViewScrollPosition.Bottom, animated: true)
+//                
+//                })
+//        } else
+//        {
+//            messages.insert(message, atIndex:i)
+//        }
+//    }
     
     
     
@@ -105,61 +131,64 @@ class SWChannelModel: NSObject, UICollectionViewDelegate, UICollectionViewDataSo
     }
     
 
-    // MARK: UICollectionViewDelegate/DataSource protocol
-    func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell!
-    {
-        //TODO, fetch cells
-        println("index = \(indexPath.item)" )
-        var cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cellulare", forIndexPath: indexPath) as UICollectionViewCell
-        cell.backgroundColor = indexPath.item%2 == 0 ? UIColor(red: 1, green: 0, blue: 0, alpha: 0.6) : UIColor(red: 1, green: 0, blue: 0, alpha: 1.0)
-        
-        
-        let messageModel = messages[indexPath.row]
-        var label = cell.viewWithTag(5) as? UILabel
-        label!.text = messageModel.text!
-        
-        
-        return cell
-    }
-    
-    func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int
-    {
-        let count = messages.count;
-        println("number of messages = \(count)")
-        return messages.count
-    }
-    
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int
-    {
-        return 1
-    }
-    
-    
-    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
-    {
-        println("selected \(indexPath)")
-    }
-
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
-    {
-        return CGSizeMake(320, 52)
-    }
-    
-    //UICollectionViewDelegateFlowLayout
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets
-    {
-        
-        return UIEdgeInsetsMake(0, 0, 0, 0)
-    }
-    
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return 0
-    }
-    
-    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
-    {
-        return 0
-    }
+//    // MARK: UICollectionViewDelegate/DataSource protocol
+//    func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell!
+//    {
+//        //TODO, fetch cells
+//        println("index = \(indexPath.item)" )
+//        
+//        if let cell = MessageCell.messageCellFromMessageModel(messages[indexPath.row], andCollectionView: collectionView, forIndexPath: indexPath)? as? MessageCell
+//        {
+//            return cell
+//        }
+//        return nil
+//        
+//
+//
+//    }
+//    
+//    func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int
+//    {
+//        let count = messages.count;
+//        println("number of messages = \(count)")
+//        return messages.count
+//    }
+//    
+//    func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int
+//    {
+//        return 1
+//    }
+//    
+//    
+//    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
+//    {
+//        println("selected \(indexPath)")
+//    }
+//
+//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
+//    {
+//        let height = MessageCell.heightOfMessageCellForModel(messages[indexPath.row], collectionView: collectionView)
+//        
+//        println("height = \(height)")
+//        
+//        return CGSizeMake(320, height)
+//    }
+//    
+//    //UICollectionViewDelegateFlowLayout
+//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets
+//    {
+//        
+//        return UIEdgeInsetsMake(0, 0, 0, 0)
+//    }
+//    
+//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
+//    {
+//        return 0
+//    }
+//    
+//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
+//    {
+//        return 0
+//    }
 }
 

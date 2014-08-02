@@ -18,12 +18,12 @@
 
 -(id)initWithSrc:(NSString*)source andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text width:(NSNumber*)w height:(NSNumber*)h
 {
-    if (self = [super initWithIcon:icon color:color ownerID:ownerID text:text])
-    {
-        self.src = source;
-        self.width = w;
-        self.height = h;
-    }
+//    if (self = [super initWithIcon:icon color:color ownerID:ownerID text:text])
+//    {
+//        self.src = source;
+//        self.width = w;
+//        self.height = h;
+//    }
     return self;
 }
 

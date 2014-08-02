@@ -66,7 +66,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         
     }
     
-    @IBAction func cancelButtonAction(sender: AnyObject) {
+    @IBAction func cancelButtonAction(sender: AnyObject?) {
         println("go back yo")
         self.dismissViewControllerAnimated(true, completion: {})
     }
@@ -263,6 +263,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                                 
                             } else
                             {
+                                self.cancelButtonAction(nil)
 //                                self.addChannelState = .Ready
 //                                self.addChannelCell!.curlDownAMessage("+ Channel", animated: true)
 //                                //index of channel?

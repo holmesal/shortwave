@@ -57,7 +57,7 @@ enum DataLoadingParcelState
     case Complete
 }
 
-private class DataLoadingParcel: NSObject
+@objc class DataLoadingParcel: NSObject
 {
     private class EventDispatcher
     {
@@ -74,7 +74,7 @@ private class DataLoadingParcel: NSObject
     let url:NSURL
     var percent:Float = 0.0
     var state:DataLoadingParcelState = .Unstarted
-    var dispatchers = [EventDispatcher]()
+    private var dispatchers = [EventDispatcher]()
     
 
     init(url:NSURL)
@@ -86,8 +86,9 @@ private class DataLoadingParcel: NSObject
         request.downloadProgressDelegate = self
         
         request.numberOfTimesToRetryOnTimeout = 2
-        request.didFinishSelector = "requestFinished:"
-        request.didFailSelector = "requestFailed:"
+        request.didFinishSelector = Selector("requestFinished:")
+        request.didFailSelector = Selector("requestFailed:")
+        
         request.delegate = self
     }
     
@@ -124,7 +125,7 @@ private class DataLoadingParcel: NSObject
         //by here state is .Downloading
     }
     
-    func requestFinished(request:ASIHTTPRequest)
+    func requestFinished(request:ASIHTTPRequest!)
     {
         state = .Complete
         receivedData = request.responseData()
@@ -142,7 +143,7 @@ private class DataLoadingParcel: NSObject
 
     }
     
-    func requestFailed(request:ASIHTTPRequest)
+    func requestFailed(request:ASIHTTPRequest!)
     {
         println("request failed")
         state = .Failed
@@ -166,7 +167,7 @@ private class DataLoadingParcel: NSObject
 }
 
 
-class SWImageLoader
+@objc class SWImageLoader
 {
     let NUM_CONCURRENT = 5
     let cache:NSCache = NSCache()

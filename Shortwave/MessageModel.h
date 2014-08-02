@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-//#import "FCUser.h"
+#import "SWUser.h"
 
 @interface MessageModel : NSObject
 
@@ -29,7 +29,7 @@ typedef enum
 } MessageModelType;
 
 //returns nil if it failed to grab all data
-//-(void)setUserData:(FCUser*)user;
+-(void)setUserData:(SWUser*)user;
 -(id)initWithDictionary:(NSDictionary*)dictionary;
 
 //bool success?  Override this to set more data!
@@ -39,27 +39,26 @@ typedef enum
 -(NSDictionary*)toDictionary;
 -(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString;
 
-+(MessageModel*)messageModelFromValue:(id)value;
++(id)messageModelFromValue:(id)value;
 
 //inherited properties
-@property (strong, nonatomic) NSString *icon;
-@property (strong, nonatomic) UIColor *color;
+
+@property (strong, nonatomic) NSString *profileUrl;
+@property (strong, nonatomic) NSString *firstName;
 
 @property (strong, nonatomic) NSString *ownerID;
 @property (strong, nonatomic) NSString *text;
 
-
-
 @property (assign, nonatomic) MessageModelType type;
 
-//for posting, use init to be safe that you've initialized all fields
--(id)initWithIcon:(NSString*)icon color:(NSString*)color ownerID:(NSString*)ownerID text:(NSString*)text;
 
 -(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text;
 
 
 -(void)postToAll;
 -(void)postToUsers:(NSArray*)earshotIds;
+
+-(void)sendMessageToChannel:(NSString*)channel;
 
 
 -(BOOL)hasAllData;

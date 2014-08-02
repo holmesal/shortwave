@@ -23,10 +23,11 @@
 
 @implementation MessageModel
 
-//@synthesize icon;
-//@synthesize color;
 @synthesize ownerID;
 @synthesize text;
+
+@synthesize profileUrl;
+@synthesize firstName;
 
 
 -(id)initWithOwnerID:(NSString*)OwnerID andText:(NSString*)Text
@@ -35,20 +36,6 @@
     {
         self.ownerID = OwnerID;
         self.text = Text;
-    }
-    return self;
-}
-
-#warning remove this method soon
--(id)initWithIcon:(NSString*)Icon color:(NSString*)colorString ownerID:(NSString*)OwnerID text:(NSString*)Text
-{
-    if (self = [self initWithOwnerID:OwnerID andText:Text])
-    {
-//        NSAssert(NO, @"no longer accessible");
-////        self.icon = Icon;
-////        self.color = [UIColor colorWithHexString:colorString];
-//        self.ownerID = OwnerID;
-//        self.text = Text;
     }
     return self;
 }
@@ -92,7 +79,8 @@
              @"title":@"Google - We're Not Evil, We Promise!",
              @"description":@"Something awful."
              },
-             @"meta":@{@"ownerID":@"shortbot"}
+             @"meta":@{@"ownerID":@"shortbot"
+             }
              }
              */
         } else
@@ -127,14 +115,14 @@
 //bool success?  Override this to set more data!
 -(BOOL)setDictionary:(NSDictionary*)dictionary
 {
-    NSDictionary *meta = dictionary[@"meta"];
+    NSDictionary *content = dictionary[@"content"];
     BOOL success = YES;
     
 //    icon = dictionary[@"icon"];
 //    success = success && (icon && [icon isKindOfClass:[NSString class]]);
     
-    text = dictionary[@"text"];
-    success = success && (text && [text isKindOfClass:[NSString class]]);
+        ownerID = dictionary[@"owner"];
+        success = success && (ownerID && [ownerID isKindOfClass:[NSString class]]);
     
 //    NSString *colorString = dictionary[@"color"];
 //    if (colorString && [colorString isKindOfClass:[NSString class]])
@@ -145,10 +133,10 @@
 //        success = NO;
 //    }
     
-    if (meta && [meta isKindOfClass:[NSDictionary class]])
+    if (content && [content isKindOfClass:[NSDictionary class]])
     {
-        ownerID = meta[@"ownerID"];
-        success = success && (ownerID && [ownerID isKindOfClass:[NSString class]]);
+        text = content[@"text"];
+        success = success && (text && [text isKindOfClass:[NSString class]]);
     } else
     {
         success = NO;
@@ -162,9 +150,6 @@
     if (!content)
         content = @{};
     
-    //location stuff filled in from CLLocationManager
-//    CLLocation *location = [[FCUser owner].beacon getLocation];
-    
     NSNumber *accuracy = [NSNumber numberWithDouble:-1];
     NSNumber *lat = [NSNumber numberWithDouble:0];// [NSNumber numberWithDouble:self.location.coordinate.latitude];
     NSNumber *lon = [NSNumber numberWithDouble:0];//[NSNumber numberWithDouble:self.location.coordinate.longitude];
@@ -175,23 +160,31 @@
 //        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
 //    }
     
+    
+    /*
+     "type": String,
+     "content": Dictionary,
+     "owner": String,
+     "raw": String,
+     "parsed": Bool
+     ".priority": Unix time in milliseconds
+     */
+    
+    NSNumber *priority = [NSNumber numberWithDouble:[NSDate date].timeIntervalSince1970*1000];
+    
+    
     return @{
-//                @"color": color.toHexString,
-//                @"icon": icon,
                 @"type": typeString,
-                @"text": text,
                 @"content": content,
-                @"timestamp": kFirebaseServerValueTimestamp,
-                @"meta":
-                    @{
-                        @"ownerID":ownerID,
-                        @"location":@{@"lat":lat, @"lon":lon, @"accuracy":accuracy}
-                    }
+                @"owner":ownerID,
+                @"raw":self.text,
+                @"parsed":@NO,
+                @".priority":priority
             };
 }
 -(NSDictionary*)toDictionary
 {
-    return [self toDictionaryWithContent:nil andType:@"text"];
+    return [self toDictionaryWithContent:@{@"text":self.text} andType:@"text"];
 }
 
 -(MessageModelType)type
@@ -199,6 +192,19 @@
     return MessageModelTypePlainText;
 }
 
+-(void)sendMessageToChannel:(NSString*)channel
+{
+    NSLog(@"sendy send!");
+    
+    NSDictionary *value = [self toDictionary];
+    Firebase *messagesChannel = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/messages/%@/", channel] ] childByAutoId];
+    [messagesChannel setValue:value];
+    self.name = messagesChannel.name;
+    
+}
+
+
+ #pragma mark nearby functionality
 -(void)postToAll
 {
 //    FCUser *owner = [FCUser owner];
@@ -256,15 +262,15 @@
 //    }
 //}
 
-//-(void)setUserData:(FCUser*)user
-//{
-//    _color = [UIColor colorWithHexString:user.color];
-//    _icon = [user icon];
-//}
+-(void)setUserData:(SWUser*)user
+{
+    profileUrl = user.photo;
+    firstName = user.firstName;
+}
 
 -(BOOL)hasAllData
 {
-    return _color && _icon;
+    return ownerID && text && profileUrl && firstName;
 }
 
 @end

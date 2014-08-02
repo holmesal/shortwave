@@ -17,7 +17,7 @@ enum AddChannelState
     case Pending(isJoining:Bool, String)
 }
 
-class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, SWComposeBarViewDelegate
+class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
     
@@ -44,17 +44,16 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.delegate = self
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
-        
-        composeBar.delegate = self
+
         
         self.navigationController.setNavigationBarHidden(false, animated: true)
         self.navigationController.navigationBar.translucent = false
         self.navigationController.navigationBar.barTintColor = UIColor(hexString: kNiceColors["green"])
         self.navigationController.navigationBar.tintColor = UIColor.whiteColor()
 
-        println("fonts! \(UIFont.familyNames())")
+//        println("fonts! \(UIFont.familyNames())")
         let thing = UIFont.fontNamesForFamilyName("Avenir")
-        println("avenir \(thing)")
+//        println("avenir \(thing)")
         
         let font = UIFont(name: "Avenir-Book", size: 15) //24 descriptors, 34 channel tittle
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),
@@ -73,8 +72,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         navigationItem.hidesBackButton = true
         bindToChannels()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
+
         
     }
     
@@ -87,7 +85,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     {
         let url = "\(kROOT_FIREBASE)users/\(NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId))/channels/"
         let f = Firebase(url: url)
-        println("f = \(f)")
+//        println("f = \(f)")
         f.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
             {
                 (snap:FDataSnapshot?, str:String?) in
@@ -192,7 +190,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
     {
-        println("todo, open channel")
+        openChannel(channels[indexPath.section])
+        
+        
 //        if indexPath.row == 0 && indexPath.section != channels.count
 //        {
 //
@@ -319,39 +319,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     }
 
     
-    /// MARK: keyboardWillToggle for willShow and willHide
-    func keyboardWillToggle(notification:NSNotification)
-    {
-        if !composeBar.textField.isFirstResponder()
-        {
-            return
-        }
-        let userInfo = notification.userInfo
-    
-        let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
-        let curveV = userInfo[UIKeyboardAnimationCurveUserInfoKey] 
-        let frameBeginV = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
-        let frameEndV = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
 
-        let duration = durationV!.doubleValue as NSTimeInterval
-        let frameBegin = frameBeginV!.CGRectValue()
-        let frameEnd = frameEndV!.CGRectValue()
-        
-        let curve:UInt = 7//curveV!.unsignedIntegerValue
-        let animationCurve = UIViewAnimationOptions.fromRaw(curve)
-
-        println("durationV = \(durationV) and curveV = \(curveV)")
-//        println("duration = \(duration) and curve = \(animationCurve)")
-        
-        let dy = frameBegin.origin.y - frameEnd.origin.y
-        let constraintHeight = (dy < 0 ? 0 : dy )
-        UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.fromRaw(7 << 16)!, animations:
-            {
-                self.bottomConstraintComposeBar.constant = constraintHeight
-                self.composeBar.layoutIfNeeded()
-            }, completion: nil)
-    }
     
+    /*
     // MARK: SWComposeBarViewDelegate
     func composeBarView(composeBarView: SWComposeBarView, sendMessage message: String)
     {
@@ -361,9 +331,21 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         message.sendMessageToChannel(selectedChannel!.name!)
         
     }
+    */
+
+    func openChannel(channel:SWChannelModel)
+    {
+        selectedChannel = channel
+        performSegueWithIdentifier("Messages", sender: self)
+    }
     
-    
-    
+    override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!)
+    {
+        if let messagesViewController = segue.destinationViewController as? SWMessagesViewController //&& segue.identifier == "Messages"
+        {
+            messagesViewController.channelModel = selectedChannel
+        }
+    }
     
     
     
