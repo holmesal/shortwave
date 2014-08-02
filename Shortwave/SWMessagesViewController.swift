@@ -31,6 +31,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
+        
+        collectionView.alwaysBounceVertical = true
     }
     
     

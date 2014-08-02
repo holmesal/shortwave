@@ -275,7 +275,13 @@
 //reverse
 -(MessageModel*)wallObjectAtIndex:(NSInteger)index
 {
-    return wall[index];//wall[(wall.count-1)-index];
+    return wall[[self displayIndexForDataIndex:index]];//wall[(wall.count-1)-index];
+}
+-(NSInteger)displayIndexForDataIndex:(NSInteger)index
+{
+    NSInteger result = wall.count-1-index;
+    
+    return index;
 }
 
 -(void)addMessageToWallEventually:(MessageModel*)messageModel
@@ -328,7 +334,7 @@
         MessageModel *messageModel = wallQueue[i];
         
         NSInteger row = [self indexInWallToInsertNewModelIn:messageModel.name];
-        [paths addObject: [NSIndexPath indexPathForRow:row inSection:0] ];
+        [paths addObject: [NSIndexPath indexPathForRow:[self displayIndexForDataIndex:row] inSection:0] ];
     }
     if (!collectionView)
     {

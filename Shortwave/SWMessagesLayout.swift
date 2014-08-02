@@ -13,11 +13,12 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
     
     override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath!) -> UICollectionViewLayoutAttributes!
     {
-        let attributes = super.layoutAttributesForItemAtIndexPath(indexPath)
+        let attribute = super.layoutAttributesForItemAtIndexPath(indexPath)
 
-//        attributes.frame.origin.y = collectionView.contentSize.height - attributes.frame.origin.y
+        let size = self.collectionViewContentSize()
+        attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
         
-        return attributes
+        return attribute
     }
     
     override func collectionViewContentSize() -> CGSize
@@ -42,7 +43,7 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
         for attribute in attributes as [UICollectionViewLayoutAttributes]
         {
 //            println("b4 = \(attribute.frame)")
-//            attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
+            attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
 //            println("aftr = \(attribute.frame)")
             
         }
