@@ -423,6 +423,9 @@
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fzz-FH-RgB">
                                 <rect key="frame" x="0.0" y="64" width="320" height="464"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="464" id="8m9-Fo-Yvc"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gqe-lC-XYr" customClass="SWMessagesLayout" customModule="Shortwave" customModuleProvider="target">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -444,7 +447,6 @@
                         <constraints>
                             <constraint firstItem="fzz-FH-RgB" firstAttribute="top" secondItem="GfS-b4-V58" secondAttribute="bottom" id="28T-HJ-q6R"/>
                             <constraint firstAttribute="trailing" secondItem="fzz-FH-RgB" secondAttribute="trailing" id="AN6-QN-Bvw"/>
-                            <constraint firstItem="u94-de-PMa" firstAttribute="top" secondItem="fzz-FH-RgB" secondAttribute="bottom" constant="40" id="Psk-1S-wrK"/>
                             <constraint firstAttribute="centerX" secondItem="yo1-Fm-Pd3" secondAttribute="centerX" id="UCz-l2-PdA"/>
                             <constraint firstItem="fzz-FH-RgB" firstAttribute="leading" secondItem="HCL-GD-LhJ" secondAttribute="leading" id="gzB-II-eDK"/>
                             <constraint firstItem="u94-de-PMa" firstAttribute="top" secondItem="yo1-Fm-Pd3" secondAttribute="bottom" id="h6V-U1-A5H"/>

@@ -32,6 +32,7 @@
     [super awakeFromNib];
     [profileImageView setContentMode:UIViewContentModeScaleAspectFit];
     profileImageView.backgroundColor = [UIColor greenColor];
+    messageText.dataDetectorTypes = UIDataDetectorTypeAll;
     
     
     CALayer *circle = [CALayer layer];

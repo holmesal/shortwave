@@ -15,8 +15,8 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
     {
         let attribute = super.layoutAttributesForItemAtIndexPath(indexPath)
 
-        let size = self.collectionViewContentSize()
-        attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
+//        let size = self.collectionViewContentSize()
+//        attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
         
         return attribute
     }
@@ -34,24 +34,32 @@ class SWMessagesLayout: UICollectionViewFlowLayout {
     
     
     
-    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]!
-    {
-        let attributes:[AnyObject] = super.layoutAttributesForElementsInRect(rect)
-        
-        let size = self.collectionViewContentSize()
-//        println("size \(size)")
-        for attribute in attributes as [UICollectionViewLayoutAttributes]
-        {
-//            println("b4 = \(attribute.frame)")
-            attribute.frame.origin.y = size.height - attribute.frame.origin.y - attribute.frame.size.height
-//            println("aftr = \(attribute.frame)")
-            
-        }
-
-        return attributes;
-        
-      
-        
-    }
+//    override func layoutAttributesForElementsInRect(rect: CGRect) -> [AnyObject]!
+//    {
+//        //shift the rectangle down!
+//        let size = self.collectionViewContentSize()
+//        
+//        let rect = CGRectMake(rect.origin.x, size.height - rect.size.height, rect.size.width, rect.size.height);
+//        
+//        println("rect = \(rect)")
+//        let attributes:[AnyObject] = super.layoutAttributesForElementsInRect(rect)
+//        
+//        
+////        println("size \(size)")
+//        for attribute in attributes as [UICollectionViewLayoutAttributes]
+//        {
+////            println("size = \(size)")
+////            println("attribute.y = \(attribute.frame.origin.y)")
+//            attribute.frame.origin.y = size.height - attribute.frame.origin.y //- attribute.frame.size.height
+//            println("aftr.y = \(attribute.frame.origin.y)")
+//            
+//            
+//        }
+//
+//        return attributes;
+//        
+//      
+//        
+//    }
 
 }

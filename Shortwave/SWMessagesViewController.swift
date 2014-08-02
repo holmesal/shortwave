@@ -28,6 +28,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         MessageCell.registerCollectionViewCellsForCollectionView(collectionView)//register relevant nib cells with this collectionview!
         
         channelModel.messageCollectionView = collectionView //dataSource and delegate linking has occured now!
+        collectionView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+        collectionView.showsVerticalScrollIndicator = false
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
@@ -65,7 +67,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         //if constraintHeight = 0, then edgeInsetBottom = 0, else
         
         var contentInset = self.collectionView.contentInset
-        contentInset.bottom = constraintHeight
+        contentInset.top = constraintHeight
         
         //what is the index of the very last cell?
         let lastIndex = channelModel.messages.count-1
@@ -90,7 +92,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 self.composeBarView.layoutIfNeeded()
                 
                 
-                self.collectionView.contentOffset = newContentOffset
+//                self.collectionView.contentOffset = newContentOffset
                 
                 
                 

@@ -228,6 +228,8 @@
     
     MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row];
     MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:cV forIndexPath:indexPath andWallSource:self];
+//    messageCell.transform = CGAffineTransformIdentity;
+    messageCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
     
     [self setProfileImageOnCell:messageCell withModel:messageModel];
     
@@ -344,26 +346,24 @@
     [collectionView performBatchUpdates:^
      {
          
-         self.hideCells = [NSArray arrayWithArray:paths];
+//         self.hideCells = [NSArray arrayWithArray:paths];
          
          [collectionView insertItemsAtIndexPaths:paths];
-         NSLog(@"**before wall = %@", wall);
+//         NSLog(@"**before wall = %@", wall);
          [self insertToWall:wallQueue inOrder:paths];
-
-         
-         NSLog(@"wallQueue = %@", wallQueue);
-         NSLog(@"wall = %@", wall);
+//         NSLog(@"wallQueue = %@", wallQueue);
+//         NSLog(@"wall = %@", wall);
          
          [wallQueue removeAllObjects];
          
      } completion:^(BOOL finished)
      {
          
-         for (NSIndexPath *indexPath in self.hideCells)
-         {
-             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-         }
-         self.hideCells = @[];
+//         for (NSIndexPath *indexPath in self.hideCells)
+//         {
+//             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+//         }
+//         self.hideCells = @[];
          CGRect visibleRect = collectionView.frame;
          visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
          
@@ -372,6 +372,10 @@
              return;
          }
          
+//         [UIView animateWithDuration:1 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveLinear animations:^
+//         {
+//            [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+//         } completion:^(BOOL finished){}];
         
      }];
 }
