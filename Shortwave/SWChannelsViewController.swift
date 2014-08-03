@@ -333,6 +333,18 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     }
     */
 
+    func openChannelForChannelName(channelName:String)
+    {
+        let filteredChannels = channels.filter {
+            return ($0.name!  ==  channelName)
+        }
+        
+        if filteredChannels.count  !=  0
+        {
+            openChannel(filteredChannels.last)
+        }
+    }
+    
     func openChannel(channel:SWChannelModel)
     {
         selectedChannel = channel
@@ -344,6 +356,10 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         if let messagesViewController = segue.destinationViewController as? SWMessagesViewController //&& segue.identifier == "Messages"
         {
             messagesViewController.channelModel = selectedChannel
+        } else
+        if let addViewController = segue.destinationViewController as? SWNewChannel
+        {
+            addViewController.channelViewController = self
         }
     }
     

@@ -15,6 +15,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
     @IBOutlet weak var navBarLabel: UILabel!
     @IBOutlet weak var fakeNavBar: UIView!
     
+    weak var channelViewController: SWChannelsViewController!
     
     @IBOutlet weak var goButton: UIButton!
     
@@ -25,6 +26,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
     
     var channelName = ""
     var channelNameExists:Bool?
+    var isJoining:Bool = false
     
     var timer:NSTimer?
     
@@ -55,6 +57,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         
         self.performFirebaseFetchForChannel(channelName, result:
             {(exists:Bool) in
+                
                 if exists
                 {
                     self.joinChannel()
@@ -68,7 +71,13 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
     
     @IBAction func cancelButtonAction(sender: AnyObject?) {
         println("go back yo")
-        self.dismissViewControllerAnimated(true, completion: {})
+        self.dismissViewControllerAnimated(true, completion:
+        {
+            if self.isJoining
+            {
+                self.channelViewController.openChannelForChannelName(self.channelName)
+            }
+        })
     }
     
     
@@ -218,6 +227,8 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                                 println("error getting my user to join channel \(error)")
                             } else
                             {
+                                self.isJoining = true
+                                self.cancelButtonAction(nil)
 //                                self.addChannelState = .Ready
 //                                self.addChannelCell!.curlDownAMessage("+ Channel", animated: true)
 //                                //index of channel?
@@ -263,6 +274,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                                 
                             } else
                             {
+                                self.isJoining = true
                                 self.cancelButtonAction(nil)
 //                                self.addChannelState = .Ready
 //                                self.addChannelCell!.curlDownAMessage("+ Channel", animated: true)
