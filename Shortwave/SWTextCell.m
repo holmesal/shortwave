@@ -71,7 +71,9 @@
 -(void)setModel:(MessageModel *)model
 {
     ownerID = model.ownerID;
-    messageText.text = model.text;
+    messageText.scrollEnabled = NO; //prevent ios7 bug!
+    messageText.text = nil; //to prevent ios7 Bug
+    messageText.attributedText = [[NSAttributedString alloc] initWithString:model.text];
     firstNameLabel.text = model.firstName;
     
 //    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
