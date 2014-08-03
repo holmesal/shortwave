@@ -61,7 +61,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                     println("error: \(error)");
                     let isMain = NSThread.isMainThread()
                     println("isMainthread? \(isMain)")
-                    var alert: UIAlertView = UIAlertView(title:"No account found.", message: "I was unable to find a Facebook account on this device, are you sure your phone has a Facebook account?  Go to settings then privacy.", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"I'll check")
+                    var alert: UIAlertView = UIAlertView(title:"No account found.", message: "I was unable to find a Facebook account on this device, are you sure your phone has a Facebook account?  Go to settings > facebook.", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"I'll check")
                     alert.show()
                     
                 } else
