@@ -8,8 +8,14 @@
 
 #import "MessageModel.h"
 #import "MessageImage.h"
+#import <AVFoundation/AVFoundation.h>
 
-@interface MessageGif : MessageImage
+@interface MessageGif : MessageModel
+
+@property (strong, nonatomic) NSString *mp4;
+
+
+@property (strong, nonatomic) AVPlayer *player;
 
 
 //to initialize a message with raw values, so as not to forget any

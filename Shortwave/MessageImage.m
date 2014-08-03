@@ -48,11 +48,11 @@
         src = content[@"src"];
         success = success && (src && [src isKindOfClass:[NSString class]]);
         
-        width = content[@"width"];
-        success = success && (width && [width isKindOfClass:[NSNumber class]]);
-        
-        height = content[@"height"];
-        success = success && (height && [height isKindOfClass:[NSNumber class]]);
+//        width = content[@"width"];
+//        success = success && (width && [width isKindOfClass:[NSNumber class]]);
+//        
+//        height = content[@"height"];
+//        success = success && (height && [height isKindOfClass:[NSNumber class]]);
     
     }
 

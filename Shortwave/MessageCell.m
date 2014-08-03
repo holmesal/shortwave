@@ -7,13 +7,15 @@
 //
 
 #import "MessageCell.h"
-//#import "SWImageCell.h"
+#import "SWImageCell.h"
 #import "SWTextCell.h"
 
 //#import "ESImageLoader.h"
 #import "MessageImage.h"
 #import "SWSpotifyTrackCell.h"
 #import "SWUserManager.h"
+#import "Shortwave-Swift.h"
+#import "SWGifCell.h"
 
 @implementation MessageCell
 
@@ -21,7 +23,7 @@
 
 +(NSArray*)cellIds
 {
-    return @[SWTextCellIdentifier];//@[SWTextCellIdentifier, SWImageCellIdentifier, SWSpotifyTrackCellIdentifier];
+    return @[SWTextCellIdentifier, SWImageCellIdentifier, SWGifCellIdentifier];//@[SWTextCellIdentifier, SWImageCellIdentifier, SWSpotifyTrackCellIdentifier];
 }
 
 +(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView
@@ -46,7 +48,7 @@
         {//no owner differentiation
             
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
-            
+            textCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
             messageCell = textCell;
             
         }
@@ -54,28 +56,50 @@
         
         case MessageModelTypeImage:
         {
-////            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-//            [imageCell setModel:messageModel];
+            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell setModel:messageModel];
+            imageCell.backgroundColor = [UIColor redColor];
+            if (!imageCell.hasImage)
+            {
+//                [imageCell resetWithImageSize:CGSizeMake(320, 100)];
+                
+                //load image
+                MessageImage *imageMessage = (MessageImage *)messageModel;
+                
+                SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
+                [imageLoader loadImage:imageMessage.src completionBlock:^(UIImage *image, BOOL synchronous)
+                {
+                    [imageCell setImage:image animated:YES];
+                } progressBlock:^(float progress)
+                {
+                    [imageCell setProgress:progress];
+                }];
+            
+            }
+            
 //            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wallSource:wallSource andIndexPath:indexPath];
 //            
 //            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
 //            imageCell.tag = indexPath.row;
-//            return imageCell;
-            return nil;
+            return imageCell;
         }
         break;
         
         case MessageModelTypeGif:
         {
-            
-//            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-//            [imageCell setModel:messageModel];
-//            
-//            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wallSource:wallSource andIndexPath:indexPath];
-//            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
-//            imageCell.tag = indexPath.row;
-//            return imageCell;
-            return nil;
+            NSLog(@"messageModel GIF");
+            SWGifCell *gifCell = (SWGifCell *)[collectionView dequeueReusableCellWithReuseIdentifier:SWGifCellIdentifier forIndexPath:indexPath];
+            messageCell = gifCell;
+//            [gifCell setModel:messageModel];
+//
+////            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+////            [imageCell setModel:messageModel];
+////            
+////            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wallSource:wallSource andIndexPath:indexPath];
+////            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
+////            imageCell.tag = indexPath.row;
+////            return imageCell;
+//            return nil;
         }
         break;
         
@@ -156,13 +180,13 @@
             
         case MessageModelTypeImage:
         {
-//            height = [SWImageCell heightWithMessageModel:messageModel];
+            height = [SWImageCell heightWithMessageModel:messageModel];
         }
             break;
             
         case MessageModelTypeGif:
         {
-//            height = [SWImageCell heightWithMessageModel:messageModel];
+            height = [SWGifCell heightWithMessageModel:messageModel];
         }
             break;
             

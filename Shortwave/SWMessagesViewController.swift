@@ -122,6 +122,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         //send the message
         let text = self.composeBarView.text
         
+        //does text contain a url?
+        
         let ownerId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         MessageModel(ownerID: ownerId, andText: text).sendMessageToChannel(channelModel.name!)
         

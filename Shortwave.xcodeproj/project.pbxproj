@@ -57,6 +57,10 @@
 		AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AACEBC0B19819F0500DD2F78 /* Images.xcassets */; };
 		AACEBC1819819F0600DD2F78 /* ShortwaveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */; };
 		AAD651D71981C86200BA0127 /* SWChannelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAD651D61981C86200BA0127 /* SWChannelModel.swift */; };
+		AAE70BFC198DCA720081B646 /* SWImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE70BFB198DCA720081B646 /* SWImageCell.m */; };
+		AAE70BFF198EBC820081B646 /* SWGifCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE70BFE198EBC820081B646 /* SWGifCell.m */; };
+		AAE70C01198EBD790081B646 /* SWGifCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE70C00198EBD790081B646 /* SWGifCell.xib */; };
+		AAE70C05198EC9F90081B646 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE70C04198EC9F90081B646 /* AVFoundation.framework */; };
 		AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87531984AAAF004AD3BA /* MessageCell.m */; };
 		AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87551984AAAF004AD3BA /* MessageGif.m */; };
 		AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87571984AAAF004AD3BA /* MessageImage.m */; };
@@ -154,6 +158,13 @@
 		AACEBC1619819F0600DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AACEBC1719819F0600DD2F78 /* ShortwaveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortwaveTests.swift; sourceTree = "<group>"; };
 		AAD651D61981C86200BA0127 /* SWChannelModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelModel.swift; sourceTree = "<group>"; };
+		AAE70BFA198DCA720081B646 /* SWImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWImageCell.h; sourceTree = "<group>"; };
+		AAE70BFB198DCA720081B646 /* SWImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWImageCell.m; sourceTree = "<group>"; };
+		AAE70BFD198EBC820081B646 /* SWGifCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWGifCell.h; sourceTree = "<group>"; };
+		AAE70BFE198EBC820081B646 /* SWGifCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWGifCell.m; sourceTree = "<group>"; };
+		AAE70C00198EBD790081B646 /* SWGifCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWGifCell.xib; sourceTree = "<group>"; };
+		AAE70C02198EC1A90081B646 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		AAE70C04198EC9F90081B646 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		AAFE87521984AAAF004AD3BA /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		AAFE87531984AAAF004AD3BA /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		AAFE87541984AAAF004AD3BA /* MessageGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGif.h; sourceTree = "<group>"; };
@@ -171,6 +182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAE70C05198EC9F90081B646 /* AVFoundation.framework in Frameworks */,
 				AAB650BA1988950F009D6D23 /* CoreGraphics.framework in Frameworks */,
 				AAB650B819889502009D6D23 /* libz.dylib in Frameworks */,
 				AAB650B6198894F7009D6D23 /* MobileCoreServices.framework in Frameworks */,
@@ -198,6 +210,8 @@
 		60BD743EE2294589A6862653 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AAE70C04198EC9F90081B646 /* AVFoundation.framework */,
+				AAE70C02198EC1A90081B646 /* MediaPlayer.framework */,
 				AAB650B91988950F009D6D23 /* CoreGraphics.framework */,
 				AAB650B719889502009D6D23 /* libz.dylib */,
 				AAB650B5198894F7009D6D23 /* MobileCoreServices.framework */,
@@ -232,17 +246,22 @@
 			children = (
 				AA59F784198AEC4E0023CFB4 /* SWTextCell.h */,
 				AA59F785198AEC4F0023CFB4 /* SWTextCell.m */,
-				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
-				AAFE87531984AAAF004AD3BA /* MessageCell.m */,
+				AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */,
+				AAE70BFA198DCA720081B646 /* SWImageCell.h */,
+				AAE70BFB198DCA720081B646 /* SWImageCell.m */,
+				AA59F778198AE8AB0023CFB4 /* SWImageCell.xib */,
+				AAE70BFD198EBC820081B646 /* SWGifCell.h */,
+				AAE70BFE198EBC820081B646 /* SWGifCell.m */,
+				AAE70C00198EBD790081B646 /* SWGifCell.xib */,
 				AA59F781198AEABE0023CFB4 /* SWSpotifyTrackCell.h */,
 				AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */,
-				AA59F778198AE8AB0023CFB4 /* SWImageCell.xib */,
 				AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */,
-				AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */,
 				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
 				AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */,
 				AA2313481985B4A800002719 /* SWAddChannelCell.swift */,
 				AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */,
+				AAFE87521984AAAF004AD3BA /* MessageCell.h */,
+				AAFE87531984AAAF004AD3BA /* MessageCell.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -479,6 +498,7 @@
 				AA59F77D198AE8AB0023CFB4 /* SWTextCell.xib in Resources */,
 				AA59F77B198AE8AB0023CFB4 /* SWImageCell.xib in Resources */,
 				AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */,
+				AAE70C01198EBD790081B646 /* SWGifCell.xib in Resources */,
 				AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -544,6 +564,8 @@
 				AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */,
 				AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */,
 				AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */,
+				AAE70BFF198EBC820081B646 /* SWGifCell.m in Sources */,
+				AAE70BFC198DCA720081B646 /* SWImageCell.m in Sources */,
 				AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */,
 				AA3B8D621981A75900F4D3CC /* SWAuthViewController.swift in Sources */,
 				AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */,

@@ -129,24 +129,12 @@
 
             
             //block models that are already fetching
-
-            if ([url rangeOfString:@"abc"].location != NSNotFound)
-            {
-                NSLog(@"looking up owner for model = %@, model.ownerID = %@", model, model.ownerID);
-            }
             [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
             {
-                NSLog(@"SWUserManager fetching a user %@ for wallSourceUrl = %@", user, url);
-//                if (synchronous)
-//                {
-//                    [model setUserData:user];
-//                    [weakSelf addMessageToWallEventually:model];
-//                } else
-//                {
+
                     [model setUserData:user];
                     [weakSelf addMessageToWallEventually:model];
-                    
-//                }
+                
             }];
             
 
@@ -227,9 +215,13 @@
     
     
     MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row];
+    if ([messageModel isKindOfClass:[MessageImage class]])
+    {
+        NSLog(@"woa image time? %@", messageModel);
+    }
     MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:cV forIndexPath:indexPath andWallSource:self];
-//    messageCell.transform = CGAffineTransformIdentity;
-    messageCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
+    
+//    messageCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
     
     [self setProfileImageOnCell:messageCell withModel:messageModel];
     

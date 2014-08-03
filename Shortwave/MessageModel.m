@@ -14,6 +14,7 @@
 #import "MessageSpotifyTrack.h"
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
+#import "Shortwave-Swift.h"
 
 @interface MessageModel ()
 
@@ -135,8 +136,9 @@
     
     if (content && [content isKindOfClass:[NSDictionary class]])
     {
+        //text is optional
         text = content[@"text"];
-        success = success && (text && [text isKindOfClass:[NSString class]]);
+//        success = success && (text && [text isKindOfClass:[NSString class]]);
     } else
     {
         success = NO;
@@ -194,12 +196,34 @@
 
 -(void)sendMessageToChannel:(NSString*)channel
 {
-    NSLog(@"sendy send!");
     
     NSDictionary *value = [self toDictionary];
     Firebase *messagesChannel = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/messages/%@/", channel] ] childByAutoId];
-    [messagesChannel setValue:value];
+    
+    __weak typeof(self) weakSelf = self;
+    [messagesChannel setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
+    {
+        if (!error)
+        {
+            if ([StringFunction validateUrlString:self.text])
+            {
+                NSLog(@"self.text = %@ HAS a url in it!", self.text);
+                Firebase *parseRequest = [[[Firebase alloc] initWithUrl:@"https://shortwave-dev.firebaseio.com/parseQueue"] childByAutoId];
+                [parseRequest setValue:@{
+                                         @"channel": channel,
+                                         @"message": weakSelf.name
+                                         } withCompletionBlock:^(NSError *error, Firebase *firebase)
+                {
+//                    NSLog(@"error = %@", error );
+                }];
+                
+                
+            }
+        }
+    }];
     self.name = messagesChannel.name;
+
+
     
 }
 

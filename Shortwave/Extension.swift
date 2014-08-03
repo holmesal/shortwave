@@ -7,6 +7,34 @@
 //
 
 import Foundation
+import UIKit
+
+@objc class StringFunction
+{
+    class func validateUrlString(string:NSString?) -> Bool
+    {
+        if let urlString = string
+        {
+            
+            let linkDetector = NSDataDetector.dataDetectorWithTypes(NSTextCheckingType.Link.toRaw(), error: nil)
+            
+            let urlStringRange = NSMakeRange(0, urlString.length)
+            let matchingOptions = NSMatchingOptions.fromRaw(0)!
+            
+            if 1 != linkDetector.numberOfMatchesInString(urlString, options:matchingOptions , range: urlStringRange)
+            {
+                return false
+            }
+            
+//            let checkingResult:NSTextCheckingResult = linkDetector.firstMatchInString(urlString, options: matchingOptions, range: urlStringRange)
+            
+            return true
+            
+        }
+        
+        return false
+    }
+}
 
 extension Array
     {
@@ -14,7 +42,7 @@ extension Array
         return self[self.endIndex - 1]
     }
     
-    
+
     
     
 //    func giveDictionary(jsonResult:NSDictionary) -> String?
