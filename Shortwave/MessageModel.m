@@ -43,6 +43,7 @@
 
 +(MessageModel*)messageModelFromValue:(id)value andPriority:(double)priority
 {
+//    NSLog(@"new message with priority %f", priority);
     if ([value isKindOfClass:[NSDictionary class]])
     {//receiving message itself.
         

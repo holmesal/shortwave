@@ -386,13 +386,17 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             assert(false)
         }
     
-        channelCell.setIsSynchronized(!hasNewActivity)
         
-        if hasNewActivity
+        //update the cell ui if it is visibru
+        if let cell = channelCell
         {
-            channelCell.push()
+            channelCell.setIsSynchronized(!hasNewActivity)
+            
+            if hasNewActivity
+            {
+                channelCell.push()
+            }
         }
-        
     }
     
 

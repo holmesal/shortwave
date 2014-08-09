@@ -49,7 +49,7 @@ import UIKit
     }
 
     
-//    #if __IPHONE_8_0
+    #if __IPHONE_8_0
     func application(application: UIApplication!, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings!)
     {
         //register to receive notifications!
@@ -70,8 +70,7 @@ import UIKit
         }
     
     }
-    
-//    #endif
+    #endif
     
     func application(application: UIApplication!, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData!)
     {
@@ -103,7 +102,10 @@ import UIKit
                 ["type":"ios",
                     "token":token], withCompletionBlock:
                 {(error:NSError?, firebase:Firebase?) in
-                    println("token saving wiht error = \(error?.localizedDescription)")
+                    if let e = error
+                    {
+                        println("token saving wiht error = \(error?.localizedDescription)")
+                    }
                 })
             NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
             NSUserDefaults.standardUserDefaults().synchronize()

@@ -85,8 +85,13 @@ protocol ChannelActivityIndicatorDelegate
     //selector called from WallSource, triggers ACTIVITY display
     func didLoadMessageModel(message:MessageModel!)
     {
+        
         if message.priority > lastSeen
         {
+
+//            println("message.priority > lastSeen : \(message.priority > lastSeen) \n\(message.priority) \n\(lastSeen) !")
+//            println("message.text = \(message.text)")
+            
             isSynchronized = false
             delegate?.channel(self, hasNewActivity: !isSynchronized)
         }
@@ -96,6 +101,14 @@ protocol ChannelActivityIndicatorDelegate
     func didViewMessageModel(message:MessageModel!)
     {
         let priority = message.priority
+
+        
+//        println("message.priority = \(message.priority)")
+        
+//        println("**")
+//        println("priority >= lastSeen && priority > lastPriorityToSet")
+//        println("\(priority) >= \(lastSeen) && \(priority) > \(lastPriorityToSet) ")
+//        println("\(priority >= lastSeen) && \(priority > lastPriorityToSet)")
         
         if priority >= lastSeen && priority > lastPriorityToSet
         {

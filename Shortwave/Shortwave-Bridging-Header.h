@@ -28,4 +28,5 @@
 #import "SWGifCell.h"
 
 #import <Crashlytics/Crashlytics.h>
+#import "CocoaColaClassic.h"
 

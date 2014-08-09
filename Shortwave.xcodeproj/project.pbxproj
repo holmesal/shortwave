@@ -28,6 +28,7 @@
 		AA7DEA0B198B2112005154FE /* SWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA0A198B2112005154FE /* SWUserManager.m */; };
 		AA7DEA0E198B2124005154FE /* SWUser.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA0D198B2124005154FE /* SWUser.m */; };
 		AA7DEA11198B3B09005154FE /* WallSource.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7DEA10198B3B09005154FE /* WallSource.m */; };
+		AA879E061996DBE800C34CB1 /* CocoaColaClassic.m in Sources */ = {isa = PBXBuildFile; fileRef = AA879E051996DBE800C34CB1 /* CocoaColaClassic.m */; };
 		AA9B7A731982058700C17494 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A721982058700C17494 /* Accounts.framework */; };
 		AA9B7A791982356A00C17494 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */; };
 		AAB650B4198894EA009D6D23 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B3198894EA009D6D23 /* SystemConfiguration.framework */; };
@@ -110,6 +111,8 @@
 		AA7DEA0D198B2124005154FE /* SWUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUser.m; sourceTree = "<group>"; };
 		AA7DEA0F198B3B09005154FE /* WallSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WallSource.h; sourceTree = "<group>"; };
 		AA7DEA10198B3B09005154FE /* WallSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WallSource.m; sourceTree = "<group>"; };
+		AA879E041996DBE800C34CB1 /* CocoaColaClassic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CocoaColaClassic.h; sourceTree = "<group>"; };
+		AA879E051996DBE800C34CB1 /* CocoaColaClassic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CocoaColaClassic.m; sourceTree = "<group>"; };
 		AA9B7A721982058700C17494 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AA9B7A741982059700C17494 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
@@ -369,6 +372,8 @@
 				AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */,
 				AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */,
 				AACEBC0819819F0500DD2F78 /* Info.plist */,
+				AA879E041996DBE800C34CB1 /* CocoaColaClassic.h */,
+				AA879E051996DBE800C34CB1 /* CocoaColaClassic.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -583,6 +588,7 @@
 				AA68937A1988927A0014B8F5 /* Reachability.m in Sources */,
 				AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */,
 				AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */,
+				AA879E061996DBE800C34CB1 /* CocoaColaClassic.m in Sources */,
 				AAC79F1119837DFB005961D1 /* SWChannelsLayout.swift in Sources */,
 				AAE70BFF198EBC820081B646 /* SWGifCell.m in Sources */,
 				AAE70BFC198DCA720081B646 /* SWImageCell.m in Sources */,
