@@ -132,21 +132,10 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         
         let elems = version.componentsSeparatedByString(".")
         println("elems \(elems)")
-        if (elems[0] == "8")
-        {
-            println("iphone80")
-            let settings = UIUserNotificationSettings(forTypes: (.Badge | .Sound | .Alert) , categories: nil)
-            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
-        }
-//        #else
-        else
-        {
-            println("whatever iphon7")
-            UIApplication.sharedApplication().registerForRemoteNotificationTypes((.Badge | .Sound | .Alert))
-        }
-//        #endif
         
-        
+        //Cocoa Cola, the classic beverage
+        CocoaColaClassic.RegisterRemoteNotifications()
+                
     }
     
     

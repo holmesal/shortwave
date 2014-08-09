@@ -265,7 +265,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                     //failure!
                 } else
                 {
-                    let priority = NSDate().timeIntervalSince1970*1000
+                    let priority = Int(NSDate().timeIntervalSince1970*1000)
                     let yourChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(self.channelName)")
                     yourChannels.setValue([
                         "lastSeen":0,
