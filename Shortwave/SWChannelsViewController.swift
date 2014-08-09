@@ -365,19 +365,19 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
-    
-    func channel(channel: SWChannelModel, receivedNewMessage newMessage: MessageModel?)
+
+    //channel receives activity indicator
+    func channel(channel: SWChannelModel, hasNewActivity: Bool)
     {
-        println("channel \(channel.name!) receviedNewMessage \(newMessage)")
+        var channelCell:SWChannelCell!
         
         if let index = find(channels, channel)
         {
             if let item = channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: index))
             {
-                if let channelCell = item as? SWChannelCell
+                if let channelCell2 = item as? SWChannelCell
                 {
-                    //shows and bounces
-                    channelCell.push()
+                    channelCell = channelCell2 //channelCell.setIsSynchronized(true)
                 }
             }
         } else
@@ -385,26 +385,16 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             println("had to find channel \(channel) in channels \(channels)")
             assert(false)
         }
+    
+        channelCell.setIsSynchronized(!hasNewActivity)
         
+        if hasNewActivity
+        {
+            channelCell.push()
+        }
         
     }
     
-    func channelIsRead(channel: SWChannelModel)
-    {
-        if let index = find(channels, channel)
-        {
-            if let item = channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: index))
-            {
-                if let channelCell = item as? SWChannelCell
-                {
-                    channelCell.setIsSynchronized(true)
-                }
-            }
-        } else
-        {
-            println("had to find channel \(channel) in channels \(channels)")
-            assert(false)
-        }
-    }
+
     
 }

@@ -218,7 +218,7 @@
     
     MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row];
     
-    [self.target performSelector:@selector(messageViewed:) withObject:messageModel];
+    [self.target performSelector:@selector(didViewMessageModel:) withObject:messageModel];
     
     if ([messageModel isKindOfClass:[MessageImage class]])
     {

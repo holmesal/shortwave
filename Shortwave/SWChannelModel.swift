@@ -12,8 +12,8 @@ import UIKit
 
 protocol ChannelActivityIndicatorDelegate
 {
-    func channel(channel:SWChannelModel, receivedNewMessage:MessageModel?) -> ()
-    func channelIsRead(channel:SWChannelModel)
+//    func channel(channel:SWChannelModel, receivedNewMessage:MessageModel?) -> ()
+    func channel(channel:SWChannelModel, hasNewActivity:Bool)
 }
 
 @objc class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
@@ -82,51 +82,33 @@ protocol ChannelActivityIndicatorDelegate
 //    }
     
     
+    //selector called from WallSource, triggers ACTIVITY display
     func didLoadMessageModel(message:MessageModel!)
     {
         if message.priority > lastSeen
         {
             isSynchronized = false
-            delegate?.channel(self, receivedNewMessage: message)
-            
-        } else
-        {
-//            if (isSynchronized != true)
-//            {
-//                isSynchronized = true
-//                delegate?.channelIsRead(self)
-//            }
+            delegate?.channel(self, hasNewActivity: !isSynchronized)
         }
     }
 
-    //selector called from WallSource to tell which message is dislpayed right now
-    func messageViewed(message:MessageModel!)
+    //selector called from WallSource to tell which message is dislpayed right now, triggers NO ACTIVITY display
+    func didViewMessageModel(message:MessageModel!)
     {
         let priority = message.priority
         
-        println("priority = \(priority) > lastSeen = \(lastSeen) ? \(priority > lastSeen)")
-        
-        if priority > lastSeen
+        if priority >= lastSeen && priority > lastPriorityToSet
         {
-            setPriorityEventually(priority)
+            lastPriorityToSet = priority
+            setPriorityEventually(priority) //unless usurped by a newer message!
         }
     }
     
     //prepare to synchronise 
-    var lastPriorityToSet:Double!
+    var lastPriorityToSet:Double = 0
     var setPriorityTimer:NSTimer?;
     func setPriorityEventually(priority:Double)
     {
-        if let lastPriorityKnownToSet = lastPriorityToSet
-        {
-            if priority > lastPriorityKnownToSet
-            {
-                lastPriorityToSet = priority
-            }
-        } else
-        {
-            lastPriorityToSet = priority
-        }
         
         if let theTimer = setPriorityTimer
         {
@@ -140,20 +122,20 @@ protocol ChannelActivityIndicatorDelegate
     }
     
     
-    //sets the priority locally (called by timer) and updates firebase
+    //sets the priority locally (called by timer only) and updates firebase
     func setPriority()
     {
         self.lastSeen = lastPriorityToSet
         
-        lastPriorityToSet = nil;
         setPriorityTimer!.invalidate()
         setPriorityTimer = nil;
         
-        lastPriorityToSet = nil
         let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
         
         isSynchronized = true
-        delegate?.channelIsRead(self)
+        
+        //if the timer is setting priority, that means that lastSeen < priority 
+        delegate?.channel(self, hasNewActivity:!isSynchronized)
         
         var setLastSeenFB = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
         setLastSeenFB.setValue(self.lastSeen)
@@ -194,7 +176,7 @@ protocol ChannelActivityIndicatorDelegate
                     self.lastSeen = newLastSeen
                     
                     self.isSynchronized = false
-                    self.delegate?.channel(self, receivedNewMessage: nil)
+//                    self.delegate?.channel(self, receivedNewMessage: nil)
                     
                 }
                 

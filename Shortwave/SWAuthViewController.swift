@@ -109,16 +109,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         let picture:NSDictionary = thirdPartyUserData["picture"] as NSDictionary
         let datas = picture["data"] as NSDictionary
         let photo = datas["url"]
-        
-//        Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)").setValue(
-//            [
-//                "profile":
-//                [
-//                    "firstName": firstName,
-//                    "photo": photo
-//                ]
-//            
-//            ])
+
         
         Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/firstName/").setValue(firstName)
         Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
@@ -132,8 +123,28 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         
         prefs.synchronize()
         
-        UIApplication.sharedApplication().registerForRemoteNotificationTypes((.Badge | .Sound | .Alert))
+        //difference between ios8 and 7 registration
+        let version =  UIDevice.currentDevice().systemVersion //([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
+        let reqVersin = "8.0"
+        let name = UIDevice.currentDevice().systemName
         
+        println("version \(version) name \(name)")
+        
+        let elems = version.componentsSeparatedByString(".")
+        println("elems \(elems)")
+        if (elems[0] == "8")
+        {
+            println("iphone80")
+            let settings = UIUserNotificationSettings(forTypes: (.Badge | .Sound | .Alert) , categories: nil)
+            UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        }
+//        #else
+        else
+        {
+            println("whatever iphon7")
+            UIApplication.sharedApplication().registerForRemoteNotificationTypes((.Badge | .Sound | .Alert))
+        }
+//        #endif
         
         
     }

@@ -143,25 +143,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
             let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell
             
             handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
-            
-            
         }
         
-
-//if let indexPath = collectionView.indexPathForItemAtPoint(location)
-//        {
-//            println("wtf is the indexpath \(indexPath)")
-//            
-//            let messageModel = channelModel.wallSource.wallObjectAtIndex(indexPath.item)
-//            let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell
-//            
-//            if let imageCell = selectedCell as? SWImageCell
-//            {
-//                
-//            }
-//            
-//            println("messageModel \(messageModel)")
-//        }
 
     }
     
@@ -227,7 +210,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 
             }
             
-        case .Ended:
+        case .Ended, .Cancelled:
+
             if let tempEnlargedView = temporaryEnlargedView
             {
                 UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:

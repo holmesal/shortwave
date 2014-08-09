@@ -18,6 +18,10 @@ import UIKit
 
         Crashlytics.startWithAPIKey("4a71d4033d33d194e246ada67acce08c24c06e80")
         
+        //audio session
+        let audioSession = AVAudioSession.sharedInstance()
+        audioSession.setCategory(AVAudioSessionCategoryAmbient, error: nil)
+        
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         return true
     }
@@ -44,6 +48,30 @@ import UIKit
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    
+//    #if __IPHONE_8_0
+    func application(application: UIApplication!, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings!)
+    {
+        //register to receive notifications!
+        application.registerForRemoteNotifications()
+    
+    }
+    
+    func application(application: UIApplication!, handleActionWithIdentifier identifier: String!, forRemoteNotification userInfo: [NSObject : AnyObject]!, completionHandler: (() -> Void)!)
+    
+    {
+        if identifier == "declineAction"
+        {
+            println("**DECLINEACTION**")
+        } else
+        if identifier == "answerAction"
+        {
+            println("**ANSWERACTION**")
+        }
+    
+    }
+    
+//    #endif
     
     func application(application: UIApplication!, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData!)
     {
@@ -105,20 +133,22 @@ import UIKit
                                 }
                             }
                         }
-                        
-                        //if I'm here then I have not found my token
-                        println("no token found!")
-                        
-                        saveTokenFirebase = Firebase(url: url).childByAutoId()
-                        saveTokenFirebase.setValue(
-                            ["type":"ios",
-                                "token":token], withCompletionBlock:
-                            {(error:NSError?, firebase:Firebase?) in
-                                println("token saving wiht error = \(error?.localizedDescription)")
-                            })
-                        NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
-                        NSUserDefaults.standardUserDefaults().synchronize()
-                    }
+                    } //end of devicesDict existence 
+                    
+                    
+                    //if I'm here then I have not found my token
+                    println("no token found!")
+                    
+                    saveTokenFirebase = Firebase(url: url).childByAutoId()
+                    saveTokenFirebase.setValue(
+                        ["type":"ios",
+                            "token":token], withCompletionBlock:
+                        {(error:NSError?, firebase:Firebase?) in
+                            println("token saving wiht error = \(error?.localizedDescription)")
+                        })
+                    NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+                    NSUserDefaults.standardUserDefaults().synchronize()
+                    
                 })
         }
         

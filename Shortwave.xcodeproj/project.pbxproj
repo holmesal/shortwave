@@ -395,8 +395,8 @@
 			children = (
 				AA7DEA0F198B3B09005154FE /* WallSource.h */,
 				AA7DEA10198B3B09005154FE /* WallSource.m */,
-				AAFE87611984AE17004AD3BA /* old message stuff */,
 				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
+				AAFE87611984AE17004AD3BA /* old message stuff */,
 				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
 				AA7DEA0C198B2124005154FE /* SWUser.h */,
 				AA7DEA0D198B2124005154FE /* SWUser.m */,
