@@ -37,6 +37,7 @@
     imageView.alpha = 1.0f;
 }
 
+
 -(void)setProgress:(float)progress
 {
     _progressLabel.text = [NSString stringWithFormat:@"%d", (int)(progress*100)];
@@ -55,6 +56,11 @@
 -(BOOL)hasImage
 {
     return imageView.image != nil;
+}
+
+-(UIImage*)getImage
+{
+    return imageView.image;
 }
 
 +(CGFloat)heightWithMessageModel:(MessageModel*)model

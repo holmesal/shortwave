@@ -24,5 +24,8 @@
 #import "MessageModel.h"
 #import "WallSource.h"
 
+#import "SWImageCell.h"
+#import "SWGifCell.h"
+
 #import <Crashlytics/Crashlytics.h>
 

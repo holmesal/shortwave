@@ -18,6 +18,7 @@
 -(void)setProgress:(float)progress;
 
 -(BOOL)hasImage;
+-(UIImage*)getImage;
 
 #define SWImageCellIdentifier @"SWImageCell"
 #define SWImageCell_ImageViewOffset CGPointMake(40, 65)

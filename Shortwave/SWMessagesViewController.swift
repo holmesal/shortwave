@@ -14,6 +14,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
 
     var channelModel:SWChannelModel!
     
+    var longPressGesture:UILongPressGestureRecognizer!
+    var temporaryEnlargedView:UIView?
 
     @IBOutlet weak var composeBarView: PHFComposeBarView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -21,6 +23,10 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     @IBOutlet weak var composeBarBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad()
     {
+        
+        longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
+        collectionView.addGestureRecognizer(longPressGesture)
+        
         self.navigationItem.title = "#\(channelModel.name!)"
         
         setupComposeBarView()
@@ -29,6 +35,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         channelModel.messageCollectionView = collectionView //dataSource and delegate linking has occured now!
         collectionView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
         collectionView.showsVerticalScrollIndicator = false
+        
+        
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
@@ -90,26 +98,12 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 self.composeBarBottomConstraint.constant = constraintHeight
                 self.composeBarView.layoutIfNeeded()
                 
-                
-//                self.collectionView.contentOffset = newContentOffset
-                
-                
-                
             }, completion: nil)
     }
     
     
     func setupComposeBarView()
     {
-        /*
-        [self.composeBarView setMaxCharCount:160];
-        [self.composeBarView setMaxLinesCount:5];
-        
-        [self.composeBarView.button.titleLabel setTextColor:[UIColor colorWithHexString:@"7E7E7E"]];
-        
-        [self.composeBarView setUtilityButtonImage:[UIImage imageNamed:@"paperclip"]];
-        [self.composeBarView setDelegate:self];
-        */
         composeBarView.maxCharCount = 160
         composeBarView.maxLinesCount = 5
         composeBarView.button.titleLabel.textColor = UIColor(hexString: "7E7E7E")
@@ -135,6 +129,120 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         println("SWMessagesViewController deinit")
         NSNotificationCenter.defaultCenter().removeObserver(self)
         channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
+    }
+    
+    func didLongPress(theLongPress:UILongPressGestureRecognizer)
+    {
+        
+        println("did longPress ")
+        let location:CGPoint = theLongPress.locationInView(collectionView)
+        
+        if let indexPath = collectionView.indexPathForItemAtPoint(location)
+        {
+            let messageModel = channelModel.wallSource.wallObjectAtIndex(indexPath.item)
+            let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell
+            
+            handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
+            
+            
+        }
+        
+
+//if let indexPath = collectionView.indexPathForItemAtPoint(location)
+//        {
+//            println("wtf is the indexpath \(indexPath)")
+//            
+//            let messageModel = channelModel.wallSource.wallObjectAtIndex(indexPath.item)
+//            let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell
+//            
+//            if let imageCell = selectedCell as? SWImageCell
+//            {
+//                
+//            }
+//            
+//            println("messageModel \(messageModel)")
+//        }
+
+    }
+    
+    func handleLongPress(longPressGesture:UILongPressGestureRecognizer, withMessageModel messageModel:MessageModel, andCollectionViewCell cell:UICollectionViewCell)
+    {
+        
+        
+        switch longPressGesture.state
+        {
+        case .Began:
+            if !temporaryEnlargedView
+            {
+               temporaryEnlargedView = UIView(frame: self.view.bounds)
+                temporaryEnlargedView!.backgroundColor = UIColor.clearColor()
+                temporaryEnlargedView!.alpha = 0
+                self.view.addSubview(temporaryEnlargedView)
+                
+                UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:
+                    {
+                        if let tempEnlargedView = self.temporaryEnlargedView
+                        {
+                            tempEnlargedView.alpha = 1.0
+                        }
+                    }, completion: {(b:Bool) in })
+                
+                if let imageMessage = messageModel as? MessageImage
+                {
+                    println("long press began on IMAGE")
+                    let imageCell = (cell as SWImageCell)
+                    let imageView = UIImageView(frame: self.view.bounds)
+                    imageView.contentMode = UIViewContentMode.ScaleAspectFit
+                    imageView.image = imageCell.getImage()
+                    
+                    temporaryEnlargedView!.addSubview(imageView)
+                    
+                } else
+                if let gifMessage = messageModel as? MessageGif
+                {
+                    println("gifMessage enlarge!")
+                    /*
+                    _player = model.player;
+                    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+                    playerLayer.bounds = _mp4View.bounds;
+                    playerLayer.position = CGPointMake(_mp4View.bounds.size.width*0.5f, _mp4View.bounds.size.height*0.5f);
+                    playerLayer.backgroundColor = [UIColor redColor].CGColor;
+                    [_mp4View.layer addSublayer:playerLayer];
+                    
+                    [_player play];
+                    */
+                    
+                    let player = gifMessage.player
+                    var playerLayer = AVPlayerLayer(player: player)
+                    playerLayer.bounds = self.view.bounds
+                    playerLayer.position = CGPoint(x: playerLayer.bounds.size.width*0.5, y: playerLayer.bounds.size.height*0.5)
+                    playerLayer.backgroundColor = UIColor(red: 1, green: 0, blue: 1, alpha: 0.2).CGColor
+                    
+                    
+                    temporaryEnlargedView!.layer.addSublayer(playerLayer)
+                    
+                    
+                }
+                
+                
+            }
+            
+        case .Ended:
+            if let tempEnlargedView = temporaryEnlargedView
+            {
+                UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:
+                    {
+                        tempEnlargedView.alpha = 0.0
+                    }, completion: {(b:Bool) in
+                        tempEnlargedView.removeFromSuperview()
+                        self.temporaryEnlargedView = nil
+                    })
+            }
+            
+            
+        default:
+            break
+        }
     }
     
     
