@@ -10,7 +10,13 @@ import Foundation
 import UIKit
 
 
-class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
+protocol ChannelActivityIndicatorDelegate
+{
+    func channel(channel:SWChannelModel, receivedNewMessage:MessageModel?) -> ()
+    func channelIsRead(channel:SWChannelModel)
+}
+
+@objc class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
 {
     var isExpanded:Bool = false
     
@@ -18,6 +24,10 @@ class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewData
     //store url because I may want to modify this entity later
     var url:String?
     
+    var lastSeen:Double = 0
+    var muted:Bool = false
+    
+    var isSynchronized:Bool = true
 
     var channelRoot:Firebase? //reference to the messages
     
@@ -25,7 +35,9 @@ class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewData
     var messages:Array<MessageModel> = [MessageModel]() //this model becomes the wall source for the interior UICollectionView for messages
     
     var temporary:Bool = false
-    var wallSource:WallSource!;
+    var wallSource:WallSource!
+    
+    var delegate:ChannelActivityIndicatorDelegate?
     
     //collectionView
     var messageCollectionView:UICollectionView? {
@@ -54,23 +66,145 @@ class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewData
     }
     }
     
-    init(temporary:Bool)
+    
+//    func wallIsLoadedMessageWithLargestPriority(message:MessageModel!)
+//    {
+//        if largestLoadedPriority >= lastSeen
+//        {
+//            //hidden state
+//            isSynchronized = true
+//            delegate?.channelIsRead(self)
+//        } else
+//        {
+//            isSynchronized = false
+//            delegate?.channel(self, receivedNewMessage: message)
+//        }
+//    }
+    
+    
+    func didLoadMessageModel(message:MessageModel!)
     {
-        self.temporary = temporary
-        super.init()
+        if message.priority > lastSeen
+        {
+            isSynchronized = false
+            delegate?.channel(self, receivedNewMessage: message)
+            
+        } else
+        {
+//            if (isSynchronized != true)
+//            {
+//                isSynchronized = true
+//                delegate?.channelIsRead(self)
+//            }
+        }
     }
+
+    //selector called from WallSource to tell which message is dislpayed right now
+    func messageViewed(message:MessageModel!)
+    {
+        let priority = message.priority
+        
+        println("priority = \(priority) > lastSeen = \(lastSeen) ? \(priority > lastSeen)")
+        
+        if priority > lastSeen
+        {
+            setPriorityEventually(priority)
+        }
+    }
+    
+    //prepare to synchronise 
+    var lastPriorityToSet:Double!
+    var setPriorityTimer:NSTimer?;
+    func setPriorityEventually(priority:Double)
+    {
+        if let lastPriorityKnownToSet = lastPriorityToSet
+        {
+            if priority > lastPriorityKnownToSet
+            {
+                lastPriorityToSet = priority
+            }
+        } else
+        {
+            lastPriorityToSet = priority
+        }
+        
+        if let theTimer = setPriorityTimer
+        {
+            theTimer.invalidate()
+            setPriorityTimer = nil
+        }
+        
+        setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
+        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
+        
+    }
+    
+    
+    //sets the priority locally (called by timer) and updates firebase
+    func setPriority()
+    {
+        self.lastSeen = lastPriorityToSet
+        
+        lastPriorityToSet = nil;
+        setPriorityTimer!.invalidate()
+        setPriorityTimer = nil;
+        
+        lastPriorityToSet = nil
+        let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
+        
+        isSynchronized = true
+        delegate?.channelIsRead(self)
+        
+        var setLastSeenFB = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
+        setLastSeenFB.setValue(self.lastSeen)
+        println("setLastSeenFB = \(setLastSeenFB)")
+    }
+    
 
     init(dictionary:NSDictionary, url:String)
     {
+        if let actualLastSeen = dictionary["lastSeen"] as? Double
+        {
+            lastSeen = actualLastSeen
+        }
+        
+        muted = dictionary["muted"] as Bool
+        
         super.init()
-     
+        
         initialize(dictionary: dictionary, andUrl: url)
         let url = "\(kROOT_FIREBASE)messages/\(self.name!)/"
         
-        
         wallSource = WallSource(url: url)
-//        bindToWall()
+        wallSource.target = self
+        
+        let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
+        var setLastSeenFB:Firebase = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
+        
+        setLastSeenFB.observeEventType(FEventTypeValue, withBlock:
+            {(snap:FDataSnapshot!) in
+                
+            if let newLastSeen = snap.value as? Double
+            {
+                println("newLastSeen = \(newLastSeen) and current lastSeen = \(self.lastSeen)")
+                
+                if self.lastSeen != newLastSeen
+                {
+                    println("update lastSeen, possibly update activity indicator!")
+                    self.lastSeen = newLastSeen
+                    
+                    self.isSynchronized = false
+                    self.delegate?.channel(self, receivedNewMessage: nil)
+                    
+                }
+                
+            }
+                
+        })
+        
     }
+    
+
     
     func initialize(#dictionary:NSDictionary, andUrl url:String)
     {
@@ -79,49 +213,10 @@ class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewData
         
         self.channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(name!)")
         self.messagesRoot = Firebase(url: "\(kROOT_FIREBASE)messages/\(name!)")
-//        println("\(kROOT_FIREBASE)messages/\(name!)")
+        
     }
     
-//    func bindToWall()
-//    {
-//        messagesRoot!.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
-//        {(snap:FDataSnapshot!, previous:String!) in
-////            println("snap.value = \(snap.value)")
-//            if let dictionary = snap.value as? Dictionary<String, AnyObject>
-//            {
-//                if let model = MessageModel.messageModelFromValue(dictionary)? as? MessageModel
-//                {
-//                    self.insertMessage(model, atIndex: self.messages.count)
-//                }
-//                
-//                
-//            }
-//        })
-//    }
-    
-    
-//    func insertMessage(message: MessageModel, atIndex i:Int)
-//    {
-//
-//        if let collectionView = messageCollectionView?
-//        {
-//            collectionView.performBatchUpdates(
-//                {
-//                    
-//                    self.messages.insert(message, atIndex: i)
-//                    collectionView.insertItemsAtIndexPaths([NSIndexPath(forItem: i, inSection: 0)])
-//                    
-//                }, completion:
-//                {(b:Bool) in
-//                    
-//                    collectionView.scrollToItemAtIndexPath(NSIndexPath(forItem: i, inSection: 0), atScrollPosition: UICollectionViewScrollPosition.Bottom, animated: true)
-//                
-//                })
-//        } else
-//        {
-//            messages.insert(message, atIndex:i)
-//        }
-//    }
+
     
     
     
@@ -131,64 +226,6 @@ class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewData
     }
     
 
-//    // MARK: UICollectionViewDelegate/DataSource protocol
-//    func collectionView(collectionView: UICollectionView!, cellForItemAtIndexPath indexPath: NSIndexPath!) -> UICollectionViewCell!
-//    {
-//        //TODO, fetch cells
-//        println("index = \(indexPath.item)" )
-//        
-//        if let cell = MessageCell.messageCellFromMessageModel(messages[indexPath.row], andCollectionView: collectionView, forIndexPath: indexPath)? as? MessageCell
-//        {
-//            return cell
-//        }
-//        return nil
-//        
-//
-//
-//    }
-//    
-//    func collectionView(collectionView: UICollectionView!, numberOfItemsInSection section: Int) -> Int
-//    {
-//        let count = messages.count;
-//        println("number of messages = \(count)")
-//        return messages.count
-//    }
-//    
-//    func numberOfSectionsInCollectionView(collectionView: UICollectionView!) -> Int
-//    {
-//        return 1
-//    }
-//    
-//    
-//    func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
-//    {
-//        println("selected \(indexPath)")
-//    }
-//
-//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
-//    {
-//        let height = MessageCell.heightOfMessageCellForModel(messages[indexPath.row], collectionView: collectionView)
-//        
-//        println("height = \(height)")
-//        
-//        return CGSizeMake(320, height)
-//    }
-//    
-//    //UICollectionViewDelegateFlowLayout
-//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, insetForSectionAtIndex section: Int) -> UIEdgeInsets
-//    {
-//        
-//        return UIEdgeInsetsMake(0, 0, 0, 0)
-//    }
-//    
-//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat
-//    {
-//        return 0
-//    }
-//    
-//    func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat
-//    {
-//        return 0
-//    }
+
 }
 

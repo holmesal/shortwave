@@ -55,6 +55,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
             
             let completion:()->() =
             {
+                self.authButton.userInteractionEnabled = true
                 if let e = error
                 {
                     //Code=-4
@@ -128,7 +129,12 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         let prefs = NSUserDefaults.standardUserDefaults();
         prefs.setBool(true, forKey: kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn)
         prefs.setObject(user.uid, forKey: kNSUSERDEFAULTS_KEY_userId)
+        
         prefs.synchronize()
+        
+        UIApplication.sharedApplication().registerForRemoteNotificationTypes((.Badge | .Sound | .Alert))
+        
+        
         
     }
     
@@ -146,6 +152,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     @IBAction func authButtonPress(sender: AnyObject)
     {
+        authButton.userInteractionEnabled = false
         beginAuthWithFirebase()
     }
 }

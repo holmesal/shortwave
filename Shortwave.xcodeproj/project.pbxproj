@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CC4E4F31BF44CAB751BD14 /* libPods.a */; };
 		AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */; };
+		AA1DEB6C1990AB64002DDCC0 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */; };
 		AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA23134619858F6500002719 /* SWMessagesLayout.swift */; };
 		AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2313481985B4A800002719 /* SWAddChannelCell.swift */; };
 		AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */; };
@@ -82,6 +83,7 @@
 		67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		81CC4E4F31BF44CAB751BD14 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWComposeBarView.swift; sourceTree = "<group>"; };
+		AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		AA23134619858F6500002719 /* SWMessagesLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessagesLayout.swift; sourceTree = "<group>"; };
 		AA2313481985B4A800002719 /* SWAddChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWAddChannelCell.swift; sourceTree = "<group>"; };
 		AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Shortwave-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 			files = (
 				AAE70C05198EC9F90081B646 /* AVFoundation.framework in Frameworks */,
 				AAB650BA1988950F009D6D23 /* CoreGraphics.framework in Frameworks */,
+				AA1DEB6C1990AB64002DDCC0 /* Crashlytics.framework in Frameworks */,
 				AAB650B819889502009D6D23 /* libz.dylib in Frameworks */,
 				AAB650B6198894F7009D6D23 /* MobileCoreServices.framework in Frameworks */,
 				AAB650B4198894EA009D6D23 /* SystemConfiguration.framework in Frameworks */,
@@ -253,6 +256,7 @@
 				AAE70BFD198EBC820081B646 /* SWGifCell.h */,
 				AAE70BFE198EBC820081B646 /* SWGifCell.m */,
 				AAE70C00198EBD790081B646 /* SWGifCell.xib */,
+				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
 				AA59F781198AEABE0023CFB4 /* SWSpotifyTrackCell.h */,
 				AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */,
 				AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */,
@@ -362,6 +366,7 @@
 		AACEBC0719819F0500DD2F78 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */,
 				AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */,
 				AACEBC0819819F0500DD2F78 /* Info.plist */,
 			);
@@ -392,7 +397,6 @@
 				AA7DEA10198B3B09005154FE /* WallSource.m */,
 				AAFE87611984AE17004AD3BA /* old message stuff */,
 				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
-				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
 				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
 				AA7DEA0C198B2124005154FE /* SWUser.h */,
 				AA7DEA0D198B2124005154FE /* SWUser.m */,
@@ -425,6 +429,7 @@
 				AACEBC0119819F0500DD2F78 /* Frameworks */,
 				AACEBC0219819F0500DD2F78 /* Resources */,
 				D3264F949F97474DAF859A67 /* Copy Pods Resources */,
+				AA1DEB6A1990AA65002DDCC0 /* Crashlytics Build Phase */,
 			);
 			buildRules = (
 			);
@@ -464,6 +469,7 @@
 				TargetAttributes = {
 					AACEBC0319819F0500DD2F78 = {
 						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = SQ4LKA86HJ;
 					};
 					AACEBC1019819F0600DD2F78 = {
 						CreatedOnToolsVersion = 6.0;
@@ -513,6 +519,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		AA1DEB6A1990AA65002DDCC0 /* Crashlytics Build Phase */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Crashlytics Build Phase";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run 4a71d4033d33d194e246ada67acce08c24c06e80 a70de6678839e8d8230752438b7895d06e8abf9b925a1a1dc90dcdb176cfb012";
+		};
 		D3264F949F97474DAF859A67 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -696,14 +716,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Shortwave",
 				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "28EE394E-5DDD-422A-8B03-5336A5ADCAD6";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -716,14 +740,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Shortwave",
 				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "28EE394E-5DDD-422A-8B03-5336A5ADCAD6";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 			};
 			name = Release;

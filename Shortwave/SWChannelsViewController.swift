@@ -17,7 +17,7 @@ enum AddChannelState
     case Pending(isJoining:Bool, String)
 }
 
-class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate
+class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate, ChannelActivityIndicatorDelegate
 {
     var indexPathsToListenFor = Dictionary<NSIndexPath,Bool>()
     
@@ -85,7 +85,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     {
         let url = "\(kROOT_FIREBASE)users/\(NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId))/channels/"
         let f = Firebase(url: url)
-//        println("f = \(f)")
+        
         f.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
             {
                 (snap:FDataSnapshot?, str:String?) in
@@ -93,6 +93,8 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                 if let dictionary = snap?.value as? NSDictionary
                 {
                     let channelModel = SWChannelModel(dictionary: dictionary, url: "\(url)\(snap!.name)")
+                    channelModel.delegate = self //updating channel activity
+                    
                     //check if this already exists!
                     let result = self.channels.filter { $0.name == channelModel.name }
                     
@@ -252,17 +254,17 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 //        }
     }
     
-    func beginAddingAChannel()
-    {
-        addChannelState = .Typing
-        let tempChannelModel = SWChannelModel(temporary: true)
-        channelsCollectionView.performBatchUpdates(
-            {
-                self.temporaryModel = tempChannelModel
-                self.channels += tempChannelModel
-                self.channelsCollectionView.insertSections(NSIndexSet(index: self.channels.count - 1))
-            }, completion: {(b:Bool) in })
-    }
+//    func beginAddingAChannel()
+//    {
+//        addChannelState = .Typing
+//        let tempChannelModel = SWChannelModel(temporary: true)
+//        channelsCollectionView.performBatchUpdates(
+//            {
+//                self.temporaryModel = tempChannelModel
+//                self.channels += tempChannelModel
+//                self.channelsCollectionView.insertSections(NSIndexSet(index: self.channels.count - 1))
+//            }, completion: {(b:Bool) in })
+//    }
     
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
     {
@@ -364,8 +366,45 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     }
     
     
+    func channel(channel: SWChannelModel, receivedNewMessage newMessage: MessageModel?)
+    {
+        println("channel \(channel.name!) receviedNewMessage \(newMessage)")
+        
+        if let index = find(channels, channel)
+        {
+            if let item = channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: index))
+            {
+                if let channelCell = item as? SWChannelCell
+                {
+                    //shows and bounces
+                    channelCell.push()
+                }
+            }
+        } else
+        {
+            println("had to find channel \(channel) in channels \(channels)")
+            assert(false)
+        }
+        
+        
+    }
     
-    
-    
+    func channelIsRead(channel: SWChannelModel)
+    {
+        if let index = find(channels, channel)
+        {
+            if let item = channelsCollectionView.cellForItemAtIndexPath(NSIndexPath(forItem: 0, inSection: index))
+            {
+                if let channelCell = item as? SWChannelCell
+                {
+                    channelCell.setIsSynchronized(true)
+                }
+            }
+        } else
+        {
+            println("had to find channel \(channel) in channels \(channels)")
+            assert(false)
+        }
+    }
     
 }

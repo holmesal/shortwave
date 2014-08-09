@@ -44,6 +44,9 @@
 
 @property (strong, nonatomic) NSMutableArray *namesOfPendingMessages;
 
+@property (assign, nonatomic) BOOL didFinishLoadingWallAtFirst;
+@property (strong, nonatomic) NSTimer *firstLoadTimer;
+
 @end
 
 @implementation WallSource
@@ -61,6 +64,7 @@
 
 @synthesize usersDictionary;
 @synthesize namesOfPendingMessages;
+
 
 
 -(id)initWithUrl:(NSString*)URL //collectionView:(UICollectionView*)cv andLayout:(UICollectionViewLayout*)lay
@@ -90,7 +94,6 @@
     
     Firebase *wallRef = [[Firebase alloc] initWithUrl:url];
     
-    
     _wallRefQueryLimit = [wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
     __weak typeof(self) weakSelf = self;
     self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageSnapshot, NSString *previous)
@@ -105,11 +108,9 @@
          NSInteger index = wallNames.count;
          if (previous) //make block to observe child moved events on messages
          {
-             //[messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
              NSInteger integer = [wallNames indexOfObject:previous];
              if (integer < wallNames.count)
              {
-//                 NSLog(@"was found! %d", index);
                  index = integer;
              } else {NSAssert(NO, @"You needed to found it!");}
          }
@@ -118,7 +119,7 @@
          
             [namesOfPendingMessages addObject:messageSnapshot.name];
 
-            MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value];
+            MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
 //            NSLog(@"type = %d", model.type);
             model.name = messageSnapshot.name;
             
@@ -134,6 +135,7 @@
 
                     [model setUserData:user];
                     [weakSelf addMessageToWallEventually:model];
+                    [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
                 
             }];
             
@@ -215,6 +217,9 @@
     
     
     MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row];
+    
+    [self.target performSelector:@selector(messageViewed:) withObject:messageModel];
+    
     if ([messageModel isKindOfClass:[MessageImage class]])
     {
         NSLog(@"woa image time? %@", messageModel);

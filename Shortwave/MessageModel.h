@@ -30,7 +30,7 @@ typedef enum
 
 //returns nil if it failed to grab all data
 -(void)setUserData:(SWUser*)user;
--(id)initWithDictionary:(NSDictionary*)dictionary;
+-(id)initWithDictionary:(NSDictionary*)dictionary andPriority:(double)priority;
 
 //bool success?  Override this to set more data!
 -(BOOL)setDictionary:(NSDictionary*)dictionary;
@@ -39,7 +39,7 @@ typedef enum
 -(NSDictionary*)toDictionary;
 -(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString;
 
-+(id)messageModelFromValue:(id)value;
++(id)messageModelFromValue:(id)value andPriority:(double)priority;
 
 //inherited properties
 
@@ -50,6 +50,8 @@ typedef enum
 @property (strong, nonatomic) NSString *text;
 
 @property (assign, nonatomic) MessageModelType type;
+
+@property (assign, nonatomic) double priority;
 
 
 -(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text;

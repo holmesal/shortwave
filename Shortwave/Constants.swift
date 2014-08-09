@@ -17,6 +17,7 @@ import Foundation
 
 let kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn = "UserIsLoggedIn"
 let kNSUSERDEFAULTS_KEY_userId = "hehehloluser"
+let kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken = "deviceTokenKey"
 
 let kFacebookOnAppStore = "https://itunes.apple.com/us/app/facebook/id284882215?mt=8"
 let kFacebookAppId = "684979988223644"

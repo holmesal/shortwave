@@ -10,9 +10,9 @@
 
 @implementation MessageGif
 
--(id)initWithDictionary:(NSDictionary *)dictionary
+-(id)initWithDictionary:(NSDictionary *)dictionary andPriority:(double)priority
 {
-    if (self = [super initWithDictionary:dictionary])
+    if (self = [super initWithDictionary:dictionary andPriority:priority])
     {
 
     }
@@ -44,6 +44,10 @@
                 AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
                 
                 _player = [AVPlayer playerWithPlayerItem:item];
+                _player.muted = YES;
+//                [_player cancelPendingPrerolls];
+                
+                
                 _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
                 
             }

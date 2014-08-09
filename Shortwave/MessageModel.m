@@ -41,7 +41,7 @@
     return self;
 }
 
-+(MessageModel*)messageModelFromValue:(id)value
++(MessageModel*)messageModelFromValue:(id)value andPriority:(double)priority
 {
     if ([value isKindOfClass:[NSDictionary class]])
     {//receiving message itself.
@@ -53,19 +53,19 @@
 
         if ([type isEqualToString:@"text"])
         {
-            return [[MessageModel alloc] initWithDictionary:dictionary];
+            return [[MessageModel alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"gif"])
         {
-            return [[MessageGif alloc] initWithDictionary:dictionary];
+            return [[MessageGif alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"image"])
         {
-            return [[MessageImage alloc] initWithDictionary:dictionary];
+            return [[MessageImage alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"spotify_track"])
         {
-            return [[MessageSpotifyTrack alloc] initWithDictionary:dictionary];
+            return [[MessageSpotifyTrack alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"link_web"])
         {
@@ -101,10 +101,11 @@
     return nil;
 }
 
--(id)initWithDictionary:(NSDictionary *)dictionary
+-(id)initWithDictionary:(NSDictionary*)dictionary andPriority:(double)priority;
 {
     if (self = [super init])
     {
+        self.priority = priority;
         if (![self setDictionary:dictionary])
         {
             return nil;
@@ -194,6 +195,7 @@
     return MessageModelTypePlainText;
 }
 
+//adds it to the push queue too
 -(void)sendMessageToChannel:(NSString*)channel
 {
     
@@ -222,10 +224,29 @@
         }
     }];
     self.name = messagesChannel.name;
-
+    
+    [self addToPushQueueForChannel:channel];
 
     
 }
+
+-(void)addToPushQueueForChannel:(NSString*)channel
+{
+    NSAssert(self.name && channel, @"message name must not be nil '%@', ,channel name must not be nil '%@'", self.name, channel);
+    Firebase *pushQueue = [[[Firebase alloc] initWithUrl:@"https://shortwave-dev.firebaseio.com/pushQueue"] childByAutoId];
+    
+    NSDictionary *value = @{@"channel":channel,
+                            @"message":self.name};
+    [pushQueue setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
+    {
+        if (error)
+        {
+            NSLog(@"after pushQueue %@ setValue %@, error: %@", pushQueue, value, error.localizedDescription);
+        }
+    }];
+    
+}
+
 
 
  #pragma mark nearby functionality

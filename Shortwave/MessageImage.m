@@ -27,9 +27,9 @@
     return self;
 }
 
--(id)initWithDictionary:(NSDictionary *)dictionary
+-(id)initWithDictionary:(NSDictionary *)dictionary andPriority:(double)priority
 {
-    if (self = [super initWithDictionary:dictionary])
+    if (self = [super initWithDictionary:dictionary andPriority:priority])
     {
 
     }

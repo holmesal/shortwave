@@ -16,6 +16,8 @@ import UIKit
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
 
+        Crashlytics.startWithAPIKey("4a71d4033d33d194e246ada67acce08c24c06e80")
+        
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         return true
     }
@@ -42,6 +44,120 @@ import UIKit
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    
+    func application(application: UIApplication!, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData!)
+    {
+        var aofb = [UInt8](count:deviceToken.length, repeatedValue:0)
+        deviceToken.getBytes(&aofb, length:deviceToken.length)
+        
+        var token = ""
+        for c in aofb
+        {
+            token += String(format: "%02x", c)
+        }
+        println("i converted it to \(token)")
+        
+        //must have userID, else crash!
+        let userID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+       
+        
+        let url = kROOT_FIREBASE + "users/" + userID + "/devices/"
+        
+
+        
+        var saveTokenFirebase:Firebase!
+        
+        
+        if let knownDeviceTokenKey = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken) as? String
+        {
+            saveTokenFirebase = Firebase(url: url + knownDeviceTokenKey)
+            saveTokenFirebase.setValue(
+                ["type":"ios",
+                    "token":token], withCompletionBlock:
+                {(error:NSError?, firebase:Firebase?) in
+                    println("token saving wiht error = \(error?.localizedDescription)")
+                })
+            NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+        } else
+        {
+//            saveTokenFirebase = Firebase(url: url).childByAutoId()
+            let loadDevices = Firebase(url: url)
+            loadDevices .observeEventType(FEventTypeValue, withBlock:
+                {(snap:FDataSnapshot!) in
+                    if let devicesDict = snap.value as? Dictionary<NSString, AnyObject>
+                    {
+                        for (keyName, anyValue) in devicesDict
+                        {
+                            if let device = anyValue as? NSDictionary
+                            {
+                                if let optionalToken = device["token"]? as? NSString
+                                {
+                                    if optionalToken == token
+                                    {
+                                        NSUserDefaults.standardUserDefaults().setObject(keyName, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+                                        NSUserDefaults.standardUserDefaults().synchronize()
+                                        
+                                        return;
+                                    } else
+                                    {}
+                                }
+                            }
+                        }
+                        
+                        //if I'm here then I have not found my token
+                        println("no token found!")
+                        
+                        saveTokenFirebase = Firebase(url: url).childByAutoId()
+                        saveTokenFirebase.setValue(
+                            ["type":"ios",
+                                "token":token], withCompletionBlock:
+                            {(error:NSError?, firebase:Firebase?) in
+                                println("token saving wiht error = \(error?.localizedDescription)")
+                            })
+                        NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+                        NSUserDefaults.standardUserDefaults().synchronize()
+                    }
+                })
+        }
+        
+        
+        
+        
+        
+
+
+        
+    }
+    
+    func application(application: UIApplication!, didFailToRegisterForRemoteNotificationsWithError error: NSError!)
+    {
+        println("failedToRegisterForRemoteNotifications \(error.localizedDescription)")
+    }
+
+    func application(application: UIApplication!, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]!)
+    {
+        if UIApplication.sharedApplication().applicationState == .Active
+        {
+            println("##notification## received by running app")
+        } else
+            //            if UIApplication.sharedApplication().applicationState == .Active
+        {
+            println("##notification## opened from notification")
+        }
+        
+    }
+    
+//    -(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+//    if ([UIApplication sharedApplication].applicationState==UIApplicationStateActive) {
+//    NSLog(@"Notification recieved by running app");
+//    }
+//    else{
+//    NSLog(@"App opened from Notification");
+//    }
+//    
+//    }
 
 }
 

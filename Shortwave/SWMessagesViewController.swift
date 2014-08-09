@@ -23,7 +23,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     {
         self.navigationItem.title = "#\(channelModel.name!)"
         
-        
         setupComposeBarView()
         MessageCell.registerCollectionViewCellsForCollectionView(collectionView)//register relevant nib cells with this collectionview!
         
@@ -133,6 +132,10 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     
     deinit
     {
+        println("SWMessagesViewController deinit")
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
     }
+    
+    
 }

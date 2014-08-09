@@ -24,3 +24,5 @@
 #import "MessageModel.h"
 #import "WallSource.h"
 
+#import <Crashlytics/Crashlytics.h>
+

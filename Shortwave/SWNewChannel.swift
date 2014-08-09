@@ -49,7 +49,10 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         
     }
     
-    @IBAction func completeButtonAction(sender: AnyObject?) {
+    
+    
+    @IBAction func completeButtonAction(sender: AnyObject?)
+    {
         println("complete action!")
         
         channelNameTextField.userInteractionEnabled = false
