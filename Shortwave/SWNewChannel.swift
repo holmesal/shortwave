@@ -30,10 +30,17 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
     
     var timer:NSTimer?
     
+    //outlets for joining
+    @IBOutlet weak var descriptionViewContainer: UIView!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    
+    
     override func viewDidLoad()
     {
         let hexString = kNiceColors["green"]
         fakeNavBar.backgroundColor = UIColor(hexString: hexString)
+        
+        descriptionViewContainer.alpha = 0.0
         
 
         navBarLabel.font = UIFont(name: "Avenir-Book", size: 15)
@@ -188,17 +195,35 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         
         if channelName == "" //invalid
         {
-            channelSearchResult.text = "Type the name of the channel you'd like to create or join."
+            channelSearchResult.text = "We'll check if it exists."
             goButton.alpha = 0.0
         } else
         if !(self.channelNameExists!)
         {
-            channelSearchResult.text = "Nice! You are about to create this channel."
+            channelSearchResult.text = "You are creating this channel."
+            
+            if self.descriptionViewContainer.alpha != 0.0
+            {
+                UIView.animateWithDuration(0.4, animations:
+                    {
+                        self.descriptionViewContainer.alpha = 0.0
+                        self.descriptionViewContainer.transform = CGAffineTransformMakeTranslation(0, -5)
+                    }, completion: {(b:Bool) in })
+            }
             goButton.setTitle("Create", forState: .Normal)
             goButton.alpha = 1
         } else
         {
-            channelSearchResult.text = "Alright, join this channel?"
+            channelSearchResult.text = "This channel exists."
+            
+            self.descriptionViewContainer.transform = CGAffineTransformMakeTranslation(0, -5)
+            UIView.animateWithDuration(0.4, animations:
+                {
+                    self.descriptionViewContainer.alpha = 1.0
+                    self.descriptionViewContainer.transform = CGAffineTransformIdentity
+                }, completion: {(b:Bool) in })
+            
+            
             goButton.setTitle("Join", forState: .Normal)
             goButton.alpha = 1
         }

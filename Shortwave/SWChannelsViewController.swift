@@ -190,6 +190,20 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 //        }
     }
     
+    override func viewDidDisappear(animated: Bool)
+    {
+        super.viewDidDisappear(animated)
+        
+        let selectedPaths = channelsCollectionView.indexPathsForSelectedItems()
+        for thing in selectedPaths
+        {
+            if let indexPath = thing as? NSIndexPath
+            {
+                channelsCollectionView.deselectItemAtIndexPath(indexPath, animated: false)
+            }
+        }
+    }
+    
     func collectionView(collectionView: UICollectionView!, didSelectItemAtIndexPath indexPath: NSIndexPath!)
     {
         openChannel(channels[indexPath.section])
@@ -268,13 +282,10 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
     {
-//        if (indexPath.item == 0)
-//        {
-            return CGSizeMake(320, 71)
-//        }
-//        
-//        return CGSizeMake(320, self.view.frame.size.height - 52 - 20)
-        
+
+            let channel = channels[indexPath.section]
+            return CGSizeMake(320, CGFloat(SWChannelCell.cellHeightGivenChannel(channel)) )
+
     }
     
     //UICollectionViewDelegateFlowLayout
@@ -399,6 +410,30 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
+
+//    func collectionView(collectionView: UICollectionView!, didHighlightItemAtIndexPath indexPath: NSIndexPath!)
+//    {
+//        let cell = collectionView.cellForItemAtIndexPath(indexPath)
+//        cell.backgroundColor = UIColor(hexString: kNiceColors["green"] )
+//    }
+//    
+//    func collectionView(collectionView: UICollectionView!, didUnhighlightItemAtIndexPath indexPath: NSIndexPath!)
+//    {
+//    
+//        let cell = collectionView.cellForItemAtIndexPath(indexPath)
+//        cell.backgroundColor = UIColor.clearColor()
+//        
+//    }
+    
+//    - (void)collectionView:(UICollectionView *)colView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionViewCell* cell = [colView cellForItemAtIndexPath:indexPath];
+//    cell.contentView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.5];
+//    }
+//    
+//    - (void)collectionView:(UICollectionView *)colView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    UICollectionViewCell* cell = [colView cellForItemAtIndexPath:indexPath];
+//    cell.contentView.backgroundColor = nil;
+//    }
 
     
 }

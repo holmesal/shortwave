@@ -15,8 +15,19 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     
     @IBOutlet weak var containerView: UIView!
     
+    //CONSTRAINT
+    @IBOutlet weak var topInsetConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var titleLabel: UILabel!
+    //CONSTRAINT
+    @IBOutlet weak var titleLabelHeightConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var descriptionLabel: UILabel!
+    //CONSTRAINT
+    @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
+    
+    //CONSTRAINT
+    @IBOutlet weak var verticalSpaceBetweenTitleAndDescriptionConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var indicatorView: UIView!
     
@@ -25,7 +36,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     didSet {
         //do UI update here
 
-        titleLabel.text = "#\(channelModel!.name!)"
+        titleLabel.text = (channelModel!.name!)
         setIsSynchronized(channelModel!.isSynchronized)
         
     }
@@ -83,6 +94,28 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         }
     }
     
+    class func cellHeightGivenChannel(channel:SWChannelModel) -> Double
+    {
+        //2 * topInsetConstraint                          //height label and height and description label height
+    
+        return 2 * 21 +                  5 +               22 + 19
+    }
+    
+    override var highlighted:Bool {
+        didSet
+        {
+            if highlighted
+            {
+                self.backgroundColor = UIColor(hexString: kNiceColors["green"])
+            } else
+            {
+                self.backgroundColor = UIColor.clearColor()
+            }
+            
+            
+
+    }
+    }
     
     
     
