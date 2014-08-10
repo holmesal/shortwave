@@ -8,11 +8,31 @@
 
 import Foundation
 
-#if DEBUG
-    let kROOT_FIREBASE = "https://shortwave-dev.firebaseio.com/"
-#else
-    let kROOT_FIREBASE = "https://shortwave-dev.firebaseio.com/"
-#endif
+
+
+var kROOT_FIREBASE:String {
+    get
+        {
+            if CocoaColaClassic.debug()
+            {
+                return "https://shortwave-dev.firebaseio.com/"
+            }
+            return "https://shortwave-dev.firebaseio.com/"
+    }
+}
+var kSANDBOX:Bool
+{
+    get {
+        if CocoaColaClassic.debug()
+        {
+            return true
+        }
+        return false
+    }
+}
+
+
+
 
 
 let kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn = "UserIsLoggedIn"

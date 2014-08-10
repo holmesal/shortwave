@@ -144,7 +144,8 @@ import UIKit
                     saveTokenFirebase = Firebase(url: url).childByAutoId()
                     saveTokenFirebase.setValue(
                         ["type":"ios",
-                            "token":token], withCompletionBlock:
+                            "token":token,
+                            "sandbox":kSANDBOX], withCompletionBlock:
                         {(error:NSError?, firebase:Firebase?) in
                             println("token saving wiht error = \(error?.localizedDescription)")
                         })

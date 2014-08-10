@@ -8,6 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+
+
 @interface CocoaColaClassic : NSObject
 +(void)RegisterRemoteNotifications;
++(BOOL)debug;
+
+
+
+
+
+
 @end

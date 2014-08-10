@@ -33,6 +33,11 @@
 //#endif
 }
 
++(BOOL)debug
+{
+    return DEBUG;
+}
+
 ////        #if __IPHONE_8_0
 //if (elems[0] == "8")
 //{

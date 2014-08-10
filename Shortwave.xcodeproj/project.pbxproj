@@ -358,7 +358,6 @@
 				AAD651D81981C87D00BA0127 /* model */,
 				AA3B8D601981A55E00F4D3CC /* viewcontrollers */,
 				AACEBC0919819F0500DD2F78 /* AppDelegate.swift */,
-				AA3B8D631981ADAD00F4D3CC /* Constants.swift */,
 				AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */,
 				AACEBC0B19819F0500DD2F78 /* Images.xcassets */,
 				AACEBC0719819F0500DD2F78 /* Supporting Files */,
@@ -372,6 +371,7 @@
 				AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */,
 				AA3B8D591981A46C00F4D3CC /* Shortwave-Bridging-Header.h */,
 				AACEBC0819819F0500DD2F78 /* Info.plist */,
+				AA3B8D631981ADAD00F4D3CC /* Constants.swift */,
 				AA879E041996DBE800C34CB1 /* CocoaColaClassic.h */,
 				AA879E051996DBE800C34CB1 /* CocoaColaClassic.m */,
 			);
