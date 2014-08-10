@@ -9,7 +9,7 @@
 import Foundation
 
 #if DEBUG
-    let kROOT_FIREBASE = "https://shortwave.firebaseio.com/"
+    let kROOT_FIREBASE = "https://shortwave-dev.firebaseio.com/"
 #else
     let kROOT_FIREBASE = "https://shortwave-dev.firebaseio.com/"
 #endif

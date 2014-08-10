@@ -49,7 +49,7 @@ import UIKit
     }
 
     
-    #if __IPHONE_8_0
+    
     func application(application: UIApplication!, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings!)
     {
         //register to receive notifications!
@@ -70,7 +70,7 @@ import UIKit
         }
     
     }
-    #endif
+    
     
     func application(application: UIApplication!, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData!)
     {
