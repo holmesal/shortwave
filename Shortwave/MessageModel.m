@@ -95,7 +95,7 @@
             NSAssert(NO, @"not yet implemented type: personal_photo");
         }
         
-        NSAssert(NO, @"type is %@ and dict is %@", type, dictionary);
+//        NSAssert(NO, @"type is %@ and dict is %@", type, dictionary);
         
     }
     

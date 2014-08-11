@@ -22,7 +22,7 @@ import UIKit
         let audioSession = AVAudioSession.sharedInstance()
         audioSession.setCategory(AVAudioSessionCategoryAmbient, error: nil)
         
-        println("debug = \(DEBUG)")
+
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         return true

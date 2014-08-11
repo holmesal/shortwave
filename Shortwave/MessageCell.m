@@ -87,7 +87,7 @@
         
         case MessageModelTypeGif:
         {
-            NSLog(@"messageModel GIF");
+//            NSLog(@"messageModel GIF");
             SWGifCell *gifCell = (SWGifCell *)[collectionView dequeueReusableCellWithReuseIdentifier:SWGifCellIdentifier forIndexPath:indexPath];
             messageCell = gifCell;
 //            [gifCell setModel:messageModel];

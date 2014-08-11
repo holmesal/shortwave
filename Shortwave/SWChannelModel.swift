@@ -155,7 +155,7 @@ protocol ChannelActivityIndicatorDelegate
         
         var setLastSeenFB = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
         setLastSeenFB.setValue(self.lastSeen)
-        println("setLastSeenFB = \(setLastSeenFB)")
+//        println("setLastSeenFB = \(setLastSeenFB)")
     }
     
 

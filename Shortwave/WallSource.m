@@ -34,7 +34,7 @@
 @property (assign, nonatomic) FirebaseHandle wallHandleInsert;
 @property (assign, nonatomic) FirebaseHandle wallHandleMove;
 @property (strong, nonatomic) FQuery *wallRefQueryLimit;
-@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
+//@property (strong, nonatomic) FDataSnapshot *firstSnapshotFromWall;
 @property (atomic, strong) NSMutableArray *wallQueue; //when inserting cells too fast
 
 @property (nonatomic, strong) NSArray *hideCells;
@@ -55,7 +55,7 @@
 @synthesize layout;
 @synthesize collectionView;
 @synthesize url;
-@synthesize firstSnapshotFromWall;
+//@synthesize firstSnapshotFromWall;
 @synthesize wallQueueInsertTimer;
 @synthesize wallQueue;
 
@@ -101,8 +101,8 @@
         
         if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
         {
-            if (!firstSnapshotFromWall)
-                firstSnapshotFromWall = messageSnapshot;
+//            if (!firstSnapshotFromWall)
+//                firstSnapshotFromWall = messageSnapshot;
          
          //lookup where to place this name..
          NSInteger index = wallNames.count;
@@ -115,7 +115,7 @@
              } else {NSAssert(NO, @"You needed to found it!");}
          }
          [wallNames insertObject:messageSnapshot.name atIndex:index];
-//         NSLog(@"wallNames = %@", wallNames);
+
          
             [namesOfPendingMessages addObject:messageSnapshot.name];
 
@@ -128,11 +128,15 @@
                 return;
             }
 
-            
             //block models that are already fetching
             [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
             {
-
+                NSLog(@"##LoadedUser %@", model.ownerID);
+                
+                if ([model.ownerID isEqualToString:@"facebook:609186312530547"])
+                {
+                    NSLog(@"break");
+                }
                     [model setUserData:user];
                     [weakSelf addMessageToWallEventually:model];
                     [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
@@ -186,12 +190,12 @@
     {
         if (otherName == name)
         {
-//            NSLog(@"FOUND IT");
+            NSLog(@"FOUND IT i = %d", i);
             break;
         } else
         if (![namesOfPendingMessages containsObject:otherName])
         {//then this cell is loaded
-//            NSLog(@"'%@' != '%@'", name, otherName);
+            NSLog(@"'%@' != '%@'", name, otherName);
             i++;
         }
     }
@@ -300,26 +304,26 @@
     [wallQueue addObject:messageModel];
     if (wallQueue.count < kWallCollectionView_MAX_CELLS_INSERT)
     {
-        //        NSLog(@"begin timer to insert animated");
-        //        [self insertMessagesToWallNow];
-        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow) userInfo:nil repeats:NO];
+        
+        wallQueueInsertTimer = [NSTimer timerWithTimeInterval:kWallCollectionView_CELL_INSERT_TIMEOUT target:self selector:@selector(insertMessagesToWallNow:) userInfo:nil repeats:NO];
         [[NSRunLoop mainRunLoop] addTimer:wallQueueInsertTimer forMode:NSRunLoopCommonModes];
     } else
     {//drain wallQueue now without animation
-//        NSLog(@"&&&Drain wallqueue no animation&&&");
-        [wall addObjectsFromArray:wallQueue];
-        [wallQueue removeAllObjects];
-        [collectionView reloadData];
-        
-        CGRect visibleRect = collectionView.frame;
-        visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
-        [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+
+        [self insertMessagesToWallNow:nil];
+//        [wall addObjectsFromArray:wallQueue];
+//        [wallQueue removeAllObjects];
+//        [collectionView reloadData];
+//        
+//        CGRect visibleRect = collectionView.frame;
+//        visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
+//        [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
         
         
     }
 }
 
--(void)insertMessagesToWallNow
+-(void)insertMessagesToWallNow:(id)sender
 {
     //no longer consider messages in queue as 'pending'
     for (MessageModel *messageModel in wallQueue)
@@ -335,46 +339,51 @@
         NSInteger row = [self indexInWallToInsertNewModelIn:messageModel.name];
         [paths addObject: [NSIndexPath indexPathForRow:[self displayIndexForDataIndex:row] inSection:0] ];
     }
+    
     if (!collectionView)
     {
         [self insertToWall:wallQueue inOrder:paths];
         [wallQueue removeAllObjects];
     }
-    [collectionView performBatchUpdates:^
-     {
-         
-//         self.hideCells = [NSArray arrayWithArray:paths];
-         
-         [collectionView insertItemsAtIndexPaths:paths];
-//         NSLog(@"**before wall = %@", wall);
-         [self insertToWall:wallQueue inOrder:paths];
-//         NSLog(@"wallQueue = %@", wallQueue);
-//         NSLog(@"wall = %@", wall);
-         
-         [wallQueue removeAllObjects];
-         
-     } completion:^(BOOL finished)
-     {
-         
-//         for (NSIndexPath *indexPath in self.hideCells)
-//         {
-//             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-//         }
-//         self.hideCells = @[];
-         CGRect visibleRect = collectionView.frame;
-         visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
-         
-         if (collectionView.contentSize.height < collectionView.frame.size.height)
+    
+    if (sender)
+    {
+        [collectionView performBatchUpdates:^
          {
-             return;
-         }
-         
-//         [UIView animateWithDuration:1 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveLinear animations:^
-//         {
-//            [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
-//         } completion:^(BOOL finished){}];
-        
-     }];
+             
+    //         self.hideCells = [NSArray arrayWithArray:paths];
+             
+             [collectionView insertItemsAtIndexPaths:paths];
+    //         NSLog(@"**before wall = %@", wall);
+             [self insertToWall:wallQueue inOrder:paths];
+    //         NSLog(@"wallQueue = %@", wallQueue);
+    //         NSLog(@"wall = %@", wall);
+             
+             [wallQueue removeAllObjects];
+             
+         } completion:^(BOOL finished)
+         {
+             
+    //         for (NSIndexPath *indexPath in self.hideCells)
+    //         {
+    //             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
+    //         }
+    //         self.hideCells = @[];
+             CGRect visibleRect = collectionView.frame;
+             visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
+             
+             if (collectionView.contentSize.height < collectionView.frame.size.height)
+             {
+                 return;
+             }
+             
+    //         [UIView animateWithDuration:1 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveLinear animations:^
+    //         {
+    //            [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
+    //         } completion:^(BOOL finished){}];
+            
+         }];
+    }
 }
 
 -(void)insertToWall:(NSArray*)wQ inOrder:(NSArray*)paths
