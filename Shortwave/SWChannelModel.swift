@@ -39,6 +39,9 @@ protocol ChannelActivityIndicatorDelegate
     
     var delegate:ChannelActivityIndicatorDelegate?
     
+    var channelDescription:String?
+    
+    
     //collectionView
     var messageCollectionView:UICollectionView? {
     
@@ -156,11 +159,16 @@ protocol ChannelActivityIndicatorDelegate
     }
     
 
-    init(dictionary:NSDictionary, url:String)
+    init(dictionary:NSDictionary, url:String, andChannelMeta meta:NSDictionary)
     {
         if let actualLastSeen = dictionary["lastSeen"] as? Double
         {
             lastSeen = actualLastSeen
+        }
+        
+        if let description = meta["description"] as? String
+        {
+            self.channelDescription = description
         }
         
         muted = dictionary["muted"] as Bool

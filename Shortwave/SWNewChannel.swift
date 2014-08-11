@@ -8,8 +8,9 @@
 
 import Foundation
 import UIKit
+import QuartzCore
 
-class SWNewChannel: UIViewController, UITextFieldDelegate
+class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 {
     
     @IBOutlet weak var navBarLabel: UILabel!
@@ -31,9 +32,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
     var timer:NSTimer?
     
     //outlets for joining
-    @IBOutlet weak var descriptionViewContainer: UIView!
+    @IBOutlet strong var descriptionViewContainer: UIView!
     @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var createDescriptionContainer: UIView!
+    @IBOutlet weak var createDescriptionTextView: UITextView!
     
     override func viewDidLoad()
     {
@@ -51,7 +55,45 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         channelNameTextField.delegate = self
         channelNameTextField.becomeFirstResponder()
         
+        createDescriptionTextView.delegate = self
+        createDescriptionTextView.backgroundColor = UIColor.clearColor()
+        
+        //CALayer behind textView
+        createInputLayer()
+        
         updateUITimer() //hides the create button for "" result, and sets prompt
+        
+    }
+    
+    func createInputLayer()
+    {
+        let insetVertical:CGFloat = 5.0
+        let insetHorizontal:CGFloat = 5.0
+    
+        let textViewSize = createDescriptionTextView.frame.size
+        
+        var layer = CALayer()
+        
+//        let frame = CGRect(x: -insertHorizontal, y: -insetVertical,
+//            width: textViewSize.width + 2*insertHorizontal,
+//            height: textViewSize.height + 2*insetVertical)
+        //CGRect(x: -insetHorizontal, y: -insetVertical, width:(textViewSize.width + 2 * insetHorizontal), height:(textViewSize.height + 2 * insetVertical))
+        var frame = createDescriptionTextView.frame
+        
+        frame.origin.y = -(insetVertical)
+        frame.origin.x = -(insetHorizontal)
+        frame.size.width = 2*insetHorizontal + frame.size.width
+        frame.size.height = 2*insetVertical + frame.size.height
+        
+        
+        layer.frame = frame
+        
+        layer.cornerRadius = 3.0
+        layer.borderColor = UIColor.redColor().CGColor //UIColor(red: 151/255.0, green: 151/255.0, blue: 151/255.0, alpha: 1.0).CGColor
+        layer.borderWidth = 0.5
+        layer.backgroundColor = UIColor(red: 255/255.0, green: 255/255.0, blue: 255/255.0, alpha: 1.0).CGColor
+        
+        createDescriptionTextView.layer.insertSublayer(layer, atIndex:0)
         
         
     }
@@ -66,7 +108,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         goButton.userInteractionEnabled = false
         
         self.performFirebaseFetchForChannel(channelName, result:
-            {(exists:Bool) in
+            {(exists:Bool, description:String?) in
                 
                 if exists
                 {
@@ -133,24 +175,30 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         return true
     }
     
-    func performFirebaseFetchForChannel(channel:String, result:((exists:Bool)->()) )
+    func performFirebaseFetchForChannel(channel:String, result:((exists:Bool, description:String?)->()) )
     {
-        let channelExistenceFetch = Firebase(url: kROOT_FIREBASE + "channels/" + channel + "/public")
-        channelExistenceFetch.observeSingleEventOfType(FEventTypeValue)
-            {(snap:FDataSnapshot!) in
-                
-                if let isPublic = snap.value as? Bool
-                {
-                    // TODO: add support for isPublic == false
-                    result(exists: true)
-                } else
-                {
-                    result(exists: false)
-                }
-        }
+        let channelExistenceFetch = Firebase(url: kROOT_FIREBASE + "channels/" + channel + "/meta")
+        
+        println("channelExistenceFetch = \(channelExistenceFetch)")
+
+        channelExistenceFetch.observeSingleEventOfType(FEventTypeValue, withBlock: {(snap:FDataSnapshot!) in
+            
+            if let meta = snap.value as? NSDictionary
+            {
+                let description = meta["description"] as? String
+                result(exists: true, description: description)
+            } else
+            {
+                result(exists:false, description:nil)
+            }
+            }, withCancelBlock: {(error:NSError!) in
+                println("error = \(error)")
+            })
+        
     }
     
     //doesn't count for deletes
+    var joiningDescriptionString:String?
     func textField(textField: UITextField!, shouldChangeCharactersInRange range: NSRange, replacementString string: String!) -> Bool
     {
         
@@ -163,13 +211,15 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         self.channelNameExists = nil
         
         performFirebaseFetchForChannel(result,
-            {(exists:Bool) in
+            {(exists:Bool, description:String?) in
                 println("channel \(result) exists? \(exists)")
             
                 //if the fetched result is the current result, save its result, wait for time to pass... update
+                self.joiningDescriptionString = description
                 if (self.channelName == result)
                 {
                     self.channelNameExists = exists
+                    
                     
                     if self.timer{
                         self.timer!.invalidate()
@@ -177,8 +227,6 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                     
                     self.updateUITimer()
                     
-//                    self.timer = NSTimer(timeInterval: 0.2, target: self, selector: "updateUITimer", userInfo: nil, repeats: false )
-//                    NSRunLoop.mainRunLoop().addTimer(self.timer, forMode: NSDefaultRunLoopMode)
                 }
                 
             })
@@ -202,32 +250,76 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         {
             channelSearchResult.text = "You are creating this channel."
             
-            if self.descriptionViewContainer.alpha != 0.0
-            {
-                UIView.animateWithDuration(0.4, animations:
-                    {
-                        self.descriptionViewContainer.alpha = 0.0
-                        self.descriptionViewContainer.transform = CGAffineTransformMakeTranslation(0, -5)
-                    }, completion: {(b:Bool) in })
-            }
+            animateDescriptionContainer(descriptionViewContainer, visible:false)
+            animateDescriptionContainer(createDescriptionContainer , visible:true)
+            
+            /*
+                NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:14]};
+                // NSString class method: boundingRectWithSize:options:attributes:context is
+                // available only on ios7.0 sdk.
+                CGRect rect = [textToMeasure boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
+                options:NSStringDrawingUsesLineFragmentOrigin
+                attributes:attributes
+                context:nil];
+            */
+            
+            
             goButton.setTitle("Create", forState: .Normal)
             goButton.alpha = 1
         } else
         {
             channelSearchResult.text = "This channel exists."
             
-            self.descriptionViewContainer.transform = CGAffineTransformMakeTranslation(0, -5)
-            UIView.animateWithDuration(0.4, animations:
-                {
-                    self.descriptionViewContainer.alpha = 1.0
-                    self.descriptionViewContainer.transform = CGAffineTransformIdentity
-                }, completion: {(b:Bool) in })
+            animateDescriptionContainer(createDescriptionContainer , visible:false)
             
+            if let description = joiningDescriptionString
+            {
+                descriptionLabel.text = description
+                let attributes = [
+                    NSFontAttributeName : descriptionLabel.font,
+                                 ]
+                let descriptionNSString:NSString = description
+                let actualSize = descriptionNSString.boundingRectWithSize(CGSize(width: descriptionLabel.frame.size.width, height: 300), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes, context: nil)
+                descriptionLabelHeightConstraint.constant = actualSize.height
+                
+                animateDescriptionContainer(descriptionViewContainer, visible:true)
+                
+            } else
+            {
+                animateDescriptionContainer(descriptionViewContainer, visible: false)
+            }
             
             goButton.setTitle("Join", forState: .Normal)
             goButton.alpha = 1
+
+            
         }
         
+    }
+    
+    func animateDescriptionContainer(descContainer:UIView, visible:Bool)
+    {
+        if visible && descContainer.alpha == 1.0
+        {
+            return
+        }
+        
+        if !visible && descContainer.alpha == 0.0
+        {
+            return
+        }
+        
+        
+        descContainer.alpha = visible ? 0.0 : 1.0
+//        descContainer.transform = visible ? CGAffineTransformMakeTranslation(0.0, -5.0) : CGAffineTransformIdentity
+        UIView.animateWithDuration(0.4, animations:
+            {
+                descContainer.alpha = visible ? 1.0 : 0.0
+//                descContainer.transform = !visible ? CGAffineTransformMakeTranslation(0.0, -5.0) : CGAffineTransformIdentity
+            }, completion: {(b:Bool) in
+
+            
+            })
     }
 
     
@@ -279,7 +371,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
         [
             "moderators": [userId: true],
             "members": [userId: true],
-            "public": true
+            "meta" : ["public": true, "description": createDescriptionTextView.text]
         ]
         let channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(self.channelName)")
         channelRoot.setValue(value, withCompletionBlock:
@@ -290,7 +382,16 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                     //failure!
                 } else
                 {
-                    let priority = Int(NSDate().timeIntervalSince1970*1000)
+                    let t:Float = Float(NSDate().timeIntervalSince1970*1000)
+//                    println("t = \(t)")
+//                    let tInt:UInt = UInt(t)
+                    
+                    println("t = \(t)")
+                    
+                    println("[\(Int.min), \(Int.max)]")
+                    
+                    
+                    let priority = t//tInt
                     let yourChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(self.channelName)")
                     yourChannels.setValue([
                         "lastSeen":0,
@@ -317,5 +418,21 @@ class SWNewChannel: UIViewController, UITextFieldDelegate
                     
                 }
             })
+    }
+    
+    // Mark: UITextViewDelegate methods
+    func textView(textView: UITextView!, shouldChangeTextInRange range: NSRange, replacementText text: String!) -> Bool
+    {
+        if textView == createDescriptionTextView
+        {
+            if text == "\n"
+            {
+                self.completeButtonAction(nil)
+                textView.resignFirstResponder()
+                return false
+            }
+        }
+        
+        return true
     }
 }

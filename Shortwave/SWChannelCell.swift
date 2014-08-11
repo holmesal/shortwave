@@ -39,6 +39,30 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         titleLabel.text = (channelModel!.name!)
         setIsSynchronized(channelModel!.isSynchronized)
         
+        if channelModel!.channelDescription
+        {
+            descriptionLabel.text = (channelModel!.channelDescription!)
+//            descriptionLabel.backgroundColor = UIColor.purpleColor()
+        } else
+        {
+            descriptionLabel.text = ""
+        }
+        let attributes = [NSFontAttributeName : descriptionLabel.font]
+        
+//        println("maxW says \(descriptionLabel.frame.size.width)")
+        let constraintSize = CGSize(width: descriptionLabel.frame.size.width, height: 300)
+        let string:NSString = descriptionLabel.text
+//        (NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+//        NSStringDrawingOptions.usesFontLeading
+
+
+        let actualSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.size.width, height: 80) )
+        
+//        println("actualSize = \(actualSize)")
+        
+        descriptionLabelHeightConstraint.constant = actualSize.height
+            
+        
     }
     }
     
@@ -94,11 +118,31 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         }
     }
     
-    class func cellHeightGivenChannel(channel:SWChannelModel) -> Double
+    //DOUBLE CHECK WHEN UI CHANGE
+    class func cellHeightGivenChannel(channel:SWChannelModel) -> CGFloat
     {
+        println("channel = \(channel.name!)")
         //2 * topInsetConstraint                          //height label and height and description label height
-    
-        return 2 * 21 +                  5 +               22 + 19
+        
+        let descriptionFont = UIFont(name: "Avenir-Light", size: 14)
+        let descriptionMaxWidth = 222;
+        let fakeDescriptionLabel = UILabel(frame: CGRect(x:0, y:0, width:descriptionMaxWidth, height:80) )
+        fakeDescriptionLabel.font = descriptionFont
+        fakeDescriptionLabel.numberOfLines = 0
+        fakeDescriptionLabel.text = channel.channelDescription!
+        let descriptionSize = fakeDescriptionLabel.sizeThatFits(fakeDescriptionLabel.frame.size)
+        
+        let titleFont = UIFont(name: "Avenir-Light", size: 16)
+        let titleMaxWidth = 222;
+        let fakeTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: titleMaxWidth, height: 80))
+        fakeTitleLabel.numberOfLines = 0
+        fakeTitleLabel.font = titleFont
+        fakeTitleLabel.text = channel.name!
+        let titleSize = fakeTitleLabel.sizeThatFits(fakeTitleLabel.frame.size)
+        
+        
+        let result = 2 * 21 +                  2 +               titleSize.height + descriptionSize.height;
+        return result
     }
     
     override var highlighted:Bool {
@@ -111,11 +155,10 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
             {
                 self.backgroundColor = UIColor.clearColor()
             }
-            
-            
-
+        }
     }
-    }
+    
+    
     
     
     

@@ -84,7 +84,7 @@ import UIKit
         {
             token += String(format: "%02x", c)
         }
-        println("i converted it to \(token)")
+//        println("i converted it to \(token)")
         
         //must have userID, else crash!
         let userID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String

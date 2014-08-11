@@ -104,7 +104,7 @@
                                                             </userDefinedRuntimeAttributes>
                                                         </label>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="description" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="222" translatesAutoresizingMaskIntoConstraints="NO" id="xM7-Uz-OtS">
-                                                            <rect key="frame" x="52" y="48" width="222" height="19"/>
+                                                            <rect key="frame" x="52" y="45" width="222" height="19"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="19" id="oDi-SK-Up6"/>
@@ -144,7 +144,7 @@
                                                         <constraint firstAttribute="bottom" secondItem="wvC-bU-KFD" secondAttribute="bottom" id="ckn-bN-RAz"/>
                                                         <constraint firstItem="wvC-bU-KFD" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" id="j7E-bQ-9Iu"/>
                                                         <constraint firstAttribute="trailing" secondItem="wvC-bU-KFD" secondAttribute="trailing" id="jBV-aE-daO"/>
-                                                        <constraint firstItem="xM7-Uz-OtS" firstAttribute="top" secondItem="1rH-Uo-YkC" secondAttribute="bottom" constant="5" id="jpp-7N-QJ3"/>
+                                                        <constraint firstItem="xM7-Uz-OtS" firstAttribute="top" secondItem="1rH-Uo-YkC" secondAttribute="bottom" constant="2" id="jpp-7N-QJ3"/>
                                                         <constraint firstItem="1rH-Uo-YkC" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" constant="52" id="lk3-E7-hMJ"/>
                                                     </constraints>
                                                 </view>
@@ -294,8 +294,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OfS-Mo-Wqm">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="380"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OfS-Mo-Wqm">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pWi-UY-Wy6">
                                         <rect key="frame" x="0.0" y="77" width="320" height="108"/>
@@ -335,8 +335,8 @@
                                             <constraint firstAttribute="height" constant="108" id="vM9-6Z-lQ7"/>
                                         </constraints>
                                     </view>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6YC-RZ-Jmf">
-                                        <rect key="frame" x="0.0" y="193" width="320" height="151"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6YC-RZ-Jmf">
+                                        <rect key="frame" x="307" y="193" width="320" height="151"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s5I-Jb-roo">
                                                 <rect key="frame" x="20" y="1" width="292" height="23"/>
@@ -347,8 +347,12 @@
                                                     <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="JEM-Hv-TFg">
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="JEM-Hv-TFg">
                                                 <rect key="frame" x="20" y="32" width="280" height="109"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="109" id="GAn-EE-FCb"/>
+                                                    <constraint firstAttribute="width" constant="280" id="HNf-95-eTC"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
@@ -357,11 +361,52 @@
                                                 </userDefinedRuntimeAttributes>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="centerX" secondItem="JEM-Hv-TFg" secondAttribute="centerX" id="GPB-HB-7Fn"/>
+                                            <constraint firstItem="JEM-Hv-TFg" firstAttribute="top" secondItem="6YC-RZ-Jmf" secondAttribute="top" constant="32" id="ktf-Wx-N9w"/>
+                                            <constraint firstAttribute="height" constant="151" id="npJ-1p-y9F"/>
+                                            <constraint firstAttribute="width" constant="320" id="u0g-1V-29v"/>
+                                        </constraints>
+                                    </view>
+                                    <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jOx-WU-CIA">
+                                        <rect key="frame" x="0.0" y="193" width="320" height="151"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NEX-RT-fhX">
+                                                <rect key="frame" x="20" y="1" width="292" height="23"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Everyone can see this.  Make it count!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3g-KZ-pTq">
+                                                <rect key="frame" x="20" y="30" width="245" height="21"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <nil key="highlightedColor"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Book"/>
+                                                </userDefinedRuntimeAttributes>
+                                            </label>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CoZ-dW-K4D">
+                                                <rect key="frame" x="20" y="59" width="280" height="92"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="gfJ-ta-bQG"/>
+                                            <constraint firstAttribute="height" constant="151" id="q2G-jN-tUT"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="pWi-UY-Wy6" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="77" id="2D4-Sm-LYB"/>
+                                    <constraint firstItem="6YC-RZ-Jmf" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="193" id="A7T-Dv-Tid"/>
+                                    <constraint firstItem="6YC-RZ-Jmf" firstAttribute="leading" secondItem="OfS-Mo-Wqm" secondAttribute="leading" id="k8Z-VB-CJr"/>
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1Q-bI-Ait">
@@ -403,7 +448,7 @@
                         </subviews>
                         <color key="backgroundColor" red="0.87951909279336737" green="0.88962850765306123" blue="0.88962850765306123" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="BfR-cU-Z4R" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="bottom" constant="150" id="0pE-0t-g0C"/>
+                            <constraint firstItem="BfR-cU-Z4R" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="bottom" id="0pE-0t-g0C"/>
                             <constraint firstItem="OfS-Mo-Wqm" firstAttribute="top" secondItem="6q1-xg-Ehq" secondAttribute="bottom" constant="-20" id="6RW-Xp-yIc"/>
                             <constraint firstAttribute="centerX" secondItem="I1Q-bI-Ait" secondAttribute="centerX" id="7wP-pT-1D8"/>
                             <constraint firstItem="OfS-Mo-Wqm" firstAttribute="leading" secondItem="beH-T5-KxD" secondAttribute="leading" id="Vb9-W9-kcc"/>
@@ -416,7 +461,10 @@
                     <connections>
                         <outlet property="channelNameTextField" destination="ET3-nD-n8L" id="oOL-gc-yvR"/>
                         <outlet property="channelSearchResult" destination="ChW-6c-Pwa" id="7ts-U0-jdG"/>
+                        <outlet property="createDescriptionContainer" destination="jOx-WU-CIA" id="W5M-mX-H5r"/>
+                        <outlet property="createDescriptionTextView" destination="CoZ-dW-K4D" id="A5Q-67-Dhx"/>
                         <outlet property="descriptionLabel" destination="JEM-Hv-TFg" id="afb-3Q-Xdj"/>
+                        <outlet property="descriptionLabelHeightConstraint" destination="GAn-EE-FCb" id="DK5-eF-dPj"/>
                         <outlet property="descriptionViewContainer" destination="6YC-RZ-Jmf" id="asx-G6-HH7"/>
                         <outlet property="fakeNavBar" destination="I1Q-bI-Ait" id="7mz-wW-tmK"/>
                         <outlet property="goButton" destination="UeD-IY-m26" id="T4l-bm-In2"/>

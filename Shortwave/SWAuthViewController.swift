@@ -128,10 +128,10 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         let reqVersin = "8.0"
         let name = UIDevice.currentDevice().systemName
         
-        println("version \(version) name \(name)")
+//        println("version \(version) name \(name)")
         
         let elems = version.componentsSeparatedByString(".")
-        println("elems \(elems)")
+//        println("elems \(elems)")
         
         //Cocoa Cola, the classic beverage
         CocoaColaClassic.RegisterRemoteNotifications()

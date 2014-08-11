@@ -16,6 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightOfTextConstraint;
+@property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
 
 
 @end
@@ -26,6 +27,8 @@
 @synthesize messageText;
 @synthesize profileImageView;
 @synthesize firstNameLabel;
+
+@synthesize priorityLabel;
 
 -(void)awakeFromNib
 {
@@ -75,6 +78,7 @@
     messageText.text = nil; //to prevent ios7 Bug
     messageText.attributedText = [[NSAttributedString alloc] initWithString:model.text];
     firstNameLabel.text = model.firstName;
+    priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
     
 //    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
 //    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];

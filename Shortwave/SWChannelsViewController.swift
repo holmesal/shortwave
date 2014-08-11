@@ -92,21 +92,32 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                 
                 if let dictionary = snap?.value as? NSDictionary
                 {
-                    let channelModel = SWChannelModel(dictionary: dictionary, url: "\(url)\(snap!.name)")
-                    channelModel.delegate = self //updating channel activity
                     
-                    //check if this already exists!
-                    let result = self.channels.filter { $0.name == channelModel.name }
-                    
-                    if (result.count != 0)
+                    let f2 = Firebase(url: kROOT_FIREBASE + "/channels/" + snap!.name + "/meta" )
+                    f2.observeEventType(FEventTypeValue)
                     {
-                        return
+                        (f2Snapshot:FDataSnapshot!) in
+                        
+                        if let meta = f2Snapshot.value as? NSDictionary
+                        {
+                            let channelModel = SWChannelModel(dictionary: dictionary, url: "\(url)\(snap!.name)", andChannelMeta:meta)
+                            channelModel.delegate = self //updating channel activity
+                            
+                            //check if this already exists!
+                            let result = self.channels.filter { $0.name == channelModel.name }
+                            
+                            if (result.count != 0)
+                            {
+                                return
+                            }
+                            
+                            
+                            let index = self.channels.count;
+                            
+                            self.insertChannel(channelModel, atIndex:index)
+                        }
                     }
                     
-                    
-                    let index = self.channels.count;
-                    
-                    self.insertChannel(channelModel, atIndex:index)
                 }
                 
                 
@@ -282,9 +293,9 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
     {
-
+            println("indexPath = \(indexPath)")
             let channel = channels[indexPath.section]
-            return CGSizeMake(320, CGFloat(SWChannelCell.cellHeightGivenChannel(channel)) )
+            return CGSizeMake(320, SWChannelCell.cellHeightGivenChannel(channel) )
 
     }
     

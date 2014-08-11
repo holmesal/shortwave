@@ -39,6 +39,12 @@
                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                     </textView>
+                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="btC-Mf-zNj">
+                        <rect key="frame" x="5" y="53" width="230" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 <nil key="simulatedStatusBarMetrics"/>
@@ -56,6 +62,7 @@
                 <outlet property="firstNameLabel" destination="KVa-Gx-7HB" id="Rlh-oj-ocv"/>
                 <outlet property="heightOfTextConstraint" destination="s8k-tR-oAY" id="lWq-Nz-npb"/>
                 <outlet property="messageText" destination="S1x-dI-oeo" id="OBH-lS-A5b"/>
+                <outlet property="priorityLabel" destination="btC-Mf-zNj" id="yp4-Zn-qct"/>
                 <outlet property="profileImageView" destination="X1i-tP-0Vc" id="PcI-i2-wmg"/>
             </connections>
         </collectionViewCell>
