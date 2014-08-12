@@ -31,6 +31,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     @IBOutlet weak var muteButtonImageSelected: UIImageView!
     @IBOutlet weak var muteButtonImageUnselected: UIImageView!
     
+    @IBOutlet weak var sideView: UIView!
     
     
     //CONSTRAINT
@@ -124,13 +125,15 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         
         UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations:
             {
-                self.indicatorView.alpha = 1.0
-                self.indicatorView.transform = CGAffineTransformMakeTranslation(0, self.distance)
+                self.sideView.alpha = 1.0
+//                self.indicatorView.alpha = 1.0
+                self.sideView.transform = CGAffineTransformMakeTranslation(-self.distance, 0)
+//                self.indicatorView.transform = CGAffineTransformMakeTranslation(0, self.distance)
             }, completion:
             {(b:Bool) in
                 UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 0.1, initialSpringVelocity: 2, options: .CurveLinear, animations:
                     {
-                        self.indicatorView.transform = CGAffineTransformMakeTranslation(0, 0)
+                        self.sideView.transform = CGAffineTransformMakeTranslation(0, 0)
                     }, completion: {(b:Bool) in })
             })
         
@@ -140,10 +143,10 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     {
         if synchronized
         {
-            indicatorView.alpha = 0.0
+            self.sideView.alpha = 0.0
         } else
         {
-            indicatorView.alpha = 1.0
+            self.sideView.alpha = 1.0
         }
     }
     
