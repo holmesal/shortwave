@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import CoreGraphics
 
-class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
+class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelMutedResponderDelegate
 {
     
     @IBOutlet weak var containerView: UIView!
@@ -26,6 +26,13 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     //CONSTRAINT
     @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var muteButton: UIButton!
+    
+    @IBOutlet weak var muteButtonImageSelected: UIImageView!
+    @IBOutlet weak var muteButtonImageUnselected: UIImageView!
+    
+    
+    
     //CONSTRAINT
     @IBOutlet weak var verticalSpaceBetweenTitleAndDescriptionConstraint: NSLayoutConstraint!
     
@@ -33,6 +40,15 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     
     
     var channelModel:SWChannelModel? = nil {
+    willSet {
+        if let currentChannelModel = channelModel
+        {
+            //wouldn't want to respond to another channel's muted event, properly unset!
+            channelModel!.mutedDelegate = nil
+        }
+    }
+    
+    
     didSet {
         //do UI update here
 
@@ -49,15 +65,14 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         }
         let attributes = [NSFontAttributeName : descriptionLabel.font]
         
-//        println("maxW says \(descriptionLabel.frame.size.width)")
         let constraintSize = CGSize(width: descriptionLabel.frame.size.width, height: 300)
         let string:NSString = descriptionLabel.text
-//        (NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-//        NSStringDrawingOptions.usesFontLeading
 
 
         let actualSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.size.width, height: 80) )
         
+        channelModel!.mutedDelegate = self
+        updateMutedState(channelModel!.muted)
 //        println("actualSize = \(actualSize)")
         
         descriptionLabelHeightConstraint.constant = actualSize.height
@@ -81,12 +96,26 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
     override func awakeFromNib()
     {
         
-       
-        
-//        NSRunLoop.mainRunLoop().addTimer(NSTimer(timeInterval: 4, target: self, selector: "push", userInfo: nil, repeats: true), forMode: NSDefaultRunLoopMode)
-
+    }
+    @IBAction func muteAction(sender: AnyObject)
+    {
+     
+        channelModel!.muted = !channelModel!.muted
         
     }
+    
+    func channel(channel: SWChannelModel, isMuted: Bool)
+    {
+        updateMutedState(isMuted)
+    }
+    
+    func updateMutedState(isMuted:Bool)
+    {
+        muteButtonImageSelected.alpha = isMuted ? 1.0 : 0.0
+        muteButtonImageUnselected.alpha = !isMuted ? 1.0 : 0.0
+    }
+    
+    
     
     var distance:CGFloat = 5;
     
@@ -141,7 +170,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate
         let titleSize = fakeTitleLabel.sizeThatFits(fakeTitleLabel.frame.size)
         
         
-        let result = 2 * 21 +                  2 +               titleSize.height + descriptionSize.height;
+        let result = 1 * 21 +                  2 +               titleSize.height + descriptionSize.height + 57;
         return result
     }
     

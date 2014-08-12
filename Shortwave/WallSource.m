@@ -10,6 +10,9 @@
 #import "MessageModel.h"
 #import "MessageCell.h"
 
+#import "SWWebSiteCell.h"
+#import "MessageWebSite.h"
+
 #import "SWUserManager.h"
 #import "SWUser.h"
 
@@ -120,7 +123,7 @@
             [namesOfPendingMessages addObject:messageSnapshot.name];
 
             MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
-//            NSLog(@"type = %d", model.type);
+            
             model.name = messageSnapshot.name;
             
             if (!model)
@@ -131,16 +134,21 @@
             //block models that are already fetching
             [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
             {
-                NSLog(@"##LoadedUser %@", model.ownerID);
-                
-                if ([model.ownerID isEqualToString:@"facebook:609186312530547"])
-                {
-                    NSLog(@"break");
-                }
-                    [model setUserData:user];
+#pragma mark Define specific fetch requests here, those which must be done before Model is acceptable to be displayed
+                [model setUserData:user];
+                void (^modelIsReadyForDisplayBlock)(void) = ^{
                     [weakSelf addMessageToWallEventually:model];
                     [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
+                };
                 
+                
+                if (![model isReadyForDisplay])
+                {
+                    [model fetchRelevantDataWithCompletion:modelIsReadyForDisplayBlock];
+                } else
+                {
+                    modelIsReadyForDisplayBlock();
+                }
             }];
             
 
@@ -190,12 +198,12 @@
     {
         if (otherName == name)
         {
-            NSLog(@"FOUND IT i = %d", i);
+//            NSLog(@"FOUND IT i = %d", i);
             break;
         } else
         if (![namesOfPendingMessages containsObject:otherName])
         {//then this cell is loaded
-            NSLog(@"'%@' != '%@'", name, otherName);
+//            NSLog(@"'%@' != '%@'", name, otherName);
             i++;
         }
     }
@@ -224,13 +232,11 @@
     
     [self.target performSelector:@selector(didViewMessageModel:) withObject:messageModel];
     
-    if ([messageModel isKindOfClass:[MessageImage class]])
-    {
-        NSLog(@"woa image time? %@", messageModel);
-    }
     MessageCell *messageCell = [MessageCell messageCellFromMessageModel:messageModel andCollectionView:cV forIndexPath:indexPath andWallSource:self];
     
-//    messageCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
+
+    [self updateCell:messageCell withMoreDataFrom:messageModel];
+    
     
     [self setProfileImageOnCell:messageCell withModel:messageModel];
     
@@ -238,6 +244,71 @@
     [messageCell setFrame:aTempRect];
     
     return messageCell;
+}
+
+-(void)updateCell:(MessageCell*)cell withMoreDataFrom:(MessageModel*)model
+{
+    
+    
+    switch (model.type) {
+        case MessageModelTypeImage:
+        {
+            
+        }
+        break;
+        case MessageModelTypeWebSite:
+        {
+            SWWebSiteCell *webSiteCell = (SWWebSiteCell*)cell;
+            MessageWebSite *webSiteModel = (MessageWebSite*)model;
+            
+            
+                [self loadImageUrl:webSiteModel.favicon intoCell:webSiteCell fromModel:webSiteModel withCompletion:^(UIImage *img, MessageCell* cell, BOOL animated)
+                 {
+                     [((SWWebSiteCell*)cell) setFavIconImg:img animated:animated];
+                 }];
+            
+            
+                [self loadImageUrl:webSiteModel.image intoCell:webSiteCell fromModel:webSiteModel withCompletion:^(UIImage *img, MessageCell* cell, BOOL animated)
+                {
+                     [((SWWebSiteCell*)cell) setImg:img animated:animated];
+                }];
+            
+            
+            
+        }
+        break;
+            
+        default:
+            break;
+    }
+}
+
+-(void)loadImageUrl:(NSString*)imageUrl intoCell:(MessageCell*)originalCell fromModel:(MessageModel*)model withCompletion:(void(^)(UIImage *image, MessageCell *completionCell, BOOL animated))completion
+{
+    if (!imageUrl)
+        return;
+    
+    SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
+    [imageLoader loadImage:imageUrl completionBlock:^(UIImage *image, BOOL synchronous)
+     {
+         if (synchronous)
+         {
+             completion(image, originalCell, !synchronous);
+         } else
+         {
+             NSArray *currentlyVisibleCells = collectionView.visibleCells;
+             MessageCell *fetchedCell = (SWWebSiteCell *)[[currentlyVisibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.model == %@)", model]] lastObject];
+             if (fetchedCell)
+             {
+                 completion(image, fetchedCell, !synchronous);
+             }
+             
+         }
+     } progressBlock:^(float progress)
+     {
+         
+     }];
+    
 }
 
 -(void)setProfileImageOnCell:(MessageCell*)messageCell withModel:(MessageModel*)messageModel

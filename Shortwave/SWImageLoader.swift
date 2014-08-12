@@ -243,5 +243,17 @@ enum DataLoadingParcelState
     }
 
     
+    public func hasImage(urlString:String) -> Bool
+    {
+        if let discardableContent = cache.objectForKey(urlString) as? DiscardableImage
+        {
+            if let img = discardableContent.getImage()
+            {
+                return true
+            }
+        }
+        return false
+    }
+    
 }
 

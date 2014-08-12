@@ -10,6 +10,8 @@
 #import "SWImageCell.h"
 #import "SWTextCell.h"
 
+#import "SWWebSiteCell.h"
+
 //#import "ESImageLoader.h"
 #import "MessageImage.h"
 #import "SWSpotifyTrackCell.h"
@@ -23,7 +25,8 @@
 
 +(NSArray*)cellIds
 {
-    return @[SWTextCellIdentifier, SWImageCellIdentifier, SWGifCellIdentifier];//@[SWTextCellIdentifier, SWImageCellIdentifier, SWSpotifyTrackCellIdentifier];
+    return @[SWTextCellIdentifier, SWImageCellIdentifier, SWGifCellIdentifier, SWWebSiteCellIdentifier];
+    
 }
 
 +(void)registerCollectionViewCellsForCollectionView:(UICollectionView*)collectionView
@@ -76,30 +79,17 @@
                 }];
             
             }
-            
-//            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wallSource:wallSource andIndexPath:indexPath];
-//            
-//            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
-//            imageCell.tag = indexPath.row;
+
             return imageCell;
         }
         break;
         
         case MessageModelTypeGif:
         {
-//            NSLog(@"messageModel GIF");
+
             SWGifCell *gifCell = (SWGifCell *)[collectionView dequeueReusableCellWithReuseIdentifier:SWGifCellIdentifier forIndexPath:indexPath];
             messageCell = gifCell;
-//            [gifCell setModel:messageModel];
-//
-////            SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-////            [imageCell setModel:messageModel];
-////            
-////            [imageCell loadImage:((MessageImage*)messageModel).src withImageCell:imageCell imageMessage:messageModel collectionView:collectionView wallSource:wallSource andIndexPath:indexPath];
-////            [imageCell initializeTouchGesturesFromCollectionViewIfNecessary:collectionView];
-////            imageCell.tag = indexPath.row;
-////            return imageCell;
-//            return nil;
+
         }
         break;
         
@@ -111,9 +101,12 @@
         }
         break;
             
-        case MessageModelTypeLinkWeb:
+        case MessageModelTypeWebSite:
         {
             NSLog(@"MessageModelTypeLinkWeb");
+            SWWebSiteCell *websiteCell = (SWWebSiteCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWWebSiteCellIdentifier forIndexPath:indexPath];
+            messageCell = websiteCell;
+            
         }
         break;
             
@@ -196,9 +189,9 @@
         }
             break;
             
-        case MessageModelTypeLinkWeb:
+        case MessageModelTypeWebSite:
         {
-            NSLog(@"MessageModelTypeLinkWeb");
+            height = [SWWebSiteCell heightWithMessageModel:messageModel];
         }
             break;
             

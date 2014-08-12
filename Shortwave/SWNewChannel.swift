@@ -340,7 +340,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                 {
                     //continue joining it by adding to my users/userID/channels
                     let myChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(self.channelName)")
-                    myChannels.setValue(["lastSeen":0, "muted":false], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
+                    myChannels.setValue(["lastSeen":0, "muted":NSNumber(bool: false)], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
                         {(error:NSError!, firebase:Firebase!) in
                             if error
                             {

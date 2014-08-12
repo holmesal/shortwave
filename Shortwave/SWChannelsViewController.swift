@@ -45,14 +45,12 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         channelsCollectionView.dataSource = self
         channelsCollectionView.alwaysBounceVertical = true
 
-        
         self.navigationController.setNavigationBarHidden(false, animated: true)
         self.navigationController.navigationBar.translucent = false
         self.navigationController.navigationBar.barTintColor = UIColor(hexString: kNiceColors["green"])
         self.navigationController.navigationBar.tintColor = UIColor.whiteColor()
 
-//        println("fonts! \(UIFont.familyNames())")
-        let thing = UIFont.fontNamesForFamilyName("Avenir")
+//        let thing = UIFont.fontNamesForFamilyName("Avenir")
 //        println("avenir \(thing)")
         
         let font = UIFont(name: "Avenir-Book", size: 15) //24 descriptors, 34 channel tittle
@@ -176,7 +174,10 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 //        if indexPath.row == 0
 //        {
             let channelCell = collectionView.dequeueReusableCellWithReuseIdentifier("SWChannelCell", forIndexPath: indexPath) as SWChannelCell
-            
+        
+            channelCell.contentView.frame = channelCell.bounds
+            channelCell.contentView.clipsToBounds = true
+//            channelCell.contentView.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0, alpha: 0.5)
             channelCell.channelModel = channels[indexPath.section]
         
             
@@ -404,8 +405,8 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             }
         } else
         {
-            println("had to find channel \(channel) in channels \(channels)")
-            assert(false)
+//            println("had to find channel \(channel) in channels \(channels)")
+//            assert(false)
         }
     
         

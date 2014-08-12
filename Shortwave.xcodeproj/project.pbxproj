@@ -63,6 +63,9 @@
 		AAE70BFF198EBC820081B646 /* SWGifCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE70BFE198EBC820081B646 /* SWGifCell.m */; };
 		AAE70C01198EBD790081B646 /* SWGifCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAE70C00198EBD790081B646 /* SWGifCell.xib */; };
 		AAE70C05198EC9F90081B646 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAE70C04198EC9F90081B646 /* AVFoundation.framework */; };
+		AAF30196199962DD00EC2D3F /* MessageWebSite.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF30195199962DD00EC2D3F /* MessageWebSite.m */; };
+		AAF301991999694100EC2D3F /* SWWebSiteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF301981999694100EC2D3F /* SWWebSiteCell.m */; };
+		AAF3019B1999695D00EC2D3F /* SWWebSiteCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAF3019A1999695D00EC2D3F /* SWWebSiteCell.xib */; };
 		AAFE875C1984AAAF004AD3BA /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87531984AAAF004AD3BA /* MessageCell.m */; };
 		AAFE875D1984AAAF004AD3BA /* MessageGif.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87551984AAAF004AD3BA /* MessageGif.m */; };
 		AAFE875E1984AAAF004AD3BA /* MessageImage.m in Sources */ = {isa = PBXBuildFile; fileRef = AAFE87571984AAAF004AD3BA /* MessageImage.m */; };
@@ -170,6 +173,11 @@
 		AAE70C00198EBD790081B646 /* SWGifCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWGifCell.xib; sourceTree = "<group>"; };
 		AAE70C02198EC1A90081B646 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		AAE70C04198EC9F90081B646 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		AAF30194199962DD00EC2D3F /* MessageWebSite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageWebSite.h; sourceTree = "<group>"; };
+		AAF30195199962DD00EC2D3F /* MessageWebSite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageWebSite.m; sourceTree = "<group>"; };
+		AAF301971999694100EC2D3F /* SWWebSiteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWWebSiteCell.h; sourceTree = "<group>"; };
+		AAF301981999694100EC2D3F /* SWWebSiteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWWebSiteCell.m; sourceTree = "<group>"; };
+		AAF3019A1999695D00EC2D3F /* SWWebSiteCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWWebSiteCell.xib; sourceTree = "<group>"; };
 		AAFE87521984AAAF004AD3BA /* MessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageCell.h; sourceTree = "<group>"; };
 		AAFE87531984AAAF004AD3BA /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		AAFE87541984AAAF004AD3BA /* MessageGif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageGif.h; sourceTree = "<group>"; };
@@ -259,7 +267,9 @@
 				AAE70BFD198EBC820081B646 /* SWGifCell.h */,
 				AAE70BFE198EBC820081B646 /* SWGifCell.m */,
 				AAE70C00198EBD790081B646 /* SWGifCell.xib */,
-				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
+				AAF301971999694100EC2D3F /* SWWebSiteCell.h */,
+				AAF301981999694100EC2D3F /* SWWebSiteCell.m */,
+				AAF3019A1999695D00EC2D3F /* SWWebSiteCell.xib */,
 				AA59F781198AEABE0023CFB4 /* SWSpotifyTrackCell.h */,
 				AA59F782198AEABE0023CFB4 /* SWSpotifyTrackCell.m */,
 				AA59F779198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib */,
@@ -402,6 +412,7 @@
 				AA7DEA10198B3B09005154FE /* WallSource.m */,
 				AAD651D61981C86200BA0127 /* SWChannelModel.swift */,
 				AAFE87611984AE17004AD3BA /* old message stuff */,
+				AAFE87581984AAAF004AD3BA /* MessageModel.h */,
 				AAFE87591984AAAF004AD3BA /* MessageModel.m */,
 				AA7DEA0C198B2124005154FE /* SWUser.h */,
 				AA7DEA0D198B2124005154FE /* SWUser.m */,
@@ -418,6 +429,8 @@
 				AAFE87571984AAAF004AD3BA /* MessageImage.m */,
 				AAFE875A1984AAAF004AD3BA /* MessageSpotifyTrack.h */,
 				AAFE875B1984AAAF004AD3BA /* MessageSpotifyTrack.m */,
+				AAF30194199962DD00EC2D3F /* MessageWebSite.h */,
+				AAF30195199962DD00EC2D3F /* MessageWebSite.m */,
 			);
 			name = "old message stuff";
 			sourceTree = "<group>";
@@ -506,6 +519,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA59F77C198AE8AB0023CFB4 /* SWSpotifyTrackCell.xib in Resources */,
+				AAF3019B1999695D00EC2D3F /* SWWebSiteCell.xib in Resources */,
 				AA59F77D198AE8AB0023CFB4 /* SWTextCell.xib in Resources */,
 				AA59F77B198AE8AB0023CFB4 /* SWImageCell.xib in Resources */,
 				AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */,
@@ -585,6 +599,7 @@
 				AAB78EEF19888C2300E93D0C /* ASIAuthenticationDialog.m in Sources */,
 				AAB78EF119888C2300E93D0C /* ASIDataDecompressor.m in Sources */,
 				AA7DEA0E198B2124005154FE /* SWUser.m in Sources */,
+				AAF301991999694100EC2D3F /* SWWebSiteCell.m in Sources */,
 				AA68937A1988927A0014B8F5 /* Reachability.m in Sources */,
 				AA3B8D5F1981A55100F4D3CC /* SWChannelsViewController.swift in Sources */,
 				AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */,
@@ -600,6 +615,7 @@
 				AAB650C519899988009D6D23 /* UILabel+CustomFont.m in Sources */,
 				AAB650C81989AE6B009D6D23 /* SWNewChannel.swift in Sources */,
 				AA4013121982DB0600C6853D /* SWChannelCell.swift in Sources */,
+				AAF30196199962DD00EC2D3F /* MessageWebSite.m in Sources */,
 				AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */,
 				AA7DEA0B198B2112005154FE /* SWUserManager.m in Sources */,
 				AA59F786198AEC4F0023CFB4 /* SWTextCell.m in Sources */,

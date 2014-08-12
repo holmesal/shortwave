@@ -12,6 +12,8 @@
 #import "MessageGif.h"
 #import "MessageImage.h"
 #import "MessageSpotifyTrack.h"
+#import "MessageWebSite.h"
+
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
 #import "Shortwave-Swift.h"
@@ -68,23 +70,9 @@
         {
             return [[MessageSpotifyTrack alloc] initWithDictionary:dictionary andPriority:priority];
         } else
-        if ([type isEqualToString:@"link_web"])
+        if ([type isEqualToString:@"website"])
         {
-            NSAssert(NO, @"not yet implemented type: link_web");
-            /*
-             {
-             @"color": @"292929" ,
-             @"icon":@"shortbot",
-             @"type":@"link-web",
-             @"content":@{
-             @"url":@"http://google.com",
-             @"title":@"Google - We're Not Evil, We Promise!",
-             @"description":@"Something awful."
-             },
-             @"meta":@{@"ownerID":@"shortbot"
-             }
-             }
-             */
+            return [[MessageWebSite alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"personal_video"])
         {
@@ -95,6 +83,7 @@
             NSAssert(NO, @"not yet implemented type: personal_photo");
         }
         
+        NSLog(@"MessageModel NOT DEFINED FOR TYPE '%@' FOR DATA %@", type, dictionary);
 //        NSAssert(NO, @"type is %@ and dict is %@", type, dictionary);
         
     }
@@ -248,65 +237,25 @@
     
 }
 
+#pragma mark override this function for more data fetch before display
+-(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion
+{
+    completion();
+}
+#pragma mark override this function for more data fetch before display
+-(BOOL)isReadyForDisplay
+{
+    return YES;
+}
 
 
  #pragma mark nearby functionality
 -(void)postToAll
 {
-//    FCUser *owner = [FCUser owner];
-//    //get all ibeacon users
-//    NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
-//    
-//    if (IS_ON_SIMULATOR)
-//    {
-//        earshotIdsWithoutMe = @[];
-//    }
-//    NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
-//    
-//    [self postToUsers:earshotIds];
+
 }
 
-//-(void)postToUsers:(NSArray*)earshotIds
-//{
-//    FCUser *owner = [FCUser owner];
-//
-//    Firebase *messageFB = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages", FIREBASE_ROOT_URL]] childByAutoId];
-//    NSNumber *priority = [NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970]]; //priority in wall of receiver
-//    NSDictionary *message = [self toDictionary];
-//    NSDictionary *messageValue = @{@"message": message,
-//                                   @"ownerID": owner.id,
-//                                   @"usersWithReadAccess":earshotIds};
-//    [messageFB setValue:messageValue];
-//
-//    // Loop through and post to the firebase of every beacon in range (including self) add to PushQueue (excluding self)
-//    for (NSString *earshotId in earshotIds)
-//    {
-//        // Post to the firebase wall of this beacon
-//        //[[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-//        NSString *userPersonMessageUrl = [NSString stringWithFormat:@"%@users/%@/wall", FIREBASE_ROOT_URL, earshotId] ;
-//        Firebase *userPersonMessageRef = [[[Firebase alloc] initWithUrl:userPersonMessageUrl] childByAutoId];
-//        [userPersonMessageRef setValue:messageFB.name];
-//        [userPersonMessageRef setPriority:priority];
-//        
-//        if (![earshotId isEqualToString:owner.id])
-//        {
-//            // Send a push notification to this user
-//            NSString *otherPersonTokenUrl = [NSString stringWithFormat:@"%@users/%@/deviceToken", FIREBASE_ROOT_URL, earshotId];
-//            Firebase *otherPersonTokenRef = [[Firebase alloc] initWithUrl:otherPersonTokenUrl];
-//            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-//                // Make the push notification IF the user allows it
-//                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
-//                {
-//                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-//                                                       @"alert": text};
-//                    // Set the push notification
-//                    Firebase *pushQueueRef = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@pushQueue", FIREBASE_ROOT_URL]];
-//                    [pushQueueRef setValue:pushNotification];
-//                }
-//            }];
-//        }
-//    }
-//}
+
 
 -(void)setUserData:(SWUser*)user
 {
@@ -322,71 +271,3 @@
 @end
 
 
-//-(void)OLDpostToAll/Users/ethan/Documents/iPhone workspace/earshot/Firechat/MessageModel.m
-//{
-//    FCUser *owner = [FCUser owner];
-//    // Grab the current list of earshot users
-//    NSArray *earshotIdsWithoutMe = [owner.beacon.earshotUsers allKeys];
-//    
-//    
-//    if (IS_ON_SIMULATOR)
-//    {
-//        earshotIdsWithoutMe = @[];
-//    }
-//    
-//    NSArray *earshotIds = [earshotIdsWithoutMe arrayByAddingObject:owner.id];
-//    
-//    // Loop through and post to the firebase of every beacon in range (including self) add to PushQueue (excluding self)
-//    for (NSString *earshotId in earshotIds)
-//    {
-//        // Post to the firebase wall of this beacon
-//        Firebase *otherPersonMessageRef = [[[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"wall"] childByAutoId];
-//        [otherPersonMessageRef setValue:[self toDictionary]];
-//        
-//        if (![earshotId isEqualToString:owner.id])
-//        {
-//            // Send a push notification to this user
-//            Firebase *otherPersonTokenRef = [[[owner.rootRef childByAppendingPath:@"users"] childByAppendingPath:earshotId] childByAppendingPath:@"deviceToken"];
-//            [otherPersonTokenRef observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot) {
-//                // Make the push notification IF the user allows it
-//                if (snapshot && [snapshot value] && [snapshot value] != [NSNull null])
-//                {
-//                    NSDictionary *pushNotification = @{@"deviceToken": [snapshot value],
-//                                                       @"alert": text};
-//                    // Set the push notification
-//                    Firebase *pushQueueRef = [[owner.rootRef childByAppendingPath:@"pushQueue"] childByAutoId];
-//                    [pushQueueRef setValue:pushNotification];
-//                }
-//            }];
-//        }
-//    }
-//    
-//    // Pass every message to shortbot 4 now
-//    NSDictionary *shortbotMessage = @{
-//                                      @"sender": owner.id,
-//                                      @"message": text,
-//                                      @"nearby": earshotIdsWithoutMe
-//                                      };
-//    // post to the queue
-//    Firebase *shortbotQueueItemRef = [[owner.rootRef childByAppendingPath:@"shortbotQueue"] childByAutoId];
-//    [shortbotQueueItemRef setValue:shortbotMessage];
-//    
-//    //        text = [text stringByReplacingOccurrencesOfString:@"short bot" withString:@"shortbot" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [text length])];
-//    
-//    // Is this a shortbot message?
-//    NSNumber *isShortbotMessage = @0;
-//    if ([text rangeOfString:@"shortbot" options:NSCaseInsensitiveSearch].location != NSNotFound || [text rangeOfString:@"short bot" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-//        isShortbotMessage = @1;
-//    }
-//    
-//    //    // Log the message to mixpanel
-//    //    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-//    //    [mixpanel track:@"Message Sent" properties:@{
-//    //                                                 @"location":@{
-//    //                                                         @"lat":lat,
-//    //                                                         @"lon":lon,
-//    //                                                         @"accuracy":accuracy,
-//    //                                                         @"toUsers":earshotIds},
-//    //                                                 @"inRangeCount":[NSString stringWithFormat:@"%ld", (unsigned long)[earshotIds count]],
-//    //                                                 @"shortbotMessage":isShortbotMessage}];
-//}

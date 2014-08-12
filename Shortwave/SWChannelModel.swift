@@ -9,6 +9,10 @@
 import Foundation
 import UIKit
 
+protocol ChannelMutedResponderDelegate
+{
+    func channel(channel:SWChannelModel, isMuted:Bool)
+}
 
 protocol ChannelActivityIndicatorDelegate
 {
@@ -25,7 +29,21 @@ protocol ChannelActivityIndicatorDelegate
     var url:String?
     
     var lastSeen:Double = 0
-    var muted:Bool = false
+    
+
+    
+    let mutedFirebase:Firebase!;
+//    let mutedFirebaseChangeHandle:FirebaseHandle
+    let mutedUrl:String!;
+    
+    var muted:Bool {
+        didSet
+        {
+            mutedDelegate?.channel(self, isMuted: muted)
+            
+            Firebase(url: mutedUrl).setValue(NSNumber(bool: muted))
+        }
+    }
     
     var isSynchronized:Bool = true
 
@@ -38,6 +56,7 @@ protocol ChannelActivityIndicatorDelegate
     var wallSource:WallSource!
     
     var delegate:ChannelActivityIndicatorDelegate?
+    var mutedDelegate:ChannelMutedResponderDelegate?
     
     var channelDescription:String?
     
@@ -173,6 +192,9 @@ protocol ChannelActivityIndicatorDelegate
         
         muted = dictionary["muted"] as Bool
         
+
+
+        
         super.init()
         
         initialize(dictionary: dictionary, andUrl: url)
@@ -205,6 +227,23 @@ protocol ChannelActivityIndicatorDelegate
                 
         })
         
+        let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        mutedUrl = kROOT_FIREBASE + "users/" + userId + "/channels/" + name! + "/muted/"
+        mutedFirebase = Firebase(url: mutedUrl)
+        
+        //mutedFirebaseChangeHandle =
+        mutedFirebase.observeEventType(FEventTypeValue, withBlock:
+            {(snap:FDataSnapshot!) in
+                
+                if let isMuted = snap.value as? Bool
+                {
+                    if isMuted != self.muted
+                    {
+                        self.muted = isMuted
+                    }
+                }
+            })
+        
     }
     
 
@@ -225,7 +264,7 @@ protocol ChannelActivityIndicatorDelegate
     
     deinit
     {
-        
+//        mutedFirebase.begin
     }
     
 

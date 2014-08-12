@@ -19,7 +19,7 @@ typedef enum
     MessageModelTypePlainText,
     MessageModelTypeGif,
     MessageModelTypeImage,
-    MessageModelTypeLinkWeb,
+    MessageModelTypeWebSite,
     MessageModelTypeSpotifyTrack,
     MessageModelTypeYoutubeVideo,
     
@@ -63,6 +63,9 @@ typedef enum
 -(void)sendMessageToChannel:(NSString*)channel;
 
 
+#pragma mark override these 2 functions to reflect a model that must fetch more unstackable data requests before being displayed
 -(BOOL)hasAllData;
+-(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion;
+-(BOOL)isReadyForDisplay;
 
 @end
