@@ -102,7 +102,8 @@ import UIKit
             saveTokenFirebase = Firebase(url: url + knownDeviceTokenKey)
             saveTokenFirebase.setValue(
                 ["type":"ios",
-                    "token":token], withCompletionBlock:
+                    "token":token,
+                    "sandbox":kSANDBOX], withCompletionBlock:
                 {(error:NSError?, firebase:Firebase?) in
                     if let e = error
                     {
