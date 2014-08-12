@@ -153,6 +153,15 @@
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                                 </view>
+                                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5O2-Ao-84g">
+                                                                    <rect key="frame" x="236" y="7" width="44" height="44"/>
+                                                                    <state key="normal" image="leave">
+                                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <connections>
+                                                                        <action selector="leaveAction:" destination="8ns-a5-Pjg" eventType="touchUpInside" id="p8M-eD-zXk"/>
+                                                                    </connections>
+                                                                </button>
                                                             </subviews>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                             <constraints>
@@ -174,15 +183,40 @@
                                                                 <constraint firstAttribute="width" constant="80" id="gpo-7r-P1l"/>
                                                             </constraints>
                                                         </view>
+                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afG-JO-HEC">
+                                                            <rect key="frame" x="320" y="80" width="372" height="41"/>
+                                                            <subviews>
+                                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="63d-uC-7Z1">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="42"/>
+                                                                    <state key="normal" title="Leave Channel">
+                                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                                    </state>
+                                                                    <userDefinedRuntimeAttributes>
+                                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
+                                                                    </userDefinedRuntimeAttributes>
+                                                                    <connections>
+                                                                        <action selector="confirmDeleteAction:" destination="8ns-a5-Pjg" eventType="touchUpInside" id="b7X-8P-JSy"/>
+                                                                    </connections>
+                                                                </button>
+                                                            </subviews>
+                                                            <color key="backgroundColor" red="0.98039215686274506" green="0.32156862745098036" blue="0.43529411764705883" alpha="1" colorSpace="calibratedRGB"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="372" id="Ied-lp-ocn"/>
+                                                                <constraint firstAttribute="height" constant="41" id="tdl-hD-pw3"/>
+                                                            </constraints>
+                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="oTa-Gt-sdb" firstAttribute="height" secondItem="3QC-Rp-ycM" secondAttribute="height" id="5JX-Tq-ouU"/>
                                                         <constraint firstItem="oTa-Gt-sdb" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" constant="313" id="8yn-LY-j7O"/>
                                                         <constraint firstItem="xM7-Uz-OtS" firstAttribute="leading" secondItem="1rH-Uo-YkC" secondAttribute="leading" id="Q33-1B-7K6"/>
+                                                        <constraint firstItem="afG-JO-HEC" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" constant="320" id="Zif-YL-gS7"/>
                                                         <constraint firstAttribute="centerX" secondItem="1fW-fZ-wYr" secondAttribute="centerX" id="bYl-UO-T0X"/>
                                                         <constraint firstItem="1rH-Uo-YkC" firstAttribute="top" secondItem="3QC-Rp-ycM" secondAttribute="top" constant="21" id="byl-T0-0Ms"/>
                                                         <constraint firstAttribute="bottom" secondItem="wvC-bU-KFD" secondAttribute="bottom" id="ckn-bN-RAz"/>
+                                                        <constraint firstAttribute="bottom" secondItem="afG-JO-HEC" secondAttribute="bottom" id="d2e-Sb-VV5"/>
                                                         <constraint firstItem="oTa-Gt-sdb" firstAttribute="top" secondItem="3QC-Rp-ycM" secondAttribute="top" id="hP9-Wg-qEe"/>
                                                         <constraint firstItem="wvC-bU-KFD" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" id="j7E-bQ-9Iu"/>
                                                         <constraint firstAttribute="trailing" secondItem="wvC-bU-KFD" secondAttribute="trailing" id="jBV-aE-daO"/>
@@ -203,10 +237,14 @@
                                         </constraints>
                                         <size key="customSize" width="320" height="121"/>
                                         <connections>
+                                            <outlet property="confirmDeleteButton" destination="63d-uC-7Z1" id="5XB-oI-SbY"/>
+                                            <outlet property="confirmDeleteLeadingSpaceToContainer" destination="Zif-YL-gS7" id="ozz-9n-0gT"/>
+                                            <outlet property="confirmDeleteView" destination="afG-JO-HEC" id="eRy-5b-3pm"/>
                                             <outlet property="containerView" destination="3QC-Rp-ycM" id="OH4-5Q-UNz"/>
                                             <outlet property="descriptionLabel" destination="xM7-Uz-OtS" id="kXM-nW-bdn"/>
                                             <outlet property="descriptionLabelHeightConstraint" destination="oDi-SK-Up6" id="neq-HQ-iLq"/>
                                             <outlet property="indicatorView" destination="n9i-lU-As0" id="IIL-vh-oqh"/>
+                                            <outlet property="leaveButton" destination="5O2-Ao-84g" id="2Ec-nh-guh"/>
                                             <outlet property="muteButton" destination="KFz-fR-gwl" id="hrq-kv-UpH"/>
                                             <outlet property="muteButtonImageSelected" destination="QnG-n1-7XO" id="Lpz-7Y-GtN"/>
                                             <outlet property="muteButtonImageUnselected" destination="HxM-B2-MgI" id="hzB-8s-iK7"/>
@@ -580,6 +618,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="leave" width="19" height="13"/>
         <image name="mute" width="19" height="13"/>
         <image name="muteSelected" width="19" height="13"/>
     </resources>

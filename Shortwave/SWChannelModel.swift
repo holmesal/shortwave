@@ -36,12 +36,17 @@ protocol ChannelActivityIndicatorDelegate
 //    let mutedFirebaseChangeHandle:FirebaseHandle
     let mutedUrl:String!;
     
+    
+    func setMutedToFirebase()
+    {
+        mutedFirebase.setValue(NSNumber(bool: muted))
+    }
     var muted:Bool {
         didSet
         {
             mutedDelegate?.channel(self, isMuted: muted)
             
-            Firebase(url: mutedUrl).setValue(NSNumber(bool: muted))
+            
         }
     }
     

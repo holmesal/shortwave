@@ -120,6 +120,34 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                 
                 
             } )
+        
+        f.observeEventType(FEventTypeChildRemoved, withBlock: {(snapshot:FDataSnapshot!) in
+            
+            let name = snapshot.name
+            
+            let names = self.channels.filter {$0.name == name}
+            
+            if names.count > 0
+            {
+                let channelModel = names[0]
+
+                if let index = find(self.channels, channelModel)
+                {
+                    
+                    self.channelsCollectionView.performBatchUpdates(
+                        {
+                            self.channels.removeAtIndex(index)
+                            self.channelsCollectionView.deleteSections(NSIndexSet(index: index))
+                        }, completion: {(finished:Bool) in })
+                    
+                    
+                }
+                
+            }
+            
+
+        })
+
     }
     
     func insertChannel(channel: SWChannelModel, atIndex i:Int)
@@ -422,6 +450,15 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         }
     }
     
+    func scrollViewDidScroll(scrollView: UIScrollView!)
+    {
+        for channelCell in channelsCollectionView.visibleCells() as [SWChannelCell]
+        {
+            channelCell.hideLeaveChannelConfirmUI()
+        }
+    }
+    
+
 
 //    func collectionView(collectionView: UICollectionView!, didHighlightItemAtIndexPath indexPath: NSIndexPath!)
 //    {

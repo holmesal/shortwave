@@ -34,6 +34,10 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     @IBOutlet weak var sideView: UIView!
     
     
+    @IBOutlet weak var leaveButton: UIButton!
+    @IBOutlet weak var confirmDeleteButton: UIButton!
+    @IBOutlet weak var confirmDeleteView: UIView!
+    @IBOutlet weak var confirmDeleteLeadingSpaceToContainer: NSLayoutConstraint!
     //CONSTRAINT
     @IBOutlet weak var verticalSpaceBetweenTitleAndDescriptionConstraint: NSLayoutConstraint!
     
@@ -74,7 +78,6 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         
         channelModel!.mutedDelegate = self
         updateMutedState(channelModel!.muted)
-//        println("actualSize = \(actualSize)")
         
         descriptionLabelHeightConstraint.constant = actualSize.height
             
@@ -96,12 +99,13 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     override func awakeFromNib()
     {
-        
+        confirmDeleteLeadingSpaceToContainer.constant = 320
     }
     @IBAction func muteAction(sender: AnyObject)
     {
      
         channelModel!.muted = !channelModel!.muted
+        channelModel!.setMutedToFirebase()
         
     }
     
@@ -150,6 +154,24 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         }
     }
     
+    @IBAction func confirmDeleteAction(sender: AnyObject)
+    {
+        let userID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        let userChannelFB = Firebase(url: kROOT_FIREBASE + "users/" + userID + "/channels/" + self.channelModel!.name!)
+        userChannelFB.setValue(nil)
+        
+        let userInChannelMemberFB = Firebase(url: kROOT_FIREBASE + "channels/" + self.channelModel!.name! + "/members/" + userID)
+        userInChannelMemberFB.setValue(nil)
+    }
+    @IBAction func leaveAction(sender: AnyObject)
+    {
+        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 2.0, initialSpringVelocity: 2.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+            self.confirmDeleteLeadingSpaceToContainer.constant = 0
+            self.confirmDeleteView.superview.layoutIfNeeded()
+            
+            }, completion: {(b:Bool) in })
+    }
+    
     //DOUBLE CHECK WHEN UI CHANGE
     class func cellHeightGivenChannel(channel:SWChannelModel) -> CGFloat
     {
@@ -187,6 +209,18 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
             {
                 self.backgroundColor = UIColor.clearColor()
             }
+        }
+    }
+    
+    func hideLeaveChannelConfirmUI()
+    {
+        if self.confirmDeleteLeadingSpaceToContainer.constant != 320
+        {
+            UIView.animateWithDuration(0.2, delay: 0.0, usingSpringWithDamping: 2.0, initialSpringVelocity: 2.0, options: UIViewAnimationOptions.CurveLinear, animations: {
+                self.confirmDeleteLeadingSpaceToContainer.constant = 320
+                self.confirmDeleteView.superview.layoutIfNeeded()
+                
+                }, completion: {(b:Bool) in })
         }
     }
     
