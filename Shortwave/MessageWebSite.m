@@ -97,7 +97,7 @@
     [appDelegate.imageLoader loadImage:favicon completionBlock:^(UIImage *img, BOOL synchronous)
     {
         completion();
-    } progressBlock:^(CGFloat progress){
+    } progressBlock:^(float progress){
         
     }];
 }
