@@ -507,7 +507,6 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     func keyboardWillToggle(notification:NSNotification)
     {
-
         let userInfo = notification.userInfo
         
         let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
