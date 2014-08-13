@@ -27,7 +27,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
         collectionView.addGestureRecognizer(longPressGesture)
         
-        self.navigationItem.title = "#\(channelModel.name!)"
+//        self.navigationItem.title = "#\(channelModel.name!)"
+        self.navigationItem.title = "#\(channelModel.lastSeen)"
         
         setupComposeBarView()
         MessageCell.registerCollectionViewCellsForCollectionView(collectionView)//register relevant nib cells with this collectionview!

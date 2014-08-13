@@ -51,4 +51,5 @@ let kNiceColors = [
     "pinkRed":"FA526F",
     "orange":"F1793A",
     "yellow":"E8AD27",
-    "green":"00CF69"]
+    "green":"00CF69",
+    "bar":"323232"]

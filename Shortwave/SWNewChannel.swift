@@ -13,6 +13,8 @@ import QuartzCore
 class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 {
     
+
+    @IBOutlet weak var createButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var navBarLabel: UILabel!
     @IBOutlet weak var fakeNavBar: UIView!
     
@@ -20,8 +22,10 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     @IBOutlet weak var goButton: UIButton!
     
+    @IBOutlet weak var channelNameCharacterCountLabel: UILabel!
+    @IBOutlet weak var hashTagLabel: UILabel!
     @IBOutlet weak var channelNameTextField: UITextField!
-    @IBOutlet weak var channelSearchResult: UILabel!
+//    @IBOutlet weak var channelSearchResult: UILabel!
     
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -41,7 +45,13 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     override func viewDidLoad()
     {
-        let hexString = kNiceColors["green"]
+        
+        channelNameTextField.becomeFirstResponder()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
+        
+        let hexString = kNiceColors["bar"]
         fakeNavBar.backgroundColor = UIColor(hexString: hexString)
         
         descriptionViewContainer.alpha = 0.0
@@ -53,7 +63,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         scrollView.alwaysBounceVertical = true
         
         channelNameTextField.delegate = self
-        channelNameTextField.becomeFirstResponder()
+        
         
         createDescriptionTextView.delegate = self
         createDescriptionTextView.backgroundColor = UIColor.clearColor()
@@ -62,6 +72,9 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         createInputLayer()
         
         updateUITimer() //hides the create button for "" result, and sets prompt
+        
+        
+
         
     }
     
@@ -205,7 +218,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         
         var result = textField.text as NSString
+        
+
         result = result.stringByReplacingCharactersInRange(range, withString: string)
+        hashTagLabel.highlighted = result.length != 0
+        channelNameCharacterCountLabel.text = "\(result.length) / \(20)"
+        
         
         self.channelName = result
         self.channelNameExists = nil
@@ -243,12 +261,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         if channelName == "" //invalid
         {
-            channelSearchResult.text = "We'll check if it exists."
-            goButton.alpha = 0.0
+//            channelSearchResult.text = "We'll check if it exists."
+//            goButton.alpha = 0.0
         } else
         if !(self.channelNameExists!)
         {
-            channelSearchResult.text = "You are creating this channel."
+//            channelSearchResult.text = "You are creating this channel."
             
             animateDescriptionContainer(descriptionViewContainer, visible:false)
             animateDescriptionContainer(createDescriptionContainer , visible:true)
@@ -268,7 +286,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             goButton.alpha = 1
         } else
         {
-            channelSearchResult.text = "This channel exists."
+//            channelSearchResult.text = "This channel exists."
             
             animateDescriptionContainer(createDescriptionContainer , visible:false)
             
@@ -435,4 +453,63 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         return true
     }
+    
+    deinit
+    {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func keyboardWillToggle(notification:NSNotification)
+    {
+
+        let userInfo = notification.userInfo
+        
+        let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
+        let curveV = userInfo[UIKeyboardAnimationCurveUserInfoKey]
+        let frameBeginV = userInfo[UIKeyboardFrameBeginUserInfoKey] as? NSValue
+        let frameEndV = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue
+        
+        let duration = durationV!.doubleValue as NSTimeInterval
+        let frameBegin = frameBeginV!.CGRectValue()
+        let frameEnd = frameEndV!.CGRectValue()
+        
+        let curve:UInt = 7//curveV!.unsignedIntegerValue
+        let animationCurve = UIViewAnimationOptions.fromRaw(curve)
+        
+        //        println("durationV = \(durationV) and curveV = \(curveV)")
+        
+        let dy = frameBegin.origin.y - frameEnd.origin.y
+        var constraintHeight = ( dy < 0 ? 0 : dy )
+        
+        
+
+        //if constraintHeight = 0, then edgeInsetBottom = 0, else
+        
+
+        
+        var signCorrection = -1
+        if (frameBegin.origin.y < 0 || frameBegin.origin.x < 0 || frameEnd.origin.y < 0 || frameEnd.origin.x < 0)
+        {
+            signCorrection = 1;
+        }
+        //            CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
+        let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * signCorrection;
+        
+        
+        
+        if constraintHeight > 300
+        {
+            constraintHeight = 216
+            self.createButtonBottomConstraint.constant = constraintHeight
+        } else
+        {
+            UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.fromRaw(7 << 16)!, animations:
+                {
+                    self.createButtonBottomConstraint.constant = constraintHeight
+                    self.goButton.superview.layoutIfNeeded()
+                    
+                }, completion: nil)
+        }
+    }
+
 }

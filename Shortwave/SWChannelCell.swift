@@ -60,10 +60,11 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         titleLabel.text = (channelModel!.name!)
         setIsSynchronized(channelModel!.isSynchronized)
         
+        confirmDeleteLeadingSpaceToContainer.constant = 320
+        
         if channelModel!.channelDescription
         {
             descriptionLabel.text = (channelModel!.channelDescription!)
-//            descriptionLabel.backgroundColor = UIColor.purpleColor()
         } else
         {
             descriptionLabel.text = ""
@@ -79,8 +80,17 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         channelModel!.mutedDelegate = self
         updateMutedState(channelModel!.muted)
         
+        println("actualSize = \(actualSize)")
+        
+//        var frame = descriptionLabel.frame
+//        frame.size.height = actualSize.height
+//        descriptionLabel.frame = frame
+
+        
         descriptionLabelHeightConstraint.constant = actualSize.height
-            
+        
+
+        
         
     }
     }
@@ -99,7 +109,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     override func awakeFromNib()
     {
-        confirmDeleteLeadingSpaceToContainer.constant = 320
+        
     }
     @IBAction func muteAction(sender: AnyObject)
     {

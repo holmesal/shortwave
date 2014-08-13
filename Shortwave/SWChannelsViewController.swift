@@ -47,20 +47,21 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 
         self.navigationController.setNavigationBarHidden(false, animated: true)
         self.navigationController.navigationBar.translucent = false
-        self.navigationController.navigationBar.barTintColor = UIColor(hexString: kNiceColors["green"])
+        self.navigationController.navigationBar.barTintColor = UIColor(hexString: kNiceColors["bar"])
         self.navigationController.navigationBar.tintColor = UIColor.whiteColor()
 
 //        let thing = UIFont.fontNamesForFamilyName("Avenir")
 //        println("avenir \(thing)")
         
-        let font = UIFont(name: "Avenir-Book", size: 15) //24 descriptors, 34 channel tittle
+        let font = UIFont(name: "Avenir-Black", size: 17) //24 descriptors, 34 channel tittle
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),
                                     NSFontAttributeName: font]
-        self.navigationController.navigationBar.titleTextAttributes = titleDict
-        self.navigationItem.title = "Shortwave Beta"
+//        self.navigationController.navigationBar.titleTextAttributes = titleDict
+//        self.navigationItem.title = "Shortwave Beta"
         
         
         var addButton = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: "addBarButtonAction:")
+        
         addButton.setTitleTextAttributes(titleDict, forState: UIControlState.Normal)
             
         self.navigationItem.rightBarButtonItem = addButton
