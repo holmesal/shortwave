@@ -323,7 +323,6 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func collectionView(collectionView: UICollectionView!, layout collectionViewLayout: UICollectionViewLayout!, sizeForItemAtIndexPath indexPath: NSIndexPath!) -> CGSize
     {
-            println("indexPath = \(indexPath)")
             let channel = channels[indexPath.section]
             return CGSizeMake(320, SWChannelCell.cellHeightGivenChannel(channel) )
 

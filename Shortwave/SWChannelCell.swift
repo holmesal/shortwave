@@ -80,16 +80,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         channelModel!.mutedDelegate = self
         updateMutedState(channelModel!.muted)
         
-        println("actualSize = \(actualSize)")
-        
-//        var frame = descriptionLabel.frame
-//        frame.size.height = actualSize.height
-//        descriptionLabel.frame = frame
-
-        
         descriptionLabelHeightConstraint.constant = actualSize.height
-        
-
         
         
     }
@@ -185,7 +176,6 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     //DOUBLE CHECK WHEN UI CHANGE
     class func cellHeightGivenChannel(channel:SWChannelModel) -> CGFloat
     {
-        println("channel = \(channel.name!)")
         //2 * topInsetConstraint                          //height label and height and description label height
         
         let descriptionFont = UIFont(name: "Avenir-Light", size: 14)

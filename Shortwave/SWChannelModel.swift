@@ -216,7 +216,7 @@ protocol ChannelActivityIndicatorDelegate
                 
             if let newLastSeen = snap.value as? Double
             {
-                println("newLastSeen = \(newLastSeen) and current lastSeen = \(self.lastSeen)")
+//                println("newLastSeen = \(newLastSeen) and current lastSeen = \(self.lastSeen)")
                 
                 if self.lastSeen != newLastSeen
                 {
