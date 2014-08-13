@@ -43,8 +43,25 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     @IBOutlet weak var createDescriptionContainer: UIView!
     @IBOutlet weak var createDescriptionTextView: UITextView!
     
+    @IBOutlet weak var heightOfDescription: NSLayoutConstraint!
+    
+    @IBOutlet weak var descriptionCharacterCountLabel: UILabel!
+    
+    
+    
+    @IBOutlet weak var topVerticalSpaceFromDescriptionTVToSuper: NSLayoutConstraint!
+    @IBOutlet weak var verticalSpaceFromDescriptionTVToSuper: NSLayoutConstraint!
+    
+    
     override func viewDidLoad()
     {
+        
+        createDescriptionTextView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.New, context: nil)
+        
+        
+        createDescriptionTextView.tintColor = UIColor(hexString: kNiceColors["bar"])
+        channelNameTextField.tintColor = UIColor(hexString: kNiceColors["bar"])
+        
         
         channelNameTextField.becomeFirstResponder()
         
@@ -222,6 +239,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 
         result = result.stringByReplacingCharactersInRange(range, withString: string)
         hashTagLabel.highlighted = result.length != 0
+        
+        if result.length > 20
+        {
+            return false
+        }
+        
         channelNameCharacterCountLabel.text = "\(result.length) / \(20)"
         
         
@@ -443,10 +466,24 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     {
         if textView == createDescriptionTextView
         {
+//            descriptionCharacterCountLabel
+           
+            var result = textView.text as NSString
+            result = result.stringByReplacingCharactersInRange(range, withString: text)
+            if result.length > 80
+            {
+                return false
+            }
+            
+            descriptionCharacterCountLabel.text = "\(result.length) / 80"
+            
+            let contentHeight = textView.contentSize;
+            println("contentheight = \(contentHeight)")
+            
             if text == "\n"
             {
                 self.completeButtonAction(nil)
-                textView.resignFirstResponder()
+//                textView.resignFirstResponder()
                 return false
             }
         }
@@ -456,6 +493,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     deinit
     {
+        createDescriptionTextView.removeObserver(self, forKeyPath: "contentSize")
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -511,5 +549,28 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                 }, completion: nil)
         }
     }
+    
+    
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafePointer<()>)
+    {
+        if keyPath == "contentSize" && object as? NSObject == createDescriptionTextView
+        {
+            /*
+
+            
+            @IBOutlet weak var heightOfDescription:
+            
+*/
+            
+            var newHeight = createDescriptionTextView.contentSize.height
+            newHeight = min(newHeight, 100)
+            println("newHeight = \(newHeight)")
+            heightOfDescription.constant = topVerticalSpaceFromDescriptionTVToSuper.constant + verticalSpaceFromDescriptionTVToSuper.constant + newHeight
+            println("change = \(change)")
+        }
+    }
+    
+    
+
 
 }

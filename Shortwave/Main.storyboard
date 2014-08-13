@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6185.11" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="cxk-25-0Ic">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6190.4"/>
     </dependencies>
     <scenes>
@@ -453,37 +454,41 @@
                                             <constraint firstAttribute="width" constant="320" id="u0g-1V-29v"/>
                                         </constraints>
                                     </view>
-                                    <view alpha="0.0" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jOx-WU-CIA">
-                                        <rect key="frame" x="0.0" y="193" width="320" height="151"/>
+                                    <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jOx-WU-CIA">
+                                        <rect key="frame" x="0.0" y="150" width="320" height="93"/>
                                         <subviews>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Description" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NEX-RT-fhX">
-                                                <rect key="frame" x="20" y="1" width="292" height="23"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="highlightedColor"/>
-                                                <userDefinedRuntimeAttributes>
-                                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
-                                                </userDefinedRuntimeAttributes>
-                                            </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Everyone can see this.  Make it count!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3g-KZ-pTq">
-                                                <rect key="frame" x="20" y="30" width="245" height="21"/>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CoZ-dW-K4D">
+                                                <rect key="frame" x="53" y="22" width="215" height="38"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="215" id="0Mz-t4-bIH"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                            </textView>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0 / 80" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DCf-Sq-VaB">
+                                                <rect key="frame" x="53" y="72" width="215" height="21"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="215" id="WCU-us-G3e"/>
+                                                    <constraint firstAttribute="height" constant="21" id="vVD-CB-7mN"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Book"/>
                                                 </userDefinedRuntimeAttributes>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CoZ-dW-K4D">
-                                                <rect key="frame" x="20" y="59" width="280" height="92"/>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                            </textView>
                                         </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
+                                            <constraint firstAttribute="bottom" secondItem="DCf-Sq-VaB" secondAttribute="bottom" id="VPs-ef-JVU"/>
+                                            <constraint firstAttribute="centerX" secondItem="CoZ-dW-K4D" secondAttribute="centerX" constant="-0.5" id="Z4Q-by-6vL"/>
                                             <constraint firstAttribute="width" constant="320" id="gfJ-ta-bQG"/>
-                                            <constraint firstAttribute="height" constant="151" id="q2G-jN-tUT"/>
+                                            <constraint firstItem="CoZ-dW-K4D" firstAttribute="top" secondItem="jOx-WU-CIA" secondAttribute="top" constant="22" id="kzY-8V-pSZ"/>
+                                            <constraint firstAttribute="centerX" secondItem="DCf-Sq-VaB" secondAttribute="centerX" constant="-0.5" id="prR-4T-fyy"/>
+                                            <constraint firstAttribute="height" constant="93" id="q2G-jN-tUT"/>
+                                            <constraint firstAttribute="bottom" secondItem="CoZ-dW-K4D" secondAttribute="bottom" constant="33" id="uMX-oM-vw7"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -491,7 +496,9 @@
                                     <constraint firstItem="pWi-UY-Wy6" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="64" id="2D4-Sm-LYB"/>
                                     <constraint firstItem="6YC-RZ-Jmf" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="193" id="A7T-Dv-Tid"/>
                                     <constraint firstAttribute="centerX" secondItem="pWi-UY-Wy6" secondAttribute="centerX" id="CQT-1n-Hkb"/>
+                                    <constraint firstAttribute="centerX" secondItem="jOx-WU-CIA" secondAttribute="centerX" id="Um1-Nw-bly"/>
                                     <constraint firstItem="6YC-RZ-Jmf" firstAttribute="leading" secondItem="OfS-Mo-Wqm" secondAttribute="leading" constant="307" id="k8Z-VB-CJr"/>
+                                    <constraint firstItem="jOx-WU-CIA" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="150" id="yNJ-Az-T2i"/>
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I1Q-bI-Ait">
@@ -531,7 +538,7 @@
                                     <constraint firstAttribute="height" constant="40" id="FwM-mK-KCU"/>
                                     <constraint firstAttribute="width" constant="320" id="gJb-Am-D0h"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <state key="normal" title="Create">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -564,14 +571,18 @@
                         <outlet property="createButtonBottomConstraint" destination="aQ3-xT-rS3" id="Lux-Hk-CfY"/>
                         <outlet property="createDescriptionContainer" destination="jOx-WU-CIA" id="W5M-mX-H5r"/>
                         <outlet property="createDescriptionTextView" destination="CoZ-dW-K4D" id="A5Q-67-Dhx"/>
+                        <outlet property="descriptionCharacterCountLabel" destination="DCf-Sq-VaB" id="cQA-QL-1V4"/>
                         <outlet property="descriptionLabel" destination="JEM-Hv-TFg" id="afb-3Q-Xdj"/>
                         <outlet property="descriptionLabelHeightConstraint" destination="GAn-EE-FCb" id="DK5-eF-dPj"/>
                         <outlet property="descriptionViewContainer" destination="6YC-RZ-Jmf" id="asx-G6-HH7"/>
                         <outlet property="fakeNavBar" destination="I1Q-bI-Ait" id="7mz-wW-tmK"/>
                         <outlet property="goButton" destination="UeD-IY-m26" id="T4l-bm-In2"/>
                         <outlet property="hashTagLabel" destination="luN-Nr-1oT" id="fyi-xV-x8q"/>
+                        <outlet property="heightOfDescription" destination="q2G-jN-tUT" id="kBZ-n5-5ZL"/>
                         <outlet property="navBarLabel" destination="ir5-tS-TLj" id="jPm-Ym-Ris"/>
                         <outlet property="scrollView" destination="OfS-Mo-Wqm" id="ugt-v0-dMm"/>
+                        <outlet property="topVerticalSpaceFromDescriptionTVToSuper" destination="kzY-8V-pSZ" id="RDH-bS-8oy"/>
+                        <outlet property="verticalSpaceFromDescriptionTVToSuper" destination="uMX-oM-vw7" id="SYP-dN-HPg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T8F-bK-3Lp" userLabel="First Responder" sceneMemberID="firstResponder"/>
