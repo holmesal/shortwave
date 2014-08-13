@@ -35,9 +35,9 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     
     @IBOutlet weak var leaveButton: UIButton!
-    @IBOutlet weak var confirmDeleteButton: UIButton!
-    @IBOutlet weak var confirmDeleteView: UIView!
-    @IBOutlet weak var confirmDeleteLeadingSpaceToContainer: NSLayoutConstraint!
+//    @IBOutlet weak var confirmDeleteButton: UIButton!
+    var confirmDeleteView: UIView!
+//    @IBOutlet weak var confirmDeleteLeadingSpaceToContainer: NSLayoutConstraint!
     //CONSTRAINT
     @IBOutlet weak var verticalSpaceBetweenTitleAndDescriptionConstraint: NSLayoutConstraint!
     
@@ -60,7 +60,8 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         titleLabel.text = (channelModel!.name!)
         setIsSynchronized(channelModel!.isSynchronized)
         
-        confirmDeleteLeadingSpaceToContainer.constant = 320
+//        confirmDeleteLeadingSpaceToContainer.constant = 320
+//        confirmDeleteView.alpha = 0.5
         
         if channelModel!.channelDescription
         {
@@ -83,6 +84,12 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         descriptionLabelHeightConstraint.constant = actualSize.height
         
         
+        confirmDeleteView.transform = CGAffineTransformMakeTranslation(0, 0)
+        let yForConfirmDelete = self.frame.size.height - 40
+        var frame = confirmDeleteView.frame
+        frame.origin.y = yForConfirmDelete
+        confirmDeleteView.frame = frame
+        confirmDeleteView.transform = CGAffineTransformMakeTranslation(320, 0)
     }
     }
     
@@ -100,6 +107,18 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     override func awakeFromNib()
     {
+        confirmDeleteView = UIView(frame: CGRect(x:0, y:0, width:320, height:40))
+        confirmDeleteView.alpha = 0.5
+        confirmDeleteView.backgroundColor = UIColor(hexString: kNiceColors["pinkRed"])
+        self.addSubview(confirmDeleteView)
+        
+        var deleteButton = UIButton(frame: confirmDeleteView.bounds)
+        deleteButton.setTitle("Leave Channel", forState: .Normal)
+        deleteButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        confirmDeleteView .addSubview(deleteButton)
+        deleteButton.addTarget(self, action: "confirmDeleteAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        
         
     }
     @IBAction func muteAction(sender: AnyObject)
@@ -166,9 +185,11 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     }
     @IBAction func leaveAction(sender: AnyObject)
     {
+        println("leaveAction:")
         UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 2.0, initialSpringVelocity: 2.0, options: UIViewAnimationOptions.CurveLinear, animations: {
-            self.confirmDeleteLeadingSpaceToContainer.constant = 0
-            self.confirmDeleteView.superview.layoutIfNeeded()
+//            self.confirmDeleteLeadingSpaceToContainer.constant = 0
+//            self.confirmDeleteView.superview.layoutIfNeeded()
+            self.confirmDeleteView.transform = CGAffineTransformMakeTranslation(0, 0)
             
             }, completion: {(b:Bool) in })
     }
@@ -214,14 +235,16 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     func hideLeaveChannelConfirmUI()
     {
-        if self.confirmDeleteLeadingSpaceToContainer.constant != 320
-        {
+//        if self.confirmDeleteLeadingSpaceToContainer.constant != 320
+//        {
             UIView.animateWithDuration(0.2, delay: 0.0, usingSpringWithDamping: 2.0, initialSpringVelocity: 2.0, options: UIViewAnimationOptions.CurveLinear, animations: {
-                self.confirmDeleteLeadingSpaceToContainer.constant = 320
-                self.confirmDeleteView.superview.layoutIfNeeded()
+                
+                self.confirmDeleteView.transform = CGAffineTransformMakeTranslation(320, 0)
+//                self.confirmDeleteLeadingSpaceToContainer.constant = 320
+//                self.confirmDeleteView.superview.layoutIfNeeded()
                 
                 }, completion: {(b:Bool) in })
-        }
+//        }
     }
     
     

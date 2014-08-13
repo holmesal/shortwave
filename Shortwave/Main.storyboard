@@ -183,37 +183,13 @@
                                                                 <constraint firstAttribute="width" constant="80" id="gpo-7r-P1l"/>
                                                             </constraints>
                                                         </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="afG-JO-HEC">
-                                                            <rect key="frame" x="0.0" y="80" width="372" height="41"/>
-                                                            <subviews>
-                                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="63d-uC-7Z1">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="42"/>
-                                                                    <state key="normal" title="Leave Channel">
-                                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                                    </state>
-                                                                    <userDefinedRuntimeAttributes>
-                                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
-                                                                    </userDefinedRuntimeAttributes>
-                                                                    <connections>
-                                                                        <action selector="confirmDeleteAction:" destination="8ns-a5-Pjg" eventType="touchUpInside" id="b7X-8P-JSy"/>
-                                                                    </connections>
-                                                                </button>
-                                                            </subviews>
-                                                            <color key="backgroundColor" red="0.98039215686274506" green="0.32156862745098036" blue="0.43529411764705883" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="372" id="Ied-lp-ocn"/>
-                                                                <constraint firstAttribute="height" constant="41" id="tdl-hD-pw3"/>
-                                                            </constraints>
-                                                        </view>
                                                     </subviews>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstItem="oTa-Gt-sdb" firstAttribute="height" secondItem="3QC-Rp-ycM" secondAttribute="height" id="5JX-Tq-ouU"/>
                                                         <constraint firstItem="oTa-Gt-sdb" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" constant="313" id="8yn-LY-j7O"/>
-                                                        <constraint firstAttribute="bottom" secondItem="afG-JO-HEC" secondAttribute="bottom" id="KMx-c0-sx0"/>
+                                                        <constraint firstItem="1fW-fZ-wYr" firstAttribute="top" secondItem="xM7-Uz-OtS" secondAttribute="bottom" id="9OO-sG-gzN"/>
                                                         <constraint firstItem="xM7-Uz-OtS" firstAttribute="leading" secondItem="1rH-Uo-YkC" secondAttribute="leading" id="Q33-1B-7K6"/>
-                                                        <constraint firstItem="afG-JO-HEC" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" id="Zif-YL-gS7"/>
                                                         <constraint firstAttribute="centerX" secondItem="1fW-fZ-wYr" secondAttribute="centerX" id="bYl-UO-T0X"/>
                                                         <constraint firstItem="1rH-Uo-YkC" firstAttribute="top" secondItem="3QC-Rp-ycM" secondAttribute="top" constant="21" id="byl-T0-0Ms"/>
                                                         <constraint firstAttribute="bottom" secondItem="wvC-bU-KFD" secondAttribute="bottom" id="ckn-bN-RAz"/>
@@ -222,7 +198,6 @@
                                                         <constraint firstAttribute="trailing" secondItem="wvC-bU-KFD" secondAttribute="trailing" id="jBV-aE-daO"/>
                                                         <constraint firstItem="xM7-Uz-OtS" firstAttribute="top" secondItem="1rH-Uo-YkC" secondAttribute="bottom" constant="2" id="jpp-7N-QJ3"/>
                                                         <constraint firstItem="1rH-Uo-YkC" firstAttribute="leading" secondItem="3QC-Rp-ycM" secondAttribute="leading" constant="52" id="lk3-E7-hMJ"/>
-                                                        <constraint firstItem="1fW-fZ-wYr" firstAttribute="top" secondItem="xM7-Uz-OtS" secondAttribute="bottom" id="zDT-9q-b03"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -237,9 +212,6 @@
                                         </constraints>
                                         <size key="customSize" width="320" height="121"/>
                                         <connections>
-                                            <outlet property="confirmDeleteButton" destination="63d-uC-7Z1" id="5XB-oI-SbY"/>
-                                            <outlet property="confirmDeleteLeadingSpaceToContainer" destination="Zif-YL-gS7" id="ozz-9n-0gT"/>
-                                            <outlet property="confirmDeleteView" destination="afG-JO-HEC" id="eRy-5b-3pm"/>
                                             <outlet property="containerView" destination="3QC-Rp-ycM" id="OH4-5Q-UNz"/>
                                             <outlet property="descriptionLabel" destination="xM7-Uz-OtS" id="kXM-nW-bdn"/>
                                             <outlet property="descriptionLabelHeightConstraint" destination="oDi-SK-Up6" id="neq-HQ-iLq"/>
