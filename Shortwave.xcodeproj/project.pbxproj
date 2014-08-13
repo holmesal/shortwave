@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CC4E4F31BF44CAB751BD14 /* libPods.a */; };
 		AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */; };
+		AA18AF37199B2D600003DF0B /* UITextView+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18AF36199B2D600003DF0B /* UITextView+CustomFont.m */; };
 		AA1DEB6C1990AB64002DDCC0 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */; };
 		AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA23134619858F6500002719 /* SWMessagesLayout.swift */; };
 		AA2313491985B4A800002719 /* SWAddChannelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2313481985B4A800002719 /* SWAddChannelCell.swift */; };
@@ -87,6 +88,8 @@
 		67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		81CC4E4F31BF44CAB751BD14 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWComposeBarView.swift; sourceTree = "<group>"; };
+		AA18AF35199B2D600003DF0B /* UITextView+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+CustomFont.h"; sourceTree = "<group>"; };
+		AA18AF36199B2D600003DF0B /* UITextView+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+CustomFont.m"; sourceTree = "<group>"; };
 		AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		AA23134619858F6500002719 /* SWMessagesLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWMessagesLayout.swift; sourceTree = "<group>"; };
 		AA2313481985B4A800002719 /* SWAddChannelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWAddChannelCell.swift; sourceTree = "<group>"; };
@@ -332,6 +335,8 @@
 				AAB650C119899988009D6D23 /* UILabel+CustomFont.m */,
 				AAB650C219899988009D6D23 /* UITextField+CustomFont.h */,
 				AAB650C319899988009D6D23 /* UITextField+CustomFont.m */,
+				AA18AF35199B2D600003DF0B /* UITextView+CustomFont.h */,
+				AA18AF36199B2D600003DF0B /* UITextView+CustomFont.m */,
 				AAB650BB19897C96009D6D23 /* UIColor+HexString.h */,
 				AAB650BC19897C96009D6D23 /* UIColor+HexString.m */,
 				AAC79F0A1982F8BE005961D1 /* Extension.swift */,
@@ -594,6 +599,7 @@
 				AAB78EF019888C2300E93D0C /* ASIDataCompressor.m in Sources */,
 				AAB78EF519888C2300E93D0C /* ASIInputStream.m in Sources */,
 				AAB78EF419888C2300E93D0C /* ASIHTTPRequest.m in Sources */,
+				AA18AF37199B2D600003DF0B /* UITextView+CustomFont.m in Sources */,
 				AAB78EF219888C2300E93D0C /* ASIDownloadCache.m in Sources */,
 				AAB78EF319888C2300E93D0C /* ASIFormDataRequest.m in Sources */,
 				AAB78EEF19888C2300E93D0C /* ASIAuthenticationDialog.m in Sources */,

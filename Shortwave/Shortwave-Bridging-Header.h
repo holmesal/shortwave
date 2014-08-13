@@ -19,6 +19,9 @@
 #import "UILabel+CustomFont.h"
 #import "UIButton+CustomFont.h"
 #import "UITextField+CustomFont.h"
+#import "UITextView+CustomFont.h"
+
+
 #import <PHFComposeBarView/PHFComposeBarView.h>
 
 #import "MessageModel.h"

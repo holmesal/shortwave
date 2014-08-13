@@ -13,6 +13,10 @@ import QuartzCore
 class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 {
     
+    //define the maximum characaters that can be in each input field
+    let maxCharsInChannelName = 20
+    let maxCharsInDescription = 80
+    
 
     @IBOutlet weak var createButtonBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var navBarLabel: UILabel!
@@ -40,6 +44,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
     
+    @IBOutlet weak var descriptionPlaceholderLabel: UILabel!
     @IBOutlet weak var createDescriptionContainer: UIView!
     @IBOutlet weak var createDescriptionTextView: UITextView!
     
@@ -58,9 +63,9 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         createDescriptionTextView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.New, context: nil)
         
-        
-        createDescriptionTextView.tintColor = UIColor(hexString: kNiceColors["bar"])
-        channelNameTextField.tintColor = UIColor(hexString: kNiceColors["bar"])
+        let clr = "green"
+        createDescriptionTextView.tintColor = UIColor(hexString: kNiceColors[clr])
+        channelNameTextField.tintColor = UIColor(hexString: kNiceColors[clr])
         
         
         channelNameTextField.becomeFirstResponder()
@@ -240,12 +245,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         result = result.stringByReplacingCharactersInRange(range, withString: string)
         hashTagLabel.highlighted = result.length != 0
         
-        if result.length > 20
+        if result.length > maxCharsInChannelName
         {
             return false
         }
         
-        channelNameCharacterCountLabel.text = "\(result.length) / \(20)"
+        channelNameCharacterCountLabel.text = "\(result.length) / \(maxCharsInChannelName)"
         
         
         self.channelName = result
@@ -321,7 +326,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                                  ]
                 let descriptionNSString:NSString = description
                 let actualSize = descriptionNSString.boundingRectWithSize(CGSize(width: descriptionLabel.frame.size.width, height: 300), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes, context: nil)
-                descriptionLabelHeightConstraint.constant = actualSize.height
+//                descriptionLabelHeightConstraint.constant = actualSize.height
                 
                 animateDescriptionContainer(descriptionViewContainer, visible:true)
                 
@@ -470,12 +475,15 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
            
             var result = textView.text as NSString
             result = result.stringByReplacingCharactersInRange(range, withString: text)
-            if result.length > 80
+            if result.length > maxCharsInDescription
             {
                 return false
             }
+
+            descriptionPlaceholderLabel.hidden = result.length != 0
+
             
-            descriptionCharacterCountLabel.text = "\(result.length) / 80"
+            descriptionCharacterCountLabel.text = "\(result.length) / \(maxCharsInDescription)"
             
             let contentHeight = textView.contentSize;
             println("contentheight = \(contentHeight)")
