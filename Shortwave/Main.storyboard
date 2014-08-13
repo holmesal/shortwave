@@ -123,7 +123,7 @@
                                                                 <constraint firstAttribute="width" constant="222" id="xRc-56-DdY"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                            <color key="textColor" white="0.0" alpha="0.39000000000000001" colorSpace="calibratedWhite"/>
+                                                            <color key="textColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
                                                             <color key="highlightedColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Light"/>

@@ -51,7 +51,7 @@
         {//no owner differentiation
             
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
-            textCell.contentView.transform = CGAffineTransformMakeRotation(M_PI);
+
             messageCell = textCell;
             
         }
@@ -236,13 +236,17 @@
 
     NSString *text = model.text;
     
-    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
-    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
-                                         @{ NSFontAttributeName: font }] ;
+//    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
+//    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
+//                                         @{ NSFontAttributeName: font }] ;
+
+    UITextView *fakeTextField = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 232, 29)];
+    fakeTextField.font = [UIFont fontWithName:@"Avenir-Light" size:14];
+    fakeTextField.text = model.text;
+    CGSize size = fakeTextField.contentSize;
+
     
-    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(212, CGFLOAT_MAX) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
-    
-    size.height = (12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
+    size.height = 28 + size.height + 16; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
     
     return size.height;
 }

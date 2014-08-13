@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightOfTextConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
 
+@property (weak, nonatomic) IBOutlet UIView *containerVIew;
 
 @end
 
@@ -29,6 +30,7 @@
 @synthesize firstNameLabel;
 
 @synthesize priorityLabel;
+@synthesize containerVIew;
 
 -(void)awakeFromNib
 {
@@ -44,7 +46,7 @@
     circle.backgroundColor = [UIColor blackColor].CGColor;
     
     profileImageView.layer.mask = circle;
-    
+    containerVIew.transform = CGAffineTransformMakeRotation(M_PI);
 }
 
 
@@ -76,7 +78,12 @@
     ownerID = model.ownerID;
     messageText.scrollEnabled = NO; //prevent ios7 bug!
     messageText.text = nil; //to prevent ios7 Bug
-    messageText.attributedText = [[NSAttributedString alloc] initWithString:model.text];
+    
+    UIFont *font = messageText.font;
+    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
+                                         @{ NSFontAttributeName: font }] ;
+    messageText.attributedText = attributedText;
+    
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
     
