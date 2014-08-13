@@ -171,7 +171,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     // MARK: textFieldDelegate method!
     func textFieldShouldReturn(textField: UITextField!) -> Bool
     {
-        textField.resignFirstResponder()
+//        textField.resignFirstResponder()
         
         completeButtonAction(nil)
         
@@ -422,9 +422,9 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         let channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(self.channelName)")
         channelRoot.setValue(value, withCompletionBlock:
             {(error:NSError!, firebase:Firebase!) in
-                println("error \(error) and firebase \(firebase)")
                 if error
                 {
+                                    println("error \(error) and firebase \(firebase)")
                     //failure!
                 } else
                 {
@@ -441,12 +441,12 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                     let yourChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(self.channelName)")
                     yourChannels.setValue([
                         "lastSeen":0,
-                        "muted":false
+                        "muted":NSNumber(bool: false)
                         ], andPriority:priority, withCompletionBlock:
                         {(error:NSError!, firebase:Firebase!) in
                             if error
                             {
-                                
+                                println("error \(error) and firebase \(firebase)")
                             } else
                             {
                                 self.isJoining = true
