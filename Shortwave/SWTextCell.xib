@@ -60,7 +60,7 @@
                                 </userDefinedRuntimeAttributes>
                             </textView>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="KVa-Gx-7HB" firstAttribute="leading" secondItem="X1i-tP-0Vc" secondAttribute="trailing" constant="11" id="1LT-uw-91L"/>
                             <constraint firstItem="S1x-dI-oeo" firstAttribute="top" secondItem="KVa-Gx-7HB" secondAttribute="bottom" constant="-11" id="BeZ-Jp-sIX"/>
