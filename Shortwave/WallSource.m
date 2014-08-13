@@ -435,11 +435,7 @@
          } completion:^(BOOL finished)
          {
              
-    //         for (NSIndexPath *indexPath in self.hideCells)
-    //         {
-    //             [collectionView cellForItemAtIndexPath:indexPath].contentView.alpha = 1.0f;
-    //         }
-    //         self.hideCells = @[];
+
              CGRect visibleRect = collectionView.frame;
              visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
              

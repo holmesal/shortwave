@@ -27,8 +27,13 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
         collectionView.addGestureRecognizer(longPressGesture)
         
-//        self.navigationItem.title = "#\(channelModel.name!)"
         self.navigationItem.title = "#\(channelModel.name!)"
+
+//        let font = UIFont(name: "Avenir-Light", size: 14)
+//        let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),
+//            NSFontAttributeName: font]
+        
+        
         
         setupComposeBarView()
         MessageCell.registerCollectionViewCellsForCollectionView(collectionView)//register relevant nib cells with this collectionview!

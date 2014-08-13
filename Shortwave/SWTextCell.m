@@ -47,6 +47,9 @@
     
     profileImageView.layer.mask = circle;
     containerVIew.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    messageText.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    messageText.contentOffset = CGPointMake(0,0);
 }
 
 
@@ -115,7 +118,7 @@
     
     NSLog(@"Calculated Height '%@' for text '%@'", NSStringFromCGSize(size), text);
     
-    size.height = 28 + size.height + 16 + 11; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
+    size.height = 28 + size.height + 16 + 11 + 6; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
     
     return size.height;
 }
