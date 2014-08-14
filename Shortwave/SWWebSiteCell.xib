@@ -31,7 +31,7 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Medium"/>
                                 </userDefinedRuntimeAttributes>
                             </label>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jCo-rp-Qy9">
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jCo-rp-Qy9">
                                 <rect key="frame" x="0.0" y="78" width="320" height="129"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="282" translatesAutoresizingMaskIntoConstraints="NO" id="6lz-ed-OWL">
@@ -65,7 +65,7 @@
                                     <constraint firstAttribute="bottom" secondItem="rtQ-rm-Z1d" secondAttribute="bottom" id="zJA-Cs-2LC"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duM-Zj-zwo">
+                            <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="duM-Zj-zwo">
                                 <rect key="frame" x="0.0" y="207" width="320" height="66"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hqO-V6-YWN">

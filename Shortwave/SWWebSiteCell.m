@@ -8,6 +8,7 @@
 
 #import "SWWebSiteCell.h"
 #import "MessageWebSite.h"
+#import "UIColor+HexString.h"
 
 @interface SWWebSiteCell ()
 
@@ -29,18 +30,84 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *trailingViewHeightConstraint;
 
+
+@property (strong, nonatomic) UIButton *bgButton;
+
+
+
+@property (strong, nonatomic) UIColor *titleColorBeforeSelect;
+@property (strong, nonatomic) UIColor *descriptionColorBeforeSelect;
+@property (strong, nonatomic) UIColor *siteNameColorBeforeSelect;
+
 @end
 
 
 @implementation SWWebSiteCell
 @synthesize containerView;
-
+@synthesize bgButton;
 
 
 -(void)awakeFromNib
 {
     containerView.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    bgButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+    [bgButton setBackgroundColor:[UIColor clearColor]];
+    [containerView insertSubview:bgButton atIndex:0];
+    [bgButton addTarget:self action:@selector(touchDown:) forControlEvents:UIControlEventTouchDown];
+    [bgButton addTarget:self action:@selector(touchUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    [bgButton addTarget:self action:@selector(touchUpOutOrCancel:) forControlEvents:UIControlEventTouchUpOutside];
+    [bgButton addTarget:self action:@selector(touchUpOutOrCancel:) forControlEvents:UIControlEventTouchCancel];
 }
+
+#pragma mark bgButton touch gesture responders (and helpera animators) START
+-(void)touchDown:(id)sender
+{
+    [bgButton setBackgroundColor:[UIColor colorWithHexString:@"00CF69"]];
+    
+    _titleColorBeforeSelect = self.titleLabel.textColor;
+    _descriptionColorBeforeSelect = self.descriptionLabel.textColor;
+    _siteNameColorBeforeSelect = self.smallUrlLabel.textColor;
+    
+    self.titleLabel.textColor = [UIColor whiteColor];
+    self.descriptionLabel.textColor = [UIColor whiteColor];
+    self.smallUrlLabel.textColor = [UIColor whiteColor];
+    
+}
+
+-(void)touchUpInside:(id)sender
+{
+    
+    MessageWebSite *mws = (MessageWebSite*)self.model;
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:mws.url]];
+    
+    [self performSelector:@selector(deselectAnimated) withObject:nil afterDelay:1.5];
+}
+
+-(void)touchUpOutOrCancel:(id)sender
+{
+    [self deselectAnimated];
+}
+
+-(void)deselectAnimated
+{
+    [UIView animateWithDuration:0.3 delay:0.0 usingSpringWithDamping:1.0 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        bgButton.backgroundColor = [UIColor clearColor];
+        
+        self.titleLabel.textColor = _titleColorBeforeSelect;
+        self.descriptionLabel.textColor = _descriptionColorBeforeSelect;
+        self.smallUrlLabel.textColor = _siteNameColorBeforeSelect;
+        
+    } completion:^(BOOL finished)
+    {
+    
+    }];
+}
+
+#pragma mark bgButton touch gesture responders END
+
+
 
 -(void)setModel:(MessageWebSite *)model
 {
@@ -89,7 +156,6 @@
     
     _bodyContainerViewHeightConstraint.constant = bodyHeight;
     
-    
     CGFloat trailingViewHeight = 0;
     if (model.siteName || model.favicon)
     {
@@ -116,6 +182,9 @@
         leftSpaceToSmallUrlLabel = 19;
     }
     _smallUrlLabelLeftConstraint.constant = leftSpaceToSmallUrlLabel;
+    
+    
+    bgButton.frame = self.bounds;
     
     
     

@@ -11,7 +11,6 @@ import UIKit
 
 class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
 {
-
     var channelModel:SWChannelModel!
     
     var longPressGesture:UILongPressGestureRecognizer!
@@ -23,16 +22,17 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     @IBOutlet weak var composeBarBottomConstraint: NSLayoutConstraint!
     override func viewDidLoad()
     {
-        
+        composeBarView.textView.font = UIFont(name: "Avenir-Medium", size: 14)
+        composeBarView.textView.textColor = UIColor.blackColor()
+        composeBarView.textView.tintColor = UIColor(hexString: kNiceColors["green"])
+        composeBarView.button.tintColor = UIColor(hexString: kNiceColors["green"])
+            
         longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
-        collectionView.addGestureRecognizer(longPressGesture)
+        longPressGesture.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(longPressGesture)
         
         self.navigationItem.title = "#\(channelModel.name!)"
 
-//        let font = UIFont(name: "Avenir-Light", size: 14)
-//        let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),
-//            NSFontAttributeName: font]
-        
         
         
         setupComposeBarView()
@@ -132,23 +132,25 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     
     deinit
     {
-        println("SWMessagesViewController deinit")
         NSNotificationCenter.defaultCenter().removeObserver(self)
         channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
     }
     
     func didLongPress(theLongPress:UILongPressGestureRecognizer)
     {
-        
-        println("did longPress ")
         let location:CGPoint = theLongPress.locationInView(collectionView)
         
         if let indexPath = collectionView.indexPathForItemAtPoint(location)
         {
             let messageModel = channelModel.wallSource.wallObjectAtIndex(indexPath.item)
-            let selectedCell = collectionView.cellForItemAtIndexPath(indexPath) as UICollectionViewCell
             
-            handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
+            println("messageModel \(messageModel) indexPath = \(indexPath)")
+            if let cell = collectionView.cellForItemAtIndexPath(indexPath)
+            {
+                let selectedCell = cell as UICollectionViewCell
+            
+                handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
+            }
         }
         
 
@@ -157,27 +159,34 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     func handleLongPress(longPressGesture:UILongPressGestureRecognizer, withMessageModel messageModel:MessageModel, andCollectionViewCell cell:UICollectionViewCell)
     {
         
+
         
         switch longPressGesture.state
         {
         case .Began:
             if !temporaryEnlargedView
             {
-               temporaryEnlargedView = UIView(frame: self.view.bounds)
-                temporaryEnlargedView!.backgroundColor = UIColor.clearColor()
-                temporaryEnlargedView!.alpha = 0
-                self.view.addSubview(temporaryEnlargedView)
                 
-                UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:
-                    {
-                        if let tempEnlargedView = self.temporaryEnlargedView
+                let createTemporaryEnlargedView:()->() = {
+                    self.temporaryEnlargedView = UIView(frame: self.view.bounds)
+                    self.temporaryEnlargedView!.backgroundColor = UIColor(white: 0, alpha: 0.8)
+                    self.temporaryEnlargedView!.alpha = 0
+                    self.view.addSubview(self.temporaryEnlargedView)
+
+                    UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:
                         {
-                            tempEnlargedView.alpha = 1.0
-                        }
-                    }, completion: {(b:Bool) in })
+                            if let tempEnlargedView = self.temporaryEnlargedView
+                            {
+                                tempEnlargedView.alpha = 1.0
+                            }
+                        }, completion: {(b:Bool) in })
+                }
+                
+
                 
                 if let imageMessage = messageModel as? MessageImage
                 {
+                    createTemporaryEnlargedView()
                     println("long press began on IMAGE")
                     let imageCell = (cell as SWImageCell)
                     let imageView = UIImageView(frame: self.view.bounds)
@@ -189,6 +198,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 } else
                 if let gifMessage = messageModel as? MessageGif
                 {
+                    createTemporaryEnlargedView()
                     println("gifMessage enlarge!")
                     /*
                     _player = model.player;

@@ -36,7 +36,6 @@
 {
     [super awakeFromNib];
     [profileImageView setContentMode:UIViewContentModeScaleAspectFit];
-    profileImageView.backgroundColor = [UIColor greenColor];
     messageText.dataDetectorTypes = UIDataDetectorTypeAll;
     
     
@@ -74,6 +73,11 @@
 -(void)setProfileImage:(UIImage*)image
 {
     self.profileImageView.image = image;
+    self.profileImageView.alpha = 0.0f;
+    [UIView animateWithDuration:0.15 delay:0.0f usingSpringWithDamping:0.8 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        self.profileImageView.alpha = 1.0f;
+    } completion:^(BOOL finished){}];
 }
 
 -(void)setModel:(MessageModel *)model
@@ -90,6 +94,8 @@
     
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
+    
+    self.profileImageView.image = nil;
     
 //    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
 //    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];

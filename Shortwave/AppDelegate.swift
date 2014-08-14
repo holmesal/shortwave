@@ -22,6 +22,14 @@ import UIKit
         let audioSession = AVAudioSession.sharedInstance()
         audioSession.setCategory(AVAudioSessionCategoryAmbient, error: nil)
         
+        
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+//        [[UINavigationBar appearance] setTitleTextAttributes:@{
+//            UITextAttributeTextColor: [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0],
+//            UITextAttributeTextShadowColor: [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8],
+//            UITextAttributeTextShadowOffset: [NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
+//            UITextAttributeFont: [UIFont fontWithName:@"Arial-Bold" size:0.0],
+//        }];
 
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent

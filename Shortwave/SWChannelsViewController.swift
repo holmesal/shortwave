@@ -36,10 +36,18 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 
     var selectedChannel:SWChannelModel?
     
+    func back()
+    {
+        self.navigationController.popViewControllerAnimated(true)
+    }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+//        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+        let backButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
+        self.navigationItem.backBarButtonItem = backButton
         
         channelsCollectionView.delegate = self
         channelsCollectionView.dataSource = self

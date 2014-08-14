@@ -60,7 +60,7 @@
         case MessageModelTypeImage:
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-            [imageCell setModel:messageModel];
+            [imageCell setModel:messageModel]; //this will clear teh profileImageView.image to nil
             imageCell.backgroundColor = [UIColor redColor];
             if (!imageCell.hasImage)
             {
