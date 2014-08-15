@@ -108,7 +108,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     override func awakeFromNib()
     {
         confirmDeleteView = UIView(frame: CGRect(x:0, y:0, width:320, height:40))
-        confirmDeleteView.alpha = 0.5
+        
         confirmDeleteView.backgroundColor = UIColor(hexString: kNiceColors["pinkRed"])
         self.addSubview(confirmDeleteView)
         
@@ -116,8 +116,8 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         deleteButton.setTitle("Leave Channel", forState: .Normal)
         deleteButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         confirmDeleteView .addSubview(deleteButton)
+        deleteButton.titleLabel.font = UIFont(name: "Avenir-Black", size: 17)
         deleteButton.addTarget(self, action: "confirmDeleteAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        
         
         
     }

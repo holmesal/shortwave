@@ -35,27 +35,98 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bGr-hg-295">
-                                <rect key="frame" x="144" y="269" width="32" height="30"/>
-                                <state key="normal" title="Auth">
+                                <rect key="frame" x="42" y="474" width="237" height="50"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Login With Facebook">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Black"/>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="authButtonPress:" destination="Unh-eg-Lpm" eventType="touchUpInside" id="oaI-eG-xfw"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uSx-LM-32d">
+                                <rect key="frame" x="50" y="280" width="220" height="121"/>
+                                <subviews>
+                                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Study with" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="maf-Jz-FSB">
+                                        <rect key="frame" x="3" y="25" width="214" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Roman"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="#Engineering101" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i90-v4-fjL">
+                                        <rect key="frame" x="2" y="55" width="217" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Heavy"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TPe-Bk-ffn">
+                                <rect key="frame" x="48" y="128" width="225" height="89"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Shortwave" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uYX-yN-s62">
+                                        <rect key="frame" x="-12" y="13" width="248" height="64"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="45"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Heavy"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Y9-EI-zvX">
+                                        <rect key="frame" x="5" y="71" width="214" height="6"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yat-Kf-OX1">
+                                <rect key="frame" x="80" y="277" width="160" height="121"/>
+                                <subviews>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="4Du-Md-I1w">
+                                        <rect key="frame" x="70" y="60" width="20" height="20"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Authenticating" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBx-sk-dGS">
+                                        <rect key="frame" x="9" y="28" width="143" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Heavy"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="0.81176470590000005" blue="0.41176470590000003" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="6LF-Zs-nlF"/>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
+                        <outlet property="actionLabel" destination="maf-Jz-FSB" id="Ft9-sa-Jr4"/>
                         <outlet property="authButton" destination="bGr-hg-295" id="m3a-qc-5Dm"/>
+                        <outlet property="authorizingView" destination="yat-Kf-OX1" id="cyL-m7-AfP"/>
+                        <outlet property="centerView" destination="uSx-LM-32d" id="6cI-Wm-d0h"/>
+                        <outlet property="channelNameLabel" destination="i90-v4-fjL" id="wTr-KB-B4C"/>
+                        <outlet property="titleContainerView" destination="TPe-Bk-ffn" id="2L1-DA-oKG"/>
                         <segue destination="rNa-3c-ERD" kind="push" identifier="next" id="EZi-nx-xV9"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kSD-op-Mez" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="521" y="-175"/>
+            <point key="canvasLocation" x="438" y="-175"/>
         </scene>
         <!--Channels View Controller-->
         <scene sceneID="FFi-p1-jBP">
@@ -466,6 +537,9 @@
                                             <constraint firstAttribute="width" constant="320" id="u0g-1V-29v"/>
                                         </constraints>
                                     </view>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="GLj-WE-nXk">
+                                        <rect key="frame" x="150" y="187" width="20" height="20"/>
+                                    </activityIndicatorView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="pWi-UY-Wy6" firstAttribute="top" secondItem="OfS-Mo-Wqm" secondAttribute="top" constant="64" id="2D4-Sm-LYB"/>
@@ -486,7 +560,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Cd-Ci-tYW">
-                                        <rect key="frame" x="8" y="20" width="80" height="44"/>
+                                        <rect key="frame" x="4" y="22" width="80" height="44"/>
                                         <fontDescription key="fontDescription" type="italicSystem" pointSize="17"/>
                                         <state key="normal" title="Cancel">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
@@ -541,6 +615,7 @@
                     <navigationItem key="navigationItem" id="zvq-Ks-0fI"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="GLj-WE-nXk" id="E5J-BM-bvE"/>
                         <outlet property="channelNameCharacterCountLabel" destination="5vN-iQ-Yxg" id="NRW-FX-8X0"/>
                         <outlet property="channelNameTextField" destination="ET3-nD-n8L" id="oOL-gc-yvR"/>
                         <outlet property="createButtonBottomConstraint" destination="aQ3-xT-rS3" id="Lux-Hk-CfY"/>

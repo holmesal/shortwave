@@ -64,11 +64,24 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         let font = UIFont(name: "Avenir-Black", size: 17) //24 descriptors, 34 channel tittle
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor(),
                                     NSFontAttributeName: font]
-//        self.navigationController.navigationBar.titleTextAttributes = titleDict
-//        self.navigationItem.title = "Shortwave Beta"
+        
+        var addButtonButton = UIButton(frame: CGRect(x: 12, y:0, width:70-7, height:48))
+        addButtonButton.addTarget(self, action: "addBarButtonAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        addButtonButton.titleLabel.font = font;
+        addButtonButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        addButtonButton.setTitle("Add", forState: .Normal)
+        
+        var addButtonView = UIView(frame: CGRect(x: 0, y: 0 , width:70, height:48))
+        addButtonView.backgroundColor = UIColor.clearColor()
+        addButtonView.addSubview(addButtonButton)
+        
+        var whiteLine = UIView(frame: CGRect(x: 0, y: 0, width: 0.5, height:48))
+        whiteLine.backgroundColor = UIColor.whiteColor()
+        addButtonView.addSubview(whiteLine)
         
         
-        var addButton = UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: "addBarButtonAction:")
+        var addButton = UIBarButtonItem(customView: addButtonView)
+        //UIBarButtonItem(title: "Add", style: UIBarButtonItemStyle.Plain, target: self, action: "addBarButtonAction:")
         
         addButton.setTitleTextAttributes(titleDict, forState: UIControlState.Normal)
             

@@ -50,7 +50,7 @@
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rtQ-rm-Z1d">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="129"/>
-                                        <color key="backgroundColor" red="0.0" green="0.62745098040000002" blue="0.86274509799999999" alpha="0.58999999999999997" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

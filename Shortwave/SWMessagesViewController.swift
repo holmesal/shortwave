@@ -9,9 +9,14 @@
 import Foundation
 import UIKit
 
-class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
+class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UIScrollViewDelegate
 {
-    var channelModel:SWChannelModel!
+    var channelModel:SWChannelModel!{
+        didSet
+        {
+            channelModel.scrollViewDelegate = self
+    }
+    }
     
     var longPressGesture:UILongPressGestureRecognizer!
     var temporaryEnlargedView:UIView?
@@ -26,6 +31,14 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         composeBarView.textView.textColor = UIColor.blackColor()
         composeBarView.textView.tintColor = UIColor(hexString: kNiceColors["green"])
         composeBarView.button.tintColor = UIColor(hexString: kNiceColors["green"])
+        
+        
+        var rightButtonView = UIButton(frame: CGRectMake(0, 0, 50, 40))
+        rightButtonView.setImage(UIImage(named:"share"), forState: .Normal)
+        rightButtonView.addTarget(self, action: "shareChannelAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        rightButtonView.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+        var rightButton = UIBarButtonItem(customView: rightButtonView)
+        self.navigationItem.rightBarButtonItem = rightButton
             
         longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
         longPressGesture.cancelsTouchesInView = false
@@ -42,12 +55,26 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         collectionView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
         collectionView.showsVerticalScrollIndicator = false
         
-        
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
         
         collectionView.alwaysBounceVertical = true
+        
+    }
+    
+    func shareChannelAction(sender:AnyObject?)
+    {
+        
+        let UID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as NSString
+        
+        let skimmedId = UID.stringByReplacingOccurrencesOfString("facebook:", withString: "")
+            
+        println("uid = \(UID)")
+        
+        let shareUrl = "http://getshortwave.com/" + self.channelModel.name! + "?ref=" + skimmedId
+        println("shareUrl = \(shareUrl)")
+        let activityView = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
+        self.presentViewController(activityView, animated: true, completion: nil)
     }
     
     
@@ -93,9 +120,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         }
 //            CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
         let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * signCorrection;
-        
-        let newContentOffset = CGPointMake(0, collectionView.contentOffset.y + heightChange)
-        
+        let newContentOffset = CGPointMake(0, collectionView.contentOffset.y - heightChange)
         
         
         UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.fromRaw(7 << 16)!, animations:
@@ -103,6 +128,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 self.collectionView.contentInset = contentInset
                 self.composeBarBottomConstraint.constant = constraintHeight
                 self.composeBarView.layoutIfNeeded()
+                self.collectionView.contentOffset = newContentOffset
                 
             }, completion: nil)
     }
@@ -134,6 +160,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     {
         NSNotificationCenter.defaultCenter().removeObserver(self)
         channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
+        channelModel.scrollViewDelegate = nil
     }
     
     func didLongPress(theLongPress:UILongPressGestureRecognizer)
@@ -144,19 +171,21 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
         {
             let messageModel = channelModel.wallSource.wallObjectAtIndex(indexPath.item)
             
-            println("messageModel \(messageModel) indexPath = \(indexPath)")
             if let cell = collectionView.cellForItemAtIndexPath(indexPath)
             {
                 let selectedCell = cell as UICollectionViewCell
             
                 handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
+                return
             }
         }
+        
+        handleLongPress(longPressGesture, withMessageModel:nil, andCollectionViewCell:nil)
         
 
     }
     
-    func handleLongPress(longPressGesture:UILongPressGestureRecognizer, withMessageModel messageModel:MessageModel, andCollectionViewCell cell:UICollectionViewCell)
+    func handleLongPress(longPressGesture:UILongPressGestureRecognizer, withMessageModel messageModel:MessageModel?, andCollectionViewCell cell:UICollectionViewCell?)
     {
         
 
@@ -199,17 +228,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
                 if let gifMessage = messageModel as? MessageGif
                 {
                     createTemporaryEnlargedView()
-                    println("gifMessage enlarge!")
-                    /*
-                    _player = model.player;
-                    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
-                    playerLayer.bounds = _mp4View.bounds;
-                    playerLayer.position = CGPointMake(_mp4View.bounds.size.width*0.5f, _mp4View.bounds.size.height*0.5f);
-                    playerLayer.backgroundColor = [UIColor redColor].CGColor;
-                    [_mp4View.layer addSublayer:playerLayer];
-                    
-                    [_player play];
-                    */
                     
                     let player = gifMessage.player
                     var playerLayer = AVPlayerLayer(player: player)
@@ -246,4 +264,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate
     }
     
     
+    func scrollViewWillBeginDragging(scrollView: UIScrollView!)
+    {
+        composeBarView.textView.resignFirstResponder()
+    }
 }

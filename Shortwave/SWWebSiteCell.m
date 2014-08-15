@@ -119,17 +119,18 @@
         self.bigImageView.alpha = 0.0f;
         self.smalImageView.alpha = 0.0f;
         
+        self.descriptionLabel.text = @"";
+        self.titleLabel.text = @"";
     }
     
     CGFloat titleLabelHeight = 0;
     if (model.title)
     {
-        NSLog(@"titleLabel = %@", _titleLabel);
+
         _titleLabel.text = model.title;
-        NSLog(@"model.text = %@", model.text);
         titleLabelHeight = [_titleLabel sizeThatFits:CGSizeMake(_titleLabel.frame.size.width, 300)].height;
-        NSLog(@"height = %f", titleLabelHeight);
         _bodyContainerViewVerticalSpaceBetweenTitle.constant = 19;
+        
     } else
     {
         _bodyContainerViewVerticalSpaceBetweenTitle.constant = 0;
@@ -235,6 +236,15 @@
 }
 -(void)setImg:(UIImage*)img animated:(BOOL)animated
 {
+    //Q: does img fit into bigImageView.frame.size without enlargement?
+    if (img.size.height <= _bigImageView.frame.size.height)
+    {
+        _bigImageView.contentMode = UIViewContentModeScaleAspectFit;
+    } else
+    {
+        _bigImageView.contentMode = UIViewContentModeScaleAspectFill;
+    }
+    
     [self setImageView:_bigImageView withImage:img animated:animated];
 }
 

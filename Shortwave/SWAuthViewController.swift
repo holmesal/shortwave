@@ -8,28 +8,167 @@
 
 import Foundation
 import UIKit
+import QuartzCore
 
 class SWAuthViewController: UIViewController, UIAlertViewDelegate
 {
+    var suggestionIndex:Int = 0
+    var repeatTimer:NSTimer?
     
+    @IBOutlet weak var authorizingView: UIView!
+    @IBOutlet weak var titleContainerView: UIView!
+    @IBOutlet weak var channelNameLabel: UILabel!
+    @IBOutlet weak var actionLabel: UILabel!
     @IBOutlet var authButton: UIButton!
     lazy var authClient:FirebaseSimpleLogin = FirebaseSimpleLogin(ref: Firebase(url: kROOT_FIREBASE) )
     
+    @IBOutlet weak var centerView: UIView!
+    
+    var suggestions:Array<NSDictionary> =
+    [
+        ["str1": "s1",
+            "str2": "s2"]
+    ]
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        centerView.backgroundColor = UIColor.clearColor()
+        authorizingView.alpha = 0.0
+        var layer = CALayer()
+        layer.frame = authButton.bounds
+        layer.backgroundColor = UIColor.clearColor().CGColor
+        layer.borderColor = UIColor.whiteColor().CGColor
+        layer.cornerRadius = 3
+        layer.borderWidth = 1
+        authButton.layer.addSublayer(layer)
+        
         //if i'm already logged in just push ahead
         if NSUserDefaults.standardUserDefaults().boolForKey(kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn)
         {
-//            var viewControllers:Array<UIViewController> = navigationController.viewControllers as Array<UIViewController>
-//            var channelViewController:UIViewController = storyboard.instantiateViewControllerWithIdentifier("SWChannelsViewController") as UIViewController
-//            viewControllers += channelViewController;
-//            navigationController.viewControllers = viewControllers;
+            beginAuthWithFirebase()
+        } else
+        {
+
         }
         
+
+        Firebase(url: kROOT_FIREBASE + "useWithSuggestions").observeEventType(FEventTypeValue, withBlock:
+            {(snap:FDataSnapshot!) in
+                if let result = snap.value as? Array<NSDictionary> {
+                    for r in result {
+                        self.suggestions += r
+                    }
+                    
+                    self.startRepeatingIfNotAlready()
+                }
+            })
+        
         observeAuthStatus()
+    }
+    
+    func startRepeatingIfNotAlready()
+    {
+        if repeatTimer
+        {
+            
+        } else
+        {
+            repeatTimer = NSTimer(timeInterval: 4, target: self, selector: "repeat", userInfo: nil, repeats: true)
+            NSRunLoop.mainRunLoop().addTimer(repeatTimer, forMode: NSDefaultRunLoopMode)
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        repeat()
+    }
+    
+    func copyLabel(label:UILabel) -> UILabel
+    {
+        var newLabel = UILabel(frame: label.frame)
+        newLabel.textColor = label.textColor
+        newLabel.font = label.font
+        newLabel.textAlignment = label.textAlignment
+        
+        return newLabel
+    }
+    
+    func repeat()
+    {
+        
+        let dict = suggestions[suggestionIndex % suggestions.count]
+        
+        if let str1 = dict["str1"] as? String
+        {
+            if let str2 = dict["str2"] as? String
+            {
+                animateReplace(str1, andSecondString: str2)
+            }
+        }
+        
+        
+        suggestionIndex++
+    }
+    
+    
+    func animateReplace( str1:String, andSecondString str2:String)
+    {
+        let fadeOutDisplacement = CGFloat(12.0)
+        let fadeInDisplacement = CGFloat(40.0)
+        let scaleAway = CGFloat(0.7)
+        
+        var actionLabel2 = copyLabel(actionLabel)
+        actionLabel2.text = str1
+        var channelNameLabel2 = copyLabel(channelNameLabel)
+        channelNameLabel2.text = str2
+        centerView.addSubview(actionLabel2)
+        centerView.addSubview(channelNameLabel2)
+        
+        actionLabel2.transform = CGAffineTransformMakeTranslation(CGFloat(0), -fadeInDisplacement)
+        channelNameLabel2.transform = CGAffineTransformMakeTranslation(CGFloat(0), fadeInDisplacement)
+        actionLabel2.alpha = 0.0
+        channelNameLabel2.alpha = 0.0
+        
+        let outgoingChange:()->() = {
+            self.actionLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, fadeOutDisplacement))
+            self.channelNameLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, -fadeOutDisplacement))
+            self.actionLabel.alpha = 0.0
+            self.channelNameLabel.alpha = 0.0
+        }
+        let incomingChange:()->() = {
+            actionLabel2.transform = CGAffineTransformIdentity
+            channelNameLabel2.transform = CGAffineTransformIdentity
+            actionLabel2.alpha = 1.0
+            channelNameLabel2.alpha = 1.0
+        }
+        
+        let duration = 1.35
+        
+        UIView.animateWithDuration(duration*1.2, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: .CurveLinear, animations:
+            {
+
+                outgoingChange()
+                
+                
+                
+                
+            }, completion: {(b:Bool) in
+                
+                self.actionLabel.removeFromSuperview()
+                self.channelNameLabel.removeFromSuperview()
+                
+                self.actionLabel = actionLabel2
+                self.channelNameLabel = channelNameLabel2
+                
+            })
+        UIView.animateWithDuration(duration, delay: 0.0, usingSpringWithDamping: 1.5, initialSpringVelocity: 0.5, options: .CurveLinear, animations:
+            {
+                incomingChange()
+            }, completion: {(b:Bool) in })
+        
     }
     
     func observeAuthStatus()
@@ -48,8 +187,20 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
             })
     }
     
+    func showValidatingUI()
+    {
+        UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: .CurveLinear, animations: {
+                self.centerView.alpha = 0.0
+                self.authorizingView.alpha = 1.0
+            }, completion:
+            {(b:Bool) in })
+    }
+    
     func beginAuthWithFirebase()
     {
+        authButton.userInteractionEnabled = false
+        showValidatingUI()
+        
         authClient.loginToFacebookAppWithId(kFacebookAppId, permissions: kFacebookPermissions, audience: ACFacebookAudienceOnlyMe, withCompletionBlock:
         {(error:NSError!, user:FAUser!) in
             
@@ -152,7 +303,15 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     @IBAction func authButtonPress(sender: AnyObject)
     {
-        authButton.userInteractionEnabled = false
         beginAuthWithFirebase()
+    }
+    
+    override func viewWillDisappear(animated: Bool)
+    {
+        if repeatTimer
+        {
+            repeatTimer!.invalidate()
+            repeatTimer = nil
+        }
     }
 }

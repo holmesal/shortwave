@@ -13,6 +13,10 @@ import QuartzCore
 class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 {
     
+    
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    let TIME_DELAY = 0.85
     //define the maximum characaters that can be in each input field
     let maxCharsInChannelName = 20
     let maxCharsInDescription = 80
@@ -35,6 +39,24 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     var channelName = ""
     var channelNameExists:Bool?
+    {
+        didSet
+        {
+            if !channelNameExists
+            {
+                self.activityIndicator.hidden = false
+                self.goButton.backgroundColor = UIColor(white: 205/255.0, alpha: 1.0)
+                self.goButton.setTitleColor(UIColor(white:229/255.0, alpha:1.0), forState: .Normal)
+                self.goButton.userInteractionEnabled = false
+            } else
+            {
+                self.activityIndicator.hidden = true
+                self.goButton.backgroundColor = UIColor(hexString: kNiceColors["green"])
+                self.goButton.setTitleColor(UIColor(white:229/255.0, alpha:1.0), forState: .Normal)
+                self.goButton.userInteractionEnabled = true
+            }
+        }
+    }
     var isJoining:Bool = false
     
     var timer:NSTimer?
@@ -60,6 +82,10 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     override func viewDidLoad()
     {
+        
+        var whiteLine = UIView(frame: CGRect(x: 87, y: 25, width: 0.5, height: 48))
+        whiteLine.backgroundColor = UIColor.whiteColor()
+        fakeNavBar.addSubview(whiteLine)
         
         createDescriptionTextView.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.New, context: nil)
         
@@ -96,7 +122,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         updateUITimer() //hides the create button for "" result, and sets prompt
         
         
-
+        activityIndicator.hidden = true
         
     }
     
@@ -139,7 +165,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     {
         println("complete action!")
         
-        channelNameTextField.userInteractionEnabled = false
+//        channelNameTextField.userInteractionEnabled = false
         goButton.userInteractionEnabled = false
         
         self.performFirebaseFetchForChannel(channelName, result:
@@ -233,28 +259,54 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     }
     
     //doesn't count for deletes
+    var temporaryChannelNameExists:Bool?
     var joiningDescriptionString:String?
     func textField(textField: UITextField!, shouldChangeCharactersInRange range: NSRange, replacementString string: String!) -> Bool
     {
+        var result = textField.text
+        result = (result as NSString).stringByReplacingCharactersInRange(range, withString: string) as String
+        result = result.lowercaseString
         
+        var illegalCharacters = ["$","[","]","/", ".", "#"]
+        for c in illegalCharacters
+        {
+            result = result.stringByReplacingOccurrencesOfString(c, withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
+        }
+        result = result.stringByReplacingOccurrencesOfString(" ", withString: "-", options: NSStringCompareOptions.LiteralSearch, range: nil)
         
+        var resultNSString = result as NSString
         
-        var result = textField.text as NSString
+        hashTagLabel.highlighted = resultNSString.length != 0
+//        if resultNSString.length == 0
+//        {
+//            animateDescriptionContainer(descriptionViewContainer, visible: false)
+//            animateDescriptionContainer(createDescriptionContainer, visible: false)
+//        }
         
-
-        result = result.stringByReplacingCharactersInRange(range, withString: string)
-        hashTagLabel.highlighted = result.length != 0
-        
-        if result.length > maxCharsInChannelName
+        if resultNSString.length > maxCharsInChannelName
         {
             return false
         }
         
-        channelNameCharacterCountLabel.text = "\(result.length) / \(maxCharsInChannelName)"
+        channelNameCharacterCountLabel.text = "\(resultNSString.length) / \(maxCharsInChannelName)"
         
-        
+        if self.timer
+        {
+            self.timer!.invalidate()
+            self.timer = nil
+        }
         self.channelName = result
         self.channelNameExists = nil
+        self.temporaryChannelNameExists = nil
+        animateDescriptionContainer(descriptionViewContainer, visible: false)
+        animateDescriptionContainer(createDescriptionContainer, visible: false)
+        
+        if resultNSString.length == 0
+        {
+            activityIndicator.hidden = true
+        }
+        
+        let timeRequestStarted = NSDate().timeIntervalSince1970
         
         performFirebaseFetchForChannel(result,
             {(exists:Bool, description:String?) in
@@ -264,20 +316,29 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                 self.joiningDescriptionString = description
                 if (self.channelName == result)
                 {
-                    self.channelNameExists = exists
                     
+                    self.temporaryChannelNameExists = exists
                     
-                    if self.timer{
-                        self.timer!.invalidate()
+                    let elapsedTimeOfRequest = NSDate().timeIntervalSince1970 - timeRequestStarted
+                    let timeRemainingToWait = self.TIME_DELAY - elapsedTimeOfRequest
+                    
+                    if timeRemainingToWait > 0
+                    {
+                        self.timer = NSTimer(timeInterval: timeRemainingToWait, target: self, selector: "updateUITimer", userInfo: nil, repeats: false)
+                            NSRunLoop.mainRunLoop().addTimer(self.timer, forMode: NSDefaultRunLoopMode)
+                    } else
+                    {
+                        self.updateUITimer()
                     }
                     
-                    self.updateUITimer()
+                    
                     
                 }
                 
             })
         
-        return true
+        textField.text = resultNSString
+        return false
     }
     
     func updateUITimer()
@@ -285,8 +346,9 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         timer?.invalidate()
         timer = nil
         
-        println("updateUITimer channel \(self.channelName) exists? \(self.channelNameExists)")
-        
+        self.channelNameExists = self.temporaryChannelNameExists
+    
+    
         if channelName == "" //invalid
         {
 //            channelSearchResult.text = "We'll check if it exists."
@@ -480,7 +542,9 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                 return false
             }
 
+            
             descriptionPlaceholderLabel.hidden = result.length != 0
+            
 
             
             descriptionCharacterCountLabel.text = "\(result.length) / \(maxCharsInDescription)"

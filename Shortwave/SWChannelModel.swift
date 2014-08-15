@@ -23,6 +23,7 @@ protocol ChannelActivityIndicatorDelegate
 @objc class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
 {
     var isExpanded:Bool = false
+    var scrollViewDelegate:UIScrollViewDelegate?
     
     var name: String?
     //store url because I may want to modify this entity later
@@ -270,6 +271,14 @@ protocol ChannelActivityIndicatorDelegate
     deinit
     {
 //        mutedFirebase.begin
+    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView!)
+    {
+        if let svD = scrollViewDelegate
+        {
+            svD.scrollViewWillBeginDragging?(scrollView)
+        }
     }
     
 

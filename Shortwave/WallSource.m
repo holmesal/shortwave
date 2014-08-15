@@ -524,6 +524,11 @@
 
 }
 
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [self.target performSelector:@selector(scrollViewWillBeginDragging:) withObject:scrollView];
+}
+
 
 
 
