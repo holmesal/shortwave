@@ -56,11 +56,22 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
 
         Firebase(url: kROOT_FIREBASE + "useWithSuggestions").observeEventType(FEventTypeValue, withBlock:
             {(snap:FDataSnapshot!) in
-                if let result = snap.value as? Array<NSDictionary> {
-                    for r in result {
-                        self.suggestions += r
-                    }
+                println("snap = \(snap.value)")
+                if let result = snap.value as? NSArray
+                {
+
+//                    if let allValues = result.allValues as? Array<NSDictionary>
+//                    {
+                        for r in result
+                        {
+                            if let r2 = r as? NSDictionary
+                            {
+                                self.suggestions += r2
+                            }
+                        }
                     
+//                    }
+//                    
                     self.startRepeatingIfNotAlready()
                 }
             })
