@@ -35,7 +35,7 @@
 -(void)awakeFromNib
 {
     [super awakeFromNib];
-    [profileImageView setContentMode:UIViewContentModeScaleAspectFit];
+//    [profileImageView setContentMode:UIViewContentModeScaleAspectFill];
     messageText.dataDetectorTypes = UIDataDetectorTypeAll;
     
     

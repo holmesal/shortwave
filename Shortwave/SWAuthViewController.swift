@@ -56,7 +56,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
 
         Firebase(url: kROOT_FIREBASE + "useWithSuggestions").observeEventType(FEventTypeValue, withBlock:
             {(snap:FDataSnapshot!) in
-                println("snap = \(snap.value)")
+            
+                
                 if let result = snap.value as? NSArray
                 {
 
@@ -221,6 +222,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                 if let e = error
                 {
                     //Code=-4
+                    
                     if e.code == -4
                     {
                         println("error: \(error)");
@@ -230,7 +232,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                         alert.show()
                     } else
                     {
-                        var alert: UIAlertView = UIAlertView(title:"No account found.", message: "error: \(error.localizedDescription) code = \(error.code)", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"I'll check")
+                        var alert: UIAlertView = UIAlertView(title:"Error Occured", message: "error: \(error.localizedDescription) code = \(error.code)", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"I'll check")
                         alert.show()
                     }
                 } else
@@ -269,10 +271,17 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         println("thirdPartyUserData = \(thirdPartyUserData)")
         
         let firstName = thirdPartyUserData["first_name"]!
+        //@"public_profile", @"email"
         if let picture:NSDictionary = thirdPartyUserData["picture"] as? NSDictionary
         {
             let datas = picture["data"] as NSDictionary
             let photo = datas["url"]
+            Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
+        } else
+        {
+            let id = thirdPartyUserData["id"]
+            let photo = "http://graph.facebook.com/\(id)/picture?type=normal"
+            println("photo is actualy <\(photo)>")
             Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
         }
         
