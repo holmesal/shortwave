@@ -266,15 +266,18 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         let thirdPartyUserData:NSDictionary = user.thirdPartyUserData["thirdPartyUserData"] as NSDictionary
 //        println("thirdPartyUserData = \(thirdPartyUserData)")
 
+        println("thirdPartyUserData = \(thirdPartyUserData)")
         
         let firstName = thirdPartyUserData["first_name"]!
-        let picture:NSDictionary = thirdPartyUserData["picture"] as NSDictionary
-        let datas = picture["data"] as NSDictionary
-        let photo = datas["url"]
-
+        if let picture:NSDictionary = thirdPartyUserData["picture"] as? NSDictionary
+        {
+            let datas = picture["data"] as NSDictionary
+            let photo = datas["url"]
+            Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
+        }
         
         Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/firstName/").setValue(firstName)
-        Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
+        
         
         
         
@@ -286,14 +289,14 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         prefs.synchronize()
         
         //difference between ios8 and 7 registration
-        let version =  UIDevice.currentDevice().systemVersion //([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
-        let reqVersin = "8.0"
-        let name = UIDevice.currentDevice().systemName
-        
-//        println("version \(version) name \(name)")
-        
-        let elems = version.componentsSeparatedByString(".")
-//        println("elems \(elems)")
+//        let version =  UIDevice.currentDevice().systemVersion //([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
+//        let reqVersin = "8.0"
+//        let name = UIDevice.currentDevice().systemName
+//        
+////        println("version \(version) name \(name)")
+//        
+//        let elems = version.componentsSeparatedByString(".")
+////        println("elems \(elems)")
         
         //Cocoa Cola, the classic beverage
         CocoaColaClassic.RegisterRemoteNotifications()

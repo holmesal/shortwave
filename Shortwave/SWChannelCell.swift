@@ -107,6 +107,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     
     override func awakeFromNib()
     {
+
         confirmDeleteView = UIView(frame: CGRect(x:0, y:0, width:320, height:40))
         
         confirmDeleteView.backgroundColor = UIColor(hexString: kNiceColors["pinkRed"])
