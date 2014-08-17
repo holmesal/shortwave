@@ -14,6 +14,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
 {
     
     
+    @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     let TIME_DELAY = 0.85
@@ -35,7 +36,6 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     @IBOutlet weak var channelNameTextField: UITextField!
 //    @IBOutlet weak var channelSearchResult: UILabel!
     
-    @IBOutlet weak var scrollView: UIScrollView!
     
     var channelName = ""
     var channelNameExists:Bool?
@@ -82,6 +82,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     override func viewDidLoad()
     {
+        scrollView.contentSize = CGSize(width: 0, height: 301)
         
         var whiteLine = UIView(frame: CGRect(x: 87, y: 25, width: 0.5, height: 48))
         whiteLine.backgroundColor = UIColor.whiteColor()
@@ -638,6 +639,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             println("newHeight = \(newHeight)")
             heightOfDescription.constant = topVerticalSpaceFromDescriptionTVToSuper.constant + verticalSpaceFromDescriptionTVToSuper.constant + newHeight
             println("change = \(change)")
+            
         }
     }
     

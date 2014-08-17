@@ -15,6 +15,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     var suggestionIndex:Int = 0
     var repeatTimer:NSTimer?
     
+    @IBOutlet weak var errorRetryView: UIView!
     @IBOutlet weak var authorizingView: UIView!
     @IBOutlet weak var titleContainerView: UIView!
     @IBOutlet weak var channelNameLabel: UILabel!
@@ -33,6 +34,10 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        errorRetryView.alpha = 0.0
+        errorRetryView.userInteractionEnabled = false
+        errorRetryView.backgroundColor = UIColor.clearColor()
         
         centerView.backgroundColor = UIColor.clearColor()
         authorizingView.alpha = 0.0
@@ -60,9 +65,6 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                 
                 if let result = snap.value as? NSArray
                 {
-
-//                    if let allValues = result.allValues as? Array<NSDictionary>
-//                    {
                         for r in result
                         {
                             if let r2 = r as? NSDictionary
@@ -70,9 +72,6 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                                 self.suggestions += r2
                             }
                         }
-                    
-//                    }
-//                    
                     self.startRepeatingIfNotAlready()
                 }
             })
@@ -201,6 +200,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     func showValidatingUI()
     {
+        errorRetryView.alpha = 0
         UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: .CurveLinear, animations: {
                 self.centerView.alpha = 0.0
                 self.authorizingView.alpha = 1.0
@@ -223,6 +223,13 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                 {
                     //Code=-4
                     
+                    UIView.animateWithDuration(0.3, delay: 0.2, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveLinear, animations:
+                        {
+                            self.errorRetryView.alpha = 1.0
+                            self.authorizingView.alpha = 0.0
+                        }, completion: {(b:Bool) in })
+                    
+                    
                     if e.code == -4
                     {
                         println("error: \(error)");
@@ -232,7 +239,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                         alert.show()
                     } else
                     {
-                        var alert: UIAlertView = UIAlertView(title:"Error Occured", message: "error: \(error.localizedDescription) code = \(error.code)", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"I'll check")
+                        var alert: UIAlertView = UIAlertView(title:"Error Occured", message: "error: \(error.localizedDescription) code = \(error.code)", delegate: self, cancelButtonTitle: nil, otherButtonTitles:"It's happening!!")
                         alert.show()
                     }
                 } else
@@ -261,9 +268,6 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     func createUser(user:FAUser)
     {
-//        println("uid = \(user.uid)")
-//        println("userID = \(user.userId)")
-        
         
         let thirdPartyUserData:NSDictionary = user.thirdPartyUserData["thirdPartyUserData"] as NSDictionary
 //        println("thirdPartyUserData = \(thirdPartyUserData)")
