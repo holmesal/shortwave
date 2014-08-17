@@ -32,11 +32,11 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         composeBarView.textView.tintColor = UIColor(hexString: kNiceColors["green"])
         composeBarView.button.tintColor = UIColor(hexString: kNiceColors["green"])
         
-        var rightButtonView = UIButton(frame: CGRectMake(0, 0, 50, 40))
-        rightButtonView.setImage(UIImage(named:"share"), forState: .Normal)
-        rightButtonView.addTarget(self, action: "shareChannelAction:", forControlEvents: UIControlEvents.TouchUpInside)
-        rightButtonView.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
-        var rightButton = UIBarButtonItem(customView: rightButtonView)
+//        var rightButtonView = UIButton(frame: CGRectMake(0, 0, 50, 40))
+//        rightButtonView.setImage(UIImage(named:"share"), forState: .Normal)
+//        rightButtonView.addTarget(self, action: "shareChannelAction:", forControlEvents: UIControlEvents.TouchUpInside)
+//        rightButtonView.contentEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+        var rightButton = UIBarButtonItem(title: "Invite", style: UIBarButtonItemStyle.Plain, target: self, action: "shareChannelAction:")
         self.navigationItem.rightBarButtonItem = rightButton
             
 //        longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
