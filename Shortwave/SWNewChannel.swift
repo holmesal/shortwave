@@ -357,20 +357,10 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         } else
         if !(self.channelNameExists!)
         {
-//            channelSearchResult.text = "You are creating this channel."
             
             animateDescriptionContainer(descriptionViewContainer, visible:false)
             animateDescriptionContainer(createDescriptionContainer , visible:true)
             
-            /*
-                NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue" size:14]};
-                // NSString class method: boundingRectWithSize:options:attributes:context is
-                // available only on ios7.0 sdk.
-                CGRect rect = [textToMeasure boundingRectWithSize:CGSizeMake(width, CGFLOAT_MAX)
-                options:NSStringDrawingUsesLineFragmentOrigin
-                attributes:attributes
-                context:nil];
-            */
             
             
             goButton.setTitle("Create", forState: .Normal)
@@ -389,7 +379,6 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                                  ]
                 let descriptionNSString:NSString = description
                 let actualSize = descriptionNSString.boundingRectWithSize(CGSize(width: descriptionLabel.frame.size.width, height: 300), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: attributes, context: nil)
-//                descriptionLabelHeightConstraint.constant = actualSize.height
                 
                 animateDescriptionContainer(descriptionViewContainer, visible:true)
                 

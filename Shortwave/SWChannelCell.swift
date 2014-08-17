@@ -226,7 +226,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         {
             if highlighted
             {
-                self.backgroundColor = UIColor(hexString: kNiceColors["green"])
+                self.backgroundColor = UIColor.whiteColor()
             } else
             {
                 self.backgroundColor = UIColor.clearColor()

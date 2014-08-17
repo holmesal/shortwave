@@ -231,7 +231,7 @@
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Light"/>
                                                             </userDefinedRuntimeAttributes>
@@ -243,7 +243,7 @@
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="#" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v2K-xX-uum">
                                                             <rect key="frame" x="41" y="21" width="12" height="22"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Light"/>
                                                             </userDefinedRuntimeAttributes>
@@ -257,7 +257,7 @@
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                             <color key="textColor" white="0.0" alpha="0.75" colorSpace="calibratedWhite"/>
-                                                            <color key="highlightedColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
+                                                            <nil key="highlightedColor"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Light"/>
                                                             </userDefinedRuntimeAttributes>

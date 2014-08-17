@@ -15,6 +15,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     var suggestionIndex:Int = 0
     var repeatTimer:NSTimer?
     
+    var isFirstTime:Bool = !(NSUserDefaults.standardUserDefaults().boolForKey(kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn))
+    
     @IBOutlet weak var errorRetryView: UIView!
     @IBOutlet weak var authorizingView: UIView!
     @IBOutlet weak var titleContainerView: UIView!
@@ -34,6 +36,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         
         errorRetryView.alpha = 0.0
         errorRetryView.userInteractionEnabled = false
@@ -59,7 +62,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         }
         
 
-        Firebase(url: kROOT_FIREBASE + "useWithSuggestions").observeEventType(FEventTypeValue, withBlock:
+        Firebase(url: kROOT_FIREBASE + "static/useWithSuggestions").observeEventType(FEventTypeValue, withBlock:
             {(snap:FDataSnapshot!) in
             
                 
@@ -250,6 +253,27 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
 
                     self.navigationItem.hidesBackButton = true;//for the next viewcontroller
                     self.performSegueWithIdentifier("next", sender: self)
+                    
+                    if (self.isFirstTime)
+                    {
+                        self.isFirstTime = false
+                        Firebase(url: kROOT_FIREBASE + "static/defaultChannels").observeEventType(FEventTypeValue, withBlock:
+                            {(snap:FDataSnapshot!) in
+                                
+                                
+                                if let result = snap.value as? NSArray
+                                {
+                                    for r in result
+                                    {
+                                        if let r2 = r as? String
+                                        {
+                                            SWChannelModel.joinChannel(r2, completion: {(e:NSError?) in })
+                                        }
+                                    }
+                                    self.startRepeatingIfNotAlready()
+                                }
+                            })
+                    }
                 }
             }
             
@@ -326,6 +350,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
 //        }
         
     }
+    
+    
     
     
     @IBAction func authButtonPress(sender: AnyObject)

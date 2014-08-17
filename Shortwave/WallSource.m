@@ -529,6 +529,10 @@
     [self.target performSelector:@selector(scrollViewWillBeginDragging:) withObject:scrollView];
 }
 
+-(void)didLongPress:(UILongPressGestureRecognizer*)longPress
+{
+    [self.target performSelector:@selector(didLongPress:) withObject:longPress];
+}
 
 
 

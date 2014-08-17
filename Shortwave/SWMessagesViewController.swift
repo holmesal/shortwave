@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UIScrollViewDelegate
+class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UIScrollViewDelegate, ChannelCellActionDelegate
 {
     var channelModel:SWChannelModel!{
         didSet
@@ -18,7 +18,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     }
     }
     
-    var longPressGesture:UILongPressGestureRecognizer!
+//    var longPressGesture:UILongPressGestureRecognizer!
     var temporaryEnlargedView:UIView?
 
     @IBOutlet weak var composeBarView: PHFComposeBarView!
@@ -32,7 +32,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         composeBarView.textView.tintColor = UIColor(hexString: kNiceColors["green"])
         composeBarView.button.tintColor = UIColor(hexString: kNiceColors["green"])
         
-        
         var rightButtonView = UIButton(frame: CGRectMake(0, 0, 50, 40))
         rightButtonView.setImage(UIImage(named:"share"), forState: .Normal)
         rightButtonView.addTarget(self, action: "shareChannelAction:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -40,9 +39,10 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         var rightButton = UIBarButtonItem(customView: rightButtonView)
         self.navigationItem.rightBarButtonItem = rightButton
             
-        longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
-        longPressGesture.cancelsTouchesInView = false
-        self.view.addGestureRecognizer(longPressGesture)
+//        longPressGesture = UILongPressGestureRecognizer(target: self, action: "didLongPress:")
+//        longPressGesture.cancelsTouchesInView = false
+//        longPressGesture.minimumPressDuration = 0.075
+//        self.view.addGestureRecognizer(longPressGesture)
         
         self.navigationItem.title = "#\(channelModel.name!)"
 
@@ -59,6 +59,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
         
         collectionView.alwaysBounceVertical = true
+        
+        channelModel.cellActionDelegate = self
         
     }
     
@@ -160,7 +162,14 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     {
         NSNotificationCenter.defaultCenter().removeObserver(self)
         channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
-        channelModel.scrollViewDelegate = nil
+//        if channelModel.scrollViewDelegate == self
+//        {
+            channelModel.scrollViewDelegate = nil
+//        }
+//        if channelModel.cellActionDelegate == self
+//        {
+            channelModel.cellActionDelegate = nil
+//        }
     }
     
     func didLongPress(theLongPress:UILongPressGestureRecognizer)
@@ -175,12 +184,12 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
             {
                 let selectedCell = cell as UICollectionViewCell
             
-                handleLongPress(longPressGesture, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
+                handleLongPress(theLongPress, withMessageModel:messageModel, andCollectionViewCell:selectedCell)
                 return
             }
         }
         
-        handleLongPress(longPressGesture, withMessageModel:nil, andCollectionViewCell:nil)
+        handleLongPress(theLongPress, withMessageModel:nil, andCollectionViewCell:nil)
         
 
     }
@@ -268,4 +277,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     {
         composeBarView.textView.resignFirstResponder()
     }
+    
+    
 }

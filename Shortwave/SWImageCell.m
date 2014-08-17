@@ -20,15 +20,36 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UILabel *progressLabel;
 
+@property (strong, nonatomic) UILongPressGestureRecognizer *longPressGesture;
 @end
 
 @implementation SWImageCell
 
 @synthesize imageView, imageContainer;
+@synthesize longPressGesture;
 
 -(void)awakeFromNib
 {
     imageContainer.transform = CGAffineTransformMakeRotation(M_PI);
+
+    longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPress:)];
+    longPressGesture.cancelsTouchesInView = NO;
+    longPressGesture.minimumPressDuration = 0.04f;
+    [self addGestureRecognizer:longPressGesture];
+    
+}
+
+-(void)didLongPress:(id)sender
+{
+    UICollectionView *collectionView = (UICollectionView *)self.superview;
+    
+    
+    NSLog(@"collView = %@", collectionView);
+    
+    if ([collectionView.delegate respondsToSelector:@selector(didLongPress:)])
+    {
+        [collectionView.delegate performSelector:@selector(didLongPress:) withObject:longPressGesture];
+    }
 }
 
 -(void)setImage:(UIImage*)image animated:(BOOL)animated
@@ -45,7 +66,7 @@
 
 -(void)setModel:(MessageImage *)model
 {
-    NSString *src = model.src;
+//    NSString *src = model.src;
     //try to uncache it
     imageView.alpha = 0.0f;
     imageView.image = nil;

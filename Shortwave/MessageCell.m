@@ -49,7 +49,7 @@
     {
         case MessageModelTypePlainText:
         {//no owner differentiation
-            NSLog(@"I am loading cell.text = '%@'", messageModel.text);
+//            NSLog(@"I am loading cell.text = '%@'", messageModel.text);
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
 
             messageCell = textCell;

@@ -18,7 +18,15 @@ protocol ChannelActivityIndicatorDelegate
 {
 //    func channel(channel:SWChannelModel, receivedNewMessage:MessageModel?) -> ()
     func channel(channel:SWChannelModel, hasNewActivity:Bool)
+    
 }
+
+protocol ChannelCellActionDelegate
+{
+    func didLongPress(longPress:UILongPressGestureRecognizer)
+}
+
+
 
 @objc class SWChannelModel: NSObject, UICollectionViewDelegate//, UICollectionViewDataSource
 {
@@ -63,6 +71,7 @@ protocol ChannelActivityIndicatorDelegate
     
     var delegate:ChannelActivityIndicatorDelegate?
     var mutedDelegate:ChannelMutedResponderDelegate?
+    var cellActionDelegate:ChannelCellActionDelegate?
     
     var channelDescription:String?
     
@@ -281,7 +290,46 @@ protocol ChannelActivityIndicatorDelegate
         }
     }
     
+    func didLongPress(longPressGesture:UILongPressGestureRecognizer)
+    {
+        self.cellActionDelegate?.didLongPress(longPressGesture)
+    }
+    
 
+    //called after auth plz
+    class func joinChannel(channelName:String, completion:(error:NSError?)->() )
+    {
+        let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        
+        //1 set myself as a moderator
+        let membersFB = Firebase(url: "\(kROOT_FIREBASE)channels/\(channelName)/members/\(userId)")
+        //        println("moderatorsFB \(moderatorsFB)")
+        
+        membersFB.setValue(true, withCompletionBlock:
+            {(error:NSError!, firebase:Firebase!) in
+                if error
+                {
+                    println("error adding myself to a channel (\(channelName)) \(error)")
+                    completion(error: error)
+                } else
+                {
+                    //continue joining it by adding to my users/userID/channels
+                    let myChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(channelName)")
+                    myChannels.setValue(["lastSeen":0, "muted":NSNumber(bool: false)], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
+                        {(error:NSError!, firebase:Firebase!) in
+                            if error
+                            {
+                                completion(error: error)
+                                println("error getting my user to join channel \(error)")
+                            } else
+                            {
+                                completion(error: nil)
+                            }
+                        })
+                }
+            })
+    }
+    
 
 }
 
