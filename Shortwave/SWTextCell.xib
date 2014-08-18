@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6185.11" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6205" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6190.4"/>
+        <deployment defaultVersion="1792" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -48,6 +49,7 @@
                                 <rect key="frame" x="69" y="28" width="232" height="29"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.0" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="29" id="Tr4-AO-BTW"/>
                                     <constraint firstAttribute="width" constant="232" id="wi7-o6-lR3"/>
                                 </constraints>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -66,7 +68,6 @@
                             <constraint firstItem="KVa-Gx-7HB" firstAttribute="top" secondItem="7OF-hz-CJz" secondAttribute="top" constant="18" id="Ylr-oy-WXU"/>
                             <constraint firstItem="X1i-tP-0Vc" firstAttribute="top" secondItem="7OF-hz-CJz" secondAttribute="top" constant="15" id="ams-Hv-3fl"/>
                             <constraint firstItem="X1i-tP-0Vc" firstAttribute="leading" secondItem="7OF-hz-CJz" secondAttribute="leading" constant="13" id="bNf-DG-Jwk"/>
-                            <constraint firstAttribute="bottom" secondItem="S1x-dI-oeo" secondAttribute="bottom" constant="16" id="vY5-Sh-QmG"/>
                             <constraint firstItem="S1x-dI-oeo" firstAttribute="leading" secondItem="X1i-tP-0Vc" secondAttribute="trailing" constant="7" id="x8C-xb-JdD"/>
                         </constraints>
                     </view>
@@ -89,6 +90,7 @@
                 <outlet property="messageText" destination="S1x-dI-oeo" id="OBH-lS-A5b"/>
                 <outlet property="priorityLabel" destination="btC-Mf-zNj" id="yp4-Zn-qct"/>
                 <outlet property="profileImageView" destination="X1i-tP-0Vc" id="PcI-i2-wmg"/>
+                <outlet property="textHeightConstraint" destination="Tr4-AO-BTW" id="vF2-le-68h"/>
             </connections>
             <point key="canvasLocation" x="139" y="153.5"/>
         </collectionViewCell>

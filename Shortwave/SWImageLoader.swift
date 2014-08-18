@@ -210,29 +210,33 @@ enum DataLoadingParcelState
     {
         return {
             //parcel is nil? dont know what behavior is.
-            let image = UIImage(data: parcel.receivedData)
             
-            //store DiscardableImage
-            let discardableImage = DiscardableImage(image: image)
-            let key = parcel.url.absoluteString
             
-            self.cache.setObject(discardableImage, forKey: key)
-            println("adding image \(key) img \(image) to cache ")
-            
-            if self.dataLoadingParcelOrder.count > self.NUM_CONCURRENT
+            if let data = parcel.receivedData
             {
-                let dlp = self.dataLoadingParcelOrder[self.NUM_CONCURRENT]
-                dlp.start()
+                let image = UIImage(data: parcel.receivedData)
+                //store DiscardableImage
+                let discardableImage = DiscardableImage(image: image)
+                let key = parcel.url.absoluteString
+                
+//                println("discardabieLimage = \(discardableImage) key \(key)")
+                self.cache.setObject(discardableImage, forKey: key)
+                
+                if self.dataLoadingParcelOrder.count > self.NUM_CONCURRENT
+                {
+                    let dlp = self.dataLoadingParcelOrder[self.NUM_CONCURRENT]
+                    dlp.start()
+                }
+                
+                self.dataLoadingParcels[key] = nil
+                //at this point, what the fuck? um, i mean.... removeObject? that function doesn't work in swift.  ssoooooo.  what the fuck.
+                if let index = find(self.dataLoadingParcelOrder, parcel)
+                {
+                    self.dataLoadingParcelOrder.removeAtIndex(index)
+                }
+                
+                completionBlock(image: image, synchronous: false)
             }
-            
-            self.dataLoadingParcels[key] = nil
-            //at this point, what the fuck? um, i mean.... removeObject? that function doesn't work in swift.  ssoooooo.  what the fuck.
-            if let index = find(self.dataLoadingParcelOrder, parcel)
-            {
-                self.dataLoadingParcelOrder.removeAtIndex(index)
-            }
-            
-            completionBlock(image: image, synchronous: false)
         }
     }
     

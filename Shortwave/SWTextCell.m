@@ -17,6 +17,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightOfTextConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *textHeightConstraint;
 
 @property (weak, nonatomic) IBOutlet UIView *containerVIew;
 
@@ -31,6 +32,7 @@
 
 @synthesize priorityLabel;
 @synthesize containerVIew;
+@synthesize textHeightConstraint;
 
 -(void)awakeFromNib
 {
@@ -46,8 +48,12 @@
     
     profileImageView.layer.mask = circle;
     containerVIew.transform = CGAffineTransformMakeRotation(M_PI);
+//    containerVIew.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
+//    self.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.4];
+//    messageText.backgroundColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:0.3];
     
     messageText.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    
     messageText.contentOffset = CGPointMake(0,0);
 }
 
@@ -86,11 +92,10 @@
     messageText.scrollEnabled = NO; //prevent ios7 bug!
     messageText.text = nil; //to prevent ios7 Bug
     
-    UIFont *font = messageText.font;
+    UIFont *font = [SWTextCell fontForMessageTextView];
     NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
                                          @{ NSFontAttributeName: font }] ;
     messageText.attributedText = attributedText;
-//    messageText.backgroundColor = [UIColor redColor];
     
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
@@ -100,32 +105,33 @@
 //    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
 //    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];
 //    iconImageView.image = img;
+    textHeightConstraint.constant = [SWTextCell heightOfMessageTextViewWithInput:model.text].height + 10*3;
     
     super.model = model;
+}
+
++(UIFont*)fontForMessageTextView
+{
+    return [UIFont fontWithName:@"Avenir-Light" size:14];
+}
++(CGSize)heightOfMessageTextViewWithInput:(NSString*)inputText
+{
+    UIFont *font = [SWTextCell fontForMessageTextView];
+    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
+    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    return size;
 }
 +(CGFloat)heightWithMessageModel:(MessageModel*)model
 {
     
     NSString *text = model.text;
-    
-    //    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
-    //    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:text attributes:
-    //                                         @{ NSFontAttributeName: font }] ;
-    
-//    UITextView *fakeTextField = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 232, 29)];
-//    fakeTextField.font = [UIFont fontWithName:@"Avenir-Light" size:14];
-//    fakeTextField.text = model.text;
-//    CGSize size = fakeTextField.contentSize;
-
-    UIFont *font = [UIFont fontWithName:@"Avenir-Light" size:14];
-    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:text attributes:@{NSFontAttributeName: font}];
-    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
-    
+    CGSize size = [SWTextCell heightOfMessageTextViewWithInput:text];
     
     NSLog(@"Calculated Height '%@' for text '%@'", NSStringFromCGSize(size), text);
     
-    size.height = 28 + size.height + 16 + 11 + 6; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
-    
+//    size.height = 28 + size.height + 16 + 11 + 6; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
+    size.height = 28 + size.height + 16 + 10;
+    NSLog(@"returning height = %f", size.height);
     return size.height;
 }
 
