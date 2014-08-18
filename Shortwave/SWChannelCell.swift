@@ -63,9 +63,9 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
 //        confirmDeleteLeadingSpaceToContainer.constant = 320
 //        confirmDeleteView.alpha = 0.5
         
-        if channelModel!.channelDescription
+        if let description = channelModel!.channelDescription
         {
-            descriptionLabel.text = (channelModel!.channelDescription!)
+            descriptionLabel.text = description
         } else
         {
             descriptionLabel.text = ""
@@ -94,7 +94,7 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
     }
     
     
-    init(coder aDecoder: NSCoder!)
+    required init(coder aDecoder: NSCoder!)
     {
         
         super.init(coder: aDecoder)

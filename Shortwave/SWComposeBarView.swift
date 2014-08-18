@@ -21,7 +21,7 @@ class SWComposeBarView: UIView, UITextFieldDelegate
     var delegate:SWComposeBarViewDelegate?
     var highlighted:Bool = false
     
-    init(coder aDecoder: NSCoder!)
+    required init(coder aDecoder: NSCoder!)
     {
         textField = UITextField(frame: CGRectMake(50, (48-40)*0.5, 320-50*2, 40))
         textField.backgroundColor = UIColor.blackColor()
@@ -41,7 +41,7 @@ class SWComposeBarView: UIView, UITextFieldDelegate
         
     }
     
-    init()
+    override init()
     {
         textField = UITextField(frame: CGRectMake(50, (48-40)*0.5, 320-50*2, 40))
         textField.backgroundColor = UIColor.blackColor()

@@ -14,12 +14,12 @@ class SWAddChannelCell: UICollectionViewCell
     var label:UILabel?;
     
     
-    init(coder aDecoder: NSCoder!)
+    required init(coder aDecoder: NSCoder!)
     {
         super.init(coder: aDecoder)
     
         label = self.getALabel("+ Channel")
-        addSubview(label)
+        addSubview(label!)
     }
     
     func getALabel(text:String) -> UILabel

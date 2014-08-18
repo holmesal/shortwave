@@ -91,7 +91,7 @@ protocol ChannelCellActionDelegate
     }
         willSet
         {
-            if !newValue
+            if newValue == nil
             {
                 if let collectionView = messageCollectionView
                 {

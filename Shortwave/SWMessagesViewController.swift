@@ -121,7 +121,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
             signCorrection = 1;
         }
 //            CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
-        let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * signCorrection;
+        let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * CGFloat(signCorrection);
         let newContentOffset = CGPointMake(0, collectionView.contentOffset.y - heightChange)
         
         
@@ -202,14 +202,14 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         switch longPressGesture.state
         {
         case .Began:
-            if !temporaryEnlargedView
+            if temporaryEnlargedView == nil
             {
                 
                 let createTemporaryEnlargedView:()->() = {
                     self.temporaryEnlargedView = UIView(frame: self.view.bounds)
                     self.temporaryEnlargedView!.backgroundColor = UIColor(white: 0, alpha: 0.8)
                     self.temporaryEnlargedView!.alpha = 0
-                    self.view.addSubview(self.temporaryEnlargedView)
+                    self.view.addSubview(self.temporaryEnlargedView!)
 
                     UIView.animateWithDuration(0.3, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveEaseInOut, animations:
                         {

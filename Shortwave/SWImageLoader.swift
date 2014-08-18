@@ -28,7 +28,7 @@ private class DiscardableImage: NSDiscardableContent
     
     func beginContentAccess() -> Bool
     {
-        return contentHasBeenAccessed && image
+        return contentHasBeenAccessed && (image != nil)
     }
     
     func endContentAccess()
@@ -43,7 +43,7 @@ private class DiscardableImage: NSDiscardableContent
     
     func isContentDiscarded() -> Bool
     {
-        return (!image)
+        return (image != nil)
     }
     
 }
@@ -98,7 +98,7 @@ enum DataLoadingParcelState
 //    var error:NSError? //UNUSED FOR NOW!
     func addListeners(#completion:(() -> ())?, progress:(() -> ())?)
     {
-        dispatchers += EventDispatcher(completion: completion, progress: progress)
+        dispatchers.append(EventDispatcher(completion: completion, progress: progress))
     }
     
     func start()
@@ -200,7 +200,7 @@ enum DataLoadingParcelState
                 }
                 
                 dataLoadingParcels[urlString] = dataLoadingParcel
-                dataLoadingParcelOrder += dataLoadingParcel
+                dataLoadingParcelOrder.append(dataLoadingParcel)
                 
             }
         }
@@ -243,7 +243,7 @@ enum DataLoadingParcelState
     }
 
     
-    public func hasImage(urlString:String) -> Bool
+    internal func hasImage(urlString:String) -> Bool
     {
         if let discardableContent = cache.objectForKey(urlString) as? DiscardableImage
         {

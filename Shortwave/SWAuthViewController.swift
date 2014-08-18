@@ -72,7 +72,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                         {
                             if let r2 = r as? NSDictionary
                             {
-                                self.suggestions += r2
+                                self.suggestions.append(r2)
                             }
                         }
                     self.startRepeatingIfNotAlready()
@@ -84,7 +84,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     func startRepeatingIfNotAlready()
     {
-        if repeatTimer
+        if (repeatTimer != nil)
         {
             
         } else
@@ -361,7 +361,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     override func viewWillDisappear(animated: Bool)
     {
-        if repeatTimer
+        if (repeatTimer != nil)
         {
             repeatTimer!.invalidate()
             repeatTimer = nil

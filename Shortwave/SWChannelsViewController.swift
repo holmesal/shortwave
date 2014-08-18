@@ -87,7 +87,6 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
             
         self.navigationItem.rightBarButtonItem = addButton
 
-        channelsCollectionView.viewForBaselineLayout().layer.speed = 1
         
         navigationItem.hidesBackButton = true
         bindToChannels()

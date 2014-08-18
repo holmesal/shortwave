@@ -42,7 +42,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     {
         didSet
         {
-            if !channelNameExists
+            if channelNameExists == nil
             {
                 self.activityIndicator.hidden = false
                 self.goButton.backgroundColor = UIColor(white: 205/255.0, alpha: 1.0)
@@ -62,7 +62,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     var timer:NSTimer?
     
     //outlets for joining
-    @IBOutlet strong var descriptionViewContainer: UIView!
+    @IBOutlet var descriptionViewContainer: UIView!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var descriptionLabelHeightConstraint: NSLayoutConstraint!
     
@@ -291,7 +291,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         channelNameCharacterCountLabel.text = "\(resultNSString.length) / \(maxCharsInChannelName)"
         
-        if self.timer
+        if self.timer != nil
         {
             self.timer!.invalidate()
             self.timer = nil
@@ -592,7 +592,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             signCorrection = 1;
         }
         //            CGFloat widthChange  = (endFrame.origin.x - startFrame.origin.x) * signCorrection;
-        let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * signCorrection;
+//        let heightChange = (frameEnd.origin.y - frameBegin.origin.y) * signCorrection;
         
         
         
@@ -605,15 +605,16 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.BeginFromCurrentState | UIViewAnimationOptions.fromRaw(7 << 16)!, animations:
                 {
                     self.createButtonBottomConstraint.constant = constraintHeight
-                    self.goButton.superview.layoutIfNeeded()
+                    self.goButton.superview?.layoutIfNeeded()
+//                    self.goButton.superview.layoutIfNeeded()
                     
                 }, completion: nil)
         }
     }
     
-    
-    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafePointer<()>)
+    override func observeValueForKeyPath(keyPath: String!, ofObject object: AnyObject!, change: [NSObject : AnyObject]!, context: UnsafeMutablePointer<()>)
     {
+        
         if keyPath == "contentSize" && object as? NSObject == createDescriptionTextView
         {
             /*
