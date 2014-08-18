@@ -43,7 +43,7 @@ private class DiscardableImage: NSDiscardableContent
     
     func isContentDiscarded() -> Bool
     {
-        return (image != nil)
+        return (image == nil)
     }
     
 }
@@ -217,6 +217,7 @@ enum DataLoadingParcelState
             let key = parcel.url.absoluteString
             
             self.cache.setObject(discardableImage, forKey: key)
+            println("adding image \(key) img \(image) to cache ")
             
             if self.dataLoadingParcelOrder.count > self.NUM_CONCURRENT
             {

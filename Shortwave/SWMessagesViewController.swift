@@ -138,7 +138,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     
     func setupComposeBarView()
     {
-        composeBarView.maxCharCount = 160
+//        composeBarView.maxCharCount = 160
         composeBarView.maxLinesCount = 5
         composeBarView.button.titleLabel.textColor = UIColor(hexString: "7E7E7E")
         composeBarView.delegate = self

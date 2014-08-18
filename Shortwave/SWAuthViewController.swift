@@ -27,11 +27,16 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     @IBOutlet weak var centerView: UIView!
     
-    var suggestions:Array<NSDictionary> =
+    var suggestions:Array<Dictionary<String, String>> =
     [
         ["str1": "s1",
-            "str2": "s2"]
+         "str2": "s2"]
     ]
+
+/*
+["str1": "s1",
+            "str2": "s2"]
+*/
     
     override func viewDidLoad()
     {
@@ -70,7 +75,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                 {
                         for r in result
                         {
-                            if let r2 = r as? NSDictionary
+                            if let r2 = r as? Dictionary<String, String>
                             {
                                 self.suggestions.append(r2)
                             }
@@ -115,9 +120,9 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         
         let dict = suggestions[suggestionIndex % suggestions.count]
         
-        if let str1 = dict["str1"] as? String
+        if let str1 = dict["str1"] //as? String
         {
-            if let str2 = dict["str2"] as? String
+            if let str2 = dict["str2"] //as? String
             {
                 animateReplace(str1, andSecondString: str2)
             }
