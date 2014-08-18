@@ -150,7 +150,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         let text = self.composeBarView.text
         
         //does text contain a url?
-        
         let ownerId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         MessageModel(ownerID: ownerId, andText: text).sendMessageToChannel(channelModel.name!)
         
@@ -161,15 +160,18 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     deinit
     {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        
+
+    }
+    
+    override func viewDidDisappear(animated: Bool)
+    {
+        super.viewDidDisappear(animated)
+        channelModel.scrollViewDelegate = nil
+        channelModel.cellActionDelegate = nil
         channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
-//        if channelModel.scrollViewDelegate == self
-//        {
-            channelModel.scrollViewDelegate = nil
-//        }
-//        if channelModel.cellActionDelegate == self
-//        {
-            channelModel.cellActionDelegate = nil
-//        }
+        
+
     }
     
     func didLongPress(theLongPress:UILongPressGestureRecognizer)

@@ -617,12 +617,6 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         if keyPath == "contentSize" && object as? NSObject == createDescriptionTextView
         {
-            /*
-
-            
-            @IBOutlet weak var heightOfDescription:
-            
-*/
             
             var newHeight = createDescriptionTextView.contentSize.height
             newHeight = min(newHeight, 100)
