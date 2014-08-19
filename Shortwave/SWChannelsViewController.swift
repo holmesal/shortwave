@@ -44,6 +44,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "joinChannelRemoteNotification:", name: kRemoteNotification_JoinChannel, object: nil)
         
 //        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
         let backButton = UIBarButtonItem(title: "", style: UIBarButtonItemStyle.Plain, target: self, action: "back")
@@ -133,6 +134,17 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                             
                             let index = self.channels.count;
                             
+                            //is this the channel that triggered a remote notification which the user opened the app with?
+                            println("watch for \((UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification) this is \(channelModel.name!)")
+                            
+                            if let channelFromRemoteNotification = (UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification
+                            {
+                                if channelFromRemoteNotification == channelModel.name!
+                                {
+                                    self.openChannel(channelModel)
+                                    (UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification = nil
+                                }
+                            }
                             self.insertChannel(channelModel, atIndex:index)
                         }
                     }
@@ -475,6 +487,25 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         for channelCell in channelsCollectionView.visibleCells() as [SWChannelCell]
         {
             channelCell.hideLeaveChannelConfirmUI()
+        }
+    }
+    
+    
+    func joinChannelRemoteNotification(notificaiton:NSNotification)
+    {
+        println("joinChannelremoteNotification to be handled by SWChannelsViewController")
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        if let channelName = appDelegate.channelFromRemoteNotification
+        {
+            //of all channels, is channelName one of them?
+            let channelsWithSameName = channels.filter {$0.name! == channelName}
+            if channelsWithSameName.count > 0
+            {
+                //let's open this channel!
+                openChannel(channelsWithSameName.last)
+                appDelegate.channelFromRemoteNotification = nil //action complete
+            }
         }
     }
     

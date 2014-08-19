@@ -32,7 +32,7 @@ var kSANDBOX:Bool
 }
 
 
-
+let kRemoteNotification_JoinChannel = "remoteNotificationJoinChannel"
 
 
 let kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn = "UserIsLoggedIn"

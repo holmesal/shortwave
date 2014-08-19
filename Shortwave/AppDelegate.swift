@@ -12,6 +12,9 @@ import UIKit
 @objc class AppDelegate: UIResponder, UIApplicationDelegate {
                             
     var window: UIWindow?
+    
+    var channelFromRemoteNotification:NSString?
+    
     var imageLoader:SWImageLoader = SWImageLoader()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
@@ -33,6 +36,20 @@ import UIKit
 
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        
+        
+        
+        if launchOptions != nil
+        {
+            // Launched from push notification
+            if let notification = launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject: AnyObject]
+            {
+                openWithRemoteNotification(notification)
+            }
+            //[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+            
+        }
+        
         return true
     }
 
@@ -104,26 +121,25 @@ import UIKit
         
         var saveTokenFirebase:Firebase!
         
-        
-        if let knownDeviceTokenKey = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken) as? String
+        let prefs = NSUserDefaults.standardUserDefaults();
+        if let knownDeviceTokenKey = prefs.objectForKey(kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken) as? String
         {
             saveTokenFirebase = Firebase(url: url + knownDeviceTokenKey)
             saveTokenFirebase.setValue(
                 ["type":"ios",
                     "token":token,
-                    "sandbox":kSANDBOX], withCompletionBlock:
+                    "sandbox":NSNumber(bool:kSANDBOX)], withCompletionBlock:
                 {(error:NSError?, firebase:Firebase?) in
                     if let e = error
                     {
                         println("token saving wiht error = \(error?.localizedDescription)")
                     }
                 })
-            NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
-            NSUserDefaults.standardUserDefaults().synchronize()
+            prefs.setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+            prefs.synchronize()
             
         } else
         {
-//            saveTokenFirebase = Firebase(url: url).childByAutoId()
             let loadDevices = Firebase(url: url)
             loadDevices .observeEventType(FEventTypeValue, withBlock:
                 {(snap:FDataSnapshot!) in
@@ -137,8 +153,8 @@ import UIKit
                                 {
                                     if optionalToken == token
                                     {
-                                        NSUserDefaults.standardUserDefaults().setObject(keyName, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
-                                        NSUserDefaults.standardUserDefaults().synchronize()
+                                        prefs.setObject(keyName, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+                                        prefs.synchronize()
                                         
                                         return;
                                     } else
@@ -156,12 +172,12 @@ import UIKit
                     saveTokenFirebase.setValue(
                         ["type":"ios",
                             "token":token,
-                            "sandbox":kSANDBOX], withCompletionBlock:
+                            "sandbox":NSNumber(bool:kSANDBOX)], withCompletionBlock:
                         {(error:NSError?, firebase:Firebase?) in
                             println("token saving wiht error = \(error?.localizedDescription)")
                         })
-                    NSUserDefaults.standardUserDefaults().setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
-                    NSUserDefaults.standardUserDefaults().synchronize()
+                    prefs.setObject(saveTokenFirebase.name, forKey: kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken)
+                    prefs.synchronize()
                     
                 })
         }
@@ -173,6 +189,27 @@ import UIKit
 
 
         
+    }
+    
+    func openWithRemoteNotification(userInfo:[NSObject:AnyObject])
+    {
+        if let channel = userInfo["channel"] as? NSString
+        {
+            channelFromRemoteNotification = channel
+            
+            println("listen for channel \(channel)")
+            let navigationController =  self.window?.rootViewController as UINavigationController
+            
+            var viewControllers = navigationController.viewControllers;
+            if viewControllers.count > 2
+            {
+                viewControllers = [viewControllers[0], viewControllers[1]]
+                navigationController.viewControllers = viewControllers;
+            }
+            
+            NSNotificationCenter.defaultCenter().postNotificationName(kRemoteNotification_JoinChannel, object: self)
+            
+        }
     }
     
     func application(application: UIApplication!, didFailToRegisterForRemoteNotificationsWithError error: NSError!)
@@ -188,7 +225,8 @@ import UIKit
         } else
             //            if UIApplication.sharedApplication().applicationState == .Active
         {
-            println("##notification## opened from notification")
+            println("##notification## opened from notification: \(userInfo)")
+            openWithRemoteNotification(userInfo)
         }
         
     }
