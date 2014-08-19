@@ -90,9 +90,6 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 
         
         navigationItem.hidesBackButton = true
-        bindToChannels()
-        
-
         
     }
     
@@ -262,7 +259,12 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
 //            return inceptionCell
 //        }
     }
-    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        bindToChannels()
+        
+    }
     override func viewDidDisappear(animated: Bool)
     {
         super.viewDidDisappear(animated)

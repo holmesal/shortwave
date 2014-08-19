@@ -13,7 +13,7 @@ import UIKit
                             
     var window: UIWindow?
     
-    var channelFromRemoteNotification:NSString?
+    var channelFromRemoteNotification:NSString?  = "devtest"
     
     var imageLoader:SWImageLoader = SWImageLoader()
 

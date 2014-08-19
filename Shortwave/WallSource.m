@@ -411,10 +411,14 @@
         [paths addObject: [NSIndexPath indexPathForRow:[self displayIndexForDataIndex:row] inSection:0] ];
     }
     
-    if (!collectionView)
+    if (!collectionView || !sender)
     {
         [self insertToWall:wallQueue inOrder:paths];
         [wallQueue removeAllObjects];
+        if (collectionView)
+        {
+            [collectionView reloadData];
+        }
     }
     
     if (sender)

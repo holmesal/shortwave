@@ -127,11 +127,11 @@
     NSString *text = model.text;
     CGSize size = [SWTextCell heightOfMessageTextViewWithInput:text];
     
-    NSLog(@"Calculated Height '%@' for text '%@'", NSStringFromCGSize(size), text);
+//    NSLog(@"Calculated Height '%@' for text '%@'", NSStringFromCGSize(size), text);
     
 //    size.height = 28 + size.height + 16 + 11 + 6; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
     size.height = 28 + size.height + 16 + 10;
-    NSLog(@"returning height = %f", size.height);
+//    NSLog(@"returning height = %f", size.height);
     return size.height;
 }
 
