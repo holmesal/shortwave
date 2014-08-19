@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		92046F21F7524377BE2DA8DE /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 81CC4E4F31BF44CAB751BD14 /* libPods.a */; };
 		AA038FD01985FF58003ED7E4 /* SWComposeBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */; };
+		AA1129C919A3E73300AB7604 /* fossil.png in Resources */ = {isa = PBXBuildFile; fileRef = AA1129C819A3E73200AB7604 /* fossil.png */; };
 		AA18AF37199B2D600003DF0B /* UITextView+CustomFont.m in Sources */ = {isa = PBXBuildFile; fileRef = AA18AF36199B2D600003DF0B /* UITextView+CustomFont.m */; };
 		AA1DEB6C1990AB64002DDCC0 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */; };
 		AA23134719858F6500002719 /* SWMessagesLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA23134619858F6500002719 /* SWMessagesLayout.swift */; };
@@ -88,6 +89,7 @@
 		67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		81CC4E4F31BF44CAB751BD14 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA038FCF1985FF58003ED7E4 /* SWComposeBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWComposeBarView.swift; sourceTree = "<group>"; };
+		AA1129C819A3E73200AB7604 /* fossil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fossil.png; sourceTree = "<group>"; };
 		AA18AF35199B2D600003DF0B /* UITextView+CustomFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextView+CustomFont.h"; sourceTree = "<group>"; };
 		AA18AF36199B2D600003DF0B /* UITextView+CustomFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITextView+CustomFont.m"; sourceTree = "<group>"; };
 		AA1DEB6B1990AB64002DDCC0 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 		AACEBBFB19819F0400DD2F78 = {
 			isa = PBXGroup;
 			children = (
+				AA1129C819A3E73200AB7604 /* fossil.png */,
 				AACEBC0619819F0500DD2F78 /* Shortwave */,
 				AACEBC1419819F0600DD2F78 /* ShortwaveTests */,
 				AACEBC0519819F0500DD2F78 /* Products */,
@@ -528,6 +531,7 @@
 				AA59F77D198AE8AB0023CFB4 /* SWTextCell.xib in Resources */,
 				AA59F77B198AE8AB0023CFB4 /* SWImageCell.xib in Resources */,
 				AACEBC0C19819F0500DD2F78 /* Images.xcassets in Resources */,
+				AA1129C919A3E73300AB7604 /* fossil.png in Resources */,
 				AAE70C01198EBD790081B646 /* SWGifCell.xib in Resources */,
 				AA3B8D5D1981A4DC00F4D3CC /* Main.storyboard in Resources */,
 			);

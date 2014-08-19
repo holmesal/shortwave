@@ -43,6 +43,18 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     override func viewDidLoad()
     {
+        
+        //display version!
+        let versionString = NSBundle.mainBundle().objectForInfoDictionaryKey("CFBundleShortVersionString") as String
+        var topLabel = UILabel(frame: CGRectMake(0, -70, 320, 30))
+        topLabel.font = UIFont(name: "Avenir-Book", size: 14)
+        topLabel.text = "v"+versionString
+        topLabel.textColor = UIColor.blackColor()
+        topLabel.textAlignment = NSTextAlignment.Center
+        channelsCollectionView.addSubview(topLabel)
+        
+        
+        
         super.viewDidLoad()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "joinChannelRemoteNotification:", name: kRemoteNotification_JoinChannel, object: nil)
         
@@ -132,7 +144,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                             let index = self.channels.count;
                             
                             //is this the channel that triggered a remote notification which the user opened the app with?
-                            println("watch for \((UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification) this is \(channelModel.name!)")
+//                            println("watch for \((UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification) this is \(channelModel.name!)")
                             
                             if let channelFromRemoteNotification = (UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification
                             {

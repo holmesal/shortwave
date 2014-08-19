@@ -55,8 +55,11 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         collectionView.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
         collectionView.showsVerticalScrollIndicator = false
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
+        let notifCenter = NSNotificationCenter.defaultCenter()
+        notifCenter.addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillShowNotification, object: nil)
+        notifCenter.addObserver(self, selector: "keyboardWillToggle:", name: UIKeyboardWillHideNotification, object: nil)
+        
+//        notifCenter.addObserver(sel, selector: "helixFossil", name: "helixFossil", object: nil)
         
         collectionView.alwaysBounceVertical = true
         
@@ -149,6 +152,16 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         //send the message
         let text = self.composeBarView.text
         
+        //does text contain helix or fossil?
+//        var textNSString = text as NSString
+        let lowercase = text.lowercaseString
+        if lowercase.rangeOfString("helix") != nil || lowercase.rangeOfString("fossil") != nil
+        {
+            helixFossil()
+            composeBarView.resignFirstResponder()
+            return
+        }
+        
         //does text contain a url?
         let ownerId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         MessageModel(ownerID: ownerId, andText: text).sendMessageToChannel(channelModel.name!)
@@ -160,8 +173,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     deinit
     {
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        
-
     }
     
     override func viewDidDisappear(animated: Bool)
@@ -280,5 +291,77 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         composeBarView.textView.resignFirstResponder()
     }
     
+    var animator:UIDynamicAnimator!
+    var gravity:UIGravityBehavior!
+    var collision:UICollisionBehavior!
+//    var collision:UICollisionBehavior!
+    
+    func createAnimatorStuffIfNotAlready()
+    {
+        if animator == nil
+        {
+            animator = UIDynamicAnimator(referenceView: self.view)
+            gravity = UIGravityBehavior()
+            collision = UICollisionBehavior()
+            collision!.translatesReferenceBoundsIntoBoundary = true
+            animator!.addBehavior(gravity)
+            animator!.addBehavior(collision)
+        }
+    }
+    
+    func fossilTap(helixButton:UIButton)
+    {
+        helixButton.removeFromSuperview()
+        gravity.removeItem(helixButton)
+        collision.removeItem(helixButton)
+        
+        
+        let alert = UIAlertView(title: nil, message: "Now is not the time to consult the helix fossil.", delegate: nil, cancelButtonTitle: nil)
+        alert.show()
+        
+        let dealyInSeconds:UInt64 = 2
+        let popTime:dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(dealyInSeconds * NSEC_PER_SEC))
+        dispatch_after(popTime, dispatch_get_main_queue(),
+        {
+            alert.dismissWithClickedButtonIndex(0, animated: true)
+        })
+    }
+    
+    func helixFossil()
+    {
+        var square = UIButton(frame: CGRectMake((320-56)*0.5, 100, 56, 60))
+        square.setBackgroundImage(UIImage(named: "fossil"), forState: .Normal)
+        square.contentMode = UIViewContentMode.ScaleToFill
+        self.view.addSubview(square)
+        
+        square.alpha = 0.2
+        square.transform = CGAffineTransformMakeScale(1.6, 1.6)
+        
+        UIView.animateWithDuration(0.7, delay: 0.0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .CurveLinear, animations:
+            {
+                square.transform = CGAffineTransformIdentity
+                square.alpha = 1.0
+            }, completion: {(b:Bool) in })
+        
+        square.addTarget(self, action: "fossilTap:", forControlEvents: UIControlEvents.TouchDown)
+
+        createAnimatorStuffIfNotAlready()
+        
+        gravity.addItem(square)
+        collision.addItem(square)
+        
+        //push behavior
+        var pushBehavior = UIPushBehavior(items: [square], mode: UIPushBehaviorMode.Instantaneous)
+        pushBehavior.magnitude = 1
+        let double:Double = Double(Int(rand())%2)
+        pushBehavior.angle = CGFloat(  double * M_PI)
+        animator.addBehavior(pushBehavior)
+        
+        animator.addBehavior(collision)
+    }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+    }
     
 }

@@ -44,8 +44,6 @@
     UICollectionView *collectionView = (UICollectionView *)self.superview;
     
     
-    NSLog(@"collView = %@", collectionView);
-    
     if ([collectionView.delegate respondsToSelector:@selector(didLongPress:)])
     {
         [collectionView.delegate performSelector:@selector(didLongPress:) withObject:longPressGesture];
