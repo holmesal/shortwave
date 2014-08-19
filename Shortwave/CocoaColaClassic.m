@@ -34,7 +34,7 @@
 
 +(BOOL)debug
 {
-    return YES;
+    return NO;
 }
 
 ////        #if __IPHONE_8_0
