@@ -666,6 +666,7 @@
 /* Begin XCBuildConfiguration section */
 		AACEBC1919819F0600DD2F78 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -698,7 +699,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				METAL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -708,6 +709,7 @@
 		};
 		AACEBC1A19819F0600DD2F78 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 67D21E5CA03A4AFF95784C68 /* Pods.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -734,7 +736,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				METAL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -754,6 +756,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Shortwave",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/PHFComposeBarView\"",
+					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
 				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
@@ -778,6 +787,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 					"$(PROJECT_DIR)/Shortwave",
+				);
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Mixpanel\"",
+					"\"${PODS_ROOT}/Headers/PHFComposeBarView\"",
+					"\"${PODS_ROOT}/Headers/PHFDelegateChain\"",
 				);
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;

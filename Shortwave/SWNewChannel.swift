@@ -122,9 +122,16 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         updateUITimer() //hides the create button for "" result, and sets prompt
         
-        
         activityIndicator.hidden = true
         
+    }
+    
+    
+    override func viewDidAppear(animated: Bool)
+    {
+        super.viewDidAppear(animated)
+        
+        Mixpanel.sharedInstance().track("Add Channel Open")
     }
     
     func createInputLayer()
@@ -164,9 +171,8 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     @IBAction func completeButtonAction(sender: AnyObject?)
     {
-        println("complete action!")
         
-//        channelNameTextField.userInteractionEnabled = false
+        
         goButton.userInteractionEnabled = false
         
         self.performFirebaseFetchForChannel(channelName, result:
@@ -184,7 +190,13 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     }
     
     @IBAction func cancelButtonAction(sender: AnyObject?) {
-        println("go back yo")
+        
+        
+        if sender != nil
+        {
+            Mixpanel.sharedInstance().track("Add Channel Cancel")
+        }
+        
         self.dismissViewControllerAnimated(true, completion:
         {
             if self.isJoining
@@ -423,6 +435,16 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     func joinChannel()
     {
+        
+        let mixpanelErrorReport = {(error:NSError) in
+            Mixpanel.sharedInstance().track("Add Channel Error", properties:
+                ["error": error.localizedDescription,
+                    "code": error.code,
+                    "isCreate": false,
+                    "channel": self.channelName
+                ])
+        }
+        
         let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         
         //1 set myself as a moderator
@@ -433,6 +455,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             {(error:NSError!, firebase:Firebase!) in
                 if error
                 {
+                    mixpanelErrorReport(error)
                     println("error adding myself to a channel \(error)")
                 } else
                 {
@@ -442,9 +465,11 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                         {(error:NSError!, firebase:Firebase!) in
                             if error
                             {
+                                mixpanelErrorReport(error)
                                 println("error getting my user to join channel \(error)")
                             } else
                             {
+                                Mixpanel.sharedInstance().track("Add Channel", properties: ["channel":self.channelName, "isCreate":false])
                                 self.isJoining = true
                                 self.cancelButtonAction(nil)
 //                                self.addChannelState = .Ready
@@ -462,6 +487,14 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     func createChannel()
     {
+        let mixpanelErrorReport = {(error:NSError) in
+            Mixpanel.sharedInstance().track("Add Channel Error", properties:
+                ["error": error.localizedDescription,
+                    "code": error.code,
+                    "isCreate": true,
+                    "channel": self.channelName
+                ])
+        }
         
         let userId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         
@@ -476,7 +509,8 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
             {(error:NSError!, firebase:Firebase!) in
                 if error
                 {
-                                    println("error \(error) and firebase \(firebase)")
+                    mixpanelErrorReport(error)
+                    println("error \(error) and firebase \(firebase)")
                     //failure!
                 } else
                 {
@@ -498,9 +532,11 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                         {(error:NSError!, firebase:Firebase!) in
                             if error
                             {
+                                mixpanelErrorReport(error)
                                 println("error \(error) and firebase \(firebase)")
                             } else
                             {
+                                Mixpanel.sharedInstance().track("Add Channel", properties: ["channel":self.channelName, "isCreate":true])
                                 self.isJoining = true
                                 self.cancelButtonAction(nil)
 //                                self.addChannelState = .Ready

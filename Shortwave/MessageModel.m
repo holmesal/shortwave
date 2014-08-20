@@ -197,20 +197,41 @@
     {
         if (!error)
         {
+            BOOL containsUrl = NO;
             if ([StringFunction validateUrlString:self.text])
             {
-                NSLog(@"self.text = %@ HAS a url in it!", self.text);
+                containsUrl = YES;
                 Firebase *parseRequest = [[[Firebase alloc] initWithUrl:@"https://shortwave-dev.firebaseio.com/parseQueue"] childByAutoId];
                 [parseRequest setValue:@{
                                          @"channel": channel,
                                          @"message": weakSelf.name
                                          } withCompletionBlock:^(NSError *error, Firebase *firebase)
                 {
-//                    NSLog(@"error = %@", error );
+                    NSLog(@"error = %@", error );
                 }];
                 
-                
             }
+            
+            //mixpanel vars
+            NSInteger numChars = 0;
+            if (self.text)
+            {
+                numChars = self.text.length;
+            }
+            
+            NSNumber *type =  [NSNumber numberWithInt:self.type];
+            if (!type)
+            {
+                type = [NSNumber numberWithInt:-1];
+            }
+            
+            [[Mixpanel sharedInstance] track:@"Send Message" properties:
+                @{@"containsUrl": [NSNumber numberWithBool:containsUrl],
+                  @"numChars": [NSNumber numberWithInt:numChars],
+                  @"type": type
+                  
+                  }];
+            
         }
     }];
     self.name = messagesChannel.name;

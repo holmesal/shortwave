@@ -33,15 +33,13 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
          "str2": "s2"]
     ]
 
-/*
-["str1": "s1",
-            "str2": "s2"]
-*/
+
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+
         
         errorRetryView.alpha = 0.0
         errorRetryView.userInteractionEnabled = false
@@ -218,6 +216,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     func beginAuthWithFirebase()
     {
+        Mixpanel.sharedInstance().track("Authentication Start")
+
         authButton.userInteractionEnabled = false
         showValidatingUI()
         
@@ -230,6 +230,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
                 if let e = error
                 {
                     //Code=-4
+                    Mixpanel.sharedInstance().track("Authentication Fail", properties: ["error":e.localizedDescription, "code":e.code])
                     
                     UIView.animateWithDuration(0.3, delay: 0.2, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .CurveLinear, animations:
                         {
@@ -297,22 +298,25 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     func createUser(user:FAUser)
     {
-        
+
+
+
+
         let thirdPartyUserData:NSDictionary = user.thirdPartyUserData["thirdPartyUserData"] as NSDictionary
 //        println("thirdPartyUserData = \(thirdPartyUserData)")
 
         println("thirdPartyUserData = \(thirdPartyUserData)")
         
-        let firstName = thirdPartyUserData["first_name"]!
+        let firstName = thirdPartyUserData["first_name"] as String
         //@"public_profile", @"email"
         if let picture:NSDictionary = thirdPartyUserData["picture"] as? NSDictionary
         {
             let datas = picture["data"] as NSDictionary
-            let photo = datas["url"]
+            let photo = datas["url"] as String
             Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
         } else
         {
-            let id = thirdPartyUserData["id"]
+            let id = thirdPartyUserData["id"] as String
             let photo = "http://graph.facebook.com/\(id)/picture?type=normal"
             println("photo is actualy <\(photo)>")
             Firebase(url: "\(kROOT_FIREBASE)users/\(user.uid)/profile/photo/").setValue(photo)
@@ -329,18 +333,13 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         prefs.setObject(user.uid, forKey: kNSUSERDEFAULTS_KEY_userId)
         
         prefs.synchronize()
-        
-        //difference between ios8 and 7 registration
-//        let version =  UIDevice.currentDevice().systemVersion //([currSysVer compare:reqSysVer options:NSNumericSearch] != NSOrderedAscending)
-//        let reqVersin = "8.0"
-//        let name = UIDevice.currentDevice().systemName
-//        
-////        println("version \(version) name \(name)")
-//        
-//        let elems = version.componentsSeparatedByString(".")
-////        println("elems \(elems)")
-        
-        //Cocoa Cola, the classic beverage
+
+//identify mixpanel user
+        Mixpanel.sharedInstance().createAlias(firstName, forDistinctID: user.uid)
+        Mixpanel.sharedInstance().identify(user.uid)
+
+        Mixpanel.sharedInstance().track("Authentication Success")
+
         CocoaColaClassic.RegisterRemoteNotifications()
                 
     }

@@ -20,6 +20,7 @@ import UIKit
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
 
         Crashlytics.startWithAPIKey("4a71d4033d33d194e246ada67acce08c24c06e80")
+        Mixpanel.sharedInstanceWithToken(kMixpanelToken)
         
         //audio session
         let audioSession = AVAudioSession.sharedInstance()

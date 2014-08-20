@@ -128,6 +128,8 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         channelModel!.muted = !channelModel!.muted
         channelModel!.setMutedToFirebase()
         
+        Mixpanel.sharedInstance().track("Mute Channel", properties: ["channel": channelModel!.name!, "isMuted":channelModel!.muted])
+        
     }
     
     func channel(channel: SWChannelModel, isMuted: Bool)
@@ -183,6 +185,9 @@ class SWChannelCell: UICollectionViewCell, UIGestureRecognizerDelegate, ChannelM
         
         let userInChannelMemberFB = Firebase(url: kROOT_FIREBASE + "channels/" + self.channelModel!.name! + "/members/" + userID)
         userInChannelMemberFB.setValue(nil)
+        
+        Mixpanel.sharedInstance().track("Leave Channel", properties: ["channel":self.channelModel!.name!])
+        
     }
     @IBAction func leaveAction(sender: AnyObject)
     {

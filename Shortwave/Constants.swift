@@ -42,6 +42,8 @@ let kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken = "deviceTokenKey"
 let kFacebookOnAppStore = "https://itunes.apple.com/us/app/facebook/id284882215?mt=8"
 let kFacebookAppId = "684979988223644"
 let kFacebookPermissions:Array<AnyObject> = []//["email"]
+
+let kMixpanelToken = ""
 //"public_profile",
 
 let kNiceColors = [

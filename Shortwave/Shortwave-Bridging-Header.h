@@ -33,3 +33,4 @@
 #import <Crashlytics/Crashlytics.h>
 #import "CocoaColaClassic.h"
 
+#import <Mixpanel/Mixpanel.h>

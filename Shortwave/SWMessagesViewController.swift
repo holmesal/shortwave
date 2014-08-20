@@ -78,7 +78,26 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         
         let shareUrl = "http://getshortwave.com/" + self.channelModel.name! + "?ref=" + skimmedId
         println("shareUrl = \(shareUrl)")
-        let activityView = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
+        var activityView = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
+        
+
+        activityView.completionHandler = {(activityType:String!, done:Bool!) in
+            
+            println("activityType \(activityType)")
+            println("done \(done)")
+            
+            var mixpanelProperties:[NSObject: AnyObject] = ["channel":self.channelModel!.name!, "done":done]
+
+            
+            if let type = activityType
+            {
+                mixpanelProperties["activityType"] = type
+            }
+            
+            Mixpanel.sharedInstance().track("Invite", properties: mixpanelProperties)
+        
+        }
+        
         self.presentViewController(activityView, animated: true, completion: nil)
     }
     
@@ -159,6 +178,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         {
             helixFossil()
             composeBarView.resignFirstResponder()
+            Mixpanel.sharedInstance().track("Helix Fossil", properties:["message":text])
             return
         }
         
