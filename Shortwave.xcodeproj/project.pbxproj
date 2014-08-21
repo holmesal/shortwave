@@ -801,6 +801,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "B62003B4-6ACE-448F-A876-2B0E29FC8081";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Release;
 		};
