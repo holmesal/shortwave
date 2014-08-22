@@ -195,13 +195,21 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    override func viewDidDisappear(animated: Bool)
+    override func viewWillDisappear(animated: Bool)
     {
-        super.viewDidDisappear(animated)
-        channelModel.scrollViewDelegate = nil
-        channelModel.cellActionDelegate = nil
-        channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
+        super.viewWillDisappear(animated)
         
+        
+        println("self = \(self) and channelModel.messageCollectionView = \(channelModel.messageCollectionView)")
+        
+
+        
+        if channelModel.messageCollectionView == self.collectionView
+        {
+            channelModel.scrollViewDelegate = nil
+            channelModel.cellActionDelegate = nil
+            channelModel.messageCollectionView = nil; //no more collectinoView associated with channelModel dataSource, delegate
+        }
 
     }
     
