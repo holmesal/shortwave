@@ -93,9 +93,14 @@
     messageText.text = nil; //to prevent ios7 Bug
     
     UIFont *font = [SWTextCell fontForMessageTextView];
-    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
-                                         @{ NSFontAttributeName: font }] ;
-    messageText.attributedText = attributedText;
+//    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
+//                                         @{ NSFontAttributeName: font }] ;
+    
+//    NSLog(@"attributedText = %@", attributedText);
+    NSLog(@"font = %@", font);
+    NSLog(@"MessageText = %@", messageText);
+    NSLog(@"heightOfMessageTextViewWithInput = %f", [SWTextCell heightOfMessageTextViewWithInput:model.text].height);
+    messageText.text = model.text;
     
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
@@ -116,9 +121,17 @@
 }
 +(CGSize)heightOfMessageTextViewWithInput:(NSString*)inputText
 {
+
     UIFont *font = [SWTextCell fontForMessageTextView];
-    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
-    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    
+    UILabel *fakeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 400)];
+    fakeLabel.font = font;
+    fakeLabel.text = inputText;
+    fakeLabel.numberOfLines = 0;
+    
+//    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
+    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    NSLog(@"inputText = %@ for size %@", inputText, NSStringFromCGSize(size));
     return size;
 }
 +(CGFloat)heightWithMessageModel:(MessageModel*)model

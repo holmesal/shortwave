@@ -195,12 +195,9 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    override func viewWillDisappear(animated: Bool)
+    override func viewDidDisappear(animated: Bool)
     {
-        super.viewWillDisappear(animated)
-        
-        
-        println("self = \(self) and channelModel.messageCollectionView = \(channelModel.messageCollectionView)")
+        super.viewDidDisappear(animated)
         
 
         
