@@ -128,7 +128,6 @@
 //    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
     CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
     
-    NSLog(@"inputText = %@ for size %@", inputText, NSStringFromCGSize(size));
     return size;
 }
 +(CGFloat)heightWithMessageModel:(MessageModel*)model

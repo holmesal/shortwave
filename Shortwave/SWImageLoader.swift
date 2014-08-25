@@ -82,6 +82,12 @@ enum DataLoadingParcelState
         self.url = url
         super.init()
         
+        initializeRequest() //setups request fresh
+        
+    }
+    
+    func initializeRequest()
+    {
         request = ASIHTTPRequest(URL: url)
         request.downloadProgressDelegate = self
         
@@ -145,8 +151,11 @@ enum DataLoadingParcelState
     
     func requestFailed(request:ASIHTTPRequest!)
     {
-        println("request failed")
-        state = .Failed
+        println("request failed, \(request)")
+        
+        state = .Unstarted
+        //just auto repeat requests that fail for now.
+        initializeRequest()
     }
  
     
