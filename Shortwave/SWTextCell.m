@@ -93,14 +93,14 @@
     messageText.text = nil; //to prevent ios7 Bug
     
     UIFont *font = [SWTextCell fontForMessageTextView];
-//    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
-//                                         @{ NSFontAttributeName: font }] ;
+    NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
+                                         @{ NSFontAttributeName: font }] ;
     
-//    NSLog(@"attributedText = %@", attributedText);
+    NSLog(@"attributedText = %@", attributedText);
     NSLog(@"font = %@", font);
     NSLog(@"MessageText = %@", messageText);
     NSLog(@"heightOfMessageTextViewWithInput = %f", [SWTextCell heightOfMessageTextViewWithInput:model.text].height);
-    messageText.text = model.text;
+    messageText.attributedText = attributedText;
     
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
@@ -117,7 +117,7 @@
 
 +(UIFont*)fontForMessageTextView
 {
-    return [UIFont fontWithName:@"Avenir-Light" size:14];
+    return [UIFont systemFontOfSize:14];//[UIFont fontWithName:@"Avenir-Light" size:14];
 }
 +(CGSize)heightOfMessageTextViewWithInput:(NSString*)inputText
 {
@@ -129,8 +129,10 @@
     fakeLabel.text = inputText;
     fakeLabel.numberOfLines = 0;
     
-//    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
-    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
+//    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    
     NSLog(@"inputText = %@ for size %@", inputText, NSStringFromCGSize(size));
     return size;
 }
