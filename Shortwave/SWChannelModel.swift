@@ -230,11 +230,9 @@ protocol ChannelCellActionDelegate
                 
             if let newLastSeen = snap.value as? Double
             {
-//                println("newLastSeen = \(newLastSeen) and current lastSeen = \(self.lastSeen)")
                 
                 if self.lastSeen != newLastSeen
                 {
-                    println("update lastSeen, possibly update activity indicator!")
                     self.lastSeen = newLastSeen
                     
                     self.isSynchronized = false

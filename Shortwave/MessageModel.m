@@ -163,7 +163,6 @@
      ".priority": Unix time in milliseconds
      */
     
-    NSNumber *priority = [NSNumber numberWithDouble:[NSDate date].timeIntervalSince1970*1000];
     
     
     return @{
@@ -172,7 +171,7 @@
                 @"owner":ownerID,
                 @"raw":self.text,
                 @"parsed":@NO,
-                @".priority":priority
+                @".priority":kFirebaseServerValueTimestamp
             };
 }
 -(NSDictionary*)toDictionary
