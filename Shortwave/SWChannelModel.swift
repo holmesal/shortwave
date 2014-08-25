@@ -83,6 +83,9 @@ protocol ChannelCellActionDelegate
         {
             if let collectionView = messageCollectionView
             {
+                lastPriorityToSet = NSDate().timeIntervalSince1970*1000
+                self.setPriority()
+                
                 wallSource.collectionView = collectionView
                 collectionView.delegate = wallSource
                 collectionView.dataSource = wallSource
@@ -137,48 +140,49 @@ protocol ChannelCellActionDelegate
     //selector called from WallSource to tell which message is dislpayed right now, triggers NO ACTIVITY display
     func didViewMessageModel(message:MessageModel!)
     {
-        let priority = message.priority
+//        let priority = message.priority
+//
+//        
 
-        
-//        println("message.priority = \(message.priority)")
-        
-//        println("**")
-//        println("priority >= lastSeen && priority > lastPriorityToSet")
-//        println("\(priority) >= \(lastSeen) && \(priority) > \(lastPriorityToSet) ")
-//        println("\(priority >= lastSeen) && \(priority > lastPriorityToSet)")
-        
-        if priority >= lastSeen && priority > lastPriorityToSet
-        {
-            lastPriorityToSet = priority
-            setPriorityEventually(priority) //unless usurped by a newer message!
-        }
+//        
+//        if priority >= lastSeen && priority > lastPriorityToSet
+//        {
+//            lastPriorityToSet = priority
+//            setPriorityEventually(priority) //unless usurped by a newer message!
+//        }
     }
     
-    //prepare to synchronise 
+//    //prepare to synchronise 
     var lastPriorityToSet:Double = 0
-    var setPriorityTimer:NSTimer?;
-    func setPriorityEventually(priority:Double)
+//    var setPriorityTimer:NSTimer?;
+//    func setPriorityEventually(priority:Double)
+//    {
+//        
+//        if let theTimer = setPriorityTimer
+//        {
+//            theTimer.invalidate()
+//            setPriorityTimer = nil
+//        }
+//        
+//        setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
+//        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
+//        
+//    }
+//    
+//    
+    //called right after sending a message yourself.
+    func setPriorityToNow()
     {
-        
-        if let theTimer = setPriorityTimer
-        {
-            theTimer.invalidate()
-            setPriorityTimer = nil
-        }
-        
-        setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
-        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
-        
+        lastPriorityToSet = NSDate().timeIntervalSince1970 * 1000
+        setPriority()
     }
-    
-    
     //sets the priority locally (called by timer only) and updates firebase
     func setPriority()
     {
         self.lastSeen = lastPriorityToSet
         
-        setPriorityTimer!.invalidate()
-        setPriorityTimer = nil;
+//        setPriorityTimer!.invalidate()
+//        setPriorityTimer = nil;
         
         let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
         

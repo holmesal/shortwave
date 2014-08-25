@@ -263,6 +263,7 @@
 		AA4013101982DAF900C6853D /* view */ = {
 			isa = PBXGroup;
 			children = (
+				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
 				AA59F784198AEC4E0023CFB4 /* SWTextCell.h */,
 				AA59F785198AEC4F0023CFB4 /* SWTextCell.m */,
 				AA59F77A198AE8AB0023CFB4 /* SWTextCell.xib */,
@@ -375,7 +376,6 @@
 				AAD651D81981C87D00BA0127 /* model */,
 				AA3B8D601981A55E00F4D3CC /* viewcontrollers */,
 				AACEBC0919819F0500DD2F78 /* AppDelegate.swift */,
-				AA4013111982DB0600C6853D /* SWChannelCell.swift */,
 				AA3B8D5C1981A4DC00F4D3CC /* Main.storyboard */,
 				AACEBC0B19819F0500DD2F78 /* Images.xcassets */,
 				AACEBC0719819F0500DD2F78 /* Supporting Files */,
