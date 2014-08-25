@@ -10,6 +10,8 @@
 
 @implementation MessageGif
 
+@synthesize playerLayer;
+
 -(id)initWithDictionary:(NSDictionary *)dictionary andPriority:(double)priority
 {
     if (self = [super initWithDictionary:dictionary andPriority:priority])
@@ -45,6 +47,9 @@
                 
                 _player = [AVPlayer playerWithPlayerItem:item];
                 _player.muted = YES;
+                
+                playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+                
 //                [_player cancelPendingPrerolls];
                 
                 

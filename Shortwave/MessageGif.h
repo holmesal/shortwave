@@ -16,6 +16,7 @@
 
 
 @property (strong, nonatomic) AVPlayer *player;
+@property (strong, nonatomic) AVPlayerLayer *playerLayer; // must be removed from superlayer upon get
 
 
 //to initialize a message with raw values, so as not to forget any

@@ -16,14 +16,40 @@
 @property (weak, nonatomic) IBOutlet UIView *mp4View;
 
 @property (strong, nonatomic) AVPlayer *player;
+
+@property (strong, nonatomic) UILongPressGestureRecognizer *longPressGesture;
 @end
 
 
 
 @implementation SWGifCell
+
+@synthesize longPressGesture;
+
 -(void)awakeFromNib
 {
     _gifContainer.transform = CGAffineTransformMakeRotation(M_PI);
+    
+    
+    longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPress:)];
+    longPressGesture.cancelsTouchesInView = NO;
+    longPressGesture.minimumPressDuration = 0.04f;
+    [self addGestureRecognizer:longPressGesture];
+
+    
+}
+
+-(void)didLongPress:(id)sender
+{
+    UICollectionView *collectionView = (UICollectionView *)self.superview;
+    
+    if ([collectionView.delegate respondsToSelector:@selector(didLongPress:)])
+    {
+        [collectionView.delegate performSelector:@selector(didLongPress:) withObject:longPressGesture];
+    } else
+    {
+        NSLog(@"WARNING: SWImageCell fails to LongPress, collectionView.delegate does not respond to selector %@", NSStringFromSelector(_cmd));
+    }
 }
 
 -(void)setModel:(MessageGif *)model
@@ -42,10 +68,20 @@
     }
     
     _player = model.player;
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+    
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
+    
+    playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    
+    
+    if (playerLayer.superlayer)
+    {
+        [playerLayer removeFromSuperlayer];
+    }
+    
     playerLayer.bounds = _mp4View.bounds;
     playerLayer.position = CGPointMake(_mp4View.bounds.size.width*0.5f, _mp4View.bounds.size.height*0.5f);
-    playerLayer.backgroundColor = [UIColor redColor].CGColor;
+    playerLayer.backgroundColor = [UIColor clearColor].CGColor;
     [_mp4View.layer addSublayer:playerLayer];
     
     [_player play];

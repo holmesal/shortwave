@@ -282,7 +282,6 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
                     var playerLayer = AVPlayerLayer(player: player)
                     playerLayer.bounds = self.view.bounds
                     playerLayer.position = CGPoint(x: playerLayer.bounds.size.width*0.5, y: playerLayer.bounds.size.height*0.5)
-                    playerLayer.backgroundColor = UIColor(red: 1, green: 0, blue: 1, alpha: 0.2).CGColor
                     
                     
                     temporaryEnlargedView!.layer.addSublayer(playerLayer)
