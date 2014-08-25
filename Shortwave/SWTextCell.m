@@ -96,20 +96,15 @@
     NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
                                          @{ NSFontAttributeName: font }] ;
     
-    NSLog(@"attributedText = %@", attributedText);
-    NSLog(@"font = %@", font);
-    NSLog(@"MessageText = %@", messageText);
-    NSLog(@"heightOfMessageTextViewWithInput = %f", [SWTextCell heightOfMessageTextViewWithInput:model.text].height);
+
     messageText.attributedText = attributedText;
     
     firstNameLabel.text = model.firstName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
     
     self.profileImageView.image = nil;
-    
-//    [self.coloredCircleLayer setBackgroundColor:model.color.CGColor];
-//    UIImage *img = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png", model.icon] ];
-//    iconImageView.image = img;
+//    messageText.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+//    messageText.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.5];
     textHeightConstraint.constant = [SWTextCell heightOfMessageTextViewWithInput:model.text].height + 10*3;
     
     super.model = model;
