@@ -153,9 +153,16 @@ enum DataLoadingParcelState
     {
         println("request failed, \(request)")
         
+        state = .Failed
+    
+        println("request.error = \(request.error.localizedDescription)")
+        println("request.code = \(request.error.code)")
+        
         state = .Unstarted
         //just auto repeat requests that fail for now.
         initializeRequest()
+        //shuffle it to the back of the request list to be a pro, 
+        beginLoading()
     }
  
     
@@ -245,7 +252,11 @@ enum DataLoadingParcelState
                 }
                 
                 completionBlock(image: image, synchronous: false)
+            } else
+            {
+                println("data = \(parcel.receivedData)")
             }
+            
         }
     }
     
