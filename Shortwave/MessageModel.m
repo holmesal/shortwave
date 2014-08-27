@@ -162,9 +162,7 @@
      "parsed": Bool
      ".priority": Unix time in milliseconds
      */
-    
-    
-    
+
     return @{
                 @"type": typeString,
                 @"content": content,
@@ -174,6 +172,7 @@
                 @".priority":kFirebaseServerValueTimestamp
             };
 }
+
 -(NSDictionary*)toDictionary
 {
     return [self toDictionaryWithContent:@{@"text":self.text} andType:@"text"];
