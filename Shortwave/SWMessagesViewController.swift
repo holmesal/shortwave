@@ -186,7 +186,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         let ownerId = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         MessageModel(ownerID: ownerId, andText: text).sendMessageToChannel(channelModel.name!)
         
-        self.channelModel.setPriorityToNow()
+//        self.channelModel.setPriorityToNow()
         
         composeBarView.setText("", animated: true)
         composeBarView.resignFirstResponder()

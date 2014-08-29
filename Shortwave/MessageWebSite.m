@@ -7,7 +7,7 @@
 //
 
 #import "MessageWebSite.h"
-#import "Shortwave-Swift.h"
+#import "Wavelength-Swift.h"
 
 @implementation MessageWebSite
 

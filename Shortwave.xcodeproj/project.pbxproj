@@ -163,7 +163,7 @@
 		AAC79F0A1982F8BE005961D1 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		AAC79F0E1983767D005961D1 /* SWInceptionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWInceptionCell.swift; sourceTree = "<group>"; };
 		AAC79F1019837DFB005961D1 /* SWChannelsLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWChannelsLayout.swift; sourceTree = "<group>"; };
-		AACEBC0419819F0500DD2F78 /* Shortwave.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shortwave.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AACEBC0419819F0500DD2F78 /* Wavelength.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wavelength.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AACEBC0819819F0500DD2F78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AACEBC0919819F0500DD2F78 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AACEBC0B19819F0500DD2F78 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -361,7 +361,7 @@
 		AACEBC0519819F0500DD2F78 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AACEBC0419819F0500DD2F78 /* Shortwave.app */,
+				AACEBC0419819F0500DD2F78 /* Wavelength.app */,
 				AACEBC1119819F0600DD2F78 /* ShortwaveTests.xctest */,
 			);
 			name = Products;
@@ -463,7 +463,7 @@
 			);
 			name = Shortwave;
 			productName = Shortwave;
-			productReference = AACEBC0419819F0500DD2F78 /* Shortwave.app */;
+			productReference = AACEBC0419819F0500DD2F78 /* Wavelength.app */;
 			productType = "com.apple.product-type.application";
 		};
 		AACEBC1019819F0600DD2F78 /* ShortwaveTests */ = {
@@ -750,8 +750,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -767,8 +767,8 @@
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "28EE394E-5DDD-422A-8B03-5336A5ADCAD6";
+				PRODUCT_NAME = Wavelength;
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -781,8 +781,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -798,8 +798,8 @@
 				INFOPLIST_FILE = Shortwave/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "B62003B4-6ACE-448F-A876-2B0E29FC8081";
+				PRODUCT_NAME = Wavelength;
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};

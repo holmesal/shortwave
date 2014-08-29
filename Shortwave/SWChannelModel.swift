@@ -140,49 +140,45 @@ protocol ChannelCellActionDelegate
     //selector called from WallSource to tell which message is dislpayed right now, triggers NO ACTIVITY display
     func didViewMessageModel(message:MessageModel!)
     {
-//        let priority = message.priority
-//
-//        
+        let priority = message.priority
 
-//        
-//        if priority >= lastSeen && priority > lastPriorityToSet
-//        {
-//            lastPriorityToSet = priority
-//            setPriorityEventually(priority) //unless usurped by a newer message!
-//        }
+        if priority >= lastSeen && priority > lastPriorityToSet
+        {
+            lastPriorityToSet = priority
+            setPriorityEventually(priority) //unless usurped by a newer message!
+        }
     }
     
 //    //prepare to synchronise 
     var lastPriorityToSet:Double = 0
-//    var setPriorityTimer:NSTimer?;
-//    func setPriorityEventually(priority:Double)
-//    {
-//        
-//        if let theTimer = setPriorityTimer
-//        {
-//            theTimer.invalidate()
-//            setPriorityTimer = nil
-//        }
-//        
-//        setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
-//        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
-//        
-//    }
-//    
-//    
+    var setPriorityTimer:NSTimer?;
+    func setPriorityEventually(priority:Double)
+    {
+        
+        if let theTimer = setPriorityTimer
+        {
+            theTimer.invalidate()
+            setPriorityTimer = nil
+        }
+        
+        setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
+        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
+        
+    }
+    
     //called right after sending a message yourself.
     func setPriorityToNow()
-    {
-        lastPriorityToSet = NSDate().timeIntervalSince1970 * 1000
-        setPriority()
+    {//idk
+        let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
+        isSynchronized = true
+        delegate?.channel(self, hasNewActivity:!isSynchronized)
+        var setLastSeenFB = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
+        setLastSeenFB.setValue([".sv": "timestamp" ])
     }
     //sets the priority locally (called by timer only) and updates firebase
     func setPriority()
     {
         self.lastSeen = lastPriorityToSet
-        
-//        setPriorityTimer!.invalidate()
-//        setPriorityTimer = nil;
         
         let myId = (NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String)
         
@@ -193,7 +189,8 @@ protocol ChannelCellActionDelegate
         
         var setLastSeenFB = Firebase(url: kROOT_FIREBASE + "users/" + myId + "/channels/" + name! + "/lastSeen")
         setLastSeenFB.setValue(self.lastSeen)
-//        println("setLastSeenFB = \(setLastSeenFB)")
+        println("lastSeen set to \(self.lastSeen)")
+        
     }
     
 

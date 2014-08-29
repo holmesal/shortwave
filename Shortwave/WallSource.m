@@ -17,7 +17,7 @@
 #import "SWUser.h"
 
 
-#import "Shortwave-Swift.h"
+#import "Wavelength-Swift.h"
 #import <Firebase/Firebase.h>
 
 #define kMAX_NUMBER_OF_MESSAGES 100

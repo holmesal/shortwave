@@ -29,8 +29,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     
     var suggestions:Array<Dictionary<String, String>> =
     [
-        ["str1": "s1",
-         "str2": "s2"]
+        ["str1": "Collaborate with",
+         "str2": "#your-community"]
     ]
 
 
@@ -38,9 +38,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
 
-        
         errorRetryView.alpha = 0.0
         errorRetryView.userInteractionEnabled = false
         errorRetryView.backgroundColor = UIColor.clearColor()
@@ -210,6 +208,8 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         UIView.animateWithDuration(0.4, delay: 0.0, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: .CurveLinear, animations: {
                 self.centerView.alpha = 0.0
                 self.authorizingView.alpha = 1.0
+//                println("authorizingView \(self.authorizingView)")
+//                println("authorizingView.superView = \(self.authorizingView.superview)")
             }, completion:
             {(b:Bool) in })
     }

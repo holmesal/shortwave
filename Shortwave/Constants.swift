@@ -43,7 +43,7 @@ let kFacebookOnAppStore = "https://itunes.apple.com/us/app/facebook/id284882215?
 let kFacebookAppId = "684979988223644"
 let kFacebookPermissions:Array<AnyObject> = []//["email"]
 
-let kMixpanelToken = ""
+let kMixpanelToken = "b8c0a03029e85ac788e49f10ddb2e80d"
 //"public_profile",
 
 let kNiceColors = [

@@ -141,6 +141,11 @@
 //    size.height = 28 + size.height + 16 + 11 + 6; //(12+15+8*2) + size.height;//MAX(17*2+40, 15*2 + size.height);
     size.height = 28 + size.height + 16 + 10;
 //    NSLog(@"returning height = %f", size.height);
+    
+    NSLog(@"**");
+    NSLog(@"sizeWithMessageModel = %@", NSStringFromCGSize(size) );
+    NSLog(@"text = %@", text);
+    
     return size.height;
 }
 

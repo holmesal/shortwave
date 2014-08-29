@@ -16,7 +16,7 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
-#import "Shortwave-Swift.h"
+#import "Wavelength-Swift.h"
 
 @interface MessageModel ()
 

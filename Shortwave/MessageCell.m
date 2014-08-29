@@ -16,7 +16,7 @@
 #import "MessageImage.h"
 #import "SWSpotifyTrackCell.h"
 #import "SWUserManager.h"
-#import "Shortwave-Swift.h"
+#import "Wavelength-Swift.h"
 #import "SWGifCell.h"
 
 @implementation MessageCell
