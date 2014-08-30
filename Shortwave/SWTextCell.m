@@ -112,21 +112,21 @@
 
 +(UIFont*)fontForMessageTextView
 {
-    return [UIFont systemFontOfSize:14];//[UIFont fontWithName:@"Avenir-Light" size:14];
+    return [UIFont fontWithName:@"Avenir-Light" size:14];
 }
 +(CGSize)heightOfMessageTextViewWithInput:(NSString*)inputText
 {
 
     UIFont *font = [SWTextCell fontForMessageTextView];
     
-    UILabel *fakeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232, 400)];
+    UILabel *fakeLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 232-2-10, 400)];
     fakeLabel.font = font;
     fakeLabel.text = inputText;
     fakeLabel.numberOfLines = 0;
     
     NSAttributedString *attributedText = [[NSAttributedString alloc] initWithString:inputText attributes:@{NSFontAttributeName: font}];
 //    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
-    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
+    CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232-2-10, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
     
     return size;
 }

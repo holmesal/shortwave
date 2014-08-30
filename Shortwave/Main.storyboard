@@ -108,7 +108,7 @@
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yat-Kf-OX1">
-                                        <rect key="frame" x="32" y="-12" width="160" height="121"/>
+                                        <rect key="frame" x="32" y="-1" width="160" height="121"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Authenticating" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UBx-sk-dGS">
                                                 <rect key="frame" x="9" y="28" width="143" height="24"/>
