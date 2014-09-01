@@ -821,7 +821,11 @@ static NSOperationQueue *sharedQueue = nil;
 #if DEBUG_REQUEST_STATUS || DEBUG_THROTTLING
 	ASI_DEBUG_LOG(@"[STATUS] Starting asynchronous request %@",self);
 #endif
-	[sharedQueue addOperation:self];
+    
+    if (![sharedQueue.operations containsObject:self])
+    {
+        [sharedQueue addOperation:self];
+    }
 }
 
 #pragma mark concurrency
