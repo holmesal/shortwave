@@ -16,7 +16,9 @@
 
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
+
 #import "Wavelength-Swift.h"
+
 
 @interface MessageModel ()
 
@@ -232,11 +234,38 @@
             
         }
     }];
-    self.name = messagesChannel.name;
     
+    
+    Firebase *membersFb = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/channels/%@/members", channel] ];
+    [membersFb observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        NSLog(@"snapshot.value = %@", snapshot.value);
+        if ([snapshot.value isKindOfClass:[NSDictionary class]])
+        {
+            NSArray *members = ((NSDictionary*)snapshot.value).allKeys;
+            
+            NSLog(@"members = %@", members);
+            
+            for (NSString *member in members)
+            {
+                NSString *userChannelUrl = [NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/channels/%@/members/channels/%@/", member, channel];
+                Firebase *userChannelFirebase = [[Firebase alloc] initWithUrl:userChannelUrl];
+                [userChannelFirebase setPriority:kFirebaseServerValueTimestamp withCompletionBlock:^(NSError *error, Firebase *firebase)
+                 {
+                     if (error)
+                     {
+                         NSLog(@"error = %@", error.localizedDescription);
+                     }
+                 }];
+            }
+            
+        }
+    }];
+    
+    
+    self.name = messagesChannel.name;
     [self addToPushQueueForChannel:channel];
 
-    
 }
 
 -(void)addToPushQueueForChannel:(NSString*)channel

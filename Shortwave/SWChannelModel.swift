@@ -75,6 +75,8 @@ protocol ChannelCellActionDelegate
     
     var channelDescription:String?
     
+    var members:Array<String> = [String]()
+    
     
     //collectionView
     var messageCollectionView:UICollectionView? {
@@ -258,6 +260,32 @@ protocol ChannelCellActionDelegate
                 }
             })
         
+        
+//        bindToMembers()
+    }
+    
+    func bindToMembers()
+    {
+        let fb = Firebase(url: kROOT_FIREBASE + "channels/" + self.name! + "/members")
+        fb.observeEventType(FEventTypeChildAdded, withBlock: {(snapshot:FDataSnapshot!)
+            in
+            
+            if let string = snapshot.value as? String
+            {
+                self.members.append(string)
+            }
+            
+        })
+        
+        fb.observeEventType(FEventTypeChildRemoved, withBlock: {(snapshot:FDataSnapshot!)
+            in
+        
+            if let string = snapshot.value as? String
+            {
+                self.members = self.members.filter({$0 != string})
+            }
+            
+        })
     }
     
 
@@ -306,7 +334,7 @@ protocol ChannelCellActionDelegate
         
         membersFB.setValue(true, withCompletionBlock:
             {(error:NSError!, firebase:Firebase!) in
-                if error
+                if (error != nil)
                 {
                     println("error adding myself to a channel (\(channelName)) \(error)")
                     completion(error: error)
@@ -316,7 +344,7 @@ protocol ChannelCellActionDelegate
                     let myChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(channelName)")
                     myChannels.setValue(["lastSeen":0, "muted":NSNumber(bool: false)], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
                         {(error:NSError!, firebase:Firebase!) in
-                            if error
+                            if (error != nil)
                             {
                                 completion(error: error)
                                 println("error getting my user to join channel \(error)")

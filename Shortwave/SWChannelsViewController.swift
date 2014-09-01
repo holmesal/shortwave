@@ -140,8 +140,18 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
                                 return
                             }
                             
+                            //index for channel?
                             
-                            let index = self.channels.count;
+                            var index = self.channels.count;
+                            
+//                            for otherChannel in self.channels
+//                            {
+//                                if channelModel.lastSeen > otherChannel.lastSeen
+//                                {
+//                                    index++
+//                                }
+//                            }
+                            
                             
                             //is this the channel that triggered a remote notification which the user opened the app with?
 //                            println("watch for \((UIApplication.sharedApplication().delegate as AppDelegate).channelFromRemoteNotification) this is \(channelModel.name!)")
@@ -427,7 +437,7 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
         let userID = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
         let message = SWMessageModel(userID: userID, text: message)
         
-        message.sendMessageToChannel(selectedChannel!.name!)
+        message.sendMessageToChannel(selectedChannel)
         
     }
     */

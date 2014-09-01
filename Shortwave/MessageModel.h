@@ -6,9 +6,12 @@
 //  Copyright (c) 2014 Buildco. All rights reserved.
 //
 
+
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "SWUser.h"
+
+
 
 @interface MessageModel : NSObject
 

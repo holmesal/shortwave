@@ -19,6 +19,7 @@ import UIKit
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: NSDictionary?) -> Bool {
 
+        
         Crashlytics.startWithAPIKey("4a71d4033d33d194e246ada67acce08c24c06e80")
         Mixpanel.sharedInstanceWithToken(kMixpanelToken)
         
@@ -64,6 +65,13 @@ import UIKit
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
+        
+        NSLog.println("application became active")
+        
+//        [[UIApplication sharedApplication] setApplicationIconBadgeNumber: 0];
+//        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+
+        
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
@@ -215,6 +223,12 @@ import UIKit
 
     func application(application: UIApplication!, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]!)
     {
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+        UIApplication.sharedApplication().cancelAllLocalNotifications()
+        
+        NSLog.println("\(userInfo) I got a notification!")
+        
+        
         if UIApplication.sharedApplication().applicationState == .Active
         {
             println("##notification## received by running app")
@@ -226,6 +240,9 @@ import UIKit
         }
         
     }
+    
+
+    
     
 //    -(void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
 //    if ([UIApplication sharedApplication].applicationState==UIApplicationStateActive) {

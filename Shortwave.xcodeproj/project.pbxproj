@@ -33,6 +33,7 @@
 		AA879E061996DBE800C34CB1 /* CocoaColaClassic.m in Sources */ = {isa = PBXBuildFile; fileRef = AA879E051996DBE800C34CB1 /* CocoaColaClassic.m */; };
 		AA9B7A731982058700C17494 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A721982058700C17494 /* Accounts.framework */; };
 		AA9B7A791982356A00C17494 /* FirebaseSimpleLogin.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */; };
+		AAB00F8919B2C04100EC3BD3 /* NSLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB00F8819B2C04100EC3BD3 /* NSLog.swift */; };
 		AAB650B4198894EA009D6D23 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B3198894EA009D6D23 /* SystemConfiguration.framework */; };
 		AAB650B6198894F7009D6D23 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B5198894F7009D6D23 /* MobileCoreServices.framework */; };
 		AAB650B819889502009D6D23 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AAB650B719889502009D6D23 /* libz.dylib */; };
@@ -124,6 +125,7 @@
 		AA9B7A721982058700C17494 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AA9B7A741982059700C17494 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		AA9B7A781982356A00C17494 /* FirebaseSimpleLogin.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseSimpleLogin.framework; sourceTree = "<group>"; };
+		AAB00F8819B2C04100EC3BD3 /* NSLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLog.swift; sourceTree = "<group>"; };
 		AAB650B3198894EA009D6D23 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		AAB650B5198894F7009D6D23 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		AAB650B719889502009D6D23 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -342,6 +344,7 @@
 				AAB650BB19897C96009D6D23 /* UIColor+HexString.h */,
 				AAB650BC19897C96009D6D23 /* UIColor+HexString.m */,
 				AAC79F0A1982F8BE005961D1 /* Extension.swift */,
+				AAB00F8819B2C04100EC3BD3 /* NSLog.swift */,
 			);
 			name = extension;
 			sourceTree = "<group>";
@@ -600,6 +603,7 @@
 			files = (
 				AAB650BD19897C96009D6D23 /* UIColor+HexString.m in Sources */,
 				AAB78EF619888C2300E93D0C /* ASINetworkQueue.m in Sources */,
+				AAB00F8919B2C04100EC3BD3 /* NSLog.swift in Sources */,
 				AAB78EF019888C2300E93D0C /* ASIDataCompressor.m in Sources */,
 				AAB78EF519888C2300E93D0C /* ASIInputStream.m in Sources */,
 				AAB78EF419888C2300E93D0C /* ASIHTTPRequest.m in Sources */,
@@ -750,8 +754,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -768,7 +772,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Wavelength;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "eda850f1-2e68-4953-bd6f-7f7d7ef0a1e8";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -781,8 +785,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -799,7 +803,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Wavelength;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "c8cba7e7-f818-4624-9870-dc36fa9ec1bb";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
