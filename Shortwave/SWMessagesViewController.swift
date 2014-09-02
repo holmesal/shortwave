@@ -105,11 +105,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
     /// MARK: keyboardWillToggle for willShow and willHide
     func keyboardWillToggle(notification:NSNotification)
     {
-//        if !composeBarView.textField.isFirstResponder()
-//        {
-//            return
-//        }
-        let userInfo = notification.userInfo
+
+        let userInfo = notification.userInfo!
         
         let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
         let curveV = userInfo[UIKeyboardAnimationCurveUserInfoKey]
@@ -190,6 +187,8 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
         
         composeBarView.setText("", animated: true)
         composeBarView.resignFirstResponder()
+        
+
     }
     
     deinit

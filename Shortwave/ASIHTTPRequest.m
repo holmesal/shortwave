@@ -840,7 +840,8 @@ static NSOperationQueue *sharedQueue = nil;
 	return finished;
 }
 
-- (BOOL)isExecuting {
+- (BOOL)isExecuting
+{
 	return [self inProgress];
 }
 

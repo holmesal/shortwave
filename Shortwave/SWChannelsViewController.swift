@@ -112,8 +112,11 @@ class SWChannelsViewController: UIViewController, UICollectionViewDataSource, UI
     
     func bindToChannels()
     {
-        let url = "\(kROOT_FIREBASE)users/\(NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId))/channels/"
+        
+        let userId:String! = NSUserDefaults.standardUserDefaults().objectForKey(kNSUSERDEFAULTS_KEY_userId) as String
+        let url = "\(kROOT_FIREBASE)users/\(userId)/channels/"
         let f = Firebase(url: url)
+        
         
         f.observeEventType(FEventTypeChildAdded, andPreviousSiblingNameWithBlock:
             {

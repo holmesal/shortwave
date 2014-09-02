@@ -18,7 +18,7 @@ protocol ChannelActivityIndicatorDelegate
 {
 //    func channel(channel:SWChannelModel, receivedNewMessage:MessageModel?) -> ()
     func channel(channel:SWChannelModel, hasNewActivity:Bool)
-    
+
 }
 
 protocol ChannelCellActionDelegate
@@ -164,7 +164,7 @@ protocol ChannelCellActionDelegate
         }
         
         setPriorityTimer = NSTimer(timeInterval: 0.3, target: self, selector: "setPriority", userInfo: nil, repeats: false)
-        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer, forMode: NSDefaultRunLoopMode)
+        NSRunLoop.mainRunLoop().addTimer(setPriorityTimer!, forMode: NSDefaultRunLoopMode)
         
     }
     
@@ -293,7 +293,11 @@ protocol ChannelCellActionDelegate
     func initialize(#dictionary:NSDictionary, andUrl url:String)
     {
         self.url = url;
-        self.name = url.componentsSeparatedByString("/").last as String
+        
+        
+        let array:Array = url.componentsSeparatedByString("/")
+        
+        self.name = (array)[array.count-1] as String
         
         self.channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(name!)")
         self.messagesRoot = Firebase(url: "\(kROOT_FIREBASE)messages/\(name!)")

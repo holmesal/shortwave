@@ -338,7 +338,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                     if timeRemainingToWait > 0
                     {
                         self.timer = NSTimer(timeInterval: timeRemainingToWait, target: self, selector: "updateUITimer", userInfo: nil, repeats: false)
-                            NSRunLoop.mainRunLoop().addTimer(self.timer, forMode: NSDefaultRunLoopMode)
+                            NSRunLoop.mainRunLoop().addTimer(self.timer!, forMode: NSDefaultRunLoopMode)
                     } else
                     {
                         self.updateUITimer()
@@ -453,7 +453,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         
         membersFB.setValue(true, withCompletionBlock:
             {(error:NSError!, firebase:Firebase!) in
-                if error
+                if (error != nil)
                 {
                     mixpanelErrorReport(error)
                     println("error adding myself to a channel \(error)")
@@ -463,7 +463,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                     let myChannels = Firebase(url: "\(kROOT_FIREBASE)users/\(userId)/channels/\(self.channelName)")
                     myChannels.setValue(["lastSeen":0, "muted":NSNumber(bool: false)], andPriority: NSDate().timeIntervalSince1970*1000, withCompletionBlock:
                         {(error:NSError!, firebase:Firebase!) in
-                            if error
+                            if (error != nil)
                             {
                                 mixpanelErrorReport(error)
                                 println("error getting my user to join channel \(error)")
@@ -507,7 +507,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
         let channelRoot = Firebase(url: "\(kROOT_FIREBASE)channels/\(self.channelName)")
         channelRoot.setValue(value, withCompletionBlock:
             {(error:NSError!, firebase:Firebase!) in
-                if error
+                if (error != nil)
                 {
                     mixpanelErrorReport(error)
                     println("error \(error) and firebase \(firebase)")
@@ -530,7 +530,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
                         "muted":NSNumber(bool: false)
                         ], andPriority:priority, withCompletionBlock:
                         {(error:NSError!, firebase:Firebase!) in
-                            if error
+                            if (error != nil)
                             {
                                 mixpanelErrorReport(error)
                                 println("error \(error) and firebase \(firebase)")
@@ -597,7 +597,7 @@ class SWNewChannel: UIViewController, UITextFieldDelegate, UITextViewDelegate
     
     func keyboardWillToggle(notification:NSNotification)
     {
-        let userInfo = notification.userInfo
+        let userInfo = notification.userInfo!
         
         let durationV = userInfo[UIKeyboardAnimationDurationUserInfoKey]
         let curveV = userInfo[UIKeyboardAnimationCurveUserInfoKey]

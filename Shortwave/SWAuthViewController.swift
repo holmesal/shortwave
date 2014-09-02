@@ -91,7 +91,7 @@ class SWAuthViewController: UIViewController, UIAlertViewDelegate
         } else
         {
             repeatTimer = NSTimer(timeInterval: 4, target: self, selector: "repeat", userInfo: nil, repeats: true)
-            NSRunLoop.mainRunLoop().addTimer(repeatTimer, forMode: NSDefaultRunLoopMode)
+            NSRunLoop.mainRunLoop().addTimer(repeatTimer!, forMode: NSDefaultRunLoopMode)
         }
     }
     

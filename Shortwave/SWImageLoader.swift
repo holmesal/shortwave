@@ -236,7 +236,7 @@ enum DataLoadingParcelState
                 let key = parcel.url.absoluteString
                 
 //                println("discardabieLimage = \(discardableImage) key \(key)")
-                self.cache.setObject(discardableImage, forKey: key)
+                self.cache.setObject(discardableImage, forKey: key!)
                 
                 if self.dataLoadingParcelOrder.count > self.NUM_CONCURRENT
                 {
@@ -244,7 +244,7 @@ enum DataLoadingParcelState
                     dlp.start()
                 }
                 
-                self.dataLoadingParcels[key] = nil
+                self.dataLoadingParcels[key!] = nil
                 //at this point, what the fuck? um, i mean.... removeObject? that function doesn't work in swift.  ssoooooo.  what the fuck.
                 if let index = find(self.dataLoadingParcelOrder, parcel)
                 {
