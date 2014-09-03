@@ -76,7 +76,7 @@ class SWMessagesViewController : UIViewController, PHFComposeBarViewDelegate, UI
             
         println("uid = \(UID)")
         
-        let shareUrl = "http://getshortwave.com/" + self.channelModel.name! + "?ref=" + skimmedId
+        let shareUrl = "http://wavelength.im/" + self.channelModel.name! + "?ref=" + skimmedId
         println("shareUrl = \(shareUrl)")
         var activityView = UIActivityViewController(activityItems: [shareUrl], applicationActivities: nil)
         

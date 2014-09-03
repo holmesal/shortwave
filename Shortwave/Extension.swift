@@ -16,19 +16,19 @@ import UIKit
         if let urlString = string
         {
             
-            let optionalLinkDetector = NSDataDetector.dataDetectorWithTypes(NSTextCheckingType.Link.toRaw(), error: nil)
-            
-            let urlStringRange = NSMakeRange(0, urlString.length)
-            let matchingOptions = NSMatchingOptions.fromRaw(0)!
-
-            if let linkDetector = optionalLinkDetector
-            {
-                if 1 != linkDetector.numberOfMatchesInString(urlString, options:matchingOptions , range: urlStringRange)
-                {
-                    return false
-                }
-            }
-            
+//            let optionalLinkDetector = NSDataDetector.dataDetectorWithTypes(NSTextCheckingType.Link.toRaw(), error: nil)
+//            
+//            let urlStringRange = NSMakeRange(0, urlString.length)
+//            let matchingOptions = NSMatchingOptions.fromRaw(0)!
+//
+//            if let linkDetector = optionalLinkDetector
+//            {
+//                if 1 != linkDetector.numberOfMatchesInString(urlString, options:matchingOptions , range: urlStringRange)
+//                {
+//                    return false
+//                }
+//            }
+//            
 //            let checkingResult:NSTextCheckingResult = linkDetector.firstMatchInString(urlString, options: matchingOptions, range: urlStringRange)
             
             return true

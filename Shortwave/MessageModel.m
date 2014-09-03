@@ -279,7 +279,7 @@
     {
         if (error)
         {
-            NSLog(@"after pushQueue %@ setValue %@, error: %@", pushQueue, value, error.localizedDescription);
+//            NSLog(@"after pushQueue %@ setValue %@, error: %@", pushQueue, value, error.localizedDescription);
         }
     }];
     

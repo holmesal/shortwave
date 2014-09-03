@@ -803,7 +803,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = Wavelength;
-				PROVISIONING_PROFILE = "c8cba7e7-f818-4624-9870-dc36fa9ec1bb";
+				PROVISIONING_PROFILE = "3c2e319e-a0e0-4d3e-ac2b-0f8f62fb4117";
 				SWIFT_OBJC_BRIDGING_HEADER = "Shortwave/Shortwave-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
