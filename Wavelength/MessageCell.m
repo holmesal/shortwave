@@ -19,6 +19,8 @@
 #import "SWGifCell.h"
 #import "SWImageLoader.h"
 #import "AppDelegate.h"
+#import "MessageFile.h"
+
 @implementation MessageCell
 
 @synthesize model;
@@ -57,6 +59,17 @@
         }
         break;
         
+        case MessageModelTypeFile:
+        {
+            MessageFile *fileMessage = (MessageFile*)messageModel;
+            if ([fileMessage.contentType isEqualToString:@"image/jpeg"])
+            {
+                NSLog(@"messageModelTypeImage");
+            } else
+            {
+                break;
+            }
+        }
         case MessageModelTypeImage:
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
@@ -67,16 +80,27 @@
 //                [imageCell resetWithImageSize:CGSizeMake(320, 100)];
                 
                 //load image
-                MessageImage *imageMessage = (MessageImage *)messageModel;
-                
-                SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
-                [imageLoader loadImage:imageMessage.src completionBlock:^(UIImage *image, BOOL synchronous)
+                if ([messageModel isKindOfClass:[MessageImage class] ])
                 {
-                    [imageCell setImage:image animated:YES];
-                } progressBlock:^(float progress)
+                    MessageImage *imageMessage = (MessageImage *)messageModel;
+                    
+                    SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
+                    [imageLoader loadImage:imageMessage.src completionBlock:^(UIImage *image, BOOL synchronous)
+                    {
+                        [imageCell setImage:image animated:YES];
+                    } progressBlock:^(float progress)
+                    {
+                        [imageCell setProgress:progress];
+                    }];
+                } else
+                if ([messageModel isKindOfClass:[MessageFile class]])
                 {
-                    [imageCell setProgress:progress];
-                }];
+                    MessageFile *fileMessage = (MessageFile*)messageModel;
+                    
+                    NSLog(@"fileMessage = %@", fileMessage);
+                    NSAssert(NO, @"I need to make a loader for files, analogues to SWImageLoader");
+                    
+                }
             
             }
 

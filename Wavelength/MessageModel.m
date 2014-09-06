@@ -13,6 +13,7 @@
 #import "MessageImage.h"
 #import "MessageSpotifyTrack.h"
 #import "MessageWebSite.h"
+#import "MessageFile.h"
 
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
@@ -68,6 +69,10 @@
         if ([type isEqualToString:@"image"])
         {
             return [[MessageImage alloc] initWithDictionary:dictionary andPriority:priority];
+        } else
+        if ([type isEqualToString:@"file"])
+        {
+            return [[MessageFile alloc] initWithDictionary:dictionary andPriority:priority];
         } else
         if ([type isEqualToString:@"spotify_track"])
         {

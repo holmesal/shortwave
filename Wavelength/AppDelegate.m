@@ -43,6 +43,7 @@
     [audioSession setCategory:AVAudioSessionCategoryAmbient error:nil];
     
     [UINavigationBar appearance].titleTextAttributes = @{NSForegroundColorAttributeName : [UIColor whiteColor]};
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
     
     if (launchOptions)

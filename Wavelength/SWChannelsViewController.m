@@ -31,14 +31,14 @@
 @implementation SWChannelsViewController
 @synthesize channelsCollectionView;
 @synthesize channels;
-//-(UIStatusBarStyle)preferredStatusBarStyle
-//{
-//    return UIStatusBarStyleLightContent;
-//}
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-//    [self setNeedsStatusBarAppearanceUpdate];
+    //    [self setNeedsStatusBarAppearanceUpdate];
     
     channels = [[NSMutableArray alloc] init];
     
@@ -86,6 +86,8 @@
     self.navigationItem.rightBarButtonItem = addButton;
     
     self.navigationItem.hidesBackButton = YES;
+    
+
     
 }
 -(void)back

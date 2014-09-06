@@ -31,3 +31,8 @@
 //["email"]
 
 #define Objc_kMixpanelToken @"b8c0a03029e85ac788e49f10ddb2e80d"
+
+
+#define Objc_kAWS_ACCESS_KEY_ID @"AKIAJWLORAVT7M4V7IJA"
+#define Objc_kAWS_SECRET_KEY @"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"
+#define Objc_kAWS_BUCKET @"wavelength-bucket"

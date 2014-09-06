@@ -16,9 +16,10 @@
 #import "SWImageCell.h"
 #import <AVFoundation/AVFoundation.h>
 #import "MessageGif.h"
+#import "SWBucketUpload.h"
+#import "MessageFile.h"
 
-
-@interface SWMessagesViewController () <PHFComposeBarViewDelegate>
+@interface SWMessagesViewController () <PHFComposeBarViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate>
 
 
 @property (strong, nonatomic) UIView *temporaryEnlargedView;
@@ -32,6 +33,11 @@
 @property (strong, nonatomic) UIGravityBehavior *gravity;
 @property (strong, nonatomic) UICollisionBehavior *collision;
 
+
+////upload specs
+//@property (strong, nonatomic) NSString *fileName;
+//@property (assign, nonatomic) CGSize imageSize;
+//@property (strong, nonatomic) NSString *contentType;
 
 @end
 
@@ -54,6 +60,14 @@
 @synthesize composeBarView;
 @synthesize collectionView;
 @synthesize composeBarBottomConstraint;
+
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+}
 
 -(void)viewDidLoad
 {
@@ -89,7 +103,123 @@
     composeBarView.maxLinesCount = 5;
     composeBarView.button.titleLabel.textColor = [UIColor colorWithHexString:@"7E7E7E"];
     composeBarView.delegate = self;
+    
+    composeBarView.utilityButtonImage = [UIImage imageNamed:@"camera.png"];
 }
+
+//all composeBarView functionality can be abstracted to another class, ideally.  Probably the composebarView
+-(void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
+{
+    NSLog(@"pick image!");
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Upload an image from" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"my camera", @"my library", nil];
+    [actionSheet showInView:self.view];
+//    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 44)];
+    [label setTextColor:[UIColor blackColor] ];
+    label.text = @"Photos";
+    CGRect labelRect = label.frame;
+    labelRect.size = [label sizeThatFits:label.frame.size];
+    [label setFrame:labelRect];
+    
+    [label setTextAlignment:NSTextAlignmentCenter];
+    
+    viewController.navigationItem.titleView = label;
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    
+    switch (buttonIndex) {
+        case 0:
+        {
+            //camera
+            NSLog(@"open camera");
+            UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
+
+            picker.delegate = self;
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+            [self presentViewController:picker animated:YES completion:nil];
+            
+        }
+            break;
+        case 1:
+        {
+            //library
+            NSLog(@"open library");
+            UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
+//            NSLog(@"picker.navigationItem %@", picker.navigationItem);
+//            
+//            NSLog(@"picker.navigationItem.titleView = %@", picker.navigationItem.titleView);
+            
+            picker.delegate = self;
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            [self presentViewController:picker animated:YES completion:nil];
+            
+            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+            
+        }
+        break;
+            
+        default:
+            return;
+            break;
+    }
+    
+    
+    
+}
+
+-(NSString *) genARandStringLength: (int) len {
+    NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    NSMutableString *randomString = [NSMutableString stringWithCapacity: len];
+    
+    for (int i=0; i<len; i++) {
+        [randomString appendFormat: @"%C", [letters characterAtIndex: arc4random() % [letters length]]];
+    }
+    
+    return randomString;
+}
+
+-(void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+
+    //image
+    UIImage *img = info[@"UIImagePickerControllerOriginalImage"];
+    NSData *imageData = UIImageJPEGRepresentation(img, 0.9);
+    NSString *randomString = [self genARandStringLength:25];
+    
+    
+    //on complete upload, will upload this message
+    NSString *fileName = [NSString stringWithFormat:@"%@.jpg", randomString];
+    NSString *contentType = @"image/jpeg";
+    CGSize imageSize = img.size;
+    
+    [[SWBucketUpload sharedInstance] uploadData:imageData forName:fileName contentType:contentType progress:^(CGFloat progress)
+    {
+        NSLog(@"returend progress = %f", progress);
+    } andComlpetion:^(NSError *error)
+    {
+        NSLog(@"completion! %@", error);
+        if (error)
+        {
+            NSLog(@"error = %@", error);
+        } else
+        {
+            NSString *ownerID = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
+            //post a file message to this channel
+            MessageFile *fileMessage = [[MessageFile alloc] initWithFileName:fileName contentType:contentType andImageSize:imageSize andOwnerID:ownerID];
+            [fileMessage sendMessageToChannel:channelModel.name];
+        }
+    }];
+    
+    
+    [picker dismissViewControllerAnimated:YES completion:^{}];
+}
+
 
 -(void)shareChannelAction:(id)sender
 {
@@ -179,18 +309,19 @@
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:nil];
-}
-
--(void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-    
     if (channelModel.messageCollectionView == self.collectionView)
     {
         channelModel.scrollViewDelegate = nil;
         channelModel.cellActionDelegate = nil;
         channelModel.messageCollectionView = nil; // no more collecitonView associated with channelModel dataSource Delegate
     }
+    
+}
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
 }
 
 -(void)didLongPress:(UILongPressGestureRecognizer *)longPress

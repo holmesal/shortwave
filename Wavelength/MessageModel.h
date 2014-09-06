@@ -27,8 +27,12 @@ typedef enum
     MessageModelTypeYoutubeVideo,
     
     MessageModelTypePersonalVideo,
-    MessageModelTypePersonalPhoto
+    MessageModelTypePersonalPhoto,
+    
+    MessageModelTypeFile
 
+    
+    
 } MessageModelType;
 
 //returns nil if it failed to grab all data
