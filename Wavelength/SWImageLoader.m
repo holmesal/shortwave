@@ -9,6 +9,10 @@
 #import "SWImageLoader.h"
 #import "ASIHTTPRequest.h"
 
+#import <AWSS3/AWSS3.h>
+#import <AWSRuntime/AWSRuntime.h>
+#import "ObjcConstants.h"
+
 
 #pragma mark DiscardableImage declaration
 @interface DiscardableImage : NSObject <NSDiscardableContent>
@@ -92,10 +96,17 @@
 @property (strong, nonatomic) ASIHTTPRequest *request;
 @property (strong, nonatomic) NSData *receivedData;
 
+@property (assign, nonatomic) BOOL isAwsLoad;
+@property (strong, nonatomic) NSString *fileName;
+
 -(id)initWithUrl:(NSURL*)theUrl;
+-(id)initWithFileName:(NSString*)fileName;
+
 -(void)initializeReqeuest;
 -(void)addListeners:(void (^)(void))completion progress:(void (^)(void))progress;
 -(void)start;
+
+-(NSString*)key;
 
 
 @end
@@ -108,29 +119,69 @@
 @synthesize request;
 @synthesize receivedData;
 
--(id)initWithUrl:(NSURL *)theUrl
+@synthesize isAwsLoad;
+@synthesize fileName;
+
+-(id)init
 {
     if (self = [super init])
     {
-        url = theUrl;
         percent = 0.0f;
         state = DataLoadingParcelStateUnstarted;
         eventDispatchers = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+-(id)initWithUrl:(NSURL *)theUrl
+{
+    if (self = [self init])
+    {
+        isAwsLoad = NO;
+        url = theUrl;
+
         [self initializeReqeuest]; //setups request fresh
     }
     return self;
-    
+}
+
+-(id)initWithFileName:(NSString*)theFileName
+{
+    if (self = [self init])
+    {
+        isAwsLoad = YES;
+        fileName = theFileName;
+        
+        [self initializeReqeuest];
+    }
+    return self;
 }
 
 -(void)initializeReqeuest
 {
-    request = [[ASIHTTPRequest alloc] initWithURL:url];
-    request.downloadProgressDelegate = self;
-    
-    request.numberOfTimesToRetryOnTimeout = 2;
-    request.didFinishSelector = @selector(requestFinished:);
-    request.didFailSelector = @selector(requestFailed:);
-    request.delegate = self;
+    if (isAwsLoad)
+    {
+        
+    } else
+    {
+        request = [[ASIHTTPRequest alloc] initWithURL:url];
+        request.downloadProgressDelegate = self;
+        
+        request.numberOfTimesToRetryOnTimeout = 2;
+        request.didFinishSelector = @selector(requestFinished:);
+        request.didFailSelector = @selector(requestFailed:);
+        request.delegate = self;
+    }
+}
+-(NSString*)key
+{
+    if (isAwsLoad)
+    {
+        return self.fileName;
+    } else
+    {
+        return self.url.absoluteString;
+    }
 }
 
 -(void)addListeners:(void (^)(void))completion progress:(void (^)(void))progress
@@ -144,8 +195,17 @@
     {
         case DataLoadingParcelStateUnstarted:
         {
-            state = DataLoadingParcelStateDownloading;
-            [request startAsynchronous];
+            if (isAwsLoad)
+            {
+                
+                [self performSelectorInBackground:@selector(awsStart) withObject:nil];
+                
+            } else
+            {
+                state = DataLoadingParcelStateDownloading;
+                [request startAsynchronous];
+            }
+            
             break;
         }
         default:
@@ -153,6 +213,42 @@
             NSLog(@"Download's state for %d is invalid to call load on. url %@", state, url);
         }
     }
+}
+
+-(void)awsStart
+{
+    S3GetObjectRequest *getObjectRequest = [[S3GetObjectRequest alloc] initWithKey:fileName withBucket:Objc_kAWS_BUCKET];
+
+    AmazonS3Client *s3 = [[AmazonS3Client alloc] initWithAccessKey:Objc_kAWS_ACCESS_KEY_ID withSecretKey:Objc_kAWS_SECRET_KEY];
+
+    S3GetObjectResponse *response;
+    @try
+    {
+        response = [s3 getObject:getObjectRequest];
+    }
+    @catch(NSException* ex)
+    {
+
+    }
+    
+    state = DataLoadingParcelStateComplete;
+    receivedData = response.body;
+    
+    
+    
+    [[NSOperationQueue mainQueue] addOperationWithBlock: ^
+     {
+         [self reportFinished];
+
+//         self.c
+//         if ([other isEqualToValue:@-1])
+//         {
+//             completion(bwImage, path, other, YES);
+//         } else
+//         {
+//             completion(img, path, other, NO);
+//         }
+     }];
 }
 
 -(void)requestFailed:(ASIHTTPRequest*)rq
@@ -177,7 +273,11 @@
     state = DataLoadingParcelStateComplete;
     receivedData = request.responseData;
 
-    NSLog(@"rq = %@", rq.url);
+    [self reportFinished];
+}
+
+-(void)reportFinished
+{
     
     //completion reporting
     
@@ -190,8 +290,6 @@
             event.completion();
         }
     }
-//    //clear all eventDispatchers!
-//    [eventDispatchers removeAllObjects];
 }
 
 -(void)setProgress:(float)p
@@ -249,6 +347,37 @@
     return self;
 }
 
+-(void)loadAwsImage:(NSString*)fileName completionBlock:(void(^)(UIImage *image, BOOL synchronous))completion progressBlock:(void(^)(float progress))progressBlock
+{
+    DiscardableImage *discardableImage = [cache objectForKey:fileName];
+    if (discardableImage)
+    {
+        completion(discardableImage.image, YES);
+    } else
+    {
+#warning dead code-store here needs to be inserted into EventDispatcher 
+        DataLoadingParcel *dataLoadingParcel = dataLoadingParcels[fileName];
+        if (dataLoadingParcel)
+        {
+            
+        } else
+        {
+            dataLoadingParcel = [[DataLoadingParcel alloc] initWithFileName:fileName];
+            
+            if (dataLoadingParcelOrder.count <= numConcurrent)
+            {
+                [dataLoadingParcel start];
+            }
+            
+            dataLoadingParcels[fileName] = dataLoadingParcel;
+            [dataLoadingParcelOrder addObject:dataLoadingParcel];
+        }
+        
+        [dataLoadingParcel addListeners:[self completionBlockForParcel:dataLoadingParcel completionBlock:completion] progress:[self progressBlockForParcel:dataLoadingParcel progressBlock:progressBlock]];
+        
+    }
+}
+
 -(void)loadImage:(NSString *)urlString completionBlock:(void (^)(UIImage *img, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock
 {
     DiscardableImage *discardableImage = [cache objectForKey:urlString];
@@ -303,7 +432,7 @@
         UIImage *image = [UIImage imageWithData:parcel.receivedData];
         //store discardableImage
         DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:image];
-        NSString *key = parcel.url.absoluteString;
+        NSString *key = [parcel key];
         
         [self.cache setObject:discardableImage forKey:key];
         

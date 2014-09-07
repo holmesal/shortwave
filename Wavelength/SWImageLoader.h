@@ -23,6 +23,8 @@ typedef enum
 -(id)init;//default concurrent 5
 -(id)initWithConcurrent:(NSInteger)conc;
 -(void)loadImage:(NSString*)urlString completionBlock:(void (^)(UIImage* image, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock;
+-(void)loadAwsImage:(NSString*)fileName completionBlock:(void(^)(UIImage *image, BOOL synchronous))completion progressBlock:(void(^)(float progress))progressBlock;
+
 -(BOOL)hasImage:(NSString*)urlString;
 
 //(returnType (^)(parameterTypes))blockName

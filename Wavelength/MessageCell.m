@@ -73,18 +73,21 @@
         case MessageModelTypeImage:
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
-            [imageCell setModel:messageModel]; //this will clear teh profileImageView.image to nil
-            imageCell.backgroundColor = [UIColor redColor];
+
             if (!imageCell.hasImage)
             {
-//                [imageCell resetWithImageSize:CGSizeMake(320, 100)];
+
+                [imageCell setModel:messageModel]; //this will clear teh profileImageView.image to nil
+                imageCell.backgroundColor = [UIColor redColor];
+                
+                SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
                 
                 //load image
                 if ([messageModel isKindOfClass:[MessageImage class] ])
                 {
                     MessageImage *imageMessage = (MessageImage *)messageModel;
                     
-                    SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
+                    
                     [imageLoader loadImage:imageMessage.src completionBlock:^(UIImage *image, BOOL synchronous)
                     {
                         [imageCell setImage:image animated:YES];
@@ -97,8 +100,19 @@
                 {
                     MessageFile *fileMessage = (MessageFile*)messageModel;
                     
-                    NSLog(@"fileMessage = %@", fileMessage);
-                    NSAssert(NO, @"I need to make a loader for files, analogues to SWImageLoader");
+//                    NSLog(@"fileMessage = %@", fileMessage);
+//                    NSAssert(NO, @"I need to make a loader for files, analogues to SWImageLoader");
+                    
+                    [imageLoader loadAwsImage:fileMessage.fileName completionBlock:^(UIImage *image, BOOL synchronous)
+                    {
+                        NSLog(@"hi");
+                        NSLog(@"image = %@", image);
+                        [imageCell setImage:image animated:YES];
+                    } progressBlock:^(float progress)
+                    {
+                         [imageCell setProgress:progress];
+                        NSLog(@"progress for aws image load is %f", progress);
+                    }];
                     
                 }
             
@@ -194,6 +208,18 @@
             height = [SWTextCell heightWithMessageModel:messageModel];
         }
             break;
+        
+        case MessageModelTypeFile:
+        {
+            MessageFile *fileMessage = (MessageFile*)messageModel;
+            if ([fileMessage.contentType isEqualToString:@"image/jpeg"])
+            {
+                //go on to MessageModelTypeImage
+            } else
+            {
+                break;
+            }
+        }
             
         case MessageModelTypeImage:
         {

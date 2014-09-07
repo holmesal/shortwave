@@ -366,9 +366,11 @@
                 {}];
             };
             
-            if (messageModel && [messageModel isKindOfClass:[MessageImage class]])
+            if ((messageModel && [messageModel isKindOfClass:[MessageImage class]]) ||
+                (messageModel && [messageModel isKindOfClass:[MessageFile class]] && [((MessageFile*)messageModel).contentType isEqualToString:@"image/jpeg"])
+                 )
             {
-                MessageImage *imageMessage = messageModel;
+//                MessageImage *imageMessage = messageModel;
                 createTemopraryEnlargedView();
                 SWImageCell *imageCell = (SWImageCell*)cell;
                 UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
