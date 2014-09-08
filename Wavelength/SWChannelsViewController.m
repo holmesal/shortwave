@@ -331,17 +331,11 @@
 //    NSLog(@"channel %@ reorderingWithMessage %f", channel.name, lastMessage.priority);
     [self.channels sortUsingComparator:^(SWChannelModel* channel1, SWChannelModel* channel2)
     {
-        if (channel1.lastMessage.priority == channel2.lastMessage.priority)
-        {
-            return 0;
-        } else
-        if (channel1.lastMessage.priority < channel2.lastMessage.priority)
-        {
-            return 1;
-        } else
-        {
-            return -1;
-        }
+        
+        NSNumber *priority1 = [NSNumber numberWithDouble:channel1.lastMessage.priority];
+        NSNumber *priority2 = [NSNumber numberWithDouble:channel2.lastMessage.priority];
+        
+        return [priority2 compare:priority1];
         
     }];
     
