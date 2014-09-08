@@ -21,4 +21,6 @@
 
 -(CGSize)size;
 
+-(NSString*)key;
+
 @end

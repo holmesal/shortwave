@@ -51,7 +51,6 @@
     {
         case MessageModelTypePlainText:
         {//no owner differentiation
-//            NSLog(@"I am loading cell.text = '%@'", messageModel.text);
             SWTextCell *textCell = (SWTextCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWTextCellIdentifier forIndexPath:indexPath];
 
             messageCell = textCell;
@@ -73,11 +72,19 @@
         case MessageModelTypeImage:
         {
             SWImageCell *imageCell = (SWImageCell*)[collectionView dequeueReusableCellWithReuseIdentifier:SWImageCellIdentifier forIndexPath:indexPath];
+            [imageCell setModel:messageModel]; //this will clear teh profileImageView.image to nil
+            
+            SWImageCell* (^findCell)(void) =
+            ^{
+                NSArray *visibleCells = collectionView.visibleCells;
+                NSArray *filteredCells = [visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.model == %@", messageModel]];
+                
+                return filteredCells.lastObject;
+            };
 
             if (!imageCell.hasImage)
             {
 
-                [imageCell setModel:messageModel]; //this will clear teh profileImageView.image to nil
                 imageCell.backgroundColor = [UIColor redColor];
                 
                 SWImageLoader *imageLoader = ((AppDelegate*)[UIApplication sharedApplication].delegate).imageLoader;
@@ -90,28 +97,35 @@
                     
                     [imageLoader loadImage:imageMessage.src completionBlock:^(UIImage *image, BOOL synchronous)
                     {
-                        [imageCell setImage:image animated:YES];
+                        if (synchronous)
+                        {
+                            [imageCell setImage:image animated:NO];
+                        } else
+                        {
+                            [findCell() setImage:image animated:YES];
+                        }
                     } progressBlock:^(float progress)
                     {
-                        [imageCell setProgress:progress];
+                        [findCell() setProgress:progress];
                     }];
                 } else
                 if ([messageModel isKindOfClass:[MessageFile class]])
                 {
                     MessageFile *fileMessage = (MessageFile*)messageModel;
-                    
-//                    NSLog(@"fileMessage = %@", fileMessage);
-//                    NSAssert(NO, @"I need to make a loader for files, analogues to SWImageLoader");
+
                     
                     [imageLoader loadAwsImage:fileMessage.fileName completionBlock:^(UIImage *image, BOOL synchronous)
                     {
-                        NSLog(@"hi");
-                        NSLog(@"image = %@", image);
-                        [imageCell setImage:image animated:YES];
+                        if (synchronous)
+                        {
+                            [imageCell setImage:image animated:NO];
+                        } else
+                        {
+                            [findCell() setImage:image animated:YES];
+                        }
                     } progressBlock:^(float progress)
                     {
-                         [imageCell setProgress:progress];
-                        NSLog(@"progress for aws image load is %f", progress);
+                         [findCell() setProgress:progress];
                     }];
                     
                 }
@@ -180,6 +194,17 @@
 
 }
 
+
+-( id (^)(void) )blockWithCellForModel:(MessageModel*)message collectionView:(UICollectionView*)collectionView
+{
+    return
+    ^{
+        NSArray *visibleCells = collectionView.visibleCells;
+        NSArray *filteredCells = [visibleCells filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.model == %@", message]];
+        
+        return filteredCells.lastObject;
+    };
+}
 
 
 

@@ -23,5 +23,5 @@
 +(CGFloat)heightWithMessageModel:(MessageModel*)model;
 
 @property (weak, nonatomic) MessageModel *model;
-
+-( id  (^)(void) )blockWithCellForModel:(MessageModel*)message collectionView:(UICollectionView*)collectionView;
 @end

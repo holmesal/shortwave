@@ -23,6 +23,7 @@
 
 
 @property (strong, nonatomic) UIView *temporaryEnlargedView;
+@property (strong, nonatomic) UIView *uploadProgressView;
 
 @property (weak, nonatomic) IBOutlet PHFComposeBarView *composeBarView;
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
@@ -43,7 +44,7 @@
 
 
 @implementation SWMessagesViewController
-
+@synthesize uploadProgressView;
 
 @synthesize channelModel;
 -(void)setChannelModel:(SWChannelModel *)newValue
@@ -73,11 +74,11 @@
 {
     [super viewDidLoad];
     
-    composeBarView.textView.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
-    composeBarView.textView.textColor = [UIColor blackColor];
-    composeBarView.textView.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
-    composeBarView.button.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
+
     
+    uploadProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 3.5)];
+    uploadProgressView.backgroundColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
+    uploadProgressView.hidden = YES;
     
     UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(shareChannelAction:)];
     self.navigationItem.rightBarButtonItem = rightButton;
@@ -85,6 +86,12 @@
     self.navigationItem.title = [NSString stringWithFormat:@"#%@", channelModel.name];
     
     [self setupComposeBarView];
+    composeBarView.textView.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
+    composeBarView.textView.textColor = [UIColor blackColor];
+    composeBarView.textView.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
+    composeBarView.button.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
+    [composeBarView addSubview:uploadProgressView];
+    
     [MessageCell registerCollectionViewCellsForCollectionView:collectionView];
     channelModel.messageCollectionView = collectionView;
     
@@ -200,9 +207,15 @@
     
     [[SWBucketUpload sharedInstance] uploadData:imageData forName:fileName contentType:contentType progress:^(CGFloat progress)
     {
+        [uploadProgressView setTransform:CGAffineTransformMakeTranslation(-320 + 320*progress, 0)];
+        [uploadProgressView setHidden:NO];
+        
         NSLog(@"returend progress = %f", progress);
     } andComlpetion:^(NSError *error)
     {
+        [uploadProgressView setTransform:CGAffineTransformMakeTranslation(-320, 0)];
+        [uploadProgressView setHidden:YES];
+        
         NSLog(@"completion! %@", error);
         if (error)
         {

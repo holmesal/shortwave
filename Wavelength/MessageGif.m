@@ -50,9 +50,6 @@
                 
                 playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
                 
-//                [_player cancelPendingPrerolls];
-                
-                
                 _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
                 
             }

@@ -78,4 +78,9 @@
     return CGSizeMake(width.integerValue, height.integerValue);
 }
 
+-(NSString*)key
+{
+    return src;
+}
+
 @end

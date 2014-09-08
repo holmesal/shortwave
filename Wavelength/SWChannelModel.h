@@ -17,6 +17,7 @@
 
 @protocol ChannelActivityIndicatorDelegate
 -(void) channel:(id)channel hasNewActivity:(BOOL)activity;
+-(void) channel:(id)channel isReorderingWithMessage:(MessageModel*)lastMessage;
 @end
 
 
@@ -28,6 +29,10 @@
 @interface SWChannelModel : NSObject <UICollectionViewDelegate>
 
 @property id<UIScrollViewDelegate> scrollViewDelegate;
+
+@property (strong, nonatomic) MessageModel *lastMessage;
+
+
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *channelDescription; //may be nil
 @property (strong, nonatomic) NSString *url;

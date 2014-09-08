@@ -14,11 +14,15 @@
 @property (assign, nonatomic) double lastPriorityToSet; //initialize 0
 @property (strong, nonatomic) NSTimer *setPriorityTimer; //may be nil
 
+@property (strong, nonatomic) NSTimer *reorderChannelsTimer;
+
 @end
 
 
 @implementation SWChannelModel
 
+
+@synthesize reorderChannelsTimer;
 
 //1. add myself as a member of the channel, (if fail, completion is run)
 //2. add the channel to my list of channels (if fail, completion is run)
@@ -233,6 +237,18 @@
 
 -(void)didLoadMessageModel:(MessageModel*)message
 {
+    if (reorderChannelsTimer)
+    {
+        [reorderChannelsTimer invalidate];
+        reorderChannelsTimer = nil;
+    }
+    if (!self.lastMessage || self.lastMessage.priority < message.priority)
+    {
+        self.lastMessage = message;
+    }
+    reorderChannelsTimer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(reorderChannels:) userInfo:nil repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:reorderChannelsTimer forMode:NSDefaultRunLoopMode];
+    
     if (message.priority > lastSeen)
     {
         isSynchronized = NO;
@@ -242,6 +258,19 @@
         }
     }
 }
+
+-(void)reorderChannels:(NSTimer*)sender
+{
+    [reorderChannelsTimer invalidate];
+    reorderChannelsTimer = nil;
+    
+    if (self.delegate)
+    {
+        [self.delegate channel:self isReorderingWithMessage:self.lastMessage];
+    }
+    
+}
+
 -(void)didViewMessageModel:(MessageModel*)message
 {
     if (message.priority >= lastSeen && message.priority > lastPriorityToSet)

@@ -84,4 +84,9 @@
     return _imageSize;
 }
 
+-(NSString*)key
+{
+    return self.fileName;
+}
+
 @end

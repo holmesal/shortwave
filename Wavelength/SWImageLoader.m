@@ -86,7 +86,7 @@
 
 
 #pragma mark DataLoadingParcel declaration
-@interface DataLoadingParcel: NSObject
+@interface DataLoadingParcel: NSObject <AmazonServiceRequestDelegate>
 
 @property (strong, nonatomic) NSURL *url;
 @property (assign, nonatomic) float percent;
@@ -98,11 +98,14 @@
 
 @property (assign, nonatomic) BOOL isAwsLoad;
 @property (strong, nonatomic) NSString *fileName;
+@property (strong, nonatomic) S3GetObjectRequest *s3GetObjectRequest;
+@property (strong, nonatomic) NSMutableData *mutableData;
+@property (assign, nonatomic) long long expectedContentLenght;
 
 -(id)initWithUrl:(NSURL*)theUrl;
 -(id)initWithFileName:(NSString*)fileName;
 
--(void)initializeReqeuest;
+-(void)initializeRequest;
 -(void)addListeners:(void (^)(void))completion progress:(void (^)(void))progress;
 -(void)start;
 
@@ -119,8 +122,10 @@
 @synthesize request;
 @synthesize receivedData;
 
+
 @synthesize isAwsLoad;
 @synthesize fileName;
+@synthesize s3GetObjectRequest;
 
 -(id)init
 {
@@ -140,7 +145,7 @@
         isAwsLoad = NO;
         url = theUrl;
 
-        [self initializeReqeuest]; //setups request fresh
+        [self initializeRequest]; //setups request fresh
     }
     return self;
 }
@@ -152,16 +157,18 @@
         isAwsLoad = YES;
         fileName = theFileName;
         
-        [self initializeReqeuest];
+        [self initializeRequest];
     }
     return self;
 }
 
--(void)initializeReqeuest
+-(void)initializeRequest
 {
+    _mutableData = [[NSMutableData alloc] init];
     if (isAwsLoad)
     {
-        
+        s3GetObjectRequest = [[S3GetObjectRequest alloc] initWithKey:fileName withBucket:Objc_kAWS_BUCKET];
+        s3GetObjectRequest.delegate = self;
     } else
     {
         request = [[ASIHTTPRequest alloc] initWithURL:url];
@@ -173,6 +180,7 @@
         request.delegate = self;
     }
 }
+
 -(NSString*)key
 {
     if (isAwsLoad)
@@ -197,8 +205,8 @@
         {
             if (isAwsLoad)
             {
-                
-                [self performSelectorInBackground:@selector(awsStart) withObject:nil];
+                state = DataLoadingParcelStateDownloading;
+                [self awsStart];
                 
             } else
             {
@@ -217,39 +225,21 @@
 
 -(void)awsStart
 {
-    S3GetObjectRequest *getObjectRequest = [[S3GetObjectRequest alloc] initWithKey:fileName withBucket:Objc_kAWS_BUCKET];
-
     AmazonS3Client *s3 = [[AmazonS3Client alloc] initWithAccessKey:Objc_kAWS_ACCESS_KEY_ID withSecretKey:Objc_kAWS_SECRET_KEY];
 
     S3GetObjectResponse *response;
     @try
     {
-        response = [s3 getObject:getObjectRequest];
+        response = [s3 getObject:s3GetObjectRequest];
     }
     @catch(NSException* ex)
     {
 
     }
-    
-    state = DataLoadingParcelStateComplete;
-    receivedData = response.body;
-    
-    
-    
-    [[NSOperationQueue mainQueue] addOperationWithBlock: ^
-     {
-         [self reportFinished];
-
-//         self.c
-//         if ([other isEqualToValue:@-1])
-//         {
-//             completion(bwImage, path, other, YES);
-//         } else
-//         {
-//             completion(img, path, other, NO);
-//         }
-     }];
+    return;
 }
+
+
 
 -(void)requestFailed:(ASIHTTPRequest*)rq
 {
@@ -262,17 +252,35 @@
     
     state = DataLoadingParcelStateUnstarted;
     //just auto repeat requests that fail for now.
-    [self initializeReqeuest];
+    [self initializeRequest];
     //shuffle it to the back of the request list to be a pro, later.
-    [request startAsynchronous];
+//    [request startAsynchronous];
+    [self start];
     
 }
 
+//-(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
+//{
+//    state = DataLoadingParcelStateFailed;
+//    NSLog(@"amazonaws servicerequest didFailWithError; %@", error);
+//}
+
 -(void)requestFinished:(ASIHTTPRequest*)rq
 {
+//    NSLog(@"'%@', is '%@'", rq.url.absoluteString, (request.responseData ? @"NULL" : @"YES") );
     state = DataLoadingParcelStateComplete;
-    receivedData = request.responseData;
+    receivedData = _mutableData;
 
+    [self reportFinished];
+}
+
+//aws didcompleteresopnse
+-(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
+{
+    state = DataLoadingParcelStateComplete;
+    receivedData = response.body;
+    
+//    receivedData = _mutableData;
     [self reportFinished];
 }
 
@@ -303,6 +311,21 @@
             event.progress();
         }
     }
+}
+
+
+
+-(void)request:(AmazonServiceRequest *)request didReceiveResponse:(NSURLResponse *)response
+{
+    _expectedContentLenght = response.expectedContentLength;
+}
+
+-(void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data
+{
+    [_mutableData appendData:data];
+    float progress = (float)_mutableData.length / (float)_expectedContentLenght;
+    
+    [self setProgress:progress];
 }
 
 -(void)dealloc
@@ -355,7 +378,6 @@
         completion(discardableImage.image, YES);
     } else
     {
-#warning dead code-store here needs to be inserted into EventDispatcher 
         DataLoadingParcel *dataLoadingParcel = dataLoadingParcels[fileName];
         if (dataLoadingParcel)
         {
