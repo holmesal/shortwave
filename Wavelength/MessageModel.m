@@ -14,6 +14,7 @@
 #import "MessageSpotifyTrack.h"
 #import "MessageWebSite.h"
 #import "MessageFile.h"
+#import "ObjcConstants.h"
 
 #import <CoreLocation/CoreLocation.h>
 #import <Firebase/Firebase.h>
@@ -45,7 +46,7 @@
         self.text = Text;
     }
     return self;
-}
+} //x
 
 +(MessageModel*)messageModelFromValue:(id)value andPriority:(double)priority
 {
@@ -110,7 +111,7 @@
         }
     }
     return self;
-}
+} //x
 
 //bool success?  Override this to set more data!
 -(BOOL)setDictionary:(NSDictionary*)dictionary
@@ -144,7 +145,7 @@
     }
     
     return success;
-}
+} //x
 
 -(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString
 {
@@ -179,12 +180,12 @@
                 @"parsed":@NO,
                 @".priority":kFirebaseServerValueTimestamp
             };
-}
+} //x
 
 -(NSDictionary*)toDictionary
 {
     return [self toDictionaryWithContent:@{@"text":self.text} andType:@"text"];
-}
+} //x
 
 -(MessageModelType)type
 {
@@ -196,18 +197,21 @@
 {
     
     NSDictionary *value = [self toDictionary];
-    Firebase *messagesChannel = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/messages/%@/", channel] ] childByAutoId];
+    //JAVA STOPPED HERE 2331211
+    Firebase *messagesChannel = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages/%@/", Objc_kROOT_FIREBASE, channel] ] childByAutoId];
     
     __weak typeof(self) weakSelf = self;
     [messagesChannel setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
     {
         if (!error)
         {
+            //1 parse queue
             BOOL containsUrl = NO;
             if ([NSString validateUrlString:self.text])
             {
                 containsUrl = YES;
-                Firebase *parseRequest = [[[Firebase alloc] initWithUrl:@"https://shortwave-dev.firebaseio.com/parseQueue"] childByAutoId];
+                NSString *parseRequestUrl = [NSString stringWithFormat:@"%@parseQueue", Objc_kROOT_FIREBASE];
+                Firebase *parseRequest = [[[Firebase alloc] initWithUrl:parseRequestUrl] childByAutoId];
                 [parseRequest setValue:@{
                                          @"channel": channel,
                                          @"message": weakSelf.name
@@ -241,43 +245,19 @@
         }
     }];
     
-    
-//    Firebase *membersFb = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/channels/%@/members", channel] ];
-//    [membersFb observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-//    {
-//        NSLog(@"snapshot.value = %@", snapshot.value);
-//        if ([snapshot.value isKindOfClass:[NSDictionary class]])
-//        {
-//            NSArray *members = ((NSDictionary*)snapshot.value).allKeys;
-//            
-//            NSLog(@"members = %@", members);
-//            
-//            for (NSString *member in members)
-//            {
-//                NSString *userChannelUrl = [NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/channels/%@/members/channels/%@/", member, channel];
-//                Firebase *userChannelFirebase = [[Firebase alloc] initWithUrl:userChannelUrl];
-//                [userChannelFirebase setPriority:kFirebaseServerValueTimestamp withCompletionBlock:^(NSError *error, Firebase *firebase)
-//                 {
-//                     if (error)
-//                     {
-//                         NSLog(@"error = %@", error.localizedDescription);
-//                     }
-//                 }];
-//            }
-//            
-//        }
-//    }];
+
     
     
     self.name = messagesChannel.name;
     [self addToPushQueueForChannel:channel];
 
-}
+} //x
 
 -(void)addToPushQueueForChannel:(NSString*)channel
 {
     NSAssert(self.name && channel, @"message name must not be nil '%@', ,channel name must not be nil '%@'", self.name, channel);
-    Firebase *pushQueue = [[[Firebase alloc] initWithUrl:@"https://shortwave-dev.firebaseio.com/pushQueue"] childByAutoId];
+    NSString *pushQueueUrl = [NSString stringWithFormat:@"%@pushQueue", Objc_kROOT_FIREBASE];
+    Firebase *pushQueue = [[[Firebase alloc] initWithUrl:pushQueueUrl] childByAutoId];
     
     NSDictionary *value = @{@"channel":channel,
                             @"message":self.name};
@@ -289,7 +269,7 @@
         }
     }];
     
-}
+} //x
 
 #pragma mark override this function for more data fetch before display
 -(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion

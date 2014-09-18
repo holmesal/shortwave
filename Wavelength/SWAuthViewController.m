@@ -245,6 +245,8 @@
     
     [authClient loginToFacebookAppWithId:Objc_kFacebookAppId permissions:Objc_kFacebookPermissions audience:ACFacebookAudienceOnlyMe withCompletionBlock:^(NSError *error, FAUser *user)
     {
+        NSLog(@"user is '%@'", user.uid);
+        
         void (^completion)(void) = ^
         {
             self.authButton.userInteractionEnabled = YES;
@@ -292,7 +294,11 @@
                             {
                                 if ([r isKindOfClass:[NSString class] ])
                                 {
-                                    [SWChannelModel joinChannel:r withCompletion:^(NSError *error){}];
+                                    NSLog(@"Join channel '%@'", r);
+                                    [SWChannelModel joinChannel:r withCompletion:^(NSError *error)
+                                    {
+                                        NSLog(@"error = %@", error.localizedDescription);
+                                    }];
                                 }
                             }
                             //[self startRepaetingIfNotAlready];

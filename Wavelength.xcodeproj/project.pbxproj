@@ -881,7 +881,7 @@
 				INFOPLIST_FILE = "Wavelength/Wavelength-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "3c2e319e-a0e0-4d3e-ac2b-0f8f62fb4117";
+				PROVISIONING_PROFILE = "99a14720-b364-410f-842d-7dc999cabcd6";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

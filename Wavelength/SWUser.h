@@ -10,10 +10,10 @@
 
 @interface SWUser : NSObject
 
-@property (strong, nonatomic) NSString *userID;
-@property (strong, nonatomic) NSString *photo;
-@property (strong, nonatomic) NSString *firstName;
+@property (strong, nonatomic) NSString *userID; //x
+@property (strong, nonatomic) NSString *photo; //x
+@property (strong, nonatomic) NSString *firstName; //x
 
--(id)initWithDictionary:(NSDictionary*)profile andUserId:(NSString*)userId;
+-(id)initWithDictionary:(NSDictionary*)profile andUserId:(NSString*)userId; //x
 
 @end

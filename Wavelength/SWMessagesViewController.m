@@ -22,6 +22,9 @@
 @interface SWMessagesViewController () <PHFComposeBarViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate>
 
 
+@property (strong, nonatomic) UIActionSheet *flagMessageActionSheet;
+@property (strong, nonatomic) MessageModel *flagMessageModel;
+
 @property (strong, nonatomic) UIView *temporaryEnlargedView;
 @property (strong, nonatomic) UIView *uploadProgressView;
 
@@ -111,7 +114,7 @@
     composeBarView.button.titleLabel.textColor = [UIColor colorWithHexString:@"7E7E7E"];
     composeBarView.delegate = self;
     
-    composeBarView.utilityButtonImage = [UIImage imageNamed:@"camera.png"];
+//    composeBarView.utilityButtonImage = [UIImage imageNamed:@"camera.png"];
 }
 
 //all composeBarView functionality can be abstracted to another class, ideally.  Probably the composebarView
@@ -122,6 +125,8 @@
     [actionSheet showInView:self.view];
 //    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
 }
+
+
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
@@ -139,41 +144,67 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    
-    switch (buttonIndex) {
-        case 0:
+    if (actionSheet == _flagMessageActionSheet)
+    {
+        NSLog(@"flagMessageActionSheet!");
+        NSLog(@"buttonIndex = %d", buttonIndex);
+        if (buttonIndex == 0)
         {
-            //camera
-            NSLog(@"open camera");
-            UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
+            NSString *messageId = _flagMessageModel.name;
+            NSString *channelId = channelModel.name;
+            NSLog(@"flag messageId '%@' and channelId '%@' as inappropriate", messageId, channelId);
+            
+            Firebase *flagQueue = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@flagQueue", Objc_kROOT_FIREBASE]] childByAutoId];
+            [flagQueue setValue:
+             @{@"channel": channelId,
+               @"message": messageId}
+            withCompletionBlock:^(NSError *error, Firebase *ref)
+            {
+                if (error)
+                {
+                    NSLog(@"error while adding flagQueue '%@'", error.localizedDescription);
+                }
+            }];
+            
+            
+        }
+    } else
+    {
+        switch (buttonIndex) {
+            case 0:
+            {
+                //camera
+                NSLog(@"open camera");
+                UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
 
-            picker.delegate = self;
-            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-            [self presentViewController:picker animated:YES completion:nil];
-            
-        }
+                picker.delegate = self;
+                picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                [self presentViewController:picker animated:YES completion:nil];
+                
+            }
+                break;
+            case 1:
+            {
+                //library
+                NSLog(@"open library");
+                UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
+    //            NSLog(@"picker.navigationItem %@", picker.navigationItem);
+    //            
+    //            NSLog(@"picker.navigationItem.titleView = %@", picker.navigationItem.titleView);
+                
+                picker.delegate = self;
+                picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                [self presentViewController:picker animated:YES completion:nil];
+                
+                [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+                
+            }
             break;
-        case 1:
-        {
-            //library
-            NSLog(@"open library");
-            UIImagePickerController *picker = [[UIImagePickerController alloc ] init];
-//            NSLog(@"picker.navigationItem %@", picker.navigationItem);
-//            
-//            NSLog(@"picker.navigationItem.titleView = %@", picker.navigationItem.titleView);
-            
-            picker.delegate = self;
-            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            [self presentViewController:picker animated:YES completion:nil];
-            
-            [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-            
+                
+            default:
+                return;
+                break;
         }
-        break;
-            
-        default:
-            return;
-            break;
     }
     
     
@@ -501,6 +532,16 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+}
+
+-(void)userTappedFlagOnMessageModel:(MessageModel*)messageModel
+{
+    _flagMessageModel = messageModel;
+    if (!_flagMessageActionSheet)
+    {
+        _flagMessageActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Flag as inappropriate", nil];
+    }
+    [_flagMessageActionSheet showInView:self.view];
 }
 
 @end

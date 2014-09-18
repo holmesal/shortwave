@@ -12,6 +12,6 @@
 
 @interface SWUserManager : NSObject
 
-+(void)userForID:(NSString*)userID withCompletion:(void(^)(SWUser *user, BOOL synchronous) )completionBlock;
++(void)userForID:(NSString*)userID withCompletion:(void(^)(SWUser *user, BOOL synchronous) )completionBlock; //x
 
 @end

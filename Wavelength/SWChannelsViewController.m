@@ -121,7 +121,10 @@
                     NSDictionary *meta = f2Snapshot.value;
                     
                     SWChannelModel *channelModel = [[SWChannelModel alloc] initWithDictionary:dictionary andUrl:[NSString stringWithFormat:@"%@%@", url, snap.name] andChannelMeta:meta];
+                    
+                    //JAVA STOPPED HERE
                     channelModel.delegate = self; //updating channel activity indicator
+                    
                     
                     //check if this already exists?
                     NSArray *result = [weakSelf.channels filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.name == %@", channelModel.name]];

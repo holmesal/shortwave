@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6205" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -31,20 +31,35 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="210"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="haZ-Gl-1x5">
+                                <rect key="frame" x="282" y="12" width="26" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="YND-q3-RGT"/>
+                                    <constraint firstAttribute="width" constant="26" id="mjw-qC-1Gs"/>
+                                </constraints>
+                                <state key="normal" image="flagButton">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="flagButtonAction:" destination="P5r-jd-djJ" eventType="touchUpInside" id="08t-0H-Jcc"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="haZ-Gl-1x5" firstAttribute="top" secondItem="5IO-ce-kWs" secondAttribute="top" constant="12" id="6Pd-9N-7Fh"/>
                             <constraint firstAttribute="centerY" secondItem="uMj-vA-NPl" secondAttribute="centerY" id="89H-3O-FCO"/>
                             <constraint firstItem="uMj-vA-NPl" firstAttribute="height" secondItem="5IO-ce-kWs" secondAttribute="height" id="Buc-fq-b6r"/>
                             <constraint firstAttribute="centerX" secondItem="uMj-vA-NPl" secondAttribute="centerX" id="fg4-cA-NZN"/>
                             <constraint firstAttribute="centerY" secondItem="drt-sj-JUF" secondAttribute="centerY" id="nOd-7e-SGz"/>
                             <constraint firstItem="uMj-vA-NPl" firstAttribute="width" secondItem="5IO-ce-kWs" secondAttribute="width" id="obZ-K8-78Y"/>
+                            <constraint firstAttribute="trailing" secondItem="haZ-Gl-1x5" secondAttribute="trailing" constant="12" id="p2q-8i-LH3"/>
                             <constraint firstAttribute="centerX" secondItem="drt-sj-JUF" secondAttribute="centerX" constant="-0.5" id="rms-JC-ERU"/>
                         </constraints>
                     </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                <nil key="simulatedStatusBarMetrics"/>
                 <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -62,12 +77,7 @@
             </connections>
         </collectionViewCell>
     </objects>
-    <simulatedMetricsContainer key="defaultSimulatedMetrics">
-        <simulatedStatusBarMetrics key="statusBar"/>
-        <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4">
-            <size key="portraitSize" width="320" height="568"/>
-            <size key="landscapeSize" width="568" height="320"/>
-        </simulatedScreenMetrics>
-    </simulatedMetricsContainer>
+    <resources>
+        <image name="flagButton" width="26" height="25"/>
+    </resources>
 </document>

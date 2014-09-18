@@ -8,11 +8,12 @@
 
 #import "SWUserManager.h"
 #import <Firebase/Firebase.h>
+#import "ObjcConstants.h"
 
 @interface SWUserManager ()
 
-@property (strong, nonatomic) NSMutableDictionary *cachedUsers;
-@property (strong, nonatomic) NSMutableDictionary *completionBlocksForUser;
+@property (strong, nonatomic) NSMutableDictionary *cachedUsers; //x
+@property (strong, nonatomic) NSMutableDictionary *completionBlocksForUser; //x
 
 @end
 
@@ -22,7 +23,7 @@
 @synthesize cachedUsers;
 @synthesize completionBlocksForUser;
 
-static SWUserManager *sharedManager;
+static SWUserManager *sharedManager; //x
 
 +(id)sharedInstance
 {
@@ -31,7 +32,7 @@ static SWUserManager *sharedManager;
         sharedManager = [[SWUserManager alloc] init];
     }
     return sharedManager;
-}
+} //x
 
 -(id)init
 {
@@ -41,7 +42,7 @@ static SWUserManager *sharedManager;
         completionBlocksForUser = [[NSMutableDictionary alloc] init];
     }
     return self;
-}
+} //x
 
 
 +(void)userForID:(NSString*)userID withCompletion:(void(^)(SWUser *user, BOOL synchronous) )completionBlock
@@ -56,8 +57,10 @@ static SWUserManager *sharedManager;
     {
         NSMutableArray *completionBlocks = userManager.completionBlocksForUser[userID];
         
+        BOOL performUserFetch = NO;
         if (!completionBlocks)
         {
+            performUserFetch = YES;
             completionBlocks = [[NSMutableArray alloc] init];
             userManager.completionBlocksForUser[userID] = completionBlocks;
         }
@@ -65,29 +68,32 @@ static SWUserManager *sharedManager;
         [completionBlocks addObject:completionBlock];
         
         
-        NSString *fetchUserProfileString = [NSString stringWithFormat:@"https://shortwave-dev.firebaseio.com/users/%@/profile", userID];
-        Firebase *fetchUserFirebase = [[Firebase alloc] initWithUrl:fetchUserProfileString];
-        [fetchUserFirebase observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snap)
+        if (performUserFetch)
         {
-            NSDictionary *profile = snap.value;
-            if (profile && [profile isKindOfClass:[NSDictionary class]])
+            NSString *fetchUserProfileString = [NSString stringWithFormat:@"%@users/%@/profile", Objc_kROOT_FIREBASE, userID];
+            Firebase *fetchUserFirebase = [[Firebase alloc] initWithUrl:fetchUserProfileString];
+            [fetchUserFirebase observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snap)
             {
-                SWUser *user = [[SWUser alloc] initWithDictionary:profile andUserId:userID];
-                [userManager.cachedUsers setObject:user forKey:userID];
-                
-                NSArray *completionBlocks = userManager.completionBlocksForUser[userID];
-                for (void (^completion)(SWUser*, BOOL) in completionBlocks)
+                NSDictionary *profile = snap.value;
+                if (profile && [profile isKindOfClass:[NSDictionary class]])
                 {
-                    completion(user, false);
-                }
+                    SWUser *user = [[SWUser alloc] initWithDictionary:profile andUserId:userID];
+                    [userManager.cachedUsers setObject:user forKey:userID];
+                    
+                    NSArray *completionBlocks = userManager.completionBlocksForUser[userID];
+                    for (void (^completion)(SWUser*, BOOL) in completionBlocks)
+                    {
+                        completion(user, NO);
+                    }
+                    
+                    [userManager.completionBlocksForUser removeObjectForKey:userID]; //cleanup all blocks
                 
-                [userManager.completionBlocksForUser removeObjectForKey:userID]; //cleanup all blocks
-            
-            }
-        } withCancelBlock:^(NSError *error)
-        {
-            NSLog(@"error while fetching user = %@", error);
-        }];
+                }
+            } withCancelBlock:^(NSError *error)
+            {
+                NSLog(@"error while fetching user = %@", error);
+            }];
+        }
     }
     
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6205" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6198"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -24,20 +24,33 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dJy-5h-1Rt">
+                                <rect key="frame" x="282" y="12" width="26" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="25" id="YBL-bn-35I"/>
+                                    <constraint firstAttribute="width" constant="26" id="gpK-0Q-7DR"/>
+                                </constraints>
+                                <state key="normal" image="flagButton">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="flagButtonAction:" destination="5yX-TB-xck" eventType="touchUpInside" id="ZI0-ha-6On"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.95686274509803915" green="0.95686274509803915" blue="0.95686274509803915" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="czP-5C-gpf" firstAttribute="top" secondItem="TMI-Za-thT" secondAttribute="top" id="Gvq-2d-c78"/>
+                            <constraint firstAttribute="trailing" secondItem="dJy-5h-1Rt" secondAttribute="trailing" constant="12" id="UH0-Nm-eBw"/>
                             <constraint firstAttribute="width" secondItem="czP-5C-gpf" secondAttribute="width" id="UH5-HE-kUq"/>
                             <constraint firstItem="czP-5C-gpf" firstAttribute="leading" secondItem="TMI-Za-thT" secondAttribute="leading" id="eGC-KU-bOh"/>
+                            <constraint firstItem="dJy-5h-1Rt" firstAttribute="top" secondItem="TMI-Za-thT" secondAttribute="top" constant="12" id="mta-ja-hYn"/>
                             <constraint firstAttribute="height" secondItem="czP-5C-gpf" secondAttribute="height" id="tpM-1x-jBF"/>
                         </constraints>
                     </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                <nil key="simulatedStatusBarMetrics"/>
-                <nil key="simulatedTopBarMetrics"/>
-                <nil key="simulatedBottomBarMetrics"/>
             </view>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="TMI-Za-thT" secondAttribute="trailing" id="Du7-3j-d3M"/>
@@ -49,7 +62,9 @@
                 <outlet property="gifContainer" destination="TMI-Za-thT" id="3eZ-vC-aSs"/>
                 <outlet property="mp4View" destination="czP-5C-gpf" id="0Uu-Qa-RjP"/>
             </connections>
-            <point key="canvasLocation" x="430" y="212"/>
         </collectionViewCell>
     </objects>
+    <resources>
+        <image name="flagButton" width="26" height="25"/>
+    </resources>
 </document>

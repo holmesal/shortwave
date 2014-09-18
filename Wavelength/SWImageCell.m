@@ -35,7 +35,8 @@
     longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPress:)];
     longPressGesture.cancelsTouchesInView = NO;
     longPressGesture.minimumPressDuration = 0.04f;
-    [self addGestureRecognizer:longPressGesture];
+    [self.imageView setUserInteractionEnabled:YES];
+    [self.imageView addGestureRecognizer:longPressGesture];
     
 }
 
@@ -83,6 +84,17 @@
 -(UIImage*)getImage
 {
     return imageView.image;
+}
+
+- (IBAction)flagButtonAction:(id)sender
+{
+    NSLog(@"flagButtonAction image");
+    UICollectionView *collectionView = (UICollectionView *)self.superview;
+    if ([collectionView.delegate respondsToSelector:@selector(userTappedFlagOnMessageModel:)])
+    {
+        [collectionView.delegate performSelector:@selector(userTappedFlagOnMessageModel:) withObject:self.model];
+    }
+    
 }
 
 +(CGFloat)heightWithMessageModel:(MessageModel*)model

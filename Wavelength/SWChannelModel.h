@@ -23,28 +23,29 @@
 
 @protocol ChannelCellActionDelegate
 -(void)didLongPress:(UILongPressGestureRecognizer*)longPress;
+-(void)userTappedFlagOnMessageModel:(MessageModel*)messageModel;
 @end
 
 
 @interface SWChannelModel : NSObject <UICollectionViewDelegate>
 
-@property id<UIScrollViewDelegate> scrollViewDelegate;
+@property id<UIScrollViewDelegate> scrollViewDelegate; //v
 
-@property (strong, nonatomic) MessageModel *lastMessage;
+@property (strong, nonatomic) MessageModel *lastMessage; //v
 
 
-@property (strong, nonatomic) NSString *name;
-@property (strong, nonatomic) NSString *channelDescription; //may be nil
-@property (strong, nonatomic) NSString *url;
+@property (strong, nonatomic) NSString *name; //x
+@property (strong, nonatomic) NSString *channelDescription; //may be nil //x
+@property (strong, nonatomic) NSString *url; //x
 
-@property (assign, nonatomic) double lastSeen; //init 0
-@property (strong, nonatomic) Firebase *mutedFirebase;
-@property (assign, nonatomic) BOOL muted;
+@property (assign, nonatomic) double lastSeen; //init 0 //x
+@property (strong, nonatomic) Firebase *mutedFirebase; //x
+@property (assign, nonatomic) BOOL muted; //x (Setter is setMuted:(boolean)
 
-@property (assign, nonatomic) BOOL isSynchronized; //defaults to TRUE
+@property (assign, nonatomic) BOOL isSynchronized; //defaults to TRUE //x
 
-@property (strong, nonatomic) Firebase *messagesRoot;
-@property (strong, nonatomic) Firebase *channelRoot;
+@property (strong, nonatomic) Firebase *messagesRoot; //x
+@property (strong, nonatomic) Firebase *channelRoot; //x
 
 //@property (strong, nonatomic) NSMutableArray* messages; //TODO: init empty array (message models go in)
 //@property (strong, nonatomic) NSMutableArray* members; //TODO: init empty array (strings go in)
@@ -53,12 +54,12 @@
 @property (strong, nonatomic) WallSource *wallSource;
 
 @property (strong, nonatomic) id<ChannelActivityIndicatorDelegate> delegate;
-@property (strong, nonatomic) id<ChannelMutedResponderDelegate> mutedDelegate;
+@property (strong, nonatomic) id<ChannelMutedResponderDelegate> mutedDelegate; //x
 @property (strong, nonatomic) id<ChannelCellActionDelegate> cellActionDelegate;
 
 
--(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta;
--(void)setMutedToFirebase;
+-(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta; 
+-(void)setMutedToFirebase; //x
 +(void)joinChannel:(NSString*)channelName withCompletion:(void (^)(NSError *error))completion;
 
 @end

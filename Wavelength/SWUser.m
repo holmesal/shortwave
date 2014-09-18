@@ -20,7 +20,7 @@
         [self updateWithDictionary:profile];
     }
     return self;
-}
+} //x
 
 -(void)updateWithDictionary:(NSDictionary*)profile
 {
@@ -29,6 +29,6 @@
         firstName = profile[@"firstName"];
         photo = profile[@"photo"];
     }
-}
+} //x
 
 @end

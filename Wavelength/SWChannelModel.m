@@ -46,7 +46,7 @@
             //2.
             NSString *url2 = [NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, userId, channelName];
             Firebase *myChannelsRef = [[Firebase alloc] initWithUrl:url2];
-            [myChannelsRef setValue:@{} withCompletionBlock:^(NSError *error2, Firebase *firebase)
+            [myChannelsRef setValue:@{@"lastSeen":@0, @"muted":@NO} andPriority:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] *1000] withCompletionBlock:^(NSError *error2, Firebase *firebase)
             {
                 if (error2)
                 {
@@ -89,11 +89,11 @@
     {
         [mutedDelegate channel:self isMuted:muted];
     }
-}
+} //x
 -(void)setMutedToFirebase
 {
     [mutedFirebase setValue:[NSNumber numberWithBool:muted]];
-}
+} //x
 
 @synthesize setPriorityTimer;
 @synthesize lastPriorityToSet;
@@ -152,25 +152,27 @@
         
         [self initializeFrom:dictionary meta:meta andUrl:url];
         
-        //firebase observing bellow
+        
+#warning what the fuck is going down below here? It does not update UI, only key-values and no keyvalue observing?  I think this is antiquated.
+//        //firebase observing bellow
         NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
         NSString *lastSeenUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/lastSeen", Objc_kROOT_FIREBASE, myId, name];
-        Firebase *lastSeenFB = [[Firebase alloc] initWithUrl:lastSeenUrl];
-        
-        [lastSeenFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
-        {
-            
-            if ([snap.value isKindOfClass:[NSNumber class]])
-            {
-                double newLastSeen = [((NSNumber*)snap.value) doubleValue];
-                if (lastSeen != newLastSeen)
-                {
-                    lastSeen = newLastSeen;
-                    isSynchronized = NO;
-                    //self.delegate?.channel(self, receivedNewMessage: nil)
-                }
-            }
-        }];
+//        Firebase *lastSeenFB = [[Firebase alloc] initWithUrl:lastSeenUrl];
+//        
+//        [lastSeenFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
+//        {
+//            
+//            if ([snap.value isKindOfClass:[NSNumber class]])
+//            {
+//                double newLastSeen = [((NSNumber*)snap.value) doubleValue];
+//                if (lastSeen != newLastSeen)
+//                {
+//                    lastSeen = newLastSeen;
+//                    isSynchronized = NO;
+//                    //self.delegate?.channel(self, receivedNewMessage: nil)
+//                }
+//            }
+//        }];
         
         NSString *mutedUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/muted", Objc_kROOT_FIREBASE, myId, name];
         mutedFirebase = [[Firebase alloc] initWithUrl:mutedUrl];
@@ -234,6 +236,14 @@
         [self.cellActionDelegate didLongPress:longPressGesture];
     }
 }
+-(void)userTappedFlagOnMessageModel:(MessageModel*)messageModel
+{
+    if (self.cellActionDelegate)
+    {
+        [self.cellActionDelegate userTappedFlagOnMessageModel:messageModel];
+    }
+}
+
 
 -(void)didLoadMessageModel:(MessageModel*)message
 {
@@ -257,6 +267,30 @@
             [self.delegate channel:self hasNewActivity:!isSynchronized];
         }
     }
+} //imp
+
+-(NSArray*)suggestionsForAutoCompleteOnInput:(NSString*)input givenUsers:(NSArray*)users
+{
+    NSMutableArray *filteredUsers = [[NSMutableArray alloc] init];
+    
+    NSString *lowercaseInput = [input lowercaseString];
+    
+    for (SWUser *user in users)
+    {
+        if ([user isKindOfClass:[SWUser class]])
+        {
+            NSString *title = [user.firstName lowercaseString];
+            if ([title hasPrefix:lowercaseInput])
+            {
+                [filteredUsers addObject:user];
+            }
+        } else
+        {
+            NSLog(@"object provided to suggestionsForAutoCompleteOnInput:givenUsers:  is not a user: '%@'", user);
+        }
+    }
+    
+    return [NSArray arrayWithArray:filteredUsers];
 }
 
 -(void)reorderChannels:(NSTimer*)sender

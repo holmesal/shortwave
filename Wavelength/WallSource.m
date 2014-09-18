@@ -45,7 +45,7 @@
 
 @property (nonatomic, strong) NSArray *hideCells;
 //@property (strong, nonatomic) NSMutableDictionary *messageIdsToReplacingId; //messages are stored
-@property (strong, nonatomic) NSMutableDictionary *usersDictionary;
+//@property (strong, nonatomic) NSMutableDictionary *usersDictionary;
 //@property (strong, nonatomic) NSMutableDictionary *userNameToModelsArray;
 
 @property (strong, nonatomic) NSMutableArray *namesOfPendingMessages;
@@ -68,7 +68,7 @@
 //@synthesize userNameToModelsArray;
 @synthesize wallNames;
 
-@synthesize usersDictionary;
+
 @synthesize namesOfPendingMessages;
 
 
@@ -82,17 +82,13 @@
         wall = [[NSMutableArray alloc] init];
         wallQueue = [[NSMutableArray alloc] initWithCapacity:kWallCollectionView_MAX_CELLS_INSERT];
         wallNames = [[NSMutableArray alloc] init];
-        
-//        userNameToModelsArray = [[NSMutableDictionary alloc] init];
-        
-        usersDictionary = [[NSMutableDictionary alloc] init];
-        
+        //c:1238901
         namesOfPendingMessages = [[NSMutableArray alloc] init];
         
         [self bindToWall];
     }
     return self;
-}
+} //x
 
 -(void)bindToWall
 {
@@ -126,19 +122,22 @@
             [namesOfPendingMessages addObject:messageSnapshot.name];
 
             MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
-            
             model.name = messageSnapshot.name;
             
             if (!model)
             {//INVALID MODEL
                 return;
             }
+            
+            //c:8912309123
 
             //block models that are already fetching
             [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
             {
 #pragma mark Define specific fetch requests here, those which must be done before Model is acceptable to be displayed
                 [model setUserData:user];
+                //c:566549877
+                
                 void (^modelIsReadyForDisplayBlock)(void) = ^{
                     [weakSelf addMessageToWallEventually:model];
                     [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
@@ -395,7 +394,7 @@
         
         
     }
-}
+}//imp
 
 -(void)insertMessagesToWallNow:(id)sender
 {
@@ -534,6 +533,11 @@
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
     [self.target performSelector:@selector(scrollViewWillBeginDragging:) withObject:scrollView];
+}
+
+-(void)userTappedFlagOnMessageModel:(MessageModel*)messageModel
+{
+    [self.target performSelector:@selector(userTappedFlagOnMessageModel:) withObject:messageModel];
 }
 
 -(void)didLongPress:(UILongPressGestureRecognizer*)longPress

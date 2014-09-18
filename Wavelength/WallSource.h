@@ -14,12 +14,12 @@
 
 //@property (strong, nonatomic) SWChannelModel *channelModel;
 
-@property (strong, nonatomic, readonly) NSString *url;
-@property (strong, nonatomic) UICollectionView *collectionView;
--(id)initWithUrl:(NSString*)url;// collectionView:(UICollectionView*)cv andLayout:(UICollectionViewLayout*)lay;
+@property (strong, nonatomic, readonly) NSString *url; //x
+@property (strong, nonatomic) UICollectionView *collectionView; //imp
+-(id)initWithUrl:(NSString*)url; //x
 -(MessageModel*)wallObjectAtIndex:(NSInteger)index;
 
-@property (assign, nonatomic) id target;
+@property (assign, nonatomic) id target; //x ish
 
 
 @end

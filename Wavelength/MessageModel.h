@@ -15,7 +15,7 @@
 
 @interface MessageModel : NSObject
 
-@property (strong, nonatomic) NSString *name;
+@property (strong, nonatomic) NSString *name; //x
 
 typedef enum
 {
@@ -33,46 +33,46 @@ typedef enum
 
     
     
-} MessageModelType;
+} MessageModelType; //x
 
 //returns nil if it failed to grab all data
--(void)setUserData:(SWUser*)user;
--(id)initWithDictionary:(NSDictionary*)dictionary andPriority:(double)priority;
+-(void)setUserData:(SWUser*)user; //avoid
+-(id)initWithDictionary:(NSDictionary*)dictionary andPriority:(double)priority; //x
 
 //bool success?  Override this to set more data!
--(BOOL)setDictionary:(NSDictionary*)dictionary;
+-(BOOL)setDictionary:(NSDictionary*)dictionary; //x
 
 //must be implemented by all classes
--(NSDictionary*)toDictionary;
--(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString;
+-(NSDictionary*)toDictionary;//x
+-(NSDictionary*)toDictionaryWithContent:(NSDictionary*)content andType:(NSString*)typeString;//x
 
-+(id)messageModelFromValue:(id)value andPriority:(double)priority;
++(id)messageModelFromValue:(id)value andPriority:(double)priority; //imp
 
 //inherited properties
 
-@property (strong, nonatomic) NSString *profileUrl;
-@property (strong, nonatomic) NSString *firstName;
+@property (strong, nonatomic) NSString *profileUrl; //x
+@property (strong, nonatomic) NSString *firstName; //x
 
-@property (strong, nonatomic) NSString *ownerID;
-@property (strong, nonatomic) NSString *text;
+@property (strong, nonatomic) NSString *ownerID; //x
+@property (strong, nonatomic) NSString *text; //x
 
-@property (assign, nonatomic) MessageModelType type;
+@property (assign, nonatomic) MessageModelType type; //x
 
-@property (assign, nonatomic) double priority;
-
-
--(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text;
+@property (assign, nonatomic) double priority; //x
 
 
--(void)postToAll;
--(void)postToUsers:(NSArray*)earshotIds;
+-(id)initWithOwnerID:(NSString*)ownerID andText:(NSString*)text; //x
 
--(void)sendMessageToChannel:(NSString*)channel;
+
+-(void)postToAll;//unimp!
+-(void)postToUsers:(NSArray*)earshotIds;//unimp
+
+-(void)sendMessageToChannel:(NSString*)channel;//imp
 
 
 #pragma mark override these 2 functions to reflect a model that must fetch more unstackable data requests before being displayed
 -(BOOL)hasAllData;
--(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion;
--(BOOL)isReadyForDisplay;
+-(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion; //x
+-(BOOL)isReadyForDisplay; //x
 
 @end
