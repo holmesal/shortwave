@@ -34,7 +34,7 @@
 
     }
     return self;
-}
+} //x
 
 -(BOOL)setDictionary:(NSDictionary *)dictionary
 {
@@ -47,23 +47,17 @@
         
         src = content[@"src"];
         success = success && (src && [src isKindOfClass:[NSString class]]);
-        
-//        width = content[@"width"];
-//        success = success && (width && [width isKindOfClass:[NSNumber class]]);
-//        
-//        height = content[@"height"];
-//        success = success && (height && [height isKindOfClass:[NSNumber class]]);
-    
+
     }
 
    
     return success;
-}
+} //x
 
 -(MessageModelType)type
 {
     return MessageModelTypeImage;
-}
+} //x
 
 -(NSDictionary*)toDictionary
 {
@@ -71,7 +65,7 @@
                               @"width": width,
                               @"height": height};
     return [self toDictionaryWithContent:content andType:@"image"];
-}
+} //x
 
 -(CGSize)size
 {
@@ -81,6 +75,6 @@
 -(NSString*)key
 {
     return src;
-}
+} //x
 
 @end

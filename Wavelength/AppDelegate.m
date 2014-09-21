@@ -116,7 +116,9 @@
                     if (device && [device isKindOfClass:[NSDictionary class]])
                     {
                         NSString *optionalToken = device[@"token"];
-                        if (optionalToken && [optionalToken isKindOfClass:[NSString class]])
+                        
+                        if (optionalToken && [optionalToken isKindOfClass:[NSString class]] &&
+                            [optionalToken isEqualToString:tokenString])
                         {
                             [prefs setObject:keyName forKey:Objc_kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken];
                             [prefs synchronize];

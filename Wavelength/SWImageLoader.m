@@ -302,6 +302,7 @@
 
 -(void)setProgress:(float)p
 {
+    NSLog(@"progress at this point is = %d", p);
     percent = p;
     
     for (EventDispatcher *event in eventDispatchers)
@@ -320,10 +321,19 @@
     _expectedContentLenght = response.expectedContentLength;
 }
 
--(void)request:(AmazonServiceRequest *)request didReceiveData:(NSData *)data
+-(void)request:(NSObject *)request didReceiveData:(NSData *)data
 {
     [_mutableData appendData:data];
-    float progress = (float)_mutableData.length / (float)_expectedContentLenght;
+    float progress = 0.0f;
+    
+    if ([request isKindOfClass:[AmazonServiceRequest class]])
+    {//then _expectedContentLength has been init
+        progress = (float)_mutableData.length / (float)_expectedContentLenght;
+    } else
+    {
+        ASIHTTPRequest *asiHttpRequest = (ASIHTTPRequest*)request;
+        progress = _mutableData.length/(float)asiHttpRequest.contentLength;
+    }
     
     [self setProgress:progress];
 }
