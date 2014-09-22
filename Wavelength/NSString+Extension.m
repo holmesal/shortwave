@@ -14,7 +14,17 @@
 {
     if (str)
     {
-
+        NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+        NSRange urlStringRange;
+        urlStringRange.length = str.length;
+        urlStringRange.location = 0;
+        
+        NSMatchingOptions matchingOptions = 0;
+        if (1 != [linkDetector numberOfMatchesInString:str options:matchingOptions range:urlStringRange])
+        {
+            return NO;
+        }
+        
 //            let optionalLinkDetector = NSDataDetector.dataDetectorWithTypes(NSTextCheckingType.Link.toRaw(), error: nil)
 //
 //            let urlStringRange = NSMakeRange(0, urlString.length)

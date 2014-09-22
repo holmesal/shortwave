@@ -19,12 +19,12 @@
 
     }
     return self;
-}
+} //x
 
 -(MessageModelType)type
 {
     return MessageModelTypeGif;
-}
+} //x
 
 -(BOOL)setDictionary:(NSDictionary*)dictionary
 {
@@ -57,7 +57,7 @@
     }
     
     return success;
-}
+} //x
 
 -(NSDictionary*)toDictionary
 {
