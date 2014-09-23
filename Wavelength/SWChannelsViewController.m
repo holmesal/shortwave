@@ -19,10 +19,14 @@
 @interface SWChannelsViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *channelsCollectionView;
-
 @property (strong, nonatomic) SWChannelModel *selectedChannel;
 
 @property (strong, nonatomic) NSMutableArray *channels;
+@property (strong, nonatomic) NSMutableArray *channelNamesOrdering;
+@property (strong, nonatomic) NSMutableDictionary *channelLoadedState;
+
+
+
 
 
 @end
@@ -31,6 +35,49 @@
 @implementation SWChannelsViewController
 @synthesize channelsCollectionView;
 @synthesize channels;
+@synthesize channelNamesOrdering;
+@synthesize channelLoadedState;
+
+
+-(void)setChannel:(NSString*)channel loadedState:(BOOL)loadedState
+{
+    [channelLoadedState setObject:[NSNumber numberWithBool:loadedState] forKey:channel];
+}
+-(BOOL)isChannelLoaded:(NSString*)channel
+{
+    return [[channelLoadedState objectForKey:channel] boolValue];
+}
+-(NSInteger)whatActualIndexIsChannel:(NSString*)channel
+{
+    NSInteger index = 0;
+    for (NSString* otherChannel in channelNamesOrdering)
+    {
+        if ([otherChannel isEqualToString:channel])
+        {
+            return index;
+        } else
+        if ([self isChannelLoaded:otherChannel])
+        {
+            index++;
+        }
+        
+    }
+    return -1;
+}
+-(NSInteger)whatPredictedIndexIs:(NSString*)channel
+{
+    if (!channel)
+    {
+        return channelNamesOrdering.count;
+    }
+    return [channelNamesOrdering indexOfObject:channel];
+}
+-(void)setPredictedIndex:(NSInteger)index forChannelName:(NSString*)channelName
+{
+    [channelNamesOrdering insertObject:channelName atIndex:index];
+}
+
+
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
     return UIStatusBarStyleLightContent;
@@ -41,6 +88,8 @@
     //    [self setNeedsStatusBarAppearanceUpdate];
     
     channels = [[NSMutableArray alloc] init];
+    channelNamesOrdering = [[NSMutableArray alloc] init];
+    channelLoadedState = [[NSMutableDictionary alloc] init];
     
     NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -70, 320, 30)];
@@ -107,19 +156,29 @@
     Firebase *f = [[Firebase alloc] initWithUrl:url];
     
     __weak SWChannelsViewController *weakSelf = self;
-    [f observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *snap, NSString *str)
+    //ADD&INSERT
+    [f observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *snap, NSString *replacingName)
     {
         if ([snap.value isKindOfClass:[NSDictionary class]])
         {
+            NSString *name = snap.name;
             NSDictionary *dictionary = snap.value;
             
-            Firebase *f2 = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@/meta", Objc_kROOT_FIREBASE, snap.name]];
+            if ([channelNamesOrdering containsObject:name])
+            {
+                NSLog(@"CONFUSION: channelNamesOrdering already contains %@", name);
+                return;
+            }
+    
+            [self setPredictedIndex:[self whatPredictedIndexIs:replacingName] forChannelName:name];
+            [self setChannel:name loadedState:NO];
+            
+            Firebase *f2 = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@/meta", Objc_kROOT_FIREBASE, name]];
             [f2 observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *f2Snapshot)
             {
                 if ([f2Snapshot.value isKindOfClass:[NSDictionary class]])
                 {
                     NSDictionary *meta = f2Snapshot.value;
-                    
                     SWChannelModel *channelModel = [[SWChannelModel alloc] initWithDictionary:dictionary andUrl:[NSString stringWithFormat:@"%@%@", url, snap.name] andChannelMeta:meta];
                     
                     //JAVA STOPPED HERE
@@ -133,16 +192,12 @@
                         return;
                     }
                     
-                    //index for channel?
+                    //what index? a reordering may have occured while iw as fetching f2's single value event
+                    NSInteger index = [self whatActualIndexIsChannel:name];
+                    [self setChannel:name loadedState:YES];
                     
-                    NSInteger index = self.channels.count;
-//                            for otherChannel in self.channels
-//                            {
-//                                if channelModel.lastSeen > otherChannel.lastSeen
-//                                {
-//                                    index++
-//                                }
-//                            }
+                    
+
                     AppDelegate *appDelegate = ((AppDelegate*)[UIApplication sharedApplication].delegate);
                     NSString *channelFromRemoteNotification = appDelegate.channelFromRemoteNotification;
                     if (channelFromRemoteNotification && [channelFromRemoteNotification isEqualToString:channelModel.name])
@@ -158,6 +213,36 @@
         }
     }];
     
+    //MOVED
+    [f observeEventType:FEventTypeChildMoved andPreviousSiblingNameWithBlock:^(FDataSnapshot *snap, NSString *replacingName)
+    {
+        NSString *name = snap.name;
+        
+        BOOL channelIsLoaded = [self isChannelLoaded:name];
+        
+        
+        NSInteger oldDisplayIndex = [self whatActualIndexIsChannel:name];
+        NSInteger oldFinalIndex = [self whatPredictedIndexIs:name];
+        SWChannelModel *model = nil;
+        if (channelIsLoaded)
+        {
+            model = [channels objectAtIndex:oldDisplayIndex];
+            [channels removeObject:model];
+        }
+        [channelNamesOrdering removeObjectAtIndex:oldFinalIndex];
+        
+        NSInteger newFinalIndex = [self whatPredictedIndexIs:replacingName];
+        [self setPredictedIndex:newFinalIndex forChannelName:name];
+        NSInteger newDisplayIndex = [self whatActualIndexIsChannel:name];
+        if (channelIsLoaded)
+        {
+            [channels insertObject:model atIndex:newDisplayIndex];
+            [channelsCollectionView reloadData];
+        }
+        
+    }];
+    
+    //REMOVE
     [f observeEventType:FEventTypeChildRemoved withBlock:^(FDataSnapshot *snapshot)
     {
         NSString *name = snapshot.name;
@@ -171,6 +256,9 @@
             [weakSelf.channelsCollectionView performBatchUpdates:^
             {
                 [weakSelf.channels removeObjectAtIndex:removeIndex];
+                [weakSelf.channelNamesOrdering removeObjectAtIndex:[self whatPredictedIndexIs:name]];
+                [weakSelf.channelLoadedState removeObjectForKey:name];
+                
                 [weakSelf.channelsCollectionView deleteSections:[NSIndexSet indexSetWithIndex:removeIndex]];
             } completion:^(BOOL finished){}];
             

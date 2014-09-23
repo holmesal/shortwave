@@ -16,10 +16,12 @@
 
 @property (strong, nonatomic, readonly) NSString *url; //x
 @property (strong, nonatomic) UICollectionView *collectionView; //imp
--(id)initWithUrl:(NSString*)url; //x
+-(id)initWithUrl:(NSString*)url andStartAtDate:(double)startAtDate; //x
 -(MessageModel*)wallObjectAtIndex:(NSInteger)index;
 
 @property (assign, nonatomic) id target; //x ish
 
+-(void)fetchNMessages;//ensures I have at least 100
+-(void)performHistoryQuery:(NSInteger)n; //queries the next 100 probably
 
 @end

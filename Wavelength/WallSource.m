@@ -29,13 +29,17 @@
 
 @interface WallSource ()
 
+@property (copy, nonatomic) void (^handleMessageInsert)(FDataSnapshot *messageSnapshot, NSString *previous);
+@property (strong, nonatomic) FQuery *historyQuery;
+@property (assign, nonatomic) FirebaseHandle historyQueryHandle;
+
 @property (strong, nonatomic) NSMutableArray *wall; //what is actually displayed (models)
 @property (strong, nonatomic) NSMutableArray *wallNames; //the order of all cells, some may still be loading
 
 @property (weak, nonatomic) UICollectionViewLayout *layout;
 
 @property (strong, nonatomic) NSTimer *wallQueueInsertTimer;
-
+@property (assign, nonatomic) double startAtDate;
 //firebase management
 @property (assign, nonatomic) FirebaseHandle wallHandleInsert;
 @property (assign, nonatomic) FirebaseHandle wallHandleMove;
@@ -70,10 +74,11 @@
 
 
 @synthesize namesOfPendingMessages;
+@synthesize handleMessageInsert;
 
 
 
--(id)initWithUrl:(NSString*)URL //collectionView:(UICollectionView*)cv andLayout:(UICollectionViewLayout*)lay
+-(id)initWithUrl:(NSString*)URL andStartAtDate:(double)startAtDate//collectionView:(UICollectionView*)cv andLayout:(UICollectionViewLayout*)lay
 {
     if (self = [super init])
     {
@@ -84,6 +89,80 @@
         wallNames = [[NSMutableArray alloc] init];
         //c:1238901
         namesOfPendingMessages = [[NSMutableArray alloc] init];
+        _startAtDate = startAtDate;
+        
+        __weak typeof(self) weakSelf = self;
+        handleMessageInsert = ^(FDataSnapshot *messageSnapshot, NSString *previous)
+        {
+            
+            if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
+            {
+                //            if (!firstSnapshotFromWall)
+                //                firstSnapshotFromWall = messageSnapshot;
+                
+                //lookup where to place this name..
+                NSInteger index = weakSelf.wallNames.count;
+                if (previous) //make block to observe child moved events on messages
+                {
+                    NSInteger integer = [weakSelf.wallNames indexOfObject:previous];
+                    if (integer < weakSelf.wallNames.count)
+                    {
+                        index = integer;
+                    } else {NSAssert(NO, @"You needed to found it!");}
+                }
+                //incase block is run by history fetch... history fetch overlaps, do not add messages that already exist
+                if ([wallNames containsObject:messageSnapshot.name])
+                {
+                    NSLog(@"NO DOUBLE ADD!");
+                    return;
+                }
+                [wallNames insertObject:messageSnapshot.name atIndex:index];
+                
+                
+                [namesOfPendingMessages addObject:messageSnapshot.name];
+                
+                MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
+                model.name = messageSnapshot.name;
+                
+                //for future history fetches
+                if (model.priority < _startAtDate)
+                {
+                    _startAtDate = model.priority;
+                }
+                
+                if (!model)
+                {//INVALID MODEL
+                    return;
+                }
+                
+                //c:8912309123
+                
+                //block models that are already fetching
+                [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
+                 {
+#pragma mark Define specific fetch requests here, those which must be done before Model is acceptable to be displayed
+                     [model setUserData:user];
+                     //c:566549877
+                     
+                     void (^modelIsReadyForDisplayBlock)(void) = ^{
+                         [weakSelf addMessageToWallEventually:model];
+                         [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
+                     };
+                     
+                     
+                     if (![model isReadyForDisplay])
+                     {
+                         [model fetchRelevantDataWithCompletion:modelIsReadyForDisplayBlock];
+                     } else
+                     {
+                         modelIsReadyForDisplayBlock();
+                     }
+                 }];
+                
+                
+                
+            }
+        };
         
         [self bindToWall];
     }
@@ -92,101 +171,15 @@
 
 -(void)bindToWall
 {
-//    NSLog(@"url = %@", url);
-    
+
     Firebase *wallRef = [[Firebase alloc] initWithUrl:url];
     
-    _wallRefQueryLimit = [wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
-    __weak typeof(self) weakSelf = self;
-    self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:^(FDataSnapshot *messageSnapshot, NSString *previous)
+    _wallRefQueryLimit = [wallRef queryStartingAtPriority:[NSNumber numberWithDouble:_startAtDate]];  //[wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
+
+    self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:handleMessageInsert withCancelBlock:^(NSError *error)
     {
-        
-        if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
-        {
-//            if (!firstSnapshotFromWall)
-//                firstSnapshotFromWall = messageSnapshot;
-         
-         //lookup where to place this name..
-         NSInteger index = wallNames.count;
-         if (previous) //make block to observe child moved events on messages
-         {
-             NSInteger integer = [wallNames indexOfObject:previous];
-             if (integer < wallNames.count)
-             {
-                 index = integer;
-             } else {NSAssert(NO, @"You needed to found it!");}
-         }
-         [wallNames insertObject:messageSnapshot.name atIndex:index];
-
-         
-            [namesOfPendingMessages addObject:messageSnapshot.name];
-
-            MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
-            model.name = messageSnapshot.name;
-            
-            if (!model)
-            {//INVALID MODEL
-                return;
-            }
-            
-            //c:8912309123
-
-            //block models that are already fetching
-            [SWUserManager userForID:model.ownerID withCompletion:^(SWUser *user, BOOL synchronous)
-            {
-#pragma mark Define specific fetch requests here, those which must be done before Model is acceptable to be displayed
-                [model setUserData:user];
-                //c:566549877
-                
-                void (^modelIsReadyForDisplayBlock)(void) = ^{
-                    [weakSelf addMessageToWallEventually:model];
-                    [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
-                };
-                
-                
-                if (![model isReadyForDisplay])
-                {
-                    [model fetchRelevantDataWithCompletion:modelIsReadyForDisplayBlock];
-                } else
-                {
-                    modelIsReadyForDisplayBlock();
-                }
-            }];
-            
-
-
-        }
-    } withCancelBlock:^(NSError *error)
-    {
-        NSLog(@"error = %@", error);
+        NSLog(@"error on child added to wallSource = %@", error.localizedDescription);
     }];
-    
-//    self.wallHandleMove = [self.wallRefQueryLimit observeEventType:FEventTypeChildMoved andPreviousSiblingNameWithBlock:^(FDataSnapshot *snap, NSString *previous)
-//    {
-//        if ([snap.value isKindOfClass:[NSString class]])
-//        {
-//            //current index
-////            NSInteger indexOfName = [wallNames indexOfObject:snap.value];
-//            [wallNames removeObject:snap.value];
-//            
-//            //where is the previous child? or last position
-//            NSInteger indexOfPrevious = wallNames.count;
-//            if (previous) //make block to observe child moved events on messages
-//            {
-//                //[messageIdsToReplacingId setObject:previous forKey:messageIdSnapshot.name]; //just keeping track of which message this will replace...
-//                NSInteger integer = [wallNames indexOfObject:previous];
-//                if (integer < wallNames.count)
-//                {
-//                    NSLog(@"was found! %d", index);
-//                    indexOfPrevious = integer;
-//                } else {NSAssert(NO, @"You needed to found it!");}
-//            }
-//            
-//            //ok now it is time to move object at indexOfName, inserted to indexOfPrevious
-//            [wallNames insertObject:snap.name atIndex:indexOfPrevious];
-//            
-//        }
-//    } withCancelBlock:^(NSError *error){}];
     
     
 }
@@ -526,8 +519,6 @@
 {
     [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleInsert];
     [self.wallRefQueryLimit removeObserverWithHandle:self.wallHandleMove];
-    
-
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -546,5 +537,26 @@
 }
 
 
+-(void)performHistoryQuery:(NSInteger)n
+{
+    if (_historyQuery)
+    {
+        //remove listener
+        [_historyQuery removeObserverWithHandle:_historyQueryHandle];
+    }
+    
+    _historyQuery = [[[[Firebase alloc] initWithUrl:url] queryLimitedToNumberOfChildren:100] queryEndingAtPriority:[NSNumber numberWithDouble:_startAtDate]];
+    _historyQueryHandle = [_historyQuery observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:handleMessageInsert];
+}
+
+-(void)fetchNMessages
+{
+    int number = kMAX_NUMBER_OF_MESSAGES - wallNames.count;
+    if (number <= 0)
+    {
+        return;
+    }
+    [self performHistoryQuery:number ];
+}
 
 @end

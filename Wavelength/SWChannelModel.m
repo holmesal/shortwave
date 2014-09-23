@@ -23,6 +23,7 @@
 
 
 @synthesize reorderChannelsTimer;
+@synthesize latestMessagePriority;
 
 //1. add myself as a member of the channel, (if fail, completion is run)
 //2. add the channel to my list of channels (if fail, completion is run)
@@ -124,6 +125,7 @@
             messageCollectionView.delegate = wallSource;
             messageCollectionView.dataSource = wallSource;
             [messageCollectionView reloadData];
+            [wallSource fetchNMessages];
         }
     }
 }
@@ -188,6 +190,19 @@
             }
         }];
         
+        //channelReorder listener! set priority on this when value change on latestMessagePriorityUrl
+        NSString *latestMessagePriorityUrl = [NSString stringWithFormat:@"%@channels/%@/meta/latestMessagePriority", Objc_kROOT_FIREBASE, name];
+        latestMessagePriority = [[Firebase alloc] initWithUrl:latestMessagePriorityUrl];
+        [latestMessagePriority observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+        {
+            NSNumber *priority = snapshot.value;
+            if (priority && [priority isKindOfClass:[NSNumber class]])
+            {
+                [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, myId, name]]
+                 setPriority:priority];
+            }
+        }];
+        
     }
     return self;
 }
@@ -208,13 +223,15 @@
     self.muted = [(NSNumber*)dictionary[@"muted"] boolValue]; //setMuted:(BOOL) called
     self.url = url;
     
+    double startDate = [meta[@"latestMessagePriority"] doubleValue];
+    
     name = [[url componentsSeparatedByString:@"/"] lastObject];
     
     channelRoot = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@", Objc_kROOT_FIREBASE, name]];
     NSString *messagesUrl = [NSString stringWithFormat:@"%@messages/%@", Objc_kROOT_FIREBASE, name];
     messagesRoot = [[Firebase alloc] initWithUrl:messagesUrl];
     
-    wallSource = [[WallSource alloc] initWithUrl:messagesUrl];
+    wallSource = [[WallSource alloc] initWithUrl:messagesUrl andStartAtDate:startDate];
     wallSource.target = self;
     
 }
@@ -247,17 +264,17 @@
 
 -(void)didLoadMessageModel:(MessageModel*)message
 {
-    if (reorderChannelsTimer)
-    {
-        [reorderChannelsTimer invalidate];
-        reorderChannelsTimer = nil;
-    }
+//    if (reorderChannelsTimer)
+//    {
+//        [reorderChannelsTimer invalidate];
+//        reorderChannelsTimer = nil;
+//    }
     if (!self.lastMessage || self.lastMessage.priority < message.priority)
     {
         self.lastMessage = message;
     }
-    reorderChannelsTimer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(reorderChannels:) userInfo:nil repeats:NO];
-    [[NSRunLoop mainRunLoop] addTimer:reorderChannelsTimer forMode:NSDefaultRunLoopMode];
+//    reorderChannelsTimer = [NSTimer timerWithTimeInterval:0.1 target:self selector:@selector(reorderChannels:) userInfo:nil repeats:NO];
+//    [[NSRunLoop mainRunLoop] addTimer:reorderChannelsTimer forMode:NSDefaultRunLoopMode];
     
     if (message.priority > lastSeen)
     {

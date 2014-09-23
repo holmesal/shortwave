@@ -46,6 +46,7 @@
 
 @property (strong, nonatomic) Firebase *messagesRoot; //x
 @property (strong, nonatomic) Firebase *channelRoot; //x
+@property (strong, nonatomic) Firebase *latestMessagePriority; //x
 
 //@property (strong, nonatomic) NSMutableArray* messages; //TODO: init empty array (message models go in)
 //@property (strong, nonatomic) NSMutableArray* members; //TODO: init empty array (strings go in)

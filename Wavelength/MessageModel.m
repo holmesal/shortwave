@@ -192,34 +192,42 @@
     return MessageModelTypePlainText;
 }
 
-//adds it to the push queue too
+//1. (async) set current timestamp value to channel/<>/meta/latestMessagePriority (so that the actual latest messagePriority > channel.meta.latestMessagePriority
+//2. (async) set message to the messages/<>/
+//3. synchronously wait for 2 to finish and post to
+//	a. url push queue
+//	b. hubot push queue
 -(void)sendMessageToChannel:(NSString*)channel
 {
+    //1.
+    Firebase *latestMessagePriority = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@/meta/latestMessagePriority", Objc_kROOT_FIREBASE, channel]];
+    [latestMessagePriority setValue:kFirebaseServerValueTimestamp withCompletionBlock:^(NSError *error, Firebase *firebase) {
+        if (error)
+        {
+            NSLog(@"latestMessagePriority error saving: %@", error.localizedDescription);
+        }
+    }];
     
+    //2.
     NSDictionary *value = [self toDictionary];
-    //JAVA STOPPED HERE 2331211
     Firebase *messagesChannel = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@messages/%@/", Objc_kROOT_FIREBASE, channel] ] childByAutoId];
-    
     __weak typeof(self) weakSelf = self;
     [messagesChannel setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
     {
         if (!error)
         {
-            //1 parse queue
-            BOOL containsUrl = NO;
-//            if ([NSString validateUrlString:self.text])
-//            {
-//                containsUrl = YES;
-//                NSString *parseRequestUrl = [NSString stringWithFormat:@"%@parseQueue", Objc_kROOT_FIREBASE];
-//                Firebase *parseRequest = [[[Firebase alloc] initWithUrl:parseRequestUrl] childByAutoId];
-//                [parseRequest setValue:@{
-//                                         @"channel": channel,
-//                                         @"message": weakSelf.name
-//                                         } withCompletionBlock:^(NSError *error, Firebase *firebase)
-//                {
-//                    NSLog(@"error = %@", error );
-//                }];
-//            }
+            BOOL containsUrl = [NSString validateUrlString:self.text];
+            BOOL containsHubot = ([self.text.lowercaseString rangeOfString:@"hubot"].location != NSNotFound);
+            //3.
+            if (containsUrl || YES)
+            {//a
+                [self addToPushQueueForChannel:channel];
+            }
+            
+            if (containsHubot)
+            {//b
+                [self addToHubotQueueForChannel:channel];
+            }
             
             //mixpanel vars
             NSInteger numChars = 0;
@@ -236,6 +244,7 @@
             
             [[Mixpanel sharedInstance] track:@"Send Message" properties:
                 @{@"containsUrl": [NSNumber numberWithBool:containsUrl],
+                  @"containsHubot": [NSNumber numberWithBool:containsHubot],
                   @"numChars": [NSNumber numberWithInt:numChars],
                   @"type": type
                   
@@ -244,19 +253,8 @@
         }
     }];
     
-
-    
-    
     self.name = messagesChannel.name;
-    if ([NSString validateUrlString:self.text] || YES)
-    {
-        [self addToPushQueueForChannel:channel];
-    }
-    
-    if ([self.text.lowercaseString rangeOfString:@"hubot"].location != NSNotFound)
-    {
-        [self addToHubotQueueForChannel:channel];
-    }
+
 } //x
 -(void)addToHubotQueueForChannel:(NSString*)channel
 {
