@@ -59,7 +59,7 @@
             _imageSize = CGSizeZero;
         }
     }
-    return success;
+    return NO;
 }
 
 -(MessageModelType)type

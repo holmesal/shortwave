@@ -150,13 +150,8 @@
                      };
                      
                      
-                     if (![model isReadyForDisplay])
-                     {
-                         [model fetchRelevantDataWithCompletion:modelIsReadyForDisplayBlock];
-                     } else
-                     {
-                         modelIsReadyForDisplayBlock();
-                     }
+                      [model fetchRelevantDataWithCompletion:modelIsReadyForDisplayBlock];
+                     
                  }];
                 
                 

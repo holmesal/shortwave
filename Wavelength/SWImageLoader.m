@@ -167,8 +167,8 @@
     _mutableData = [[NSMutableData alloc] init];
     if (isAwsLoad)
     {
-        s3GetObjectRequest = [[S3GetObjectRequest alloc] initWithKey:fileName withBucket:Objc_kAWS_BUCKET];
-        s3GetObjectRequest.delegate = self;
+//        s3GetObjectRequest = [[S3GetObjectRequest alloc] initWithKey:fileName withBucket:Objc_kAWS_BUCKET];
+//        s3GetObjectRequest.delegate = self;
     } else
     {
         request = [[ASIHTTPRequest alloc] initWithURL:url];
@@ -205,9 +205,9 @@
         {
             if (isAwsLoad)
             {
-                state = DataLoadingParcelStateDownloading;
-                [self awsStart];
-                
+//                state = DataLoadingParcelStateDownloading;
+//                [self awsStart];
+//                
             } else
             {
                 state = DataLoadingParcelStateDownloading;
@@ -259,30 +259,25 @@
     
 }
 
-//-(void)request:(AmazonServiceRequest *)request didFailWithError:(NSError *)error
-//{
-//    state = DataLoadingParcelStateFailed;
-//    NSLog(@"amazonaws servicerequest didFailWithError; %@", error);
-//}
 
 -(void)requestFinished:(ASIHTTPRequest*)rq
 {
 //    NSLog(@"'%@', is '%@'", rq.url.absoluteString, (request.responseData ? @"NULL" : @"YES") );
     state = DataLoadingParcelStateComplete;
-    receivedData = _mutableData;
+    receivedData = rq.responseData;
 
     [self reportFinished];
 }
 
-//aws didcompleteresopnse
--(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
-{
-    state = DataLoadingParcelStateComplete;
-    receivedData = response.body;
-    
-//    receivedData = _mutableData;
-    [self reportFinished];
-}
+////aws didcompleteresopnse
+//-(void)request:(AmazonServiceRequest *)request didCompleteWithResponse:(AmazonServiceResponse *)response
+//{
+//    state = DataLoadingParcelStateComplete;
+//    receivedData = response.body;
+//    
+////    receivedData = _mutableData;
+//    [self reportFinished];
+//}
 
 -(void)reportFinished
 {
@@ -302,7 +297,7 @@
 
 -(void)setProgress:(float)p
 {
-    NSLog(@"progress at this point is = %d", p);
+//    NSLog(@"progress at this point is = %d", p);
     percent = p;
     
     for (EventDispatcher *event in eventDispatchers)
@@ -321,22 +316,22 @@
     _expectedContentLenght = response.expectedContentLength;
 }
 
--(void)request:(NSObject *)request didReceiveData:(NSData *)data
-{
-    [_mutableData appendData:data];
-    float progress = 0.0f;
-    
-    if ([request isKindOfClass:[AmazonServiceRequest class]])
-    {//then _expectedContentLength has been init
-        progress = (float)_mutableData.length / (float)_expectedContentLenght;
-    } else
-    {
-        ASIHTTPRequest *asiHttpRequest = (ASIHTTPRequest*)request;
-        progress = _mutableData.length/(float)asiHttpRequest.contentLength;
-    }
-    
-    [self setProgress:progress];
-}
+//-(void)request:(NSObject *)request didReceiveData:(NSData *)data
+//{
+//    [_mutableData appendData:data];
+//    float progress = 0.0f;
+//    
+//    if ([request isKindOfClass:[AmazonServiceRequest class]])
+//    {//then _expectedContentLength has been init
+//        progress = (float)_mutableData.length / (float)_expectedContentLenght;
+//    } else
+//    {
+//        ASIHTTPRequest *asiHttpRequest = (ASIHTTPRequest*)request;
+//        progress = _mutableData.length/(float)asiHttpRequest.contentLength;
+//    }
+//    
+//    [self setProgress:progress];
+//}
 
 -(void)dealloc
 {

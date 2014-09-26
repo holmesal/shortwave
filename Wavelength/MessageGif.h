@@ -13,6 +13,7 @@
 @interface MessageGif : MessageModel
 
 @property (strong, nonatomic) NSString *mp4;
+@property (strong, nonatomic) NSString *gif;
 
 
 @property (strong, nonatomic) AVPlayer *player;

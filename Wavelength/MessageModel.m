@@ -219,15 +219,17 @@
             BOOL containsUrl = [NSString validateUrlString:self.text];
             BOOL containsHubot = ([self.text.lowercaseString rangeOfString:@"hubot"].location != NSNotFound);
             //3.
-            if (containsUrl || YES)
+            [self addToPushQueueForChannel:channel];
+            
+            if (containsUrl || containsHubot)
             {//a
-                [self addToPushQueueForChannel:channel];
+                [self addToParseQueue:channel];
             }
             
-            if (containsHubot)
-            {//b
-                [self addToHubotQueueForChannel:channel];
-            }
+//            if (containsHubot)
+//            {//b
+//                [self addToHubotQueueForChannel:channel];
+//            }
             
             //mixpanel vars
             NSInteger numChars = 0;
@@ -260,6 +262,22 @@
 {
     NSAssert(self.name && channel, @"message name must not be nil '%@', ,channel name must not be nil '%@'", self.name, channel);
     NSString *pushQueueUrl = [NSString stringWithFormat:@"%@hubotQueue", Objc_kROOT_FIREBASE];
+    Firebase *pushQueue = [[[Firebase alloc] initWithUrl:pushQueueUrl] childByAutoId];
+    
+    NSDictionary *value = @{@"channel":channel,
+                            @"message":self.name};
+    [pushQueue setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
+     {
+         if (error)
+         {
+             //            NSLog(@"after pushQueue %@ setValue %@, error: %@", pushQueue, value, error.localizedDescription);
+         }
+     }];
+}
+
+-(void)addToParseQueue:(NSString*)channel
+{
+    NSString *pushQueueUrl = [NSString stringWithFormat:@"%@parseQueue", Objc_kROOT_FIREBASE];
     Firebase *pushQueue = [[[Firebase alloc] initWithUrl:pushQueueUrl] childByAutoId];
     
     NSDictionary *value = @{@"channel":channel,

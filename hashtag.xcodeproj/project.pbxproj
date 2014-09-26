@@ -105,17 +105,17 @@
 
 /* Begin PBXFileReference section */
 		09A6222C34E0431FB7BFEE9C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		AA6BFB0419B93DDB00A4D5EC /* Wavelength.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wavelength.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA6BFB0419B93DDB00A4D5EC /* hashtag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hashtag.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA6BFB0919B93DDB00A4D5EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AA6BFB0B19B93DDB00A4D5EC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		AA6BFB0F19B93DDB00A4D5EC /* Wavelength-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Wavelength-Info.plist"; sourceTree = "<group>"; };
+		AA6BFB0F19B93DDB00A4D5EC /* hashtag-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hashtag-Info.plist"; sourceTree = "<group>"; };
 		AA6BFB1119B93DDC00A4D5EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA6BFB1319B93DDC00A4D5EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		AA6BFB1519B93DDC00A4D5EC /* Wavelength-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Wavelength-Prefix.pch"; sourceTree = "<group>"; };
-		AA6BFB2519B93DEF00A4D5EC /* WavelengthTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WavelengthTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA6BFB1519B93DDC00A4D5EC /* hashtag-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "hashtag-Prefix.pch"; sourceTree = "<group>"; };
+		AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hashtagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6BFB2619B93DEF00A4D5EC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		AA6BFB2E19B93DF000A4D5EC /* WavelengthTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WavelengthTests-Info.plist"; sourceTree = "<group>"; };
+		AA6BFB2E19B93DF000A4D5EC /* hashtagTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hashtagTests-Info.plist"; sourceTree = "<group>"; };
 		AA6BFB3019B93DF000A4D5EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA6BFB3219B93DF100A4D5EC /* WavelengthTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WavelengthTests.m; sourceTree = "<group>"; };
 		AA6BFB3C19B93E6E00A4D5EC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -304,8 +304,8 @@
 		AA6BFB0519B93DDB00A4D5EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AA6BFB0419B93DDB00A4D5EC /* Wavelength.app */,
-				AA6BFB2519B93DEF00A4D5EC /* WavelengthTests.xctest */,
+				AA6BFB0419B93DDB00A4D5EC /* hashtag.app */,
+				AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -369,10 +369,10 @@
 				AAF803FC19B942F200B51B6D /* CocoaColaClassic.h */,
 				AAF803FD19B942F200B51B6D /* CocoaColaClassic.m */,
 				AAF803FE19B942F200B51B6D /* ObjcConstants.h */,
-				AA6BFB0F19B93DDB00A4D5EC /* Wavelength-Info.plist */,
+				AA6BFB0F19B93DDB00A4D5EC /* hashtag-Info.plist */,
 				AA6BFB1019B93DDC00A4D5EC /* InfoPlist.strings */,
 				AA6BFB1319B93DDC00A4D5EC /* main.m */,
-				AA6BFB1519B93DDC00A4D5EC /* Wavelength-Prefix.pch */,
+				AA6BFB1519B93DDC00A4D5EC /* hashtag-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -389,7 +389,7 @@
 		AA6BFB2D19B93DF000A4D5EC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				AA6BFB2E19B93DF000A4D5EC /* WavelengthTests-Info.plist */,
+				AA6BFB2E19B93DF000A4D5EC /* hashtagTests-Info.plist */,
 				AA6BFB2F19B93DF000A4D5EC /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
@@ -536,9 +536,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AA6BFB0319B93DDB00A4D5EC /* Wavelength */ = {
+		AA6BFB0319B93DDB00A4D5EC /* hashtag */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA6BFB3619B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "Wavelength" */;
+			buildConfigurationList = AA6BFB3619B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtag" */;
 			buildPhases = (
 				D0AC267B913D4EBF9E707C8D /* Check Pods Manifest.lock */,
 				AA6BFB0019B93DDB00A4D5EC /* Sources */,
@@ -551,14 +551,14 @@
 			);
 			dependencies = (
 			);
-			name = Wavelength;
+			name = hashtag;
 			productName = Wavelength;
-			productReference = AA6BFB0419B93DDB00A4D5EC /* Wavelength.app */;
+			productReference = AA6BFB0419B93DDB00A4D5EC /* hashtag.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AA6BFB2419B93DEF00A4D5EC /* WavelengthTests */ = {
+		AA6BFB2419B93DEF00A4D5EC /* hashtagTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "WavelengthTests" */;
+			buildConfigurationList = AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtagTests" */;
 			buildPhases = (
 				AA6BFB2119B93DEF00A4D5EC /* Sources */,
 				AA6BFB2219B93DEF00A4D5EC /* Frameworks */,
@@ -569,9 +569,9 @@
 			dependencies = (
 				AA6BFB2B19B93DF000A4D5EC /* PBXTargetDependency */,
 			);
-			name = WavelengthTests;
+			name = hashtagTests;
 			productName = WavelengthTests;
-			productReference = AA6BFB2519B93DEF00A4D5EC /* WavelengthTests.xctest */;
+			productReference = AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -591,7 +591,7 @@
 					};
 				};
 			};
-			buildConfigurationList = AA6BFAFF19B93DDA00A4D5EC /* Build configuration list for PBXProject "Wavelength" */;
+			buildConfigurationList = AA6BFAFF19B93DDA00A4D5EC /* Build configuration list for PBXProject "hashtag" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -604,8 +604,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AA6BFB0319B93DDB00A4D5EC /* Wavelength */,
-				AA6BFB2419B93DEF00A4D5EC /* WavelengthTests */,
+				AA6BFB0319B93DDB00A4D5EC /* hashtag */,
+				AA6BFB2419B93DEF00A4D5EC /* hashtagTests */,
 			);
 		};
 /* End PBXProject section */
@@ -747,7 +747,7 @@
 /* Begin PBXTargetDependency section */
 		AA6BFB2B19B93DF000A4D5EC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AA6BFB0319B93DDB00A4D5EC /* Wavelength */;
+			target = AA6BFB0319B93DDB00A4D5EC /* hashtag */;
 			targetProxy = AA6BFB2A19B93DF000A4D5EC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -855,11 +855,11 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Wavelength/Wavelength-Prefix.pch";
-				INFOPLIST_FILE = "Wavelength/Wavelength-Info.plist";
+				GCC_PREFIX_HEADER = "Wavelength/hashtag-Prefix.pch";
+				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "c7936ecc-380a-4fe8-bbb3-699b8855bbe5";
+				PRODUCT_NAME = hashtag;
+				PROVISIONING_PROFILE = "e32b3992-b47e-4fde-9b1d-2db73f76e741";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -877,11 +877,11 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Wavelength/Wavelength-Prefix.pch";
-				INFOPLIST_FILE = "Wavelength/Wavelength-Info.plist";
+				GCC_PREFIX_HEADER = "Wavelength/hashtag-Prefix.pch";
+				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "99a14720-b364-410f-842d-7dc999cabcd6";
+				PRODUCT_NAME = hashtag;
+				PROVISIONING_PROFILE = "26c3abc6-7049-47b3-8a4b-6fcf08fb6089";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -901,8 +901,8 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "WavelengthTests/WavelengthTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "WavelengthTests/hashtagTests-Info.plist";
+				PRODUCT_NAME = hashtagTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -919,8 +919,8 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Wavelength/Wavelength-Prefix.pch";
-				INFOPLIST_FILE = "WavelengthTests/WavelengthTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "WavelengthTests/hashtagTests-Info.plist";
+				PRODUCT_NAME = hashtagTests;
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -929,7 +929,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AA6BFAFF19B93DDA00A4D5EC /* Build configuration list for PBXProject "Wavelength" */ = {
+		AA6BFAFF19B93DDA00A4D5EC /* Build configuration list for PBXProject "hashtag" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA6BFB3419B93DF200A4D5EC /* Debug */,
@@ -938,7 +938,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AA6BFB3619B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "Wavelength" */ = {
+		AA6BFB3619B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtag" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA6BFB3719B93DF200A4D5EC /* Debug */,
@@ -947,7 +947,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "WavelengthTests" */ = {
+		AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtagTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				AA6BFB3A19B93DF200A4D5EC /* Debug */,
