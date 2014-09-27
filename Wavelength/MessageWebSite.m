@@ -94,7 +94,7 @@
 -(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion
 {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
+
     [appDelegate.imageLoader loadImage:favicon completionBlock:^(UIImage *img, BOOL synchronous)
     {
         completion();

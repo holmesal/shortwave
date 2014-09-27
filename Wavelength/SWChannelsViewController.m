@@ -398,6 +398,7 @@
 #pragma ChannelModel callbacks
 -(void)channel:(SWChannelModel*)channel hasNewActivity:(BOOL)activity
 {
+    return;
     SWChannelCell *channelCell = nil;
     
     NSInteger index = [channels indexOfObject:channel];

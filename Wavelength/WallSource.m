@@ -57,6 +57,8 @@
 @property (assign, nonatomic) BOOL didFinishLoadingWallAtFirst;
 @property (strong, nonatomic) NSTimer *firstLoadTimer;
 
+@property (assign, nonatomic) NSInteger count;
+
 @end
 
 @implementation WallSource
@@ -94,6 +96,9 @@
         __weak typeof(self) weakSelf = self;
         handleMessageInsert = ^(FDataSnapshot *messageSnapshot, NSString *previous)
         {
+            NSLog(@"Channel '%@' is loading it's %d message '%@' priority ", weakSelf.url, weakSelf.count, messageSnapshot.priority);
+            
+            weakSelf.count++;
             
             if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
             {
@@ -169,7 +174,16 @@
 
     Firebase *wallRef = [[Firebase alloc] initWithUrl:url];
     
+    if (_startAtDate == 0)
+    {
+        _startAtDate = [[NSDate date] timeIntervalSince1970] * 1000;
+    }
+    
+    NSLog(@"channel '%@' starting at '%f'", self.url, _startAtDate);
+    
     _wallRefQueryLimit = [wallRef queryStartingAtPriority:[NSNumber numberWithDouble:_startAtDate]];  //[wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
+    
+    NSLog(@"wallRefQueryLimit = %@", _wallRefQueryLimit);
 
     self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:handleMessageInsert withCancelBlock:^(NSError *error)
     {

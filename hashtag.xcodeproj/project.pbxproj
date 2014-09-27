@@ -12,6 +12,11 @@
 		AA6BFB0C19B93DDB00A4D5EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0B19B93DDB00A4D5EC /* UIKit.framework */; };
 		AA6BFB1219B93DDC00A4D5EC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA6BFB1019B93DDC00A4D5EC /* InfoPlist.strings */; };
 		AA6BFB1419B93DDC00A4D5EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BFB1319B93DDC00A4D5EC /* main.m */; };
+		AA6BFB2719B93DEF00A4D5EC /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB2619B93DEF00A4D5EC /* XCTest.framework */; };
+		AA6BFB2819B93DF000A4D5EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */; };
+		AA6BFB2919B93DF000A4D5EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0B19B93DDB00A4D5EC /* UIKit.framework */; };
+		AA6BFB3119B93DF000A4D5EC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AA6BFB2F19B93DF000A4D5EC /* InfoPlist.strings */; };
+		AA6BFB3319B93DF100A4D5EC /* WavelengthTests.m in Sources */ = {isa = PBXBuildFile; fileRef = AA6BFB3219B93DF100A4D5EC /* WavelengthTests.m */; };
 		AA6BFB3D19B93E6E00A4D5EC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB3C19B93E6E00A4D5EC /* AVFoundation.framework */; };
 		AA6BFB3F19B93E8D00A4D5EC /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB3E19B93E8D00A4D5EC /* libz.dylib */; };
 		AA6BFB4119B93EA200A4D5EC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB4019B93EA200A4D5EC /* MobileCoreServices.framework */; };
@@ -88,6 +93,16 @@
 		C4EB8FB8B76040F8961E1D06 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DADF3A1D67E94FA697D113FE /* libPods.a */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		AA6BFB2A19B93DF000A4D5EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA6BFAFC19B93DDA00A4D5EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA6BFB0319B93DDB00A4D5EC;
+			remoteInfo = Wavelength;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		09A6222C34E0431FB7BFEE9C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		AA6BFB0419B93DDB00A4D5EC /* hashtag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hashtag.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +113,7 @@
 		AA6BFB1119B93DDC00A4D5EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		AA6BFB1319B93DDC00A4D5EC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AA6BFB1519B93DDC00A4D5EC /* hashtag-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "hashtag-Prefix.pch"; sourceTree = "<group>"; };
+		AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hashtagTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6BFB2619B93DEF00A4D5EC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		AA6BFB2E19B93DF000A4D5EC /* hashtagTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "hashtagTests-Info.plist"; sourceTree = "<group>"; };
 		AA6BFB3019B93DF000A4D5EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -260,6 +276,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA6BFB2219B93DEF00A4D5EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6BFB2719B93DEF00A4D5EC /* XCTest.framework in Frameworks */,
+				AA6BFB2919B93DF000A4D5EC /* UIKit.framework in Frameworks */,
+				AA6BFB2819B93DF000A4D5EC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -279,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				AA6BFB0419B93DDB00A4D5EC /* hashtag.app */,
+				AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -529,6 +556,24 @@
 			productReference = AA6BFB0419B93DDB00A4D5EC /* hashtag.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA6BFB2419B93DEF00A4D5EC /* hashtagTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtagTests" */;
+			buildPhases = (
+				AA6BFB2119B93DEF00A4D5EC /* Sources */,
+				AA6BFB2219B93DEF00A4D5EC /* Frameworks */,
+				AA6BFB2319B93DEF00A4D5EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA6BFB2B19B93DF000A4D5EC /* PBXTargetDependency */,
+			);
+			name = hashtagTests;
+			productName = WavelengthTests;
+			productReference = AA6BFB2519B93DEF00A4D5EC /* hashtagTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -540,6 +585,9 @@
 				TargetAttributes = {
 					AA6BFB0319B93DDB00A4D5EC = {
 						DevelopmentTeam = SQ4LKA86HJ;
+					};
+					AA6BFB2419B93DEF00A4D5EC = {
+						TestTargetID = AA6BFB0319B93DDB00A4D5EC;
 					};
 				};
 			};
@@ -557,6 +605,7 @@
 			projectRoot = "";
 			targets = (
 				AA6BFB0319B93DDB00A4D5EC /* hashtag */,
+				AA6BFB2419B93DEF00A4D5EC /* hashtagTests */,
 			);
 		};
 /* End PBXProject section */
@@ -575,6 +624,14 @@
 				AAF803F919B9429C00B51B6D /* Main.storyboard in Resources */,
 				AA6BFB1219B93DDC00A4D5EC /* InfoPlist.strings in Resources */,
 				AAF803CD19B9422F00B51B6D /* SWWebSiteCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA6BFB2319B93DEF00A4D5EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6BFB3119B93DF000A4D5EC /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -677,7 +734,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA6BFB2119B93DEF00A4D5EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA6BFB3319B93DF100A4D5EC /* WavelengthTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA6BFB2B19B93DF000A4D5EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA6BFB0319B93DDB00A4D5EC /* hashtag */;
+			targetProxy = AA6BFB2A19B93DF000A4D5EC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		AA6BFB1019B93DDC00A4D5EC /* InfoPlist.strings */ = {
@@ -808,8 +881,48 @@
 				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = hashtag;
-				PROVISIONING_PROFILE = "1b3c9d94-fbb8-4e86-ac31-d90a39fe2257";
+				PROVISIONING_PROFILE = "2c9904e1-602a-47ed-b083-72888195e3c1";
 				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		AA6BFB3A19B93DF200A4D5EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Wavelength.app/Wavelength";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Wavelength/Wavelength-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "WavelengthTests/hashtagTests-Info.plist";
+				PRODUCT_NAME = hashtagTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		AA6BFB3B19B93DF200A4D5EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Wavelength.app/Wavelength";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Wavelength/Wavelength-Prefix.pch";
+				INFOPLIST_FILE = "WavelengthTests/hashtagTests-Info.plist";
+				PRODUCT_NAME = hashtagTests;
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -830,6 +943,15 @@
 			buildConfigurations = (
 				AA6BFB3719B93DF200A4D5EC /* Debug */,
 				AA6BFB3819B93DF200A4D5EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA6BFB3919B93DF200A4D5EC /* Build configuration list for PBXNativeTarget "hashtagTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA6BFB3A19B93DF200A4D5EC /* Debug */,
+				AA6BFB3B19B93DF200A4D5EC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

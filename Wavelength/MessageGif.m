@@ -77,7 +77,7 @@
         
     }
     
-    return success && _gif;
+    return success && _gif && [_gif isKindOfClass:[NSString class]];
 } //x
 
 -(NSDictionary*)toDictionary
@@ -95,10 +95,13 @@
     {
         NSString *fetch = [NSString stringWithFormat:@"http://upload.gfycat.com/transcode?fetchUrl=%@", _gif];
         
+//        NSLog(@"MESSAGEGIF about to start async call %@", fetch);
+        
         __block ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:[NSURL URLWithString:fetch ]];
         
         [request setCompletionBlock:^{
-            NSLog(@"done fetching %@ ", fetch);
+//            NSLog(@"what thread am I on? main? %@", [NSThread mainThread] ? @"YES" : @"NO" );
+//            NSLog(@"done fetching %@ ", fetch);
             NSData *data = [request responseData];
             NSString *dataString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
             
