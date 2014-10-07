@@ -65,12 +65,18 @@
 @synthesize collectionView;
 @synthesize composeBarBottomConstraint;
 
-
+-(void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
 -(void)viewDidLoad

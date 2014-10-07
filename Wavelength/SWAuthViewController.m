@@ -19,9 +19,15 @@
 @interface SWAuthViewController () <UIAlertViewDelegate>
 
 
+@property (weak, nonatomic) IBOutlet UILabel *welcomeLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *welcomeCenterConstraint;
+
+
+@property (weak, nonatomic) IBOutlet UIImageView *hashtagImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *hashtagCenterVertical;
 
 @property (assign, nonatomic) NSInteger suggestionIndex; //init at 0
-@property (strong, nonatomic) NSTimer *repeatTimer; //may be nil;
+//@property (strong, nonatomic) NSTimer *repeatTimer; //may be nil;
 
 
 @property (assign, nonatomic) BOOL isFirstTime; //init as !(NSUserDefaults.standardUserDefaults().boolForKey(kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn))
@@ -29,16 +35,15 @@
 
 @property (weak, nonatomic) IBOutlet UIView *errorRetryView;
 @property (weak, nonatomic) IBOutlet UIView *authorizingView;
-@property (weak, nonatomic) IBOutlet UIView *titleContainerView;
-@property (weak, nonatomic) IBOutlet UILabel *channelNameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *actionLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *authButton;
-@property (weak, nonatomic) IBOutlet UIView *centerView;
+
 
 @property (strong, nonatomic) NSMutableArray *suggestions; //init with:
 //["str1": "Collaborate with",
 // "str2": "#your-community"]
+
+@property (assign, nonatomic) BOOL viewJustLoaded;
 
 @end
 
@@ -46,12 +51,12 @@
 @implementation SWAuthViewController
 
 @synthesize errorRetryView;
-@synthesize centerView;
+
 @synthesize authorizingView;
 @synthesize authButton;
 
 @synthesize suggestionIndex;
-@synthesize repeatTimer;
+//@synthesize repeatTimer;
 @synthesize isFirstTime;
 @synthesize suggestions;
 @synthesize authClient;
@@ -59,10 +64,12 @@
 
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
-    return UIStatusBarStyleLightContent;
+    return UIStatusBarStyleDefault;
 }
 -(void)viewDidLoad
 {
+    _welcomeLabel.alpha = 0.0f;
+    _viewJustLoaded = YES;
     [super viewDidLoad];
     [self setNeedsStatusBarAppearanceUpdate];
     suggestionIndex = 0;
@@ -76,7 +83,7 @@
     errorRetryView.userInteractionEnabled = NO;
     errorRetryView.backgroundColor = [UIColor clearColor];
     
-    centerView.backgroundColor = [UIColor clearColor];
+
     authorizingView.alpha = 0.0f;
     CALayer *layer = [CALayer layer];
     layer.frame = authButton.bounds;
@@ -87,27 +94,27 @@
     [authButton.layer addSublayer:layer];
     
     isFirstTime = ![[NSUserDefaults standardUserDefaults] boolForKey:Objc_kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn];
-    if (!isFirstTime)
+    if (!isFirstTime && NO)
     {
         [self beginAuthWithFirebase];
     } else
     {}
     
-    [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@static/useWithSuggestions", Objc_kROOT_FIREBASE]] observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snap)
-    {
-        if ([snap.value isKindOfClass:[NSArray class]])
-        {
-            NSArray *result = snap.value;
-            for (id thing in result)
-            {
-                if ([thing isKindOfClass:[NSDictionary class]])
-                {
-                    [self.suggestions addObject:thing];
-                }
-            }
-            [self startRepeatingIfNotAlready];
-        }
-    }];
+//    [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@static/useWithSuggestions", Objc_kROOT_FIREBASE]] observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *snap)
+//    {
+//        if ([snap.value isKindOfClass:[NSArray class]])
+//        {
+//            NSArray *result = snap.value;
+//            for (id thing in result)
+//            {
+//                if ([thing isKindOfClass:[NSDictionary class]])
+//                {
+//                    [self.suggestions addObject:thing];
+//                }
+//            }
+//            [self startRepeatingIfNotAlready];
+//        }
+//    }];
     
     [self observeAuthStatus];
     
@@ -127,21 +134,35 @@
     }];
 }
 
--(void)startRepeatingIfNotAlready
-{
-    if (repeatTimer != nil)
-    {
-        
-    } else
-    {
-        repeatTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(repeat) userInfo:nil repeats:YES];
-        [[NSRunLoop mainRunLoop] addTimer:repeatTimer forMode:NSDefaultRunLoopMode];
-    }
-}
+//-(void)startRepeatingIfNotAlready
+//{
+//    if (repeatTimer != nil)
+//    {
+//        
+//    } else
+//    {
+//        repeatTimer = [NSTimer timerWithTimeInterval:4 target:self selector:@selector(repeat) userInfo:nil repeats:YES];
+//        [[NSRunLoop mainRunLoop] addTimer:repeatTimer forMode:NSDefaultRunLoopMode];
+//    }
+//}
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self repeat]; //get the first one!
+    
+    if (_viewJustLoaded)
+    {
+        _viewJustLoaded = NO;
+        [UIView animateWithDuration:1.3f delay:0.1f usingSpringWithDamping:1.2f initialSpringVelocity:2.0f options:UIViewAnimationOptionCurveLinear animations:^
+        {
+            _hashtagCenterVertical.constant = 76.5f;
+            _welcomeLabel.alpha = 1.0f;
+            _welcomeCenterConstraint.constant = -30.0f;
+            [self.hashtagImageView.superview layoutIfNeeded];
+        } completion:^(BOOL finished){}];
+    }
+    
+    
+    //    [self repeat]; //get the first one!
 }
 
 -(UILabel*)copyLabel:(UILabel*)label
@@ -154,83 +175,83 @@
     return newLabel;
 }
 
--(void)repeat
-{
-    NSDictionary *dict = suggestions[suggestionIndex % suggestions.count];
-    
-    NSString *str1 = dict[@"str1"];
-    NSString *str2 = dict[@"str2"];
-    if (str1 && str2)
-    {
-        [self animateReplaceWithFirstString:str1 andSecondString:str2];
-    }
-    suggestionIndex ++;
-}
+//-(void)repeat
+//{
+//    NSDictionary *dict = suggestions[suggestionIndex % suggestions.count];
+//    
+//    NSString *str1 = dict[@"str1"];
+//    NSString *str2 = dict[@"str2"];
+//    if (str1 && str2)
+//    {
+//        [self animateReplaceWithFirstString:str1 andSecondString:str2];
+//    }
+//    suggestionIndex ++;
+//}
 
-@synthesize actionLabel;
-@synthesize channelNameLabel;
--(void)animateReplaceWithFirstString:(NSString*)str1 andSecondString:(NSString*)str2
-{
-    CGFloat duration = 1.0f;
-    CGFloat fadeOutDisplacement = 12.0f;
-    CGFloat fadeInDisplacement = 40.0f;
-    CGFloat scaleAway = 0.7f;
-    
-    UILabel *actionLabel2 = [self copyLabel:actionLabel];
-    actionLabel2.text = str1;
-    UILabel *channelNameLabel2 = [self copyLabel:channelNameLabel];
-    channelNameLabel2.text = str2;
-    [centerView addSubview:actionLabel2];
-    [centerView addSubview:channelNameLabel2];
-    
-    actionLabel2.transform = CGAffineTransformMakeTranslation(0, -fadeInDisplacement);
-    channelNameLabel2.transform = CGAffineTransformMakeTranslation(0, fadeInDisplacement);
-    actionLabel2.alpha = 0.0f;
-    channelNameLabel2.alpha = 0.0f;
-    
-    __weak SWAuthViewController *weakSelf = self;
-    void (^outgoingChange)(void) = ^{
-        weakSelf.actionLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, fadeInDisplacement));
-        weakSelf.channelNameLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, -fadeInDisplacement));
-    
-        weakSelf.actionLabel.alpha = 0.0f;
-        weakSelf.channelNameLabel.alpha = 0.0f;
-    
-    };
-    void (^incomingChange)(void) = ^{
-        actionLabel2.transform = CGAffineTransformIdentity;
-        channelNameLabel2.transform = CGAffineTransformIdentity;
-        actionLabel2.alpha = 1.0f;
-        channelNameLabel2.alpha = 1.0f;
-    };
-    
-    
-    [UIView animateWithDuration:duration*1.2f delay:0.0f usingSpringWithDamping:0.5f initialSpringVelocity:0.5f options:UIViewAnimationOptionCurveLinear animations:^
-    {
-        outgoingChange();
-        
-    } completion:^(BOOL finished)
-    {
-        [weakSelf.actionLabel removeFromSuperview];
-        [weakSelf.channelNameLabel removeFromSuperview];
-        
-        weakSelf.actionLabel = actionLabel2;
-        weakSelf.channelNameLabel = channelNameLabel2;
-    }];
-    
-    [UIView animateWithDuration:duration delay:0.0f usingSpringWithDamping:1.5f initialSpringVelocity:0.5f options:UIViewAnimationOptionCurveLinear animations:^
-    {
-        incomingChange();
-    } completion:^(BOOL finished){}];
-    
-}
+
+//@synthesize channelNameLabel;
+//-(void)animateReplaceWithFirstString:(NSString*)str1 andSecondString:(NSString*)str2
+//{
+//    CGFloat duration = 1.0f;
+//    CGFloat fadeOutDisplacement = 12.0f;
+//    CGFloat fadeInDisplacement = 40.0f;
+//    CGFloat scaleAway = 0.7f;
+//    
+//    UILabel *actionLabel2 = [self copyLabel:actionLabel];
+//    actionLabel2.text = str1;
+//    UILabel *channelNameLabel2 = [self copyLabel:channelNameLabel];
+//    channelNameLabel2.text = str2;
+//    [centerView addSubview:actionLabel2];
+//    [centerView addSubview:channelNameLabel2];
+//    
+//    actionLabel2.transform = CGAffineTransformMakeTranslation(0, -fadeInDisplacement);
+//    channelNameLabel2.transform = CGAffineTransformMakeTranslation(0, fadeInDisplacement);
+//    actionLabel2.alpha = 0.0f;
+//    channelNameLabel2.alpha = 0.0f;
+//    
+//    __weak SWAuthViewController *weakSelf = self;
+//    void (^outgoingChange)(void) = ^{
+//        weakSelf.actionLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, fadeInDisplacement));
+//        weakSelf.channelNameLabel.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(scaleAway, scaleAway), CGAffineTransformMakeTranslation(0, -fadeInDisplacement));
+//    
+//        weakSelf.actionLabel.alpha = 0.0f;
+//        weakSelf.channelNameLabel.alpha = 0.0f;
+//    
+//    };
+//    void (^incomingChange)(void) = ^{
+//        actionLabel2.transform = CGAffineTransformIdentity;
+//        channelNameLabel2.transform = CGAffineTransformIdentity;
+//        actionLabel2.alpha = 1.0f;
+//        channelNameLabel2.alpha = 1.0f;
+//    };
+//    
+//    
+//    [UIView animateWithDuration:duration*1.2f delay:0.0f usingSpringWithDamping:0.5f initialSpringVelocity:0.5f options:UIViewAnimationOptionCurveLinear animations:^
+//    {
+//        outgoingChange();
+//        
+//    } completion:^(BOOL finished)
+//    {
+//        [weakSelf.actionLabel removeFromSuperview];
+//        [weakSelf.channelNameLabel removeFromSuperview];
+//        
+//        weakSelf.actionLabel = actionLabel2;
+//        weakSelf.channelNameLabel = channelNameLabel2;
+//    }];
+//    
+//    [UIView animateWithDuration:duration delay:0.0f usingSpringWithDamping:1.5f initialSpringVelocity:0.5f options:UIViewAnimationOptionCurveLinear animations:^
+//    {
+//        incomingChange();
+//    } completion:^(BOOL finished){}];
+//    
+//}
 
 -(void)showValidatingUI
 {
     errorRetryView.alpha = 0.0f;
     [UIView animateWithDuration:0.4f delay:0.0f usingSpringWithDamping:2.0f initialSpringVelocity:2.0f options:UIViewAnimationOptionCurveLinear animations:^
     {
-        self.centerView.alpha = 0.0f;
+        _welcomeLabel.alpha = 0.0f;
         self.authorizingView.alpha = 1.0f;
     } completion:^(BOOL finished){}];
 }
@@ -370,11 +391,11 @@
 
 -(void)viewWillDisappear:(BOOL)animated
 {
-    if (repeatTimer)
-    {
-        [repeatTimer invalidate];
-        repeatTimer = nil;
-    }
+//    if (repeatTimer)
+//    {
+//        [repeatTimer invalidate];
+//        repeatTimer = nil;
+//    }
 }
 
 

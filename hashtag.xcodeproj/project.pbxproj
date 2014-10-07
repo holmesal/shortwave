@@ -42,6 +42,7 @@
 		AA9B5F8F19BAB94E00260652 /* AWSSQS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B5F8219BAB94E00260652 /* AWSSQS.framework */; };
 		AA9B5F9119BAC1F300260652 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B5F9019BAC1F300260652 /* CoreData.framework */; };
 		AA9B5F9419BAD9E300260652 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9B5F9319BAD9E300260652 /* MessageFile.m */; };
+		AABAC71E19E3AC7700E1FF59 /* AutoCompleteChannelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */; };
 		AAF802E419B9411700B51B6D /* fossil.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF802E319B9411700B51B6D /* fossil.png */; };
 		AAF8037A19B941AE00B51B6D /* SWImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF8037719B941AE00B51B6D /* SWImageLoader.m */; };
 		AAF8037B19B941AE00B51B6D /* SWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF8037919B941AE00B51B6D /* SWUserManager.m */; };
@@ -145,6 +146,8 @@
 		AA9B5F9019BAC1F300260652 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		AA9B5F9219BAD9E300260652 /* MessageFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageFile.h; sourceTree = "<group>"; };
 		AA9B5F9319BAD9E300260652 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
+		AABAC71C19E3AC7700E1FF59 /* AutoCompleteChannelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCompleteChannelCell.h; sourceTree = "<group>"; };
+		AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCompleteChannelCell.m; sourceTree = "<group>"; };
 		AAF802E319B9411700B51B6D /* fossil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fossil.png; sourceTree = "<group>"; };
 		AAF8037619B941AE00B51B6D /* SWImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWImageLoader.h; sourceTree = "<group>"; };
 		AAF8037719B941AE00B51B6D /* SWImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWImageLoader.m; sourceTree = "<group>"; };
@@ -479,6 +482,8 @@
 				AAF803BF19B9422F00B51B6D /* SWWebSiteCell.h */,
 				AAF803C019B9422F00B51B6D /* SWWebSiteCell.m */,
 				AAF803C119B9422F00B51B6D /* SWWebSiteCell.xib */,
+				AABAC71C19E3AC7700E1FF59 /* AutoCompleteChannelCell.h */,
+				AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -698,6 +703,7 @@
 				AAF8039819B941D200B51B6D /* ASIInputStream.m in Sources */,
 				AAF8039919B941D200B51B6D /* ASINetworkQueue.m in Sources */,
 				AAF8039419B941D200B51B6D /* ASIDataDecompressor.m in Sources */,
+				AABAC71E19E3AC7700E1FF59 /* AutoCompleteChannelCell.m in Sources */,
 				AA9B5F9419BAD9E300260652 /* MessageFile.m in Sources */,
 				AAF8039519B941D200B51B6D /* ASIDownloadCache.m in Sources */,
 				AAF803F319B9428D00B51B6D /* SWAuthViewController.m in Sources */,

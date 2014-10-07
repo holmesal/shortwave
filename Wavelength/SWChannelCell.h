@@ -16,9 +16,10 @@
 
 
 @property (strong, nonatomic) SWChannelModel *channelModel; //willSet and didSet responders
+@property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 
 -(void)hideLeaveChannelConfirmUI;
 -(void)setIsSynchronized:(BOOL)synchronized;
--(void)push;
+//-(void)push;
 
 @end

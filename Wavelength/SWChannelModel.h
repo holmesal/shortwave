@@ -11,6 +11,28 @@
 #import <Firebase/Firebase.h>
 #import "WallSource.h"
 
+
+@interface  QueryChannelRequest : NSObject
+
+@property (strong, nonatomic) Firebase *put;
+@property (strong, nonatomic) Firebase *get;
+@property (assign, nonatomic) FirebaseHandle listener;
+@property (strong, nonatomic) id result;
+@property (strong, nonatomic) NSMutableArray *results; //of QueryResult
+
+@end
+
+@interface QueryResult : NSObject
+
+@property (assign, nonatomic) NSInteger memberCount;
+@property (strong, nonatomic) NSNumber *score;
+@property (strong, nonatomic) NSString *text;
+-(id)initWithDictionary:(NSDictionary*)dictionary;
+
+
+
+@end
+
 @protocol ChannelMutedResponderDelegate
 -(void)channel:(id)channel isMuted:(BOOL)muted;
 @end
@@ -62,5 +84,6 @@
 -(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta; 
 -(void)setMutedToFirebase; //x
 +(void)joinChannel:(NSString*)channelName withCompletion:(void (^)(NSError *error))completion;
++(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery))completion;
 
 @end

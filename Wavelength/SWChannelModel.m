@@ -9,7 +9,53 @@
 #import "SWChannelModel.h"
 #import "ObjcConstants.h"
 
+
+
+@implementation QueryChannelRequest
+@end
+
+@implementation QueryResult
+
+-(id)initWithDictionary:(NSDictionary*)result
+{
+    if (self = [super init])
+    {
+        _score = result[@"score"];
+        if (_score == nil || ![_score isKindOfClass:[NSNumber class]])
+        {
+            return nil;
+        }
+        _text = result[@"text"];
+        if (_text == nil || ![_text isKindOfClass:[NSString class]])
+        {
+            return nil;
+        }
+        NSNumber *memberCountObj = nil;
+        
+        NSDictionary *payload = result[@"payload"];
+        if (payload == nil || ![payload isKindOfClass:[NSDictionary class]])
+        {
+            return nil;
+        }
+        
+        memberCountObj = payload[@"memberCount"];
+        if (memberCountObj == nil || ![memberCountObj isKindOfClass:[NSNumber class]])
+        {
+            return nil;
+        }
+        _memberCount = [memberCountObj integerValue];
+        
+        
+    }
+    return self;
+}
+
+@end
+
+
 @interface SWChannelModel ()
+
+
 
 @property (assign, nonatomic) double lastPriorityToSet; //initialize 0
 @property (strong, nonatomic) NSTimer *setPriorityTimer; //may be nil
@@ -21,9 +67,56 @@
 
 @implementation SWChannelModel
 
+//query & return the suggested channel name!
++(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery))queryResultHandler
+{
+    QueryChannelRequest *f = [[QueryChannelRequest alloc] init];
+    f.put = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@searchQueue/query", Objc_kROOT_FIREBASE]] childByAutoId];
+    f.get = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@searchQueue/result/%@", Objc_kROOT_FIREBASE, f.put.name]];
+    f.results = [[NSMutableArray alloc] init];
+    f.listener = [f.get observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+    {
+        //if snapshot.value then remove event listener, otherwise keep listening, waiting for elastic search
+        if (snapshot.value && [snapshot.value isKindOfClass:[NSDictionary class]])
+        {
+            NSDictionary *value = snapshot.value;
+            if ([value isKindOfClass:[NSDictionary class]])
+            {
+                NSArray *results = value[@"results"];
+                if (results && [results isKindOfClass:[NSArray class]])
+                {
+                    for (NSDictionary *result in results)
+                    {
+                        if ([result isKindOfClass:[NSDictionary class]])
+                        {
+                            QueryResult *queryResult = [[QueryResult alloc] initWithDictionary:result];
+                            if (queryResult)
+                            {
+                                [f.results addObject:queryResult];
+                            }
+                        }
+                    }
+                }
+            }
+            
+            //remove this listener
+            [f.get removeObserverWithHandle:f.listener];
+        
+            //return query
+            queryResultHandler(f, queryTerm);
+        }
+    }];
+    //stash the request maybe to avoid multiples? or timer on UI fixes it too
+    NSDictionary *queryValue = @{@"query" : queryTerm};
+    [f.put setValue:queryValue withCompletionBlock:^(NSError *error, Firebase *ref)
+    {}];
+}
+
+
 
 @synthesize reorderChannelsTimer;
 @synthesize latestMessagePriority;
+
 
 //1. add myself as a member of the channel, (if fail, completion is run)
 //2. add the channel to my list of channels (if fail, completion is run)
