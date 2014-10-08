@@ -29,6 +29,7 @@
 
 -(void)setData:(QueryResult*)newValue
 {
+    [self customSetSelected:NO animated:NO];
     data = newValue;
     _nameLabel.text = data.text;
     _countLabel.text = [NSString stringWithFormat:@"%d", data.memberCount];
@@ -39,5 +40,28 @@
 {
     return data;
 }
+
+
+-(void)customSetSelected:(BOOL)selected animated:(BOOL)animated
+{
+    if (animated)
+    {
+        
+        [UIView animateWithDuration:0.3f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^
+         {
+             [self customSetSelectedState:selected];
+         } completion:^(BOOL finished){}];
+    }
+    else
+    {
+        [self customSetSelectedState:selected];
+    }
+}
+
+-(void)customSetSelectedState:(BOOL)selected
+{
+    self.backgroundColor = selected ? [UIColor colorWithWhite:235/255.0f alpha:1.0f] : [UIColor whiteColor];
+}
+
 
 @end

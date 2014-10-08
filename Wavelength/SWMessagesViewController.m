@@ -84,7 +84,7 @@
     [super viewDidLoad];
     
 
-    
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
     uploadProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 3.5)];
     uploadProgressView.backgroundColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
     uploadProgressView.hidden = YES;
@@ -96,9 +96,9 @@
     
     [self setupComposeBarView];
     composeBarView.textView.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
-    composeBarView.textView.textColor = [UIColor blackColor];
-    composeBarView.textView.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
-    composeBarView.button.tintColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
+    composeBarView.textView.textColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
+    composeBarView.textView.tintColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
+    composeBarView.button.tintColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
     [composeBarView addSubview:uploadProgressView];
     
     [MessageCell registerCollectionViewCellsForCollectionView:collectionView];

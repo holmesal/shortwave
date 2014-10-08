@@ -84,6 +84,10 @@
 -(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta; 
 -(void)setMutedToFirebase; //x
 +(void)joinChannel:(NSString*)channelName withCompletion:(void (^)(NSError *error))completion;
-+(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery))completion;
++(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery, BOOL hasExactMatch))completion;
+
++(void)joinChannel:(NSString *)channelName withCompletion:(void (^)(NSError *))completion;
++(void)createChannel:(NSString *)channelName withCompletion:(void (^)(NSError *))completion;
+
 
 @end

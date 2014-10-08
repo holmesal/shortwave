@@ -20,6 +20,8 @@
 
 -(void)hideLeaveChannelConfirmUI;
 -(void)setIsSynchronized:(BOOL)synchronized;
+
+-(void)customSetSelected:(BOOL)selected animated:(BOOL)animated;
 //-(void)push;
 
 @end

@@ -62,23 +62,29 @@
 
 @property (strong, nonatomic) NSTimer *reorderChannelsTimer;
 
+
 @end
 
 
 @implementation SWChannelModel
 
+static QueryChannelRequest *pendingRequest;
 //query & return the suggested channel name!
-+(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery))queryResultHandler
++(void)query:(NSString*)queryTerm andCompletionHandler:(void(^)(QueryChannelRequest *request, NSString *originalQuery, BOOL hasExactMatch))queryResultHandler;
 {
+    
     QueryChannelRequest *f = [[QueryChannelRequest alloc] init];
     f.put = [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@searchQueue/query", Objc_kROOT_FIREBASE]] childByAutoId];
     f.get = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@searchQueue/result/%@", Objc_kROOT_FIREBASE, f.put.name]];
     f.results = [[NSMutableArray alloc] init];
+    pendingRequest = f;
+    __weak QueryChannelRequest *weakF = f;
     f.listener = [f.get observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
     {
         //if snapshot.value then remove event listener, otherwise keep listening, waiting for elastic search
         if (snapshot.value && [snapshot.value isKindOfClass:[NSDictionary class]])
         {
+            BOOL hasExactMatch = NO;
             NSDictionary *value = snapshot.value;
             if ([value isKindOfClass:[NSDictionary class]])
             {
@@ -92,18 +98,23 @@
                             QueryResult *queryResult = [[QueryResult alloc] initWithDictionary:result];
                             if (queryResult)
                             {
-                                [f.results addObject:queryResult];
+                                [weakF.results addObject:queryResult];
+                                if ([queryResult.text isEqualToString:queryTerm])
+                                {
+                                    hasExactMatch = YES;
+                                }
                             }
+                            
                         }
                     }
                 }
             }
             
             //remove this listener
-            [f.get removeObserverWithHandle:f.listener];
+            [weakF.get removeObserverWithHandle:weakF.listener];
         
-            //return query
-            queryResultHandler(f, queryTerm);
+            //return queryJoin
+            queryResultHandler(weakF, queryTerm, hasExactMatch);
         }
     }];
     //stash the request maybe to avoid multiples? or timer on UI fixes it too
@@ -122,6 +133,7 @@
 //2. add the channel to my list of channels (if fail, completion is run)
 //3. completion is run
 
+
 +(void)joinChannel:(NSString*)channelName withCompletion:(void (^)(NSError *error))completion
 {
     //1.
@@ -130,31 +142,61 @@
     Firebase *membersFB = [[Firebase alloc] initWithUrl:url1];
     
     [membersFB setValue:@YES withCompletionBlock:^(NSError *error1, Firebase *firebase)
-    {
-        if (error1)
-        {
-            NSLog(@"<error adding self to members> '%@' : %@", url1, error1.localizedDescription);
-            completion(error1);
-        } else
-        {
-            //2.
-            NSString *url2 = [NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, userId, channelName];
-            Firebase *myChannelsRef = [[Firebase alloc] initWithUrl:url2];
-            [myChannelsRef setValue:@{@"lastSeen":@0, @"muted":@NO} andPriority:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] *1000] withCompletionBlock:^(NSError *error2, Firebase *firebase)
-            {
-                if (error2)
-                {
-                    NSLog(@"<error adding channel to channels> '%@' : %@", url2, error2.localizedDescription);
-                    completion(error2);
-                } else
-                {
-                    //3.
-                    completion(nil);
-                }
-            }];
-        }
-    }];
+     {
+         if (error1)
+         {
+             NSLog(@"<error adding self to members> '%@' : %@", url1, error1.localizedDescription);
+             completion(error1);
+         } else
+         {
+             //2.
+             [SWChannelModel localAddChannel:channelName withCompletion:(void(^)(NSError *error))completion];
+         }
+     }];
     
+}
+
++(void)createChannel:(NSString *)channelName withCompletion:(void (^)(NSError *))completion
+{
+    NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
+    
+    NSDictionary *value = @{@"moderators": @{userId: @YES},
+                            @"members": @{userId: @YES},
+                            @"meta":
+                                @{@"public": @YES,
+                                  @"latestMessagePriority" : kFirebaseServerValueTimestamp}
+                            };
+    Firebase *channelRoot = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@", Objc_kROOT_FIREBASE, channelName]];
+    [channelRoot setValue:value withCompletionBlock:^(NSError *error, Firebase *firebase)
+     {
+         if (error)
+         {
+             completion(error);
+         } else
+         {
+             [SWChannelModel localAddChannel:channelName withCompletion:completion];
+         }
+     }];
+}
+
++(void)localAddChannel:(NSString*)channelName withCompletion:(void(^)(NSError *error))completion
+{
+    NSString *userId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
+    
+    NSString *url2 = [NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, userId, channelName];
+    Firebase *myChannelsRef = [[Firebase alloc] initWithUrl:url2];
+    [myChannelsRef setValue:@{@"lastSeen":@0, @"muted":@NO} andPriority:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] *1000] withCompletionBlock:^(NSError *error2, Firebase *firebase)
+     {
+         if (error2)
+         {
+             NSLog(@"<error adding channel to channels> '%@' : %@", url2, error2.localizedDescription);
+             completion(error2);
+         } else
+         {
+             //3.
+             completion(nil);
+         }
+     }];
 }
 
 @synthesize isSynchronized;

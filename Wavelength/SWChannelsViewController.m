@@ -19,6 +19,22 @@
 #define maxCharsInChannelName NSIntegerMax
 
 @interface SWChannelsViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
+
+@property (assign, nonatomic) BOOL navBarIsAnimating;
+@property (assign, nonatomic ) BOOL isJoiningOrCreatingAChannel;
+
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *spinnerView;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *x1;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *x2;
+//+14
+@property (weak, nonatomic) IBOutlet UIView *addOrCreateContainer;
+@property (weak, nonatomic) IBOutlet UILabel *addOrCreateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *addOrCreateChannelNameLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *addChannelHashImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *addChannelButtonWidthConstraint;
+
+@property (strong, nonatomic) SWChannelCell *selectedSWChannelCell;
 @property (weak, nonatomic) IBOutlet UIView *addChannelAutoCompleteContainer;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *addChannelAutoCompleteContainerSpaceToBottom;
 
@@ -40,6 +56,11 @@
 @property (strong, nonatomic) UIView *verticalBeam;
 @property (strong, nonatomic) UIView *horizontalBeam;
 
+@property (strong, nonatomic) NSTimer *channelQueryTimer;
+@property (strong, nonatomic) NSString *channelQueryTerm;
+@property (strong, nonatomic) NSNumber *channelQueryExists; //nil meaning unknown
+
+
 
 @property (weak, nonatomic) IBOutlet UICollectionView *autoCompleteCollectionView;
 @property (strong, nonatomic) NSArray *autoCompleteResults;
@@ -50,6 +71,8 @@
 
 
 @implementation SWChannelsViewController
+
+@synthesize navBarIsAnimating;
 @synthesize channelsCollectionView;
 @synthesize channels;
 @synthesize channelNamesOrdering;
@@ -126,6 +149,7 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    _addOrCreateContainer.alpha = 0.0f;
     _autoCompleteResults = @[];
     [_addChannelAutoCompleteContainer setAlpha:0.0f];
     [_addChannelTextField setHidden:YES];
@@ -134,7 +158,8 @@
     
     [_autoCompleteCollectionView setDataSource:self];
     [_autoCompleteCollectionView setDelegate:self];
-    
+    [_autoCompleteCollectionView setAlwaysBounceVertical:YES];
+    [_autoCompleteCollectionView setBackgroundColor:[UIColor whiteColor]];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillToggle:) name:UIKeyboardWillShowNotification object:nil];
@@ -416,6 +441,13 @@
 {
     [super viewDidAppear:animated];
     [self bindToChannels];
+
+    if (_selectedSWChannelCell)
+    {
+        [_selectedSWChannelCell customSetSelected:NO animated:YES];
+        _selectedSWChannelCell = nil;
+    }
+
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
@@ -433,11 +465,28 @@
 {
     if (collectionView == channelsCollectionView)
     {
+        SWChannelCell *channelCell = (SWChannelCell*)[collectionView cellForItemAtIndexPath:indexPath];
+        _selectedSWChannelCell = channelCell;
+        [channelCell customSetSelected:YES animated:NO];
         [self openChannel:channels[indexPath.section]];
     } else
-    if (collectionView == _autoCompleteCollectionView)
+    if (collectionView == _autoCompleteCollectionView && !_isJoiningOrCreatingAChannel)
     {
-        NSAssert(NO, @"LOL");
+        _isJoiningOrCreatingAChannel = YES;
+        
+        AutoCompleteChannelCell *channelCell = (AutoCompleteChannelCell*)[collectionView cellForItemAtIndexPath:indexPath];
+        [channelCell customSetSelected:YES animated:NO];
+        QueryResult *queryResult = [channelCell data];
+        
+
+        [self removeAllAutoCompletesExcept:queryResult.text];
+        
+        __weak SWChannelsViewController *weakSelf = self;
+        [SWChannelModel joinChannel:queryResult.text withCompletion:^(NSError *error)
+        {
+            NSLog(@"done joining channel queryResult.text = %@, error = %@", queryResult.text, error.localizedDescription);
+            [weakSelf setNavBarHighlighted:NO];
+        }];
     }
 }
 
@@ -597,8 +646,19 @@
 
 -(void)setNavBarHighlighted:(BOOL)highlighted
 {
+    [_addOrCreateContainer setBackgroundColor:[UIColor whiteColor]];
+    _isJoiningOrCreatingAChannel = NO;
+    if (navBarIsAnimating)
+    {
+        return;
+    }
+    navBarIsAnimating = YES;
     _navBarImageViewBG.highlighted = highlighted;
-
+    if (!highlighted)
+    {
+        [_addChannelTextField resignFirstResponder];
+//        _plusContainer.alpha = 0.0f;
+    }
     [_plusContainer setHidden:NO];
     [UIView animateWithDuration:0.4f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
     {
@@ -606,6 +666,13 @@
          CGAffineTransformMakeRotation(M_PI/2) : CGAffineTransformMakeRotation(0)];
     
         [_addChannelAutoCompleteContainer setAlpha:highlighted ? 1.0f : 0.0f];
+        
+        if (!highlighted)
+        {
+            [_addChannelTextField setTransform:CGAffineTransformMakeScale(0.1, 1.0)];
+             _plusContainer.alpha = 1.0f;
+        }
+        
         
     } completion:^(BOOL finished)
     {
@@ -615,6 +682,18 @@
             [_addChannelTextField setHidden:NO];
             [_addChannelTextField becomeFirstResponder];
         }
+        
+        if (!highlighted)
+        {
+            _spinnerView.alpha = 0.0f;
+            [_addChannelTextField setTransform:CGAffineTransformIdentity];
+            [_addChannelTextField setHidden:YES];
+            [_addChannelTextField setText:@""];
+            _autoCompleteResults = @[];
+            _addOrCreateContainer.alpha = 0.0f;
+            [_autoCompleteCollectionView reloadData];
+        }
+        navBarIsAnimating = NO;
     }];
 
 }
@@ -662,6 +741,10 @@
 //UITextField delegate methods
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
+    if (_isJoiningOrCreatingAChannel)
+    {
+        return NO;
+    }
     NSString *result = [[textField.text stringByReplacingCharactersInRange:range withString:string] lowercaseString];
     
     NSArray *illegalCharacters = @[@"$", @"[", @"]", @"/", @".", @"#"];
@@ -677,61 +760,131 @@
         return NO;
     }
     
-//    self.channelNameCharacterCountLabel.text = [NSString stringWithFormat:@"%d / %d", result.length, maxCharsInChannelName];
-//    
-//    if (self.timer != nil)
-//    {
-//        [self.timer invalidate];
-//        self.timer = nil;
-//    }
-//    self.channelName = result;
-//    self.channelNameExists = nil;
-//    self.temporaryChannelNameExists = nil;
-//    [self animateDescriptionContainer:self.descriptionViewContainer visible:NO];
-//    [self animateDescriptionContainer:self.createDescriptionContainer visible:NO];
-//    
-//    if (result.length == 0)
-//    {
-//        self.activityIndicator.hidden = YES;
-//    }
-//    NSTimeInterval timeRequestStarted = [[NSDate date] timeIntervalSince1970];
-//    
-//    [self performFirebaseFetchForChannel:result result:^(BOOL exists, NSString *description)
-//     {
-//         NSLog(@"channel %@ exists ? %d", result, exists );
-//         
-//         self.joiningDescriptionString = description;
-//         if (self.channelName == result)
-//         {
-//             self.temporaryChannelNameExists = [NSNumber numberWithBool:exists];
-//             
-//             NSTimeInterval elapsedTimeOfRequest = [[NSDate date] timeIntervalSince1970] - timeRequestStarted;
-//             NSTimeInterval timeRemaining = TIME_DELAY - elapsedTimeOfRequest;
-//             
-//             if (timeRemaining > 0)
-//             {
-//                 self.timer = [NSTimer timerWithTimeInterval:timeRemaining target:self selector:@selector(updateUITimer) userInfo:nil repeats:NO];
-//                 [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSDefaultRunLoopMode];
-//             } else
-//             {
-//                 [self updateUITimer];
-//             }
-//         }
-//         
-//     }];
-//    
+    if (_channelQueryTimer)
+    {
+        [_channelQueryTimer invalidate];
+        _channelQueryTimer = nil;
+    }
+    
+    _channelQueryTimer = [NSTimer timerWithTimeInterval:0.85f target:self selector:@selector(queryTimerEvent:) userInfo:nil repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:_channelQueryTimer forMode:NSDefaultRunLoopMode];
     textField.text = result;
     
-    [SWChannelModel query:result andCompletionHandler:^(QueryChannelRequest *request, NSString *originalQuery)
+    _channelQueryTerm = result;
+    _channelQueryExists = nil; //unknown
+    
+    if (_addOrCreateContainer.alpha == 1.0f)
     {
-        NSLog(@"done query '%@' with requests: '%d'", originalQuery, request.results.count);
-        _autoCompleteResults = request.results;
-        [_autoCompleteCollectionView reloadData];
-    }];
+        [UIView animateWithDuration:0.3f animations:^
+        {
+            _addOrCreateContainer.alpha = 0.5f;
+        }];
+    }
     
     return NO;
     
 }
 
+-(void)queryTimerEvent:(NSTimer*)tmrw
+{
+    [_channelQueryTimer invalidate];
+    _channelQueryTimer = nil;
+    
+    
+    __weak SWChannelsViewController *weakSelf = self;
+    [SWChannelModel query:_channelQueryTerm andCompletionHandler:^(QueryChannelRequest *request, NSString *originalQuery, BOOL hasExactMatch)
+     {
+         NSLog(@"done query '%@' with requests: '%d'", originalQuery, request.results.count);
+         if ([originalQuery isEqualToString:weakSelf.channelQueryTerm])
+         {
+             weakSelf.channelQueryExists = [NSNumber numberWithBool:hasExactMatch];
+             weakSelf.autoCompleteResults = request.results;
+             [weakSelf.autoCompleteCollectionView reloadData];
+             
+             [weakSelf setAddOrCreateButton:hasExactMatch ? @"Join" : @"Create" andChannel:originalQuery];
+         }
+     }];
+    
+}
+
+-(void)setAddOrCreateButton:(NSString*)addOrCreate andChannel:(NSString*)channelName
+{
+    if (_addOrCreateContainer.alpha != 1.0f)
+    {
+        [UIView animateWithDuration:0.3f animations:^{
+            _addOrCreateContainer.alpha = 1.0f;
+        }];
+    }
+    _addOrCreateLabel.text = addOrCreate;
+    _addOrCreateChannelNameLabel.text = channelName;
+    
+    CGSize s1 = [_addOrCreateLabel sizeThatFits:CGSizeMake(300, 50)];
+    CGSize s2 = [_addOrCreateChannelNameLabel sizeThatFits:CGSizeMake(300, 50)];
+    
+    CGFloat width = s1.width + s2.width + 14 + _x1.constant + _x2.constant;
+    
+    _addChannelButtonWidthConstraint.constant = width;
+}
+
+- (IBAction)addOrCreateChannel:(id)sender
+{
+    if (_channelQueryExists && !_isJoiningOrCreatingAChannel)
+    {
+        [_addOrCreateContainer setBackgroundColor:[UIColor colorWithWhite:230/255.0f alpha:1.0f]];
+        _isJoiningOrCreatingAChannel = YES;
+        __weak SWChannelsViewController *weakSelf = self;
+        [self removeAllAutoCompletesExcept:_channelQueryTerm];
+        
+        if ([_channelQueryExists boolValue])
+        {
+            [SWChannelModel joinChannel:_channelQueryTerm withCompletion:^(NSError *error)
+            {
+                [weakSelf setNavBarHighlighted:NO];
+            }];
+        } else
+        {
+            [SWChannelModel createChannel:_channelQueryTerm withCompletion:^(NSError *error)
+            {
+                [weakSelf setNavBarHighlighted:NO];
+            }];
+        }
+    }
+}
+
+-(void)removeAllAutoCompletesExcept:(NSString*)term
+{
+    NSArray *results = [_autoCompleteResults filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.text == %@", term]];
+    QueryResult *result = [results lastObject];
+    
+    NSInteger index = [_autoCompleteResults indexOfObject:result];
+    
+    NSMutableArray *removeIndexPaths = [[NSMutableArray alloc] init];
+    for (int i = 0; i < _autoCompleteResults.count ; i++)
+    {
+        if (i != index)
+        {
+            [removeIndexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+        }
+    }
+    
+    if (index == NSNotFound)
+    {
+        _autoCompleteResults = @[ ];
+    } else
+    {
+        _autoCompleteResults = @[ result ];
+    }
+    [_autoCompleteCollectionView deleteItemsAtIndexPaths:removeIndexPaths];
+    
+    [UIView animateWithDuration:0.3f animations:^{
+        _spinnerView.alpha = 1.0f;
+    }];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [self addOrCreateChannel:nil];
+    return NO;
+}
 
 @end

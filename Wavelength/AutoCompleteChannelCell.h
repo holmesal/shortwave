@@ -14,5 +14,5 @@
 -(void)setData:(QueryResult*)setData;
 
 -(QueryResult*)data;
-
+-(void)customSetSelected:(BOOL)selected animated:(BOOL)animated;
 @end

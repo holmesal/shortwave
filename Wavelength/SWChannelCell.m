@@ -110,6 +110,8 @@
     channelModel = newValue;
     //didSet
     {
+        [self customSetSelected:NO animated:NO];
+        
         titleLabel.text = channelModel.name;
         [self setIsSynchronized:channelModel.isSynchronized];
         
@@ -377,6 +379,26 @@
     _leaveWidthConstraint.constant = translation;
 }
 
+-(void)customSetSelected:(BOOL)selected animated:(BOOL)animated
+{
+    if (animated)
+    {
+        
+        [UIView animateWithDuration:0.3f delay:0.0 options:UIViewAnimationOptionCurveEaseIn animations:^
+        {
+            [self customSetSelectedState:selected];
+        } completion:^(BOOL finished){}];
+    }
+    else
+    {
+        [self customSetSelectedState:selected];
+    }
+}
+
+-(void)customSetSelectedState:(BOOL)selected
+{
+    self.panView.backgroundColor = selected ? [UIColor colorWithWhite:235/255.0f alpha:1.0f] : [UIColor whiteColor];
+}
 
 
 
