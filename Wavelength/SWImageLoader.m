@@ -243,12 +243,17 @@
 
 -(void)requestFailed:(ASIHTTPRequest*)rq
 {
-    NSLog(@"request failed, %@", rq);
+    NSLog(@"request failed, %@", rq.url);
     
     state = DataLoadingParcelStateFailed;
     
     NSLog(@"request.error = %@", rq.error.localizedDescription);
     NSLog(@"request.code = %ld", (long)rq.error.code);
+    
+    if (rq.error.code == 1)
+    {
+        return;
+    }
     
     state = DataLoadingParcelStateUnstarted;
     //just auto repeat requests that fail for now.

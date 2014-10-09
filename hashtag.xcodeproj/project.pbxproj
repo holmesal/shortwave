@@ -43,6 +43,8 @@
 		AA9B5F9119BAC1F300260652 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B5F9019BAC1F300260652 /* CoreData.framework */; };
 		AA9B5F9419BAD9E300260652 /* MessageFile.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9B5F9319BAD9E300260652 /* MessageFile.m */; };
 		AABAC71E19E3AC7700E1FF59 /* AutoCompleteChannelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */; };
+		AAD9120119E5F4C4009CA1B8 /* SWAtMentionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = AAD9120019E5F4C4009CA1B8 /* SWAtMentionCell.m */; };
+		AAD9120319E5F4D5009CA1B8 /* SWAtMentionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = AAD9120219E5F4D5009CA1B8 /* SWAtMentionCell.xib */; };
 		AAF802E419B9411700B51B6D /* fossil.png in Resources */ = {isa = PBXBuildFile; fileRef = AAF802E319B9411700B51B6D /* fossil.png */; };
 		AAF8037A19B941AE00B51B6D /* SWImageLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF8037719B941AE00B51B6D /* SWImageLoader.m */; };
 		AAF8037B19B941AE00B51B6D /* SWUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AAF8037919B941AE00B51B6D /* SWUserManager.m */; };
@@ -148,6 +150,9 @@
 		AA9B5F9319BAD9E300260652 /* MessageFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageFile.m; sourceTree = "<group>"; };
 		AABAC71C19E3AC7700E1FF59 /* AutoCompleteChannelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoCompleteChannelCell.h; sourceTree = "<group>"; };
 		AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoCompleteChannelCell.m; sourceTree = "<group>"; };
+		AAD911FF19E5F4C4009CA1B8 /* SWAtMentionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWAtMentionCell.h; sourceTree = "<group>"; };
+		AAD9120019E5F4C4009CA1B8 /* SWAtMentionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWAtMentionCell.m; sourceTree = "<group>"; };
+		AAD9120219E5F4D5009CA1B8 /* SWAtMentionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SWAtMentionCell.xib; sourceTree = "<group>"; };
 		AAF802E319B9411700B51B6D /* fossil.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = fossil.png; sourceTree = "<group>"; };
 		AAF8037619B941AE00B51B6D /* SWImageLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWImageLoader.h; sourceTree = "<group>"; };
 		AAF8037719B941AE00B51B6D /* SWImageLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWImageLoader.m; sourceTree = "<group>"; };
@@ -484,6 +489,9 @@
 				AAF803C119B9422F00B51B6D /* SWWebSiteCell.xib */,
 				AABAC71C19E3AC7700E1FF59 /* AutoCompleteChannelCell.h */,
 				AABAC71D19E3AC7700E1FF59 /* AutoCompleteChannelCell.m */,
+				AAD911FF19E5F4C4009CA1B8 /* SWAtMentionCell.h */,
+				AAD9120019E5F4C4009CA1B8 /* SWAtMentionCell.m */,
+				AAD9120219E5F4D5009CA1B8 /* SWAtMentionCell.xib */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -629,6 +637,7 @@
 				AAF803F919B9429C00B51B6D /* Main.storyboard in Resources */,
 				AA6BFB1219B93DDC00A4D5EC /* InfoPlist.strings in Resources */,
 				AAF803CD19B9422F00B51B6D /* SWWebSiteCell.xib in Resources */,
+				AAD9120319E5F4D5009CA1B8 /* SWAtMentionCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -699,6 +708,7 @@
 				AAF8039719B941D200B51B6D /* ASIHTTPRequest.m in Sources */,
 				AAF8039219B941D200B51B6D /* ASIAuthenticationDialog.m in Sources */,
 				AAF8040419B9452C00B51B6D /* AppDelegate.m in Sources */,
+				AAD9120119E5F4C4009CA1B8 /* SWAtMentionCell.m in Sources */,
 				AAF8039619B941D200B51B6D /* ASIFormDataRequest.m in Sources */,
 				AAF8039819B941D200B51B6D /* ASIInputStream.m in Sources */,
 				AAF8039919B941D200B51B6D /* ASINetworkQueue.m in Sources */,

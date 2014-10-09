@@ -18,9 +18,18 @@
 #import "MessageGif.h"
 #import "SWBucketUpload.h"
 #import "MessageFile.h"
+#import "SWChannelModel.h"
+#import "SWAtMentionCell.h"
 
-@interface SWMessagesViewController () <PHFComposeBarViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate>
+#define kAutoCompleteCellHeight 40.0f
 
+@interface SWMessagesViewController () <PHFComposeBarViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+
+@property (assign, nonatomic) NSInteger atMentionStartsAtThisIndex;
+
+@property (strong, nonatomic) NSMutableArray *autoCompleteData;
+@property (strong, nonatomic) UIView *autoCompleteContainerView;
+@property (strong, nonatomic) UICollectionView *autoCompleteCollectionView;
 
 @property (strong, nonatomic) UIActionSheet *flagMessageActionSheet;
 @property (strong, nonatomic) MessageModel *flagMessageModel;
@@ -55,6 +64,7 @@
     channelModel = newValue;
     //didSet
     {
+        [channelModel fetchAllUsersIfNecessary];
         channelModel.scrollViewDelegate = self;
     }
 }
@@ -79,11 +89,38 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 }
 
+-(void)initAutocompleteViews
+{
+    _autoCompleteContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, composeBarView.frame.origin.y, self.view.bounds.size.width, 0.0f)];
+    [_autoCompleteContainerView setBackgroundColor:[UIColor whiteColor] ];
+    [self.view insertSubview:_autoCompleteContainerView belowSubview:composeBarView];
+    
+    UICollectionViewFlowLayout *layout=[[UICollectionViewFlowLayout alloc] init];
+    _autoCompleteCollectionView = [[UICollectionView alloc] initWithFrame:_autoCompleteContainerView.bounds collectionViewLayout:layout];
+
+    UINib *nib = [UINib nibWithNibName:@"SWAtMentionCell" bundle:nil];
+    [_autoCompleteCollectionView registerNib:nib forCellWithReuseIdentifier:@"SWAtMentionCell"];
+    
+    [_autoCompleteCollectionView setBackgroundColor:[UIColor whiteColor] ];
+    
+    _autoCompleteData = [[NSMutableArray alloc] init];
+    
+    [_autoCompleteCollectionView setDataSource:self];
+    [_autoCompleteCollectionView setDelegate:self];
+    
+    UIView *topline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _autoCompleteContainerView.frame.size.width, 1)];
+    topline.backgroundColor = [UIColor colorWithWhite:151/255.0f alpha:1.0f];
+    
+    [_autoCompleteContainerView addSubview:_autoCompleteCollectionView];
+    [_autoCompleteContainerView addSubview:topline];
+}
+
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self initAutocompleteViews];
 
+    
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     uploadProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 3.5)];
     uploadProgressView.backgroundColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
@@ -98,7 +135,11 @@
     composeBarView.textView.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
     composeBarView.textView.textColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
     composeBarView.textView.tintColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
+    [composeBarView setDelegate:self];
+    
+    
     composeBarView.button.tintColor = [UIColor colorWithRed:70/255.0f green:76/255.0f blue:88/255.0f alpha:1.0f];
+    
     [composeBarView addSubview:uploadProgressView];
     
     [MessageCell registerCollectionViewCellsForCollectionView:collectionView];
@@ -328,6 +369,12 @@
     {
         self.collectionView.contentInset = contentInset;
         self.composeBarBottomConstraint.constant = constraintHeight;
+        
+        CGRect r = _autoCompleteContainerView.frame;
+        r.origin.y = [UIScreen mainScreen].bounds.size.height - composeBarView.frame.size.height - r.size.height - constraintHeight;
+        _autoCompleteContainerView.frame = r;
+        _autoCompleteCollectionView.frame = _autoCompleteContainerView.bounds;
+        
         [self.composeBarView layoutIfNeeded];
         self.collectionView.contentOffset = newContentOffset;
         
@@ -349,7 +396,11 @@
     }
     
     NSString *ownerId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
-    [[[MessageModel alloc] initWithOwnerID:ownerId andText:text] sendMessageToChannel:channelModel.name];
+    
+    MessageModel *message = [[MessageModel alloc] initWithOwnerID:ownerId andText:text];
+    message.isPublic = YES;
+    message.usersMentioned = [self.channelModel scanString:text forAllAtMentionsIsPublic:message.isPublic];
+    [message sendMessageToChannel:channelModel.name];
     
     [self.composeBarView setText:@"" animated:YES];
     [self.composeBarView resignFirstResponder];
@@ -548,6 +599,143 @@
         _flagMessageActionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Flag as inappropriate", nil];
     }
     [_flagMessageActionSheet showInView:self.view];
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    
+    return YES;
+}
+
+-(void)textViewDidChange:(UITextView *)textView
+{
+    
+    NSUInteger s = textView.selectedRange.location;
+
+    int end = s - 1;
+    int start = -1;
+    
+    
+    for (int i = s - 1; i >= 0; i--)
+    {
+        char c = [textView.text characterAtIndex:i];
+        
+        if (c == ' ')
+        {
+            break;
+        }
+        
+        if (c == '@')
+        {
+            _atMentionStartsAtThisIndex = i;
+            start = i;
+            break;
+        }
+    }
+    
+    NSMutableArray *users = nil;
+    if (start >= 0)
+    {
+        NSRange range;
+        range.location = start + 1;
+        range.length = end-start ;
+        NSString *queryString = [textView.text substringWithRange:range];
+        users = [self.channelModel usersThatBeginWith:queryString isPublic:YES];
+    }
+    
+    NSLog(@"fetched : %d", users.count);
+    if (users.count != 0)
+    {
+        [self updateCurrentFetchedUsersWithUsers:users];
+    }
+    
+    int count = users.count;
+    [UIView animateWithDuration:0.38f delay:0.0f usingSpringWithDamping:1.0 initialSpringVelocity:1.2 options:UIViewAnimationOptionCurveLinear animations:^
+    {
+        
+        CGRect endFrame = CGRectMake(0, composeBarView.frame.origin.y, _autoCompleteContainerView.frame.size.width, kAutoCompleteCellHeight*count);
+        endFrame.origin.y -= endFrame.size.height;
+        _autoCompleteContainerView.frame = endFrame;
+        _autoCompleteCollectionView.frame = _autoCompleteContainerView.bounds;
+        
+    } completion:^(BOOL finished)
+    {
+        if (users.count == 0)
+        {
+            [self updateCurrentFetchedUsersWithUsers:users];
+        }
+    }];
+    
+
+    
+}
+
+-(void)updateCurrentFetchedUsersWithUsers:(NSMutableArray*)newAutoComplete
+{
+    
+    _autoCompleteData = newAutoComplete;
+    [_autoCompleteCollectionView reloadData];
+    
+    
+}
+
+
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return _autoCompleteData.count;
+}
+
+-(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SWAtMentionCell *atMentionCell = (SWAtMentionCell*) [_autoCompleteCollectionView cellForItemAtIndexPath:indexPath];
+    [atMentionCell customSetSelected:YES animated:NO];
+    
+    //perform an insert action
+    UITextView *textView = composeBarView.textView;
+    
+    UITextPosition *beginning = textView.beginningOfDocument;
+    UITextPosition *start = [textView positionFromPosition:beginning offset:_atMentionStartsAtThisIndex+1];
+    UITextPosition *end = textView.selectedTextRange.start;
+
+    UITextRange *textRange = [textView textRangeFromPosition:start toPosition:end];
+    
+    //[textView  textRangeFromPosition:textView.selectedTextRange.start toPosition:_atMentionStartsAtThisIndex+1];
+    
+    SWUser *user = [atMentionCell getUser];
+    
+    NSString *replaceString = [NSString stringWithFormat:@"%@ ", [user getAutoCompleteKey:YES]];
+ 
+    [textView replaceRange:textRange withText:replaceString];
+    
+}
+
+-(UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SWAtMentionCell *atMentionCell = (SWAtMentionCell*)[_autoCompleteCollectionView dequeueReusableCellWithReuseIdentifier:@"SWAtMentionCell" forIndexPath:indexPath];
+    [atMentionCell setUser:_autoCompleteData[indexPath.row] isPublic:YES];
+    return atMentionCell;
+}
+
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(320, kAutoCompleteCellHeight);
+}
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsZero;
+}
+-(CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0.0f;
+}
+-(CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 0.0f;
 }
 
 @end

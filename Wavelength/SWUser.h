@@ -13,7 +13,11 @@
 @property (strong, nonatomic) NSString *userID; //x
 @property (strong, nonatomic) NSString *photo; //x
 @property (strong, nonatomic) NSString *firstName; //x
+@property (strong, nonatomic) NSString *userName;
+@property (strong, nonatomic) NSString *lastName;
 
 -(id)initWithDictionary:(NSDictionary*)profile andUserId:(NSString*)userId; //x
+-(NSString*)getAutoCompleteKey:(BOOL)isPublic;
 
+-(BOOL)isMe;
 @end

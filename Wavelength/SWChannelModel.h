@@ -80,6 +80,11 @@
 @property (strong, nonatomic) id<ChannelMutedResponderDelegate> mutedDelegate; //x
 @property (strong, nonatomic) id<ChannelCellActionDelegate> cellActionDelegate;
 
+-(void)fetchAllUsersIfNecessary;
+-(NSMutableArray*)usersThatBeginWith:(NSString*)prefix isPublic:(BOOL)ispublic;
+
+
+-(NSArray*)scanString:(NSString*)text forAllAtMentionsIsPublic:(BOOL)isPublic;
 
 -(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta; 
 -(void)setMutedToFirebase; //x

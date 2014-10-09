@@ -152,34 +152,39 @@
     if (!content)
         content = @{};
     
-    NSNumber *accuracy = [NSNumber numberWithDouble:-1];
-    NSNumber *lat = [NSNumber numberWithDouble:0];// [NSNumber numberWithDouble:self.location.coordinate.latitude];
-    NSNumber *lon = [NSNumber numberWithDouble:0];//[NSNumber numberWithDouble:self.location.coordinate.longitude];
-//    if (location)
-//    {
-//        accuracy = [NSNumber numberWithDouble:location.horizontalAccuracy];
-//        lat = [NSNumber numberWithDouble:location.coordinate.latitude];
-//        lon = [NSNumber numberWithDouble:location.coordinate.longitude];
-//    }
-    
-    
-    /*
-     "type": String,
-     "content": Dictionary,
-     "owner": String,
-     "raw": String,
-     "parsed": Bool
-     ".priority": Unix time in milliseconds
-     */
+//    NSNumber *accuracy = [NSNumber numberWithDouble:-1];
+//    NSNumber *lat = [NSNumber numberWithDouble:0];// [NSNumber numberWithDouble:self.location.coordinate.latitude];
+//    NSNumber *lon = [NSNumber numberWithDouble:0];//[NSNumber numberWithDouble:self.location.coordinate.longitude];
 
-    return @{
-                @"type": typeString,
-                @"content": content,
-                @"owner":ownerID,
-                @"raw":self.text,
-                @"parsed":@NO,
-                @".priority":kFirebaseServerValueTimestamp
-            };
+    
+    NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithDictionary:
+    @{
+        @"type": typeString,
+        @"content": content,
+        @"owner":ownerID,
+        //                @"raw":self.text,
+        //                @"parsed":@NO,
+        @".priority":kFirebaseServerValueTimestamp
+    }];
+    
+    if (_usersMentioned && _usersMentioned.count != 0)
+    {
+        NSMutableArray *mentionsValue = [[NSMutableArray alloc] initWithCapacity:_usersMentioned.count];
+        
+        for (SWUser *user in _usersMentioned)
+        {
+            NSString *substring = [NSString stringWithFormat:@"%@%@", @"@", [user getAutoCompleteKey:_isPublic]];
+            NSString *uuid = user.userID;
+            NSDictionary *dict = @{@"substring": substring,
+                                   @"uuid": uuid};
+            [mentionsValue addObject:dict];
+        }
+        
+        [mutableDictionary setObject:mentionsValue forKey:@"mentions"];
+    }
+    
+
+    return mutableDictionary;
 } //x
 
 -(NSDictionary*)toDictionary

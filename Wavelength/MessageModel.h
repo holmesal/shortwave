@@ -75,4 +75,8 @@ typedef enum
 -(void)fetchRelevantDataWithCompletion:(void (^)(void) )completion; //x
 -(BOOL)isReadyForDisplay; //x
 
+
+@property (strong, nonatomic) NSArray *usersMentioned;
+@property (assign, nonatomic) BOOL isPublic;
+
 @end

@@ -9,7 +9,7 @@
 #import "SWChannelModel.h"
 #import "ObjcConstants.h"
 
-
+#import "SWUserManager.h"
 
 @implementation QueryChannelRequest
 @end
@@ -61,7 +61,9 @@
 @property (strong, nonatomic) NSTimer *setPriorityTimer; //may be nil
 
 @property (strong, nonatomic) NSTimer *reorderChannelsTimer;
+@property (assign, nonatomic) BOOL didFetchUsers;
 
+@property (strong, nonatomic) NSMutableSet *usersSet;
 
 @end
 
@@ -489,6 +491,96 @@ static QueryChannelRequest *pendingRequest;
     [lastSeenFB setValue:kFirebaseServerValueTimestamp];
 }
 
+-(void)fetchAllUsersIfNecessary
+{
+    if (!_didFetchUsers)
+    {
+        _didFetchUsers = YES;
+        _usersSet = [[NSMutableSet alloc] init];
+        
+        NSString *membersUrl = [NSString stringWithFormat:@"%@channels/%@/members", Objc_kROOT_FIREBASE, self.name];
+        Firebase *fetchAllUsers = [[Firebase alloc] initWithUrl:membersUrl];
+        
+        __weak SWChannelModel *weakSelf = self;
+        [fetchAllUsers observeEventType:FEventTypeChildAdded withBlock:^(FDataSnapshot *snapshot)
+        {
+            NSString *nameString = snapshot.name;
+            if (nameString && [nameString isKindOfClass:[NSString class] ])
+            {
+                [SWUserManager userForID:nameString withCompletion:^(SWUser *user, BOOL synchronous)
+                {
+                    [weakSelf.usersSet addObject:user];
+                }];
+            }
+        }];
+        
+    }
+}
 
+-(NSMutableArray*)usersThatBeginWith:(NSString*)prefix isPublic:(BOOL)isPublic
+{
+    prefix = [prefix lowercaseString];
+    NSMutableArray *usersStartingWithPrefix = [[NSMutableArray alloc] initWithCapacity:_usersSet.count];
+    
+    if (_usersSet)
+    {
+        for (SWUser *user in _usersSet)
+        {
+            NSString *key = [[user getAutoCompleteKey:isPublic] lowercaseString];
+            if ([key hasPrefix:prefix])
+            {
+                [usersStartingWithPrefix addObject:user];
+            }
+        }
+    }
+    
+    return usersStartingWithPrefix;
+}
+
+-(NSArray*)scanString:(NSString*)text forAllAtMentionsIsPublic:(BOOL)isPublic
+{
+    NSMutableArray *usersMentioned = [[NSMutableArray alloc] init];
+    
+    int length = text.length;
+    for (int i = 0; i < length; i++)
+    {
+        char c = [text characterAtIndex:i];
+        if (c == '@')
+        {
+            int start = i+1;
+            int end = start;
+            while (end <= length)
+            {
+                if (end == length || [text characterAtIndex:end] == ' ')
+                {
+                    //done
+                    NSString *atMentionKey = [text substringWithRange:NSMakeRange(start, end-start)];
+                    SWUser *user = [self getUserForAtMentionKey:atMentionKey andIsPublic:isPublic];
+                    if (user && ![user isMe])
+                    {
+                        [usersMentioned addObject:user];
+                    }
+                    break;
+                }
+                end++;
+                
+            }
+        }
+    }
+    
+    return [NSArray arrayWithArray:usersMentioned];
+}
+
+-(SWUser*)getUserForAtMentionKey:(NSString*)atMentionKey andIsPublic:(BOOL)isPublic
+{
+    for (SWUser * user in _usersSet)
+    {
+        if ([[user getAutoCompleteKey:isPublic] isEqualToString:atMentionKey ])
+        {
+            return user;
+        }
+    }
+    return nil;
+}
 
 @end
