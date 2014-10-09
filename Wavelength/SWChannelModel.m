@@ -434,7 +434,7 @@ static QueryChannelRequest *pendingRequest;
         if ([user isKindOfClass:[SWUser class]])
         {
             NSString *title = [user.firstName lowercaseString];
-            if ([title hasPrefix:lowercaseInput])
+            if ([title hasPrefix:lowercaseInput] && ![user isMe])
             {
                 [filteredUsers addObject:user];
             }

@@ -382,7 +382,7 @@
     
 }
 
--(void)composeBarViewDidPressButton:(PHFComposeBarView *)composeBarView
+-(void)composeBarViewDidPressButton:(PHFComposeBarView *)_composeBarView
 {
     NSString *text = self.composeBarView.text;
     
