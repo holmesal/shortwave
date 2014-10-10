@@ -480,7 +480,7 @@ static QueryChannelRequest *pendingRequest;
 }
 -(void)setPriorityToNow
 {
-    NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kROOT_FIREBASE];
+    NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
     isSynchronized = YES;
     if (self.delegate)
     {

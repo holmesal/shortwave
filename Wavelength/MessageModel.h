@@ -12,6 +12,18 @@
 #import "SWUser.h"
 
 
+@interface Section : NSObject
+
+@property (strong, nonatomic) NSMutableArray *messagesDisplay;
+@property (strong, nonatomic) NSMutableArray *messagesOrder;
+@property (assign, nonatomic) BOOL isLoaded;
+@property (assign, nonatomic) NSInteger numberOfLoadedCells;
+
+
+-(NSString*)toString;
+-(NSInteger)displayIndexForMessageModel:(id)messageModel;
+
+@end
 
 @interface MessageModel : NSObject
 
@@ -78,5 +90,9 @@ typedef enum
 
 @property (strong, nonatomic) NSArray *usersMentioned;
 @property (assign, nonatomic) BOOL isPublic;
+
+@property (strong, nonatomic) Section *section;
+
+@property (assign, nonatomic) BOOL isPending;
 
 @end

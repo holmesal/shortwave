@@ -73,7 +73,6 @@
 
 -(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-    NSLog(@"sandbox? %@", [NSNumber numberWithBool:Objc_kSandbox]);
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     
     NSString *tokenString = [self hexStringFromData:deviceToken];

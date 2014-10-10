@@ -129,7 +129,7 @@
         if ([number isKindOfClass:[NSNumber class]])
         {
             BOOL isAuthenticated = [number boolValue];
-            NSLog(@"isAuthenticated? %d", isAuthenticated);
+//            NSLog(@"isAuthenticated? %d", isAuthenticated);
         }
     }];
 }
@@ -266,8 +266,6 @@
     
     [authClient loginToFacebookAppWithId:Objc_kFacebookAppId permissions:Objc_kFacebookPermissions audience:ACFacebookAudienceOnlyMe withCompletionBlock:^(NSError *error, FAUser *user)
     {
-        NSLog(@"user is '%@'", user.uid);
-        
         void (^completion)(void) = ^
         {
             self.authButton.userInteractionEnabled = YES;

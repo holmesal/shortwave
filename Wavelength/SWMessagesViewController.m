@@ -432,13 +432,15 @@
     
     if (indexPath)
     {
-        MessageModel *messageModel = [channelModel.wallSource wallObjectAtIndex:indexPath.item];
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-        if (cell)
-        {
-            [self handleLongPress:longPress withMessageModel:messageModel andCollectionViewCell:cell];
-            return;
-        }
+        return;
+//        
+//        MessageModel *messageModel = [channelModel.wallSource wallObjectAtIndex:indexPath.item];
+//        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+//        if (cell)
+//        {
+//            [self handleLongPress:longPress withMessageModel:messageModel andCollectionViewCell:cell];
+//            return;
+//        }
         
     }
     

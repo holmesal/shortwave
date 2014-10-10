@@ -17,6 +17,8 @@
 #import "SWUser.h"
 #import "AppDelegate.h"
 
+#import "SWMessageHeaderView.h"
+
 
 
 #import <Firebase/Firebase.h>
@@ -27,13 +29,18 @@
 #define kWallCollectionView_MAX_CELLS_INSERT 20
 #define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
 
+
+
 @interface WallSource ()
+
+@property (strong, nonatomic) NSMutableArray *sectionsOrder;
+@property (strong, nonatomic) NSMutableArray *sections;
 
 @property (copy, nonatomic) void (^handleMessageInsert)(FDataSnapshot *messageSnapshot, NSString *previous);
 @property (strong, nonatomic) FQuery *historyQuery;
 @property (assign, nonatomic) FirebaseHandle historyQueryHandle;
 
-@property (strong, nonatomic) NSMutableArray *wall; //what is actually displayed (models)
+//@property (strong, nonatomic) NSMutableArray *wall; //what is actually displayed (models)
 @property (strong, nonatomic) NSMutableArray *wallNames; //the order of all cells, some may still be loading
 
 @property (weak, nonatomic) UICollectionViewLayout *layout;
@@ -52,7 +59,7 @@
 //@property (strong, nonatomic) NSMutableDictionary *usersDictionary;
 //@property (strong, nonatomic) NSMutableDictionary *userNameToModelsArray;
 
-@property (strong, nonatomic) NSMutableArray *namesOfPendingMessages;
+@property (strong, nonatomic) NSMutableDictionary *allMessagesEver;
 
 @property (assign, nonatomic) BOOL didFinishLoadingWallAtFirst;
 @property (strong, nonatomic) NSTimer *firstLoadTimer;
@@ -63,7 +70,7 @@
 
 @implementation WallSource
 
-@synthesize wall;
+//@synthesize wall;
 @synthesize layout;
 @synthesize collectionView;
 @synthesize url;
@@ -75,36 +82,37 @@
 @synthesize wallNames;
 
 
-@synthesize namesOfPendingMessages;
+@synthesize allMessagesEver;
 @synthesize handleMessageInsert;
 
-
+@synthesize sections;
+@synthesize sectionsOrder;
 
 -(id)initWithUrl:(NSString*)URL andStartAtDate:(double)startAtDate//collectionView:(UICollectionView*)cv andLayout:(UICollectionViewLayout*)lay
 {
     if (self = [super init])
     {
+        sectionsOrder = [[NSMutableArray alloc] init];
+        sections = [[NSMutableArray alloc] init];
         url = URL;
         
-        wall = [[NSMutableArray alloc] init];
+//        wall = [[NSMutableArray alloc] init];
         wallQueue = [[NSMutableArray alloc] initWithCapacity:kWallCollectionView_MAX_CELLS_INSERT];
         wallNames = [[NSMutableArray alloc] init];
         //c:1238901
-        namesOfPendingMessages = [[NSMutableArray alloc] init];
+        allMessagesEver = [[NSMutableDictionary alloc] initWithCapacity:200];
         _startAtDate = startAtDate;
         
         __weak typeof(self) weakSelf = self;
         handleMessageInsert = ^(FDataSnapshot *messageSnapshot, NSString *previous)
         {
-            NSLog(@"Channel '%@' is loading it's %d message '%@' priority ", weakSelf.url, weakSelf.count, messageSnapshot.priority);
+            NSLog(@"%d message '%@' name ",weakSelf.count, messageSnapshot.name);
             
             weakSelf.count++;
             
             if ([messageSnapshot.value isKindOfClass:[NSDictionary class]])
             {
-                //            if (!firstSnapshotFromWall)
-                //                firstSnapshotFromWall = messageSnapshot;
-                
+
                 //lookup where to place this name..
                 NSInteger index = weakSelf.wallNames.count;
                 if (previous) //make block to observe child moved events on messages
@@ -121,13 +129,57 @@
                     NSLog(@"NO DOUBLE ADD!");
                     return;
                 }
-                [wallNames insertObject:messageSnapshot.name atIndex:index];
-                
-                
-                [namesOfPendingMessages addObject:messageSnapshot.name];
                 
                 MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
+                if (!model)
+                    return;
+
                 model.name = messageSnapshot.name;
+                [wallNames insertObject:model.name  atIndex:index];
+                [allMessagesEver setObject:model forKey:model.name];
+                model.isPending = YES;
+                [self getPossibleParentAndPossibleChild:model.name withCompletion:^(MessageModel *possibleParent, MessageModel *possibleChild)
+                {
+
+                    NSLog(@"*******BEFORE");
+                    int i = 0;
+                    
+                    for (Section *section in sectionsOrder)
+                    {
+                        NSLog(@"section[%d] = %@", i, [section toString]);
+                        i++;
+                    }
+                    
+                    if (possibleParent && [possibleParent.ownerID isEqualToString:model.ownerID])
+                    {
+                        NSAssert(possibleParent.section, @"possibleParent's section must not be nil");
+                        model.section = possibleParent.section;
+                        //where to put model in section?
+                        NSInteger parentIndex = [wallNames indexOfObject:possibleParent.name];
+                        NSInteger index = parentIndex - 1;
+//                        NSAssert( index > 0, @"index must be strictly less than parentIndex");
+                        
+                        [model.section.messagesOrder insertObject:model atIndex:index];
+                        
+                    } else
+                    {
+                        Section *section = [[Section alloc] init];
+                        [section.messagesOrder addObject:model];
+                        model.section = section;
+                        
+                        [sectionsOrder insertObject:section atIndex:0];
+                    }
+                    
+                    NSLog(@"*******AFTER");
+                    i = 0;
+                    for (Section *section in sectionsOrder)
+                    {
+                        NSLog(@"section[%d] = %@", i, [section toString]);
+                        i++;
+                    }
+                    //visualize data.
+                    
+                }];
                 
                 //for future history fetches
                 if (model.priority < _startAtDate)
@@ -135,10 +187,7 @@
                     _startAtDate = model.priority;
                 }
                 
-                if (!model)
-                {//INVALID MODEL
-                    return;
-                }
+                
                 
                 //c:8912309123
                 
@@ -150,6 +199,7 @@
                      //c:566549877
                      
                      void (^modelIsReadyForDisplayBlock)(void) = ^{
+//                         model.isPending = NO;
                          [weakSelf addMessageToWallEventually:model];
                          [weakSelf.target performSelector:@selector(didLoadMessageModel:) withObject:model];
                      };
@@ -181,7 +231,8 @@
     
     NSLog(@"channel '%@' starting at '%f'", self.url, _startAtDate);
     
-    _wallRefQueryLimit = [wallRef queryStartingAtPriority:[NSNumber numberWithDouble:_startAtDate]];  //[wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
+    //right now fetch all messages
+    _wallRefQueryLimit = [wallRef queryStartingAtPriority:[NSNumber numberWithDouble:0]]; //_startAtDate]];  //[wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
     
     NSLog(@"wallRefQueryLimit = %@", _wallRefQueryLimit);
 
@@ -193,46 +244,48 @@
     
 }
 
--(NSInteger)indexInWallToInsertNewModelIn:(NSString*)name
+-(void)getPossibleParentAndPossibleChild:(NSString*)name withCompletion:(void (^)(MessageModel *possibleParent, MessageModel *possibleChild))completion;
 {
 //    NSLog(@"searching for '%@'", name);
     
-    NSInteger i = 0;
-    for (NSString *otherName in wallNames)
-    {
-        if (otherName == name)
-        {
-//            NSLog(@"FOUND IT i = %d", i);
-            break;
-        } else
-        if (![namesOfPendingMessages containsObject:otherName])
-        {//then this cell is loaded
-//            NSLog(@"'%@' != '%@'", name, otherName);
-            i++;
-        }
-    }
+    NSInteger i = [wallNames indexOfObject:name];
     
     //now i is the index that "name" should be inserted into, and also "name" is no longer loading
     
+    MessageModel *possibleParent = nil;
+    if (i+1 < wallNames.count)
+    {
+        MessageModel *model = allMessagesEver[wallNames[i+1]];
+        possibleParent = model;
+    }
     
-    return i;
+    MessageModel *possibleChild = nil;
+    if (i-1 >= 0)
+    {
+        MessageModel *model = allMessagesEver[wallNames[i-1]];
+        possibleChild = model;
+    }
+    
+    completion(possibleParent, possibleChild);
 }
 
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    return 1;
+    NSInteger s = sections.count;
+    return s;
 }
 
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+-(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)s
 {
-    return wall.count;
+    Section *sectionObj = sections[s];
+    return sectionObj.messagesDisplay.count;
 }
 
 -(UICollectionViewCell*)collectionView:(UICollectionView *)cV cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     
     
-    MessageModel *messageModel = [self wallObjectAtIndex:indexPath.row];
+    MessageModel *messageModel = [self wallObjectAtIndex:indexPath];  //[self wallObjectAtIndex:indexPath.row];
     
     [self.target performSelector:@selector(didViewMessageModel:) withObject:messageModel];
     
@@ -249,6 +302,8 @@
     
     return messageCell;
 }
+
+//-(UIView*)
 
 -(void)updateCell:(MessageCell*)cell withMoreDataFrom:(MessageModel*)model
 {
@@ -345,21 +400,17 @@
 
 - (CGSize)collectionView:(UICollectionView *)cV layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MessageModel *model = [self wallObjectAtIndex:indexPath.row]; //wall[indexPath.row]
+    MessageModel *model = [self wallObjectAtIndex:indexPath]; //wall[indexPath.row]
     CGFloat height = [MessageCell heightOfMessageCellForModel:model collectionView:(UICollectionView*)collectionView];
     return CGSizeMake(320, height);
 }
 
 //reverse
--(MessageModel*)wallObjectAtIndex:(NSInteger)index
+-(MessageModel*)wallObjectAtIndex:(NSIndexPath*)indexPath
 {
-    return wall[[self displayIndexForDataIndex:index]];//wall[(wall.count-1)-index];
-}
--(NSInteger)displayIndexForDataIndex:(NSInteger)index
-{
-    NSInteger result = wall.count-1-index;
+    Section *section = (Section*) sections[indexPath.section];
     
-    return index;
+    return section.messagesDisplay[indexPath.row];
 }
 
 -(void)addMessageToWallEventually:(MessageModel*)messageModel
@@ -401,23 +452,68 @@
 -(void)insertMessagesToWallNow:(id)sender
 {
     //no longer consider messages in queue as 'pending'
+    NSLog(@"are newest messages first?");
+    /*
+     NSArray *sortedArray = [unsortedArray sortedArrayUsingComparator:^NSComparisonResult(NSDictionary* a, NSDictionary* b) {
+     NSInteger rowA = ((NSIndexPath*)a[@"indexPath"]).row;
+     NSInteger rowB = ((NSIndexPath*)b[@"indexPath"]).row;
+     return rowA > rowB;
+     }];
+     */
+
+    [wallQueue sortUsingComparator:^NSComparisonResult(MessageModel* a, MessageModel* b) {
+        return a.priority < b.priority;
+    }];
+    
     for (MessageModel *messageModel in wallQueue)
     {
-        [namesOfPendingMessages removeObject:messageModel.name];
+        messageModel.isPending = NO;
+        messageModel.section.isLoaded = YES;
     }
     
-    NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
-    for (int i = 0; i < wallQueue.count; i++)
+
+    __block NSMutableArray *paths = [[NSMutableArray alloc] initWithCapacity:wallQueue.count];
+    __block NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+    
+    
+    void (^addToWallBlock)(void) = ^
     {
-        MessageModel *messageModel = wallQueue[i];
-        
-        NSInteger row = [self indexInWallToInsertNewModelIn:messageModel.name];
-        [paths addObject: [NSIndexPath indexPathForRow:[self displayIndexForDataIndex:row] inSection:0] ];
-    }
+        for (MessageModel *messageModel in wallQueue)
+        {
+            
+            NSInteger sectionDisplayIndex = 0;
+            for (int index = sectionDisplayIndex; index < sectionsOrder.count; index++)
+            {
+                Section *section = sectionsOrder[index];
+                if (messageModel.section == section)
+                {
+                    break;
+                } else
+                if (section.isLoaded)
+                {
+                    sectionDisplayIndex++;
+                }
+            }
+            
+            //ok now sectionDisplayIndex is the display index!
+            if (![sections containsObject:messageModel.section])
+            {
+                [indexSet addIndex:sectionDisplayIndex];
+                [sections insertObject:messageModel.section atIndex:sectionDisplayIndex];
+            }
+            
+            //what row should this go into?
+            NSInteger displayIndex = [messageModel.section displayIndexForMessageModel:messageModel];
+            [messageModel.section.messagesDisplay insertObject:messageModel atIndex:displayIndex];
+            
+            NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:displayIndex inSection:sectionDisplayIndex];
+            [paths addObject:newIndexPath];
+        }
+    };
     
     if (!collectionView || !sender)
     {
-        [self insertToWall:wallQueue inOrder:paths];
+        addToWallBlock();
         [wallQueue removeAllObjects];
         if (collectionView)
         {
@@ -429,21 +525,15 @@
     {
         [collectionView performBatchUpdates:^
          {
-             
-    //         self.hideCells = [NSArray arrayWithArray:paths];
-             
+             addToWallBlock();
+             [collectionView insertSections:indexSet];
              [collectionView insertItemsAtIndexPaths:paths];
-    //         NSLog(@"**before wall = %@", wall);
-             [self insertToWall:wallQueue inOrder:paths];
-    //         NSLog(@"wallQueue = %@", wallQueue);
-    //         NSLog(@"wall = %@", wall);
              
              [wallQueue removeAllObjects];
              
          } completion:^(BOOL finished)
          {
              
-
              CGRect visibleRect = collectionView.frame;
              visibleRect.origin.y = collectionView.contentSize.height-visibleRect.size.height;
              
@@ -452,11 +542,6 @@
                  return;
              }
              
-    //         [UIView animateWithDuration:1 delay:0.0 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveLinear animations:^
-    //         {
-    //            [collectionView setContentOffset:CGPointMake(0, visibleRect.origin.y)];
-    //         } completion:^(BOOL finished){}];
-            
          }];
     }
 }
@@ -486,43 +571,10 @@
 
         MessageModel *model = sortedArray[i][@"model"];
         
-        [wall insertObject:model atIndex:row];
+//        [wall insertObject:model atIndex:row];
     }
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-//    if ([object isKindOfClass:[FCUser class]])
-//    {
-//        FCUser *user = object;
-//        //gather all relevant models
-//        NSArray *modelsFromWall = [wall filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"(SELF.ownerID == %@)", user.id]];
-//        
-////        NSMutableArray *arrayOfIndexPaths = [[NSMutableArray alloc] init];
-//        for (MessageModel *model in modelsFromWall)
-//        {
-//            [model setUserData:user];
-//            NSInteger row = [wall indexOfObject:model];
-//            row = (row < wall.count) ? row : -1;
-//            
-//            //if row is valid
-//            if (row >= 0)
-//            {
-////                [arrayOfIndexPaths addObject:[NSIndexPath indexPathForItem:row inSection:0]];
-//                MessageCell *messageCell = (MessageCell*)[collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:row inSection:0]];
-//                if (messageCell)
-//                {//live update!
-//                    [messageCell setMessageModel:model]; //will update cell
-//                }
-//            }
-//
-//        } //now the models are updated, and arrayOfIndexPaths is an array of all index paths that must be updated!
-//        
-//        
-//
-//        
-//    }
-}
 
 -(void)dealloc
 {
@@ -548,6 +600,8 @@
 
 -(void)performHistoryQuery:(NSInteger)n
 {
+    return;
+    
     if (_historyQuery)
     {
         //remove listener
@@ -566,6 +620,22 @@
         return;
     }
     [self performHistoryQuery:number ];
+}
+
+-(UICollectionReusableView*)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    SWMessageHeaderView *headerView = nil;
+    
+    Section *section = ((Section*)sections[indexPath.section]);
+    MessageModel *parent = section.messagesOrder[0];
+    
+    NSString *ownerPhoto = parent.profileUrl;
+    NSString *ownerName = [NSString stringWithFormat:@"%@ %d", parent.firstName, section.messagesOrder.count];
+    
+    headerView = (SWMessageHeaderView *)[collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"SWMessageHeaderView" forIndexPath:indexPath];
+    [headerView setPhoto:ownerPhoto andName:ownerName];
+    
+    return headerView;
 }
 
 @end

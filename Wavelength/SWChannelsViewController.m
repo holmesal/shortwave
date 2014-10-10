@@ -207,7 +207,6 @@
     channelsCollectionView.delegate = self;
     channelsCollectionView.dataSource = self;
     channelsCollectionView.alwaysBounceVertical = YES;
-    NSLog(@"pangesture in channelscollectionview = %@", channelsCollectionView.panGestureRecognizer);
     
     
     [self setAutomaticallyAdjustsScrollViewInsets:NO];

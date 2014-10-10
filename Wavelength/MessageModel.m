@@ -24,8 +24,49 @@
 #import <Mixpanel/Mixpanel.h>
 
 @interface MessageModel ()
+@end
 
 
+@implementation Section
+
+-(id)init
+{
+    if (self = [super init])
+    {
+        _messagesDisplay = [[NSMutableArray alloc] init];
+        _messagesOrder = [[NSMutableArray alloc] init];
+        
+        _isLoaded = NO;
+        _numberOfLoadedCells = 0;
+    }
+    return self;
+}
+-(NSString*)toString
+{
+    NSString *str = @"[";
+    for (MessageModel *model in _messagesOrder){
+        str = [NSString stringWithFormat:@"%@,%@", str, model.text];
+    }
+    str = [NSString stringWithFormat:@"%@]", str];
+    return str;
+}
+-(NSInteger)displayIndexForMessageModel:(MessageModel*)messageModel
+{
+    NSInteger displayIndex = 0;
+    for (int i = 0; i < _messagesOrder.count ; i++)
+    {
+        MessageModel *otherMessageModel = _messagesOrder[i];
+        if (otherMessageModel == messageModel)
+        {
+            break;
+        } else
+        if (!messageModel.isPending)
+        {
+            displayIndex++;
+        }
+    }
+    return displayIndex;
+}
 @end
 
 

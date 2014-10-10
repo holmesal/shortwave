@@ -873,10 +873,40 @@
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gqe-lC-XYr">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="50" height="50"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
+                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWMessageHeaderView" id="nJ3-ii-hYu" customClass="SWMessageHeaderView">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jhg-DT-g5F">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <subviews>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="name label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbo-Pn-iTU">
+                                                    <rect key="frame" x="118" y="14" width="84" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="Jhg-DT-g5F" secondAttribute="bottom" id="1Qy-ZM-ZMa"/>
+                                        <constraint firstItem="Jhg-DT-g5F" firstAttribute="leading" secondItem="nJ3-ii-hYu" secondAttribute="leading" id="8CI-fi-bqw"/>
+                                        <constraint firstAttribute="trailing" secondItem="Jhg-DT-g5F" secondAttribute="trailing" id="SAa-69-UX3"/>
+                                        <constraint firstItem="Jhg-DT-g5F" firstAttribute="top" secondItem="nJ3-ii-hYu" secondAttribute="top" id="usl-vt-sVd"/>
+                                    </constraints>
+                                    <connections>
+                                        <outlet property="containerView" destination="Jhg-DT-g5F" id="wxf-nk-pq2"/>
+                                        <outlet property="nameLabel" destination="dbo-Pn-iTU" id="G1u-oZ-zYU"/>
+                                    </connections>
+                                </collectionReusableView>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yo1-Fm-Pd3" customClass="PHFComposeBarView">
                                 <rect key="frame" x="0.0" y="528" width="320" height="40"/>

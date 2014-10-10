@@ -26,6 +26,7 @@
 		AA6BFB4919B93F2900A4D5EC /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB4819B93F2900A4D5EC /* Accounts.framework */; };
 		AA6BFB4B19B93F3100A4D5EC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB4A19B93F3100A4D5EC /* CFNetwork.framework */; };
 		AA7FC82519B980320037944E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA7FC82419B980320037944E /* Crashlytics.framework */; };
+		AA8C83C019E74946007454C6 /* SWMessageHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA8C83BF19E74946007454C6 /* SWMessageHeaderView.m */; };
 		AA9B5F7519BAB76F00260652 /* SWBucketUpload.m in Sources */ = {isa = PBXBuildFile; fileRef = AA9B5F7419BAB76F00260652 /* SWBucketUpload.m */; };
 		AA9B5F8319BAB94E00260652 /* AWSAutoScaling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B5F7619BAB94E00260652 /* AWSAutoScaling.framework */; };
 		AA9B5F8419BAB94E00260652 /* AWSCloudWatch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA9B5F7719BAB94E00260652 /* AWSCloudWatch.framework */; };
@@ -130,6 +131,8 @@
 		AA6BFB4819B93F2900A4D5EC /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		AA6BFB4A19B93F3100A4D5EC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		AA7FC82419B980320037944E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		AA8C83BE19E74946007454C6 /* SWMessageHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWMessageHeaderView.h; sourceTree = "<group>"; };
+		AA8C83BF19E74946007454C6 /* SWMessageHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWMessageHeaderView.m; sourceTree = "<group>"; };
 		AA9B5F7319BAB76F00260652 /* SWBucketUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWBucketUpload.h; sourceTree = "<group>"; };
 		AA9B5F7419BAB76F00260652 /* SWBucketUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWBucketUpload.m; sourceTree = "<group>"; };
 		AA9B5F7619BAB94E00260652 /* AWSAutoScaling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AWSAutoScaling.framework; sourceTree = "<group>"; };
@@ -492,6 +495,8 @@
 				AAD911FF19E5F4C4009CA1B8 /* SWAtMentionCell.h */,
 				AAD9120019E5F4C4009CA1B8 /* SWAtMentionCell.m */,
 				AAD9120219E5F4D5009CA1B8 /* SWAtMentionCell.xib */,
+				AA8C83BE19E74946007454C6 /* SWMessageHeaderView.h */,
+				AA8C83BF19E74946007454C6 /* SWMessageHeaderView.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -713,6 +718,7 @@
 				AAF8039819B941D200B51B6D /* ASIInputStream.m in Sources */,
 				AAF8039919B941D200B51B6D /* ASINetworkQueue.m in Sources */,
 				AAF8039419B941D200B51B6D /* ASIDataDecompressor.m in Sources */,
+				AA8C83C019E74946007454C6 /* SWMessageHeaderView.m in Sources */,
 				AABAC71E19E3AC7700E1FF59 /* AutoCompleteChannelCell.m in Sources */,
 				AA9B5F9419BAD9E300260652 /* MessageFile.m in Sources */,
 				AAF8039519B941D200B51B6D /* ASIDownloadCache.m in Sources */,

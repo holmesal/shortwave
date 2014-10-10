@@ -10,6 +10,9 @@
 //#import "ESSpringFlowLayout.h"
 #import "MessageModel.h"
 
+
+
+
 @interface WallSource : NSObject <UICollectionViewDataSource, UICollectionViewDelegate>
 
 //@property (strong, nonatomic) SWChannelModel *channelModel;
@@ -17,7 +20,7 @@
 @property (strong, nonatomic, readonly) NSString *url; //x
 @property (strong, nonatomic) UICollectionView *collectionView; //imp
 -(id)initWithUrl:(NSString*)url andStartAtDate:(double)startAtDate; //x
--(MessageModel*)wallObjectAtIndex:(NSInteger)index;
+//-(MessageModel*)wallObjectAtIndex:(NSInteger)index;
 
 @property (assign, nonatomic) id target; //x ish
 
