@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA1F207519E87BEC0094FE33 /* SWMessagesLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AA1F207419E87BEC0094FE33 /* SWMessagesLayout.m */; };
 		AA6BFB0819B93DDB00A4D5EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */; };
 		AA6BFB0A19B93DDB00A4D5EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0919B93DDB00A4D5EC /* CoreGraphics.framework */; };
 		AA6BFB0C19B93DDB00A4D5EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0B19B93DDB00A4D5EC /* UIKit.framework */; };
@@ -109,6 +110,8 @@
 
 /* Begin PBXFileReference section */
 		09A6222C34E0431FB7BFEE9C /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		AA1F207319E87BEC0094FE33 /* SWMessagesLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWMessagesLayout.h; sourceTree = "<group>"; };
+		AA1F207419E87BEC0094FE33 /* SWMessagesLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWMessagesLayout.m; sourceTree = "<group>"; };
 		AA6BFB0419B93DDB00A4D5EC /* hashtag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hashtag.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA6BFB0919B93DDB00A4D5EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -547,6 +550,8 @@
 				AAF803F019B9428D00B51B6D /* SWMessagesViewController.m */,
 				AAF803F119B9428D00B51B6D /* SWNewChannel.h */,
 				AAF803F219B9428D00B51B6D /* SWNewChannel.m */,
+				AA1F207319E87BEC0094FE33 /* SWMessagesLayout.h */,
+				AA1F207419E87BEC0094FE33 /* SWMessagesLayout.m */,
 			);
 			name = viewcontroller;
 			sourceTree = "<group>";
@@ -725,6 +730,7 @@
 				AAF803F319B9428D00B51B6D /* SWAuthViewController.m in Sources */,
 				AAF803DA19B9424A00B51B6D /* WallSource.m in Sources */,
 				AAF803F519B9428D00B51B6D /* SWChannelsViewController.m in Sources */,
+				AA1F207519E87BEC0094FE33 /* SWMessagesLayout.m in Sources */,
 				AAF803AA19B9420C00B51B6D /* UIColor+HexString.m in Sources */,
 				AAF803C619B9422F00B51B6D /* SWImageCell.m in Sources */,
 				AAF803C419B9422F00B51B6D /* SWGifCell.m in Sources */,
@@ -870,7 +876,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Alonso Holmes (8M2HL48XKL)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Wavelength/Shortwave",
@@ -881,7 +888,7 @@
 				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = hashtag;
-				PROVISIONING_PROFILE = "e32b3992-b47e-4fde-9b1d-2db73f76e741";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -892,7 +899,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: ALONSO HOLMES (SQ4LKA86HJ)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Wavelength/Shortwave",
@@ -903,7 +911,7 @@
 				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = hashtag;
-				PROVISIONING_PROFILE = "2c9904e1-602a-47ed-b083-72888195e3c1";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

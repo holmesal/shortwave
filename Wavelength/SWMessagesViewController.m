@@ -25,6 +25,8 @@
 
 @interface SWMessagesViewController () <PHFComposeBarViewDelegate, UIActionSheetDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewVerticalSpaceToBottom;
+@property (strong, nonatomic) UILabel *membersCountLabel;
 @property (assign, nonatomic) NSInteger atMentionStartsAtThisIndex;
 
 @property (strong, nonatomic) NSMutableArray *autoCompleteData;
@@ -120,16 +122,91 @@
     [super viewDidLoad];
     [self initAutocompleteViews];
 
+
+
+    
+    
+//    self.navigationController.
+    UIImageView *hashtagInTitleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, (44-14)*0.5f, 14, 14)];
+    [hashtagInTitleImageView setContentMode:UIViewContentModeScaleAspectFill];
+    [hashtagInTitleImageView setImage:[UIImage imageNamed:@"small_hashtag"]];
+    
+    UILabel *channelNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 200, 44)];
+    [channelNameLabel setNumberOfLines:1];
+    [channelNameLabel setFont:[UIFont fontWithName:@"Avenir-Black" size:33*0.5f]];
+    [channelNameLabel setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [channelNameLabel setText:channelModel.name];
+    
+    CGFloat channelNameLabelWidth = [channelNameLabel sizeThatFits:channelNameLabel.frame.size].width;
+    CGRect channelNameLabelRect = channelNameLabel.frame;
+    channelNameLabelRect.size.width = channelNameLabelWidth;
+    
+    channelNameLabelRect.origin.x += hashtagInTitleImageView.frame.size.width + hashtagInTitleImageView.frame.origin.x + 5;
+    channelNameLabel.frame = channelNameLabelRect;
+    
+    CGFloat widthOfTitleView = channelNameLabelRect.origin.x + channelNameLabelWidth;
+    
+    UIView *titleView = [[UIView alloc ] initWithFrame:CGRectMake(0, 0, widthOfTitleView, 44)];
+//    [titleView setBackgroundColor:[UIColor redColor] ];
+    [titleView addSubview:channelNameLabel];
+    [titleView addSubview:hashtagInTitleImageView];
+    
+    
+
+
+    
+    [self.navigationItem setTitleView:titleView];
+    
     
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     uploadProgressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 3.5)];
     uploadProgressView.backgroundColor = [UIColor colorWithHexString:Objc_kNiceColors[@"green"]];
     uploadProgressView.hidden = YES;
     
-    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(shareChannelAction:)];
+    //    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(shareChannelAction:)];
+
+    UIImageView *personIcon = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 27*0.5f, 27*0.5f)];
+    [personIcon setContentMode:UIViewContentModeScaleAspectFit];
+    [personIcon setImage:[UIImage imageNamed:@"person_symbol"]];
+    
+    _membersCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 75, 44)];
+    [_membersCountLabel setTextAlignment:NSTextAlignmentRight];
+    [_membersCountLabel setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [_membersCountLabel setFont:[UIFont fontWithName:@"Avenir-Book" size:28*0.5f]];
+    [_membersCountLabel setText:@"0"];
+    NSString *membersCountUrl = [NSString stringWithFormat:@"%@channels/%@/meta/memberCount", Objc_kROOT_FIREBASE, self.channelModel.name];
+    Firebase *memberCount = [[Firebase alloc] initWithUrl:membersCountUrl];
+    [memberCount observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+     {
+         if (snapshot.value && [snapshot.value isKindOfClass:[ NSNumber class] ])
+         {
+             int members = [snapshot.value intValue];
+             [_membersCountLabel setText:[NSString stringWithFormat:@"%d", members]];
+         }
+     }];
+    
+    UIView *rightBarView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 44, 44)];
+    CGRect personIconFrame = personIcon.frame;
+    personIconFrame.origin.x = rightBarView.frame.size.width - personIconFrame.size.width;
+    personIconFrame.origin.y = (rightBarView.frame.size.height - personIconFrame.size.height)*0.5f;
+    personIcon.frame = personIconFrame;
+    [rightBarView addSubview:personIcon];
+    
+    CGRect membersCountFrame = _membersCountLabel.frame;
+    membersCountFrame.origin.x = personIconFrame.origin.x - membersCountFrame.size.width - 1;
+    membersCountFrame.origin.y = 2;
+    _membersCountLabel.frame = membersCountFrame;
+    
+    [rightBarView addSubview:personIcon];
+    [rightBarView setClipsToBounds:NO];
+    [rightBarView addSubview:_membersCountLabel];
+    
+    UIBarButtonItem *rightButton = [[UIBarButtonItem alloc] initWithCustomView:rightBarView];
+
+    
     self.navigationItem.rightBarButtonItem = rightButton;
     
-    self.navigationItem.title = [NSString stringWithFormat:@"#%@", channelModel.name];
+//    self.navigationItem.title = [NSString stringWithFormat:@"#%@", channelModel.name];
     
     [self setupComposeBarView];
     composeBarView.textView.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
@@ -142,6 +219,7 @@
     
     [composeBarView addSubview:uploadProgressView];
     
+    
     [MessageCell registerCollectionViewCellsForCollectionView:collectionView];
     channelModel.messageCollectionView = collectionView;
     
@@ -152,6 +230,7 @@
     [notifCenter addObserver:self selector:@selector(keyboardWillToggle:) name:UIKeyboardWillHideNotification object:nil];
     
     self.collectionView.alwaysBounceVertical = YES;
+    [collectionView setContentInset:UIEdgeInsetsMake(10, 0, 29, 0)];
     channelModel.cellActionDelegate = self;
     
 }
@@ -160,6 +239,7 @@
     composeBarView.maxLinesCount = 5;
     composeBarView.button.titleLabel.textColor = [UIColor colorWithHexString:@"7E7E7E"];
     composeBarView.delegate = self;
+    composeBarView.utilityButtonImage = [UIImage imageNamed:@"plus_icon"];
     
 //    composeBarView.utilityButtonImage = [UIImage imageNamed:@"camera.png"];
 }
@@ -168,7 +248,7 @@
 -(void)composeBarViewDidPressUtilityButton:(PHFComposeBarView *)composeBarView
 {
     NSLog(@"pick image!");
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Upload an image from" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"my camera", @"my library", nil];
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Photo from camera", @"Photo from library", @"Image from hubot", @"GIF from hubot", nil];
     [actionSheet showInView:self.view];
 //    self.navigationController.navigationBar.tintColor = [UIColor blackColor];
 }
@@ -247,7 +327,25 @@
                 
             }
             break;
+            case 2:
+            {
+                //hubot imaeg
+                NSLog(@"hubot imaeg");
+                UITextRange *textRange = composeBarView.textView.selectedTextRange;
+                NSString *replaceString = @"hubot image me ";
+                [composeBarView.textView replaceRange:textRange withText:replaceString];
+                [composeBarView.textView becomeFirstResponder];
+            }
+            break;
                 
+            case 3:
+            {
+                UITextRange *textRange = composeBarView.textView.selectedTextRange;
+                NSString *replaceString = @"hubot animate me ";
+                [composeBarView.textView replaceRange:textRange withText:replaceString];
+                [composeBarView.textView becomeFirstResponder];
+            }
+                break;
             default:
                 return;
                 break;
@@ -302,8 +400,10 @@
         {
             NSString *ownerID = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
             //post a file message to this channel
-            MessageFile *fileMessage = [[MessageFile alloc] initWithFileName:fileName contentType:contentType andImageSize:imageSize andOwnerID:ownerID];
-            [fileMessage sendMessageToChannel:channelModel.name];
+//            MessageFile *fileMessage = [[MessageFile alloc] initWithFileName:fileName contentType:contentType andImageSize:imageSize andOwnerID:ownerID];
+            NSString *src = [NSString stringWithFormat:@"https://s3-us-west-1.amazonaws.com/wavelength-bucket/%@", fileName];
+            MessageImage *imageMessage = [[MessageImage alloc] initWithSrc:src ownerID:ownerID];
+            [imageMessage sendMessageToChannel:channelModel.name];
         }
     }];
     
@@ -378,6 +478,10 @@
         [self.composeBarView layoutIfNeeded];
         self.collectionView.contentOffset = newContentOffset;
         
+        NSLog(@"constraintHeight+40 = %f", (constraintHeight + 40));
+        _collectionViewVerticalSpaceToBottom.constant = constraintHeight + 40;
+        [collectionView.superview layoutIfNeeded];
+        
     } completion:^(BOOL finished){}];
     
 }
@@ -425,26 +529,31 @@
     
 }
 
--(void)didLongPress:(UILongPressGestureRecognizer *)longPress
+-(void)didLongPress:(MessageCell *)cell
 {
-    CGPoint location = [longPress locationInView:collectionView];
-    NSIndexPath *indexPath = [collectionView indexPathForItemAtPoint:location];
-    
-    if (indexPath)
-    {
-        return;
+//    CGPoint location = [longPress locationInView:collectionView];
+//    NSIndexPath *indexPath = [collectionView indexPathForItemAtPoint:location];
+//    
+//    if (indexPath)
+//    {
+//        return;
+////        
+////        MessageModel *messageModel = [channelModel.wallSource wallObjectAtIndex:indexPath.item];
+////        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
+////        if (cell)
+////        {
+////            [self handleLongPress:longPress withMessageModel:messageModel andCollectionViewCell:cell];
+////            return;
+////        }
 //        
-//        MessageModel *messageModel = [channelModel.wallSource wallObjectAtIndex:indexPath.item];
-//        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:indexPath];
-//        if (cell)
-//        {
-//            [self handleLongPress:longPress withMessageModel:messageModel andCollectionViewCell:cell];
-//            return;
-//        }
-        
+//    }
+//    
+//    [self handleLongPress:longPress withMessageModel:nil andCollectionViewCell:nil];
+    NSLog(@"longPress in messagesViewController on %@", cell);
+    if (cell)
+    {
+        [self handleLongPress:cell.longPress withMessageModel:cell.model andCollectionViewCell:cell];
     }
-    
-    [self handleLongPress:longPress withMessageModel:nil andCollectionViewCell:nil];
 }
 
 -(void)handleLongPress:(UILongPressGestureRecognizer*)longPressGesture withMessageModel:(MessageModel*)messageModel andCollectionViewCell:(UICollectionViewCell*)cell

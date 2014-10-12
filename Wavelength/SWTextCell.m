@@ -136,8 +136,8 @@
     NSString *text = model.text;
     CGSize size = [SWTextCell heightOfMessageTextViewWithInput:text];
     
-    size.height = 28 + size.height + 16 + 10;
-
+//    size.height = 28 + size.height + 16 + 10;
+    size.height = size.height + 16;
     
     return size.height;
 }

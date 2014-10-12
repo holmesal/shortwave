@@ -47,7 +47,9 @@
     
     if ([collectionView.delegate respondsToSelector:@selector(didLongPress:)])
     {
-        [collectionView.delegate performSelector:@selector(didLongPress:) withObject:longPressGesture];
+        self.longPress = sender;
+        [collectionView.delegate performSelector:@selector(didLongPress:) withObject:self];
+        self.longPress = nil;
     } else
     {
         NSLog(@"WARNING: SWImageCell fails to LongPress, collectionView.delegate does not respond to selector %@", NSStringFromSelector(_cmd));

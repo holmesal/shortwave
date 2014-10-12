@@ -63,15 +63,15 @@
 #pragma mark bgButton touch gesture responders (and helpera animators) START
 -(void)touchDown:(id)sender
 {
-    [bgButton setBackgroundColor:[UIColor colorWithHexString:@"00CF69"]];
+    [bgButton setBackgroundColor:[UIColor colorWithHexString:@"FFFFFF"]];
     
     _titleColorBeforeSelect = self.titleLabel.textColor;
     _descriptionColorBeforeSelect = self.descriptionLabel.textColor;
     _siteNameColorBeforeSelect = self.smallUrlLabel.textColor;
     
-    self.titleLabel.textColor = [UIColor whiteColor];
-    self.descriptionLabel.textColor = [UIColor whiteColor];
-    self.smallUrlLabel.textColor = [UIColor whiteColor];
+//    self.titleLabel.textColor = [UIColor whiteColor];
+//    self.descriptionLabel.textColor = [UIColor whiteColor];
+//    self.smallUrlLabel.textColor = [UIColor whiteColor];
     
 }
 

@@ -275,8 +275,8 @@ static QueryChannelRequest *pendingRequest;
     //if the timer is setting priority, that means the lastSeen < priority
     
     Firebase *setLastSeenFb = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/channels/%@/lastSeen", Objc_kROOT_FIREBASE, myId, name]];
-    [setLastSeenFb setValue:[NSNumber numberWithDouble:lastSeen]];
-    NSLog(@"lastSeen set to %f", lastSeen);
+    [setLastSeenFb setValue:kFirebaseServerValueTimestamp];//[NSNumber numberWithDouble:lastSeen]];
+//    NSLog(@"lastSeen set to %f", lastSeen);
 }
 
 
@@ -513,6 +513,8 @@ static QueryChannelRequest *pendingRequest;
                 }];
             }
         }];
+        
+        
         
     }
 }

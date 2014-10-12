@@ -24,4 +24,6 @@
 
 @property (weak, nonatomic) MessageModel *model;
 -( id  (^)(void) )blockWithCellForModel:(MessageModel*)message collectionView:(UICollectionView*)collectionView;
+
+@property (weak, nonatomic) UILongPressGestureRecognizer *longPress;
 @end

@@ -372,6 +372,13 @@
 -(void)openChannel:(SWChannelModel*)channel
 {
     self.selectedChannel = channel;
+    UIBarButtonItem *barBtnItem = [[UIBarButtonItem alloc]initWithTitle:@"" style:UIBarButtonItemStyleBordered target:self action:@selector(pop)];
+//    [barBtnItem setTintColor:[UIColor colorWithHexString:@"464C58"]];
+    self.navigationItem.backBarButtonItem = barBtnItem;
+    
+    
+    self.navigationController.navigationBar.tintColor = [UIColor colorWithHexString:@"464C58"];
+
     [self performSegueWithIdentifier:@"Messages" sender:self];
 }
 -(void)insertChannel:(SWChannelModel*)channel atIndex:(NSInteger)i

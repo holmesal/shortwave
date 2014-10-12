@@ -7,11 +7,15 @@
 //
 
 #import "SWMessageHeaderView.h"
+#import "SWImageLoader.h"
+#import "AppDelegate.h"
 
 @interface SWMessageHeaderView ()
 
+@property (strong, nonatomic) NSString *ownerPhoto;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 
 @end
@@ -31,6 +35,17 @@
     [super awakeFromNib];
     
     [_containerView setTransform:CGAffineTransformMakeRotation(M_PI)];
+    
+    CALayer *roundLayer = [CALayer layer];
+    [roundLayer setCornerRadius:_imageView.frame.size.width/2];
+    [roundLayer setBackgroundColor:[UIColor whiteColor].CGColor];
+    [roundLayer setBorderColor:[UIColor whiteColor].CGColor];
+    [roundLayer setBorderWidth:1.0f];
+    [roundLayer setFrame:_imageView.bounds];
+    
+    [_imageView.layer setMask:roundLayer];
+    
+    
 }
 //-(void)setUser:(SWUser*)newValue
 //{
@@ -41,6 +56,19 @@
 -(void)setPhoto:(NSString *)ownerPhoto andName:(NSString *)ownerName
 {
     [_nameLabel setText:ownerName];
+    _ownerPhoto = ownerPhoto;
+    [_imageView setImage:nil];
+    
+    
+    AppDelegate *app = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    [app.imageLoader loadImage:ownerPhoto completionBlock:^(UIImage *image, BOOL synch)
+    {
+        if ([_ownerPhoto isEqualToString:ownerPhoto])
+        {
+            [_imageView setImage:image];
+        }
+        
+    } progressBlock:^(float p){}];
 }
 
 /*

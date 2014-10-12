@@ -868,32 +868,54 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="fzz-FH-RgB">
-                                <rect key="frame" x="0.0" y="20" width="320" height="508"/>
-                                <color key="backgroundColor" red="0.98039215690000003" green="0.32156862749999998" blue="0.43529411759999997" alpha="1" colorSpace="calibratedRGB"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gqe-lC-XYr">
+                                <rect key="frame" x="0.0" y="-9" width="320" height="537"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gqe-lC-XYr" customClass="SWMessagesLayout">
                                     <size key="itemSize" width="50" height="50"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="50" height="50"/>
+                                    <size key="footerReferenceSize" width="50" height="35"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells/>
-                                <collectionReusableView key="sectionFooterView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWMessageHeaderView" id="nJ3-ii-hYu" customClass="SWMessageHeaderView">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                <collectionReusableView key="sectionFooterView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SWMessageHeaderView" id="nJ3-ii-hYu" customClass="SWMessageHeaderView">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jhg-DT-g5F">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="35"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <subviews>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="name label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbo-Pn-iTU">
-                                                    <rect key="frame" x="118" y="14" width="84" height="21"/>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="name label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dbo-Pn-iTU">
+                                                    <rect key="frame" x="73" y="18" width="213" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="C6A-kJ-Mmm"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                    <color key="textColor" red="0.45098039215686275" green="0.54509803921568623" blue="0.59215686274509804" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Book"/>
+                                                    </userDefinedRuntimeAttributes>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ztz-dj-ZJy">
+                                                    <rect key="frame" x="13" y="15" width="49" height="49"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="49" id="2H2-DJ-JB6"/>
+                                                        <constraint firstAttribute="height" constant="49" id="yCc-rv-fdk"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="dbo-Pn-iTU" firstAttribute="leading" secondItem="ztz-dj-ZJy" secondAttribute="trailing" constant="11" id="WFX-Uc-it2"/>
+                                                <constraint firstAttribute="trailing" secondItem="dbo-Pn-iTU" secondAttribute="trailing" constant="34" id="YEY-dv-Bxt"/>
+                                                <constraint firstItem="ztz-dj-ZJy" firstAttribute="leading" secondItem="Jhg-DT-g5F" secondAttribute="leading" constant="13" id="aKZ-9r-bTR"/>
+                                                <constraint firstItem="ztz-dj-ZJy" firstAttribute="top" secondItem="dbo-Pn-iTU" secondAttribute="top" constant="-3" id="fHx-1j-etT"/>
+                                                <constraint firstItem="ztz-dj-ZJy" firstAttribute="top" secondItem="Jhg-DT-g5F" secondAttribute="top" constant="15" id="orb-fY-lhE"/>
+                                            </constraints>
                                         </view>
                                     </subviews>
                                     <constraints>
@@ -904,6 +926,7 @@
                                     </constraints>
                                     <connections>
                                         <outlet property="containerView" destination="Jhg-DT-g5F" id="wxf-nk-pq2"/>
+                                        <outlet property="imageView" destination="ztz-dj-ZJy" id="Jxy-06-vg5"/>
                                         <outlet property="nameLabel" destination="dbo-Pn-iTU" id="G1u-oZ-zYU"/>
                                     </connections>
                                 </collectionReusableView>
@@ -920,7 +943,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="u94-de-PMa" firstAttribute="top" secondItem="fzz-FH-RgB" secondAttribute="bottom" constant="40" id="0vj-m8-nTL"/>
-                            <constraint firstItem="fzz-FH-RgB" firstAttribute="top" secondItem="GfS-b4-V58" secondAttribute="bottom" id="28T-HJ-q6R"/>
+                            <constraint firstItem="fzz-FH-RgB" firstAttribute="top" secondItem="GfS-b4-V58" secondAttribute="bottom" constant="-29" id="28T-HJ-q6R"/>
                             <constraint firstAttribute="trailing" secondItem="fzz-FH-RgB" secondAttribute="trailing" id="AN6-QN-Bvw"/>
                             <constraint firstAttribute="centerX" secondItem="yo1-Fm-Pd3" secondAttribute="centerX" id="UCz-l2-PdA"/>
                             <constraint firstItem="fzz-FH-RgB" firstAttribute="leading" secondItem="HCL-GD-LhJ" secondAttribute="leading" id="gzB-II-eDK"/>
@@ -930,6 +953,7 @@
                     <navigationItem key="navigationItem" id="koM-eM-8un"/>
                     <connections>
                         <outlet property="collectionView" destination="fzz-FH-RgB" id="cMw-cd-h6g"/>
+                        <outlet property="collectionViewVerticalSpaceToBottom" destination="0vj-m8-nTL" id="jWO-cf-qwC"/>
                         <outlet property="composeBarBottomConstraint" destination="h6V-U1-A5H" id="HCx-6H-3yE"/>
                         <outlet property="composeBarView" destination="yo1-Fm-Pd3" id="2pv-DH-CRF"/>
                     </connections>

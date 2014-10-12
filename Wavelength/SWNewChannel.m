@@ -488,7 +488,6 @@
         [UIView animateWithDuration:0.3f delay:0.0f options:(UIViewAnimationOptionBeginFromCurrentState | animationCurve << 16) animations:^
         {
             self.createButtonBottomConstraint.constant = constraintHeight;
-            
             [self.goButton.superview layoutIfNeeded];
         } completion:^(BOOL finished){}];
     }

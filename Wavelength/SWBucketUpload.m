@@ -72,6 +72,7 @@ static SWBucketUpload *sharedInstance;
 -(void)uploadData:(NSData*)data forName:(NSString*)fileName contentType:(NSString*)contentType progress:(void(^)(CGFloat p))progress andComlpetion:(void(^)(NSError *error))completion;
 {
     S3PutObjectRequest *por = [[S3PutObjectRequest alloc] initWithKey:fileName inBucket:Objc_kAWS_BUCKET];
+    por.cannedACL = [S3CannedACL publicRead];
     por.contentType = contentType;
     por.data = data;
     por.delegate = self;

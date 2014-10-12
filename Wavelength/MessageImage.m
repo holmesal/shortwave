@@ -16,14 +16,13 @@
 
 @synthesize size;
 
--(id)initWithSrc:(NSString*)source andIcon:(NSString *)icon color:(NSString *)color ownerID:(NSString *)ownerID text:(NSString *)text width:(NSNumber*)w height:(NSNumber*)h
+-(id)initWithSrc:(NSString*)source ownerID:(NSString *)ownerID// width:(NSNumber*)w height:(NSNumber*)h;
 {
-//    if (self = [super initWithIcon:icon color:color ownerID:ownerID text:text])
-//    {
-//        self.src = source;
-//        self.width = w;
-//        self.height = h;
-//    }
+
+    if (self = [super initWithOwnerID:ownerID andText:@""])
+    {
+        self.src = source;
+    }
     return self;
 }
 
@@ -61,9 +60,10 @@
 
 -(NSDictionary*)toDictionary
 {
-    NSDictionary *content = @{@"src": src,
-                              @"width": width,
-                              @"height": height};
+    NSDictionary *content = @{@"src": src};
+//    ,
+//                              @"width": width,
+//                              @"height": height};
     return [self toDictionaryWithContent:content andType:@"image"];
 } //x
 
