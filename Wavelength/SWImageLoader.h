@@ -25,10 +25,12 @@ typedef enum
 -(void)loadImage:(NSString*)urlString completionBlock:(void (^)(UIImage* image, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock;
 -(void)loadAwsImage:(NSString*)fileName completionBlock:(void(^)(UIImage *image, BOOL synchronous))completion progressBlock:(void(^)(float progress))progressBlock;
 
+-(void)loadVideo:(NSString*)mp4Url completionBlock:(void (^)(NSString *videoPath, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock;
+
 -(BOOL)hasImage:(NSString*)urlString;
 
 //(returnType (^)(parameterTypes))blockName
-
+-(NSString*)filePathForMp4Url:(NSString*)mp4url;
 
 @end
 

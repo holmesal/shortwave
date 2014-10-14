@@ -1,4 +1,5 @@
- //
+git s
+//
 //  MessageModel.m
 //  Shortwave
 //
@@ -76,7 +77,7 @@
 @synthesize text;
 
 @synthesize profileUrl;
-@synthesize firstName;
+@synthesize displayName;
 
 
 -(id)initWithOwnerID:(NSString*)OwnerID andText:(NSString*)Text
@@ -377,12 +378,12 @@
 -(void)setUserData:(SWUser*)user
 {
     profileUrl = user.photo;
-    firstName = user.firstName;
+    displayName = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
 }
 
 -(BOOL)hasAllData
 {
-    return ownerID && text && profileUrl && firstName;
+    return ownerID && text && profileUrl && displayName;
 }
 
 @end

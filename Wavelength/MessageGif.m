@@ -7,12 +7,19 @@
 //
 
 #import "MessageGif.h"
+#import "AppDelegate.h"
 #import "ASIHTTPRequest.h"
+
+@interface MessageGif ()
+
+@property (strong, nonatomic) AVPlayerLayer *layer;
+
+@end
 
 @implementation MessageGif
 
-@synthesize playerLayer;
 @synthesize mp4;
+@synthesize layer;
 
 -(id)initWithDictionary:(NSDictionary *)dictionary andPriority:(double)priority
 {
@@ -31,18 +38,25 @@
 -(void)setMp4:(NSString *)newValue
 {
     mp4 = newValue;
-    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:mp4] options:nil];
+}
+-(void)generatePlayer;
+{
+    AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    
+    NSString *filePath = [appDelegate.imageLoader filePathForMp4Url:mp4];
+    
+    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL fileURLWithPath:filePath] options:nil];
+    //    AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:mp4] options:nil];
     // Create an AVPlayerItem using the asset
     AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-
+    
     _player = [AVPlayer playerWithPlayerItem:item];
     _player.muted = YES;
-
-    playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
-
+    
+    //    playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+    
     _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
 }
-
 -(BOOL)setDictionary:(NSDictionary*)dictionary
 {
     BOOL success = [super setDictionary:dictionary];
@@ -51,29 +65,12 @@
     if (content && [content isKindOfClass:[NSDictionary class]])
     {
         _gif = [content objectForKey:@"src"];
-        self.mp4 = [content objectForKey:@"mp4"]; //optional
-        
-//        NSDictionary *src = content[@"src"];
-//        if (src && [src isKindOfClass:[NSDictionary class]])
-//        {
-//            _mp4 = src[@"mp4"];
-//            success = success && (_mp4 && [_mp4 isKindOfClass:[NSString class]]);
-//            if (success)
-//            {
-//                // Create an AVURLAsset with an NSURL containing the path to the video
-//                AVURLAsset *asset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:_mp4] options:nil];
-//                // Create an AVPlayerItem using the asset
-//                AVPlayerItem *item = [AVPlayerItem playerItemWithAsset:asset];
-//                
-//                _player = [AVPlayer playerWithPlayerItem:item];
-//                _player.muted = YES;
-//                
-//                playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
-//                
-//                _player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
-//                
-//            }
-//        }
+        NSString *thisMustNotBeNull = [content objectForKey:@"mp4"];
+//        NSAssert(thisMustNotBeNull, @"content has no mp4? %@", content);
+        if (thisMustNotBeNull)
+        {
+            self.mp4 = [content objectForKey:@"mp4"]; //optional
+        }
         
     }
     
@@ -123,6 +120,21 @@
         
         
     }
+}
+
+-(AVPlayerLayer*)avplayerlayer
+{
+    if (!_player)
+    {
+        return nil;
+    }
+    if (!layer)
+    {
+        layer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+        layer.videoGravity = AVLayerVideoGravityResizeAspectFill;
+    }
+    return layer;
+
 }
 
 @end

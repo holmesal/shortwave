@@ -20,6 +20,8 @@
 @property (assign, nonatomic) NSInteger numberOfLoadedCells;
 
 
+
+
 -(NSString*)toString;
 -(NSInteger)displayIndexForMessageModel:(id)messageModel;
 
@@ -63,7 +65,7 @@ typedef enum
 //inherited properties
 
 @property (strong, nonatomic) NSString *profileUrl; //x
-@property (strong, nonatomic) NSString *firstName; //x
+@property (strong, nonatomic) NSString *displayName; //x
 
 @property (strong, nonatomic) NSString *ownerID; //x
 @property (strong, nonatomic) NSString *text; //x
@@ -94,5 +96,8 @@ typedef enum
 @property (strong, nonatomic) Section *section;
 
 @property (assign, nonatomic) BOOL isPending;
+
+
+@property (assign, nonatomic) CGFloat cachedCellHeight;
 
 @end

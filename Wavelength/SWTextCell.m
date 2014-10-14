@@ -99,7 +99,7 @@
 
     messageText.attributedText = attributedText;
     
-    firstNameLabel.text = model.firstName;
+//    firstNameLabel.text = model.displayName;
     priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
     
     self.profileImageView.image = nil;

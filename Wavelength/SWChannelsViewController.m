@@ -17,8 +17,12 @@
 #import "AppDelegate.h"
 #import "AutoCompleteChannelCell.h"
 #define maxCharsInChannelName NSIntegerMax
+#define kCHANNELADDTIMEOUT 0.5f
 
 @interface SWChannelsViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
+
+@property (strong, nonatomic) NSTimer *insertChannelTimer;
+@property (strong, nonatomic) NSMutableArray *queuedChannels;
 
 @property (assign, nonatomic) BOOL navBarIsAnimating;
 @property (assign, nonatomic ) BOOL isJoiningOrCreatingAChannel;
@@ -71,6 +75,8 @@
 
 
 @implementation SWChannelsViewController
+@synthesize insertChannelTimer;
+@synthesize queuedChannels;
 
 @synthesize navBarIsAnimating;
 @synthesize channelsCollectionView;
@@ -149,6 +155,8 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    queuedChannels = [[NSMutableArray alloc] init];
+    
     _addOrCreateContainer.alpha = 0.0f;
     _autoCompleteResults = @[];
     [_addChannelAutoCompleteContainer setAlpha:0.0f];
@@ -238,7 +246,7 @@
 //    self.navigationItem.hidesBackButton = YES;
     
 
-    
+    [self bindToChannels];
 }
 -(void)back
 {
@@ -281,6 +289,8 @@
                 {
                     NSDictionary *meta = f2Snapshot.value;
                     SWChannelModel *channelModel = [[SWChannelModel alloc] initWithDictionary:dictionary andUrl:[NSString stringWithFormat:@"%@%@", url, snap.name] andChannelMeta:meta];
+                    channelModel.priority = [snap.priority doubleValue];
+                    
                     
                     //JAVA STOPPED HERE
                     channelModel.delegate = self; //updating channel activity indicator
@@ -294,8 +304,8 @@
                     }
                     
                     //what index? a reordering may have occured while iw as fetching f2's single value event
-                    NSInteger index = [self whatActualIndexIsChannel:name];
-                    [self setChannel:name loadedState:YES];
+//                    NSInteger index = [self whatActualIndexIsChannel:name];
+//                    [self setChannel:name loadedState:YES];
                     
                     
 
@@ -306,7 +316,7 @@
                         [weakSelf openChannel:channelModel];
                         appDelegate.channelFromRemoteNotification = nil;
                     }
-                    [weakSelf insertChannel:channelModel atIndex:index];
+                    [weakSelf insertChannelEventually:channelModel];//:channelModel atIndex:index];
                     
                 }
             }];
@@ -329,6 +339,7 @@
         {
             model = [channels objectAtIndex:oldDisplayIndex];
             [channels removeObject:model];
+            model.priority = [snap.priority doubleValue];
         }
         [channelNamesOrdering removeObjectAtIndex:oldFinalIndex];
         
@@ -381,14 +392,60 @@
 
     [self performSegueWithIdentifier:@"Messages" sender:self];
 }
--(void)insertChannel:(SWChannelModel*)channel atIndex:(NSInteger)i
+//-(void)insertChannel:(SWChannelModel*)channel atIndex:(NSInteger)i
+//{
+//    __weak SWChannelsViewController *weakSelf = self;
+//    [channelsCollectionView performBatchUpdates:^
+//    {
+//        [weakSelf.channels insertObject:channel atIndex:i];
+//        [weakSelf.channelsCollectionView insertSections:[NSIndexSet indexSetWithIndex:i]];
+//    } completion:^(BOOL finished){}];
+//}
+-(void)insertChannelEventually:(SWChannelModel*)channel
 {
+    if (insertChannelTimer)
+    {
+        [insertChannelTimer invalidate];
+        insertChannelTimer = nil;
+    }
+    
+    [queuedChannels addObject:channel];
+    insertChannelTimer = [NSTimer timerWithTimeInterval:kCHANNELADDTIMEOUT target:self selector:@selector(insertChannelNow) userInfo:nil repeats:NO];
+    [[NSRunLoop mainRunLoop] addTimer:insertChannelTimer forMode:NSDefaultRunLoopMode];
+    
+}
+
+-(void)insertChannelNow
+{
+    
+    [queuedChannels sortUsingComparator:^(SWChannelModel *a, SWChannelModel *b)
+    {
+        return a.priority < b.priority;
+    }];
+
+    
     __weak SWChannelsViewController *weakSelf = self;
     [channelsCollectionView performBatchUpdates:^
     {
-        [weakSelf.channels insertObject:channel atIndex:i];
-        [weakSelf.channelsCollectionView insertSections:[NSIndexSet indexSetWithIndex:i]];
+        NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+        for (SWChannelModel *channel in queuedChannels)
+        {
+            NSString *name = channel.name;
+            [self setChannel:name loadedState:YES];
+            NSInteger index = [self whatActualIndexIsChannel:name];
+//            NSLog(@"add channel index %d", index);
+            [indexSet addIndex:index];
+            [self.channels insertObject:channel atIndex:index];
+        }
+        
+        [weakSelf.channelsCollectionView insertSections:indexSet];
+        
+        [queuedChannels removeAllObjects];
+        
     } completion:^(BOOL finished){}];
+
+    
+    
 }
 
 #pragma mark UICollectionViewDelegate /DataSource methods
@@ -446,7 +503,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self bindToChannels];
+
 
     if (_selectedSWChannelCell)
     {

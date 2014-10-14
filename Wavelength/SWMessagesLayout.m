@@ -39,6 +39,11 @@
             attributes.zIndex = 100;
             
         }
+        else
+        if (attributes.representedElementCategory == UICollectionElementCategoryCell)
+        {
+            attributes.zIndex = 0;
+        }
     }
     
     return attributesArray;

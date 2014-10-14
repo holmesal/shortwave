@@ -10,4 +10,5 @@
 
 @interface NSString(Extension)
 +(BOOL)validateUrlString:(NSString*)str;
+- (NSString *)MD5String;
 @end

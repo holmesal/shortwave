@@ -8,6 +8,7 @@
 
 #import "SWGifCell.h"
 #import "MessageGif.h"
+#import "AppDelegate.h"
 #import <AVFoundation/AVFoundation.h>
 
 @interface SWGifCell ()
@@ -70,29 +71,54 @@
             [sublayer removeFromSuperlayer];
         }
     }
-    
+    if (_player)
+    {
+        [_player pause];
+    }
     _player = model.player;
+
+    AppDelegate* appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+    __weak SWGifCell *weakSelf = self;
     
-    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:model.player];
-    
-    playerLayer.videoGravity = AVLayerVideoGravityResizeAspectFill;
-    
-    
-    if (playerLayer.superlayer)
+    __block AVPlayerLayer *playerLayer = [model avplayerlayer];
+    if (playerLayer && playerLayer.superlayer)
     {
         [playerLayer removeFromSuperlayer];
     }
     
-    playerLayer.bounds = _mp4View.bounds;
-    playerLayer.position = CGPointMake(_mp4View.bounds.size.width*0.5f, _mp4View.bounds.size.height*0.5f);
-    playerLayer.backgroundColor = [UIColor clearColor].CGColor;
-    [_mp4View.layer addSublayer:playerLayer];
-    
-    [_player play];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(playerItemDidReachEnd:)
-                                                 name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:[_player currentItem]];
+    NSString *mp4Str = model.mp4;
+    [appDelegate.imageLoader loadVideo:mp4Str completionBlock:^(NSString *videoPath, BOOL synchronous)
+    {
+        if (model.mp4 && [mp4Str isEqualToString:model.mp4])
+        {
+            if (!_player)
+            {
+                [model generatePlayer];
+                weakSelf.player = model.player;
+                playerLayer = [model avplayerlayer];
+            }
+            playerLayer.bounds = _mp4View.bounds;
+            playerLayer.position = CGPointMake(_mp4View.bounds.size.width*0.5f, _mp4View.bounds.size.height*0.5f);
+            playerLayer.backgroundColor = [UIColor clearColor].CGColor;
+            [weakSelf.mp4View.layer addSublayer:playerLayer];
+
+            [weakSelf.player play];
+            [[NSNotificationCenter defaultCenter] addObserver:self
+                                                     selector:@selector(playerItemDidReachEnd:)
+                                                         name:AVPlayerItemDidPlayToEndTimeNotification
+                                                       object:[weakSelf.player currentItem]];
+            
+            
+        }
+    } progressBlock:^(float progress)
+    {
+        if (model.mp4 && [mp4Str isEqualToString:model.mp4])
+        {
+            NSLog(@"videoProgress %f", progress);
+        }
+        
+    }];
+
 
     
 
@@ -122,7 +148,6 @@
 
 - (IBAction)flagButtonAction:(id)sender
 {
-    NSLog(@"flagButtonAction gif");
     UICollectionView *collectionView = (UICollectionView *)self.superview;
     if ([collectionView.delegate respondsToSelector:@selector(userTappedFlagOnMessageModel:)])
     {

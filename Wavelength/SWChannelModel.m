@@ -272,6 +272,13 @@ static QueryChannelRequest *pendingRequest;
     lastSeen = lastPriorityToSet;
     NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
     isSynchronized = YES;
+    
+    if (self.delegate)
+    {
+        [self.delegate channel:self hasNewActivity:NO];
+    }
+    NSLog(@"isSynchronized = %@", isSynchronized ? @"YES" : @"NO");
+    
     //if the timer is setting priority, that means the lastSeen < priority
     
     Firebase *setLastSeenFb = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/channels/%@/lastSeen", Objc_kROOT_FIREBASE, myId, name]];
@@ -482,6 +489,7 @@ static QueryChannelRequest *pendingRequest;
 {
     NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
     isSynchronized = YES;
+
     if (self.delegate)
     {
         [self.delegate channel:self hasNewActivity:!isSynchronized];

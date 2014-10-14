@@ -130,14 +130,14 @@
                     return;
                 }
                 
+                [wallNames insertObject:messageSnapshot.name  atIndex:index];
+                
                 MessageModel *model = [MessageModel messageModelFromValue:messageSnapshot.value andPriority:[messageSnapshot.priority doubleValue]];
                 if (!model)
                     return;
-                
-
 
                 model.name = messageSnapshot.name;
-                [wallNames insertObject:model.name  atIndex:index];
+
                 [allMessagesEver setObject:model forKey:model.name];
                 model.isPending = YES;
                 [self getPossibleParentAndPossibleChild:model.name withCompletion:^(MessageModel *possibleParent, MessageModel *possibleChild)
@@ -432,8 +432,14 @@
 - (CGSize)collectionView:(UICollectionView *)cV layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MessageModel *model = [self wallObjectAtIndex:indexPath]; //wall[indexPath.row]
-    CGFloat height = [MessageCell heightOfMessageCellForModel:model collectionView:(UICollectionView*)collectionView];
-    return CGSizeMake(320, height);
+    if (model.cachedCellHeight == 0)
+    {
+    
+        CGFloat height = [MessageCell heightOfMessageCellForModel:model collectionView:(UICollectionView*)collectionView];
+        model.cachedCellHeight = height;
+    }
+    
+    return CGSizeMake(320, model.cachedCellHeight);
 }
 
 //reverse
@@ -500,7 +506,7 @@
     __block NSMutableArray *newSections = [[NSMutableArray alloc] init];
     for (MessageModel *messageModel in wallQueue)
     {
-        NSLog(@"messageModel.priority = %f", messageModel.priority);
+//        NSLog(@"messageModel.priority = %f", messageModel.priority);
         if (!messageModel.section.isLoaded && ![newSections containsObject:messageModel.section])
         {
             [newSections addObject:messageModel.section];
@@ -686,7 +692,7 @@
     MessageModel *parent = section.messagesOrder[0];
     
     NSString *ownerPhoto = parent.profileUrl;
-    NSString *ownerName = [NSString stringWithFormat:@"%@ %d", parent.firstName, section.messagesOrder.count];
+    NSString *ownerName = [NSString stringWithFormat:@"%@", parent.displayName];
     
     headerView = (SWMessageHeaderView *)[collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"SWMessageHeaderView" forIndexPath:indexPath];
     [headerView setPhoto:ownerPhoto andName:ownerName];

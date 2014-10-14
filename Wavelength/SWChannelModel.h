@@ -55,6 +55,7 @@
 
 @property (strong, nonatomic) MessageModel *lastMessage; //v
 
+@property (assign, nonatomic) double priority;
 
 @property (strong, nonatomic) NSString *name; //x
 @property (strong, nonatomic) NSString *channelDescription; //may be nil //x

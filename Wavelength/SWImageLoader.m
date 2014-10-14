@@ -12,7 +12,7 @@
 #import <AWSS3/AWSS3.h>
 #import <AWSRuntime/AWSRuntime.h>
 #import "ObjcConstants.h"
-
+#import "NSString+Extension.h"
 
 #pragma mark DiscardableImage declaration
 @interface DiscardableImage : NSObject <NSDiscardableContent>
@@ -102,7 +102,9 @@
 @property (strong, nonatomic) NSMutableData *mutableData;
 @property (assign, nonatomic) long long expectedContentLenght;
 
--(id)initWithUrl:(NSURL*)theUrl;
+@property (strong, nonatomic) NSString *downloadDestinationPath;
+
+-(id)initWithUrl:(NSURL *)theUrl andDownloadDestinationPath:(NSString*)downloadDestinationPath;
 -(id)initWithFileName:(NSString*)fileName;
 
 -(void)initializeRequest;
@@ -138,10 +140,11 @@
     return self;
 }
 
--(id)initWithUrl:(NSURL *)theUrl
+-(id)initWithUrl:(NSURL *)theUrl andDownloadDestinationPath:(NSString*)downloadDestinationPath
 {
     if (self = [self init])
     {
+        _downloadDestinationPath = downloadDestinationPath;
         isAwsLoad = NO;
         url = theUrl;
 
@@ -173,6 +176,7 @@
     {
         request = [[ASIHTTPRequest alloc] initWithURL:url];
         request.downloadProgressDelegate = self;
+        request.downloadDestinationPath = _downloadDestinationPath;
         
         request.numberOfTimesToRetryOnTimeout = 2;
         request.didFinishSelector = @selector(requestFinished:);
@@ -269,7 +273,8 @@
 {
 //    NSLog(@"'%@', is '%@'", rq.url.absoluteString, (request.responseData ? @"NULL" : @"YES") );
     state = DataLoadingParcelStateComplete;
-    receivedData = rq.responseData;
+   
+    receivedData = [NSData dataWithContentsOfFile:_downloadDestinationPath];//rq.responseData;
 
     [self reportFinished];
 }
@@ -380,6 +385,9 @@
     return self;
 }
 
+
+
+
 -(void)loadAwsImage:(NSString*)fileName completionBlock:(void(^)(UIImage *image, BOOL synchronous))completion progressBlock:(void(^)(float progress))progressBlock
 {
     DiscardableImage *discardableImage = [cache objectForKey:fileName];
@@ -410,12 +418,80 @@
     }
 }
 
+-(NSString*) cacheDirectoryName
+{
+    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+//    NSString *cacheDirectoryName = [documentsDirectory stringByAppendingPathComponent:@"HashtagImages"];
+    return documentsDirectory;
+}
+
+-(NSString*)filePathForMp4Url:(NSString*)mp4url
+{
+    NSString *name = [mp4url MD5String];
+    NSString *filePathFromUrl = [[self cacheDirectoryName] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.mp4", name]];
+    return filePathFromUrl;
+}
+
+-(void)loadVideo:(NSString*)mp4Url completionBlock:(void (^)(NSString *videoFilePathPath, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock
+{
+    NSString *filePathFromUrl = [self filePathForMp4Url:mp4Url];
+//    NSLog(@"filePathFromUrlMp4 = %@", filePathFromUrl);
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePathFromUrl])
+    {
+        completionBlock(filePathFromUrl, YES);
+    } else
+    {
+        DataLoadingParcel *dataLoadingParcel = dataLoadingParcels[mp4Url];
+        if (dataLoadingParcel)
+        {} else
+        {
+            //does not exist, create parcel & book-keeping
+            
+            dataLoadingParcel = [[DataLoadingParcel alloc] initWithUrl:[NSURL URLWithString:mp4Url] andDownloadDestinationPath:filePathFromUrl];
+            
+            if (dataLoadingParcelOrder.count <= numConcurrent)
+            {
+                [dataLoadingParcel start];
+            }
+            
+            dataLoadingParcels[mp4Url] = dataLoadingParcel;
+            [dataLoadingParcelOrder addObject:dataLoadingParcel];
+            
+        }
+        
+        [dataLoadingParcel
+         addListeners: [self completionBlockForVideoParcel:dataLoadingParcel completionBlock:completionBlock] //completion
+         progress:[self progressBlockForParcel:dataLoadingParcel progressBlock:progressBlock]]; //progress
+        
+    }
+}
+
 -(void)loadImage:(NSString *)urlString completionBlock:(void (^)(UIImage *img, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock
 {
+    NSString *name = [urlString MD5String];
+    NSString *filePathFromUrl = [[self cacheDirectoryName] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.data", name ]];
+    
+    
+//    NSLog(@"cacheDirectoryName = %@", [self cacheDirectoryName]);
+    
     DiscardableImage *discardableImage = [cache objectForKey:urlString];
     if (discardableImage)
     {//synchronous return
         completionBlock(discardableImage.image, YES);
+    } else
+    if ([[NSFileManager defaultManager] fileExistsAtPath:filePathFromUrl])
+    {
+        NSData *imgData = [[NSData alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePathFromUrl]];
+        UIImage *img = [[UIImage alloc] initWithData:imgData];
+        
+        DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:img];
+        NSString *key = urlString;
+        [self.cache setObject:discardableImage forKey:key];
+        completionBlock(img, YES);
+        
     } else
     {
         //does this request already exist?
@@ -429,7 +505,8 @@
         } else
         {
             //does not exist, create parcel & book-keeping
-            dataLoadingParcel = [[DataLoadingParcel alloc] initWithUrl:[NSURL URLWithString:urlString]];
+            
+            dataLoadingParcel = [[DataLoadingParcel alloc] initWithUrl:[NSURL URLWithString:urlString] andDownloadDestinationPath:filePathFromUrl];
             
             if (dataLoadingParcelOrder.count <= numConcurrent)
             {
@@ -461,12 +538,15 @@
 -(void (^)(void))completionBlockForParcel:(DataLoadingParcel*)parcel completionBlock:(void (^)(UIImage *img, BOOL syncrhonous))completionBlock
 {
     return ^{
-        UIImage *image = [UIImage imageWithData:parcel.receivedData];
+        NSData *data = parcel.receivedData;
+        UIImage *image = [UIImage imageWithData:data];
         //store discardableImage
         DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:image];
         NSString *key = [parcel key];
         
         [self.cache setObject:discardableImage forKey:key];
+        
+
         
         if (self.dataLoadingParcelOrder.count > self.numConcurrent)
         {
@@ -485,13 +565,40 @@
     };
 }
 
+-(void(^)(void))completionBlockForVideoParcel:(DataLoadingParcel*)parcel completionBlock:(void (^)(NSString *videoFilePathPath, BOOL synchronous))completionBlock
+{
+    return ^{
+//        NSData *data = parcel.receivedData;
+//        UIImage *image = [UIImage imageWithData:data];
+//        //store discardableImage
+//        DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:image];
+        NSString *key = [parcel key];
+//
+//        [self.cache setObject:discardableImage forKey:key];
+
+        if (self.dataLoadingParcelOrder.count > self.numConcurrent)
+        {
+            DataLoadingParcel *nextDLP = dataLoadingParcelOrder[self.numConcurrent];
+            [nextDLP start];
+        }
+        
+        //remove this parcel from dataLoadingParcels url -> Parcel mapping
+        [self.dataLoadingParcels removeObjectForKey:key];
+        
+        //remove this parcel from DataLoadingParcelOrder
+        [self.dataLoadingParcelOrder removeObject:parcel];
+        
+        completionBlock(parcel.downloadDestinationPath, NO);
+        
+    };
+}
+
 -(void (^)(void))progressBlockForParcel:(DataLoadingParcel*)parcel progressBlock:(void(^)(float progress))progressBlock
 {
     return ^{
         progressBlock(parcel.percent);
     };
 }
-
 
 
 
