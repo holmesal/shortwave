@@ -17,6 +17,7 @@
 
 #define Objc_kRemoteNotification_JoinChannel @"remoteNotificationJoinChannel"
 
+#define Objc_kNSUSERDEFAULTS_BOOLKEY_userHasSeenWalkthrough @"hasUserSeenWalkthroughKey?"
 #define Objc_kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn @"UserIsLoggedIn"
 #define Objc_kNSUSERDEFAULTS_KEY_userId @"hehehloluser"
 #define Objc_kNSUSERDEFAULTS_KEY_firebaseKeyForDeviceToken @"deviceTokenKey"

@@ -81,6 +81,10 @@
 @property (strong, nonatomic) id<ChannelMutedResponderDelegate> mutedDelegate; //x
 @property (strong, nonatomic) id<ChannelCellActionDelegate> cellActionDelegate;
 
+-(id)initWithoutData;
+-(void)doInitializationWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta;
+@property (assign, nonatomic) BOOL isLoaded;
+
 -(void)fetchAllUsersIfNecessary;
 -(NSMutableArray*)usersThatBeginWith:(NSString*)prefix isPublic:(BOOL)ispublic;
 

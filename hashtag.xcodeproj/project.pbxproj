@@ -17,6 +17,7 @@
 		AA38E7C319EC58AF00967C03 /* HJMOUserBase.m in Sources */ = {isa = PBXBuildFile; fileRef = AA38E7B819EC58AF00967C03 /* HJMOUserBase.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AA38E7C419EC58AF00967C03 /* HJObjManager.m in Sources */ = {isa = PBXBuildFile; fileRef = AA38E7BA19EC58AF00967C03 /* HJObjManager.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		AA38E7C519EC58AF00967C03 /* HJWeakMutableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = AA38E7BC19EC58AF00967C03 /* HJWeakMutableArray.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		AA47A2BE19EDE6E000757F55 /* WalkthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = AA47A2BD19EDE6E000757F55 /* WalkthroughView.m */; };
 		AA6BFB0819B93DDB00A4D5EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */; };
 		AA6BFB0A19B93DDB00A4D5EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0919B93DDB00A4D5EC /* CoreGraphics.framework */; };
 		AA6BFB0C19B93DDB00A4D5EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA6BFB0B19B93DDB00A4D5EC /* UIKit.framework */; };
@@ -141,6 +142,8 @@
 		AA38E7BA19EC58AF00967C03 /* HJObjManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJObjManager.m; sourceTree = "<group>"; };
 		AA38E7BB19EC58AF00967C03 /* HJWeakMutableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HJWeakMutableArray.h; sourceTree = "<group>"; };
 		AA38E7BC19EC58AF00967C03 /* HJWeakMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HJWeakMutableArray.m; sourceTree = "<group>"; };
+		AA47A2BC19EDE6E000757F55 /* WalkthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WalkthroughView.h; sourceTree = "<group>"; };
+		AA47A2BD19EDE6E000757F55 /* WalkthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WalkthroughView.m; sourceTree = "<group>"; };
 		AA6BFB0419B93DDB00A4D5EC /* hashtag.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hashtag.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA6BFB0719B93DDB00A4D5EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA6BFB0919B93DDB00A4D5EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -556,6 +559,8 @@
 				AAD9120219E5F4D5009CA1B8 /* SWAtMentionCell.xib */,
 				AA8C83BE19E74946007454C6 /* SWMessageHeaderView.h */,
 				AA8C83BF19E74946007454C6 /* SWMessageHeaderView.m */,
+				AA47A2BC19EDE6E000757F55 /* WalkthroughView.h */,
+				AA47A2BD19EDE6E000757F55 /* WalkthroughView.m */,
 			);
 			name = view;
 			sourceTree = "<group>";
@@ -825,6 +830,7 @@
 				AAF803E619B9425600B51B6D /* MessageWebSite.m in Sources */,
 				AAF803F619B9428D00B51B6D /* SWMessagesViewController.m in Sources */,
 				AAF803CA19B9422F00B51B6D /* SWTextCell.m in Sources */,
+				AA47A2BE19EDE6E000757F55 /* WalkthroughView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

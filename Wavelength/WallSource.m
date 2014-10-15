@@ -259,16 +259,19 @@
         _startAtDate = [[NSDate date] timeIntervalSince1970] * 1000;
     }
     
-    NSLog(@"channel '%@' starting at '%f'", self.url, _startAtDate);
+//    NSLog(@"channel '%@' starting at '%f'", self.url, _startAtDate);
     
     //right now fetch all messages
     _wallRefQueryLimit = [wallRef queryStartingAtPriority:[NSNumber numberWithDouble:_startAtDate]];  //[wallRef queryLimitedToNumberOfChildren:kMAX_NUMBER_OF_MESSAGES];
     
-    NSLog(@"wallRefQueryLimit = %@", _wallRefQueryLimit);
+//    NSLog(@"wallRefQueryLimit = %@", _wallRefQueryLimit);
 
     self.wallHandleInsert = [self.wallRefQueryLimit observeEventType:FEventTypeChildAdded andPreviousSiblingNameWithBlock:handleMessageInsert withCancelBlock:^(NSError *error)
     {
-        NSLog(@"error on child added to wallSource = %@", error.localizedDescription);
+        if (error)
+        {
+            NSLog(@"error on child added to wallSource = %@", error.localizedDescription);
+        }
     }];
     
     

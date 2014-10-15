@@ -83,6 +83,7 @@
     errorRetryView.userInteractionEnabled = NO;
     errorRetryView.backgroundColor = [UIColor clearColor];
     
+    [self addParalaxShiftTiltToView:_hashtagImageView];
 
     authorizingView.alpha = 0.0f;
     CALayer *layer = [CALayer layer];
@@ -133,6 +134,32 @@
         }
     }];
 }
+
+-(void)addParalaxShiftTiltToView:(UIView*)view
+{
+    UIInterpolatingMotionEffect *verticalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.y"
+     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    verticalMotionEffect.minimumRelativeValue = @(-25);
+    verticalMotionEffect.maximumRelativeValue = @(25);
+    
+    // Set horizontal effect
+    UIInterpolatingMotionEffect *horizontalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.x"
+     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    horizontalMotionEffect.minimumRelativeValue = @(-10);
+    horizontalMotionEffect.maximumRelativeValue = @(10);
+    
+    // Create group to combine both
+    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+    
+    // Add both effects to your view
+    [view addMotionEffect:group];
+}
+
 
 //-(void)startRepeatingIfNotAlready
 //{

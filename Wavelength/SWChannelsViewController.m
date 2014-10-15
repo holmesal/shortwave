@@ -16,10 +16,21 @@
 #import "SWNewChannel.h"
 #import "AppDelegate.h"
 #import "AutoCompleteChannelCell.h"
+#import "WalkthroughView.h"
+
 #define maxCharsInChannelName NSIntegerMax
 #define kCHANNELADDTIMEOUT 0.5f
 
 @interface SWChannelsViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
+
+
+@property (strong, nonatomic) WalkthroughView *firstWalkthrough;
+@property (strong, nonatomic) WalkthroughView *secondWalkthrough;
+@property (strong, nonatomic) WalkthroughView *thirdWalkthrough;
+
+
+@property (strong, nonatomic) NSString *userAddedChannelNamedThisDuringWalkthrough;
+
 
 @property (strong, nonatomic) NSTimer *insertChannelTimer;
 @property (strong, nonatomic) NSMutableArray *queuedChannels;
@@ -48,7 +59,7 @@
 
 @property (strong, nonatomic) NSMutableArray *channels;
 @property (strong, nonatomic) NSMutableArray *channelNamesOrdering;
-@property (strong, nonatomic) NSMutableDictionary *channelLoadedState;
+@property (strong, nonatomic) NSMutableDictionary *allChannelsEver;
 
 //@property (strong, nonatomic) UIPanGestureRecognizer *myPanGesture;
 
@@ -82,17 +93,18 @@
 @synthesize channelsCollectionView;
 @synthesize channels;
 @synthesize channelNamesOrdering;
-@synthesize channelLoadedState;
+@synthesize allChannelsEver;
 
 
--(void)setChannel:(NSString*)channel loadedState:(BOOL)loadedState
+//-(void)setChannel:(SWChannelModel*)channel loadedState:(BOOL)loadedState
+//{
+//    [allChannelsEver setObject:[NSNumber numberWithBool:loadedState] forKey:channel.name];
+//}
+-(BOOL)isChannelLoaded:(NSString*)channelName
 {
-    [channelLoadedState setObject:[NSNumber numberWithBool:loadedState] forKey:channel];
-}
--(BOOL)isChannelLoaded:(NSString*)channel
-{
+    SWChannelModel *channelModel = [allChannelsEver objectForKey:channelName];
 
-    return [[channelLoadedState objectForKey:channel] boolValue];
+    return channelModel.isLoaded;
 }
 -(NSInteger)whatActualIndexIsChannel:(NSString*)channel
 {
@@ -194,7 +206,7 @@
     
     channels = [[NSMutableArray alloc] init];
     channelNamesOrdering = [[NSMutableArray alloc] init];
-    channelLoadedState = [[NSMutableDictionary alloc] init];
+    allChannelsEver = [[NSMutableDictionary alloc] init];
     
     NSString *versionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     UILabel *topLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, -70, 320, 30)];
@@ -245,9 +257,16 @@
     
 //    self.navigationItem.hidesBackButton = YES;
     
-
-    [self bindToChannels];
+    if (self.hasUserSeenWalkthrough)
+    {
+        [self bindToChannels];
+    }
 }
+-(BOOL)hasUserSeenWalkthrough
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:Objc_kNSUSERDEFAULTS_BOOLKEY_userHasSeenWalkthrough];
+}
+
 -(void)back
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -271,6 +290,9 @@
         if ([snap.value isKindOfClass:[NSDictionary class]])
         {
             NSString *name = snap.name;
+            
+
+            
             NSDictionary *dictionary = snap.value;
             
             if ([channelNamesOrdering containsObject:name])
@@ -278,9 +300,14 @@
                 NSLog(@"CONFUSION: channelNamesOrdering already contains %@", name);
                 return;
             }
-    
+            
+            
+
+            SWChannelModel *channel = [[SWChannelModel alloc] initWithoutData];
+            channel.name = name;
+            
             [self setPredictedIndex:[self whatPredictedIndexIs:replacingName] forChannelName:name];
-            [self setChannel:name loadedState:NO];
+            [allChannelsEver setObject:channel forKey:name];
             
             Firebase *f2 = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@channels/%@/meta", Objc_kROOT_FIREBASE, name]];
             [f2 observeSingleEventOfType:FEventTypeValue withBlock:^(FDataSnapshot *f2Snapshot)
@@ -288,16 +315,20 @@
                 if ([f2Snapshot.value isKindOfClass:[NSDictionary class]])
                 {
                     NSDictionary *meta = f2Snapshot.value;
-                    SWChannelModel *channelModel = [[SWChannelModel alloc] initWithDictionary:dictionary andUrl:[NSString stringWithFormat:@"%@%@", url, snap.name] andChannelMeta:meta];
-                    channelModel.priority = [snap.priority doubleValue];
+                    [channel doInitializationWithDictionary:dictionary andUrl:[NSString stringWithFormat:@"%@%@", url, snap.name] andChannelMeta:meta]; 
+                    
+                    
+                    double priority = snap.priority == [NSNull null] ? 0 : [snap.priority doubleValue];
+                    
+                    channel.priority = priority;
                     
                     
                     //JAVA STOPPED HERE
-                    channelModel.delegate = self; //updating channel activity indicator
+                    channel.delegate = self; //updating channel activity indicator
                     
                     
                     //check if this already exists?
-                    NSArray *result = [weakSelf.channels filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.name == %@", channelModel.name]];
+                    NSArray *result = [weakSelf.channels filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.name == %@", channel.name]];
                     if (result.count != 0)
                     {
                         return;
@@ -311,12 +342,12 @@
 
                     AppDelegate *appDelegate = ((AppDelegate*)[UIApplication sharedApplication].delegate);
                     NSString *channelFromRemoteNotification = appDelegate.channelFromRemoteNotification;
-                    if (channelFromRemoteNotification && [channelFromRemoteNotification isEqualToString:channelModel.name])
+                    if (channelFromRemoteNotification && [channelFromRemoteNotification isEqualToString:channel.name])
                     {
-                        [weakSelf openChannel:channelModel];
+                        [weakSelf openChannel:channel];
                         appDelegate.channelFromRemoteNotification = nil;
                     }
-                    [weakSelf insertChannelEventually:channelModel];//:channelModel atIndex:index];
+                    [weakSelf insertChannelEventually:channel];//:channelModel atIndex:index];
                     
                 }
             }];
@@ -329,17 +360,19 @@
     {
         NSString *name = snap.name;
         
-        BOOL channelIsLoaded = [self isChannelLoaded:name];
+
         
         
         NSInteger oldDisplayIndex = [self whatActualIndexIsChannel:name];
         NSInteger oldFinalIndex = [self whatPredictedIndexIs:name];
-        SWChannelModel *model = nil;
+
+        SWChannelModel *model = [allChannelsEver objectForKey:name];
+        BOOL channelIsLoaded = model.isLoaded;
+        
         if (channelIsLoaded)
         {
             model = [channels objectAtIndex:oldDisplayIndex];
             [channels removeObject:model];
-            model.priority = [snap.priority doubleValue];
         }
         [channelNamesOrdering removeObjectAtIndex:oldFinalIndex];
         
@@ -351,6 +384,11 @@
             [channels insertObject:model atIndex:newDisplayIndex];
             [channelsCollectionView reloadData];
         }
+        
+        double priority = snap.priority == [NSNull null] ? 0 : [snap.priority doubleValue];
+        model.priority = priority;
+        
+        
         
     }];
     
@@ -369,10 +407,15 @@
             {
                 [weakSelf.channels removeObjectAtIndex:removeIndex];
                 [weakSelf.channelNamesOrdering removeObjectAtIndex:[self whatPredictedIndexIs:name]];
-                [weakSelf.channelLoadedState removeObjectForKey:name];
-                
+//                [weakSelf.channelLoadedState removeObjectForKey:name];
+                [weakSelf.allChannelsEver removeObjectForKey:name];
                 [weakSelf.channelsCollectionView deleteSections:[NSIndexSet indexSetWithIndex:removeIndex]];
-            } completion:^(BOOL finished){}];
+            } completion:^(BOOL finished){
+                if (weakSelf.thirdWalkthrough)
+                {
+                    [weakSelf endTutorial];
+                }
+            }];
             
             
         }
@@ -417,30 +460,70 @@
 
 -(void)insertChannelNow
 {
-    
+    NSLog(@"*****insertChannelNow**** %@", _userAddedChannelNamedThisDuringWalkthrough);
     [queuedChannels sortUsingComparator:^(SWChannelModel *a, SWChannelModel *b)
     {
+        if (a.priority == b.priority)
+        {
+            int aIndx = [channelNamesOrdering indexOfObject:a.name];
+            int bIndx = [channelNamesOrdering indexOfObject:b.name];
+            
+            return aIndx > bIndx;
+        }
         return a.priority < b.priority;
     }];
+    
+    NSLog(@"**printing channelNamesOrdering");
+    int i = 0;
+    for (NSString *name in channelNamesOrdering)
+    {
+        NSLog(@"[%d] = %@", i, name);
+        i++;
+    }
+    
 
     
     __weak SWChannelsViewController *weakSelf = self;
     [channelsCollectionView performBatchUpdates:^
     {
         NSMutableIndexSet *indexSet = [[NSMutableIndexSet alloc] init];
+        NSMutableArray *removeObjects = [[NSMutableArray alloc] initWithCapacity:queuedChannels.count];
         for (SWChannelModel *channel in queuedChannels)
         {
             NSString *name = channel.name;
-            [self setChannel:name loadedState:YES];
-            NSInteger index = [self whatActualIndexIsChannel:name];
-//            NSLog(@"add channel index %d", index);
-            [indexSet addIndex:index];
-            [self.channels insertObject:channel atIndex:index];
+            BOOL canAddChannelNow = NO;
+            if (![self hasUserSeenWalkthrough])
+            {
+                if ([name isEqualToString:_userAddedChannelNamedThisDuringWalkthrough])
+                {
+                    canAddChannelNow = YES;
+                    [removeObjects addObject:channel];
+                } else
+                {
+                    canAddChannelNow = NO;
+                    
+                }
+            } else
+            {
+                canAddChannelNow = YES;
+                [removeObjects addObject:channel];
+            }
+            
+            if (canAddChannelNow)
+            {
+                channel.isLoaded = YES;
+                NSInteger index = [self whatActualIndexIsChannel:name];
+                [indexSet addIndex:index];
+                SWChannelModel *model = [allChannelsEver objectForKey:name];
+                NSLog(@"inserting channel '%@' at index \t\t'%d' priority = \t\t'%f' ", name, index, model.priority);
+                [self.channels insertObject:channel atIndex:index];
+            }
         }
         
         [weakSelf.channelsCollectionView insertSections:indexSet];
         
-        [queuedChannels removeAllObjects];
+        [queuedChannels removeObjectsInArray:removeObjects];
+        
         
     } completion:^(BOOL finished){}];
 
@@ -510,8 +593,16 @@
         [_selectedSWChannelCell customSetSelected:NO animated:YES];
         _selectedSWChannelCell = nil;
     }
+    
+    if (! self.hasUserSeenWalkthrough )
+    {
+        [self createFirstWalkThrough];
+    }
 
 }
+
+
+
 -(void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
@@ -531,6 +622,7 @@
         SWChannelCell *channelCell = (SWChannelCell*)[collectionView cellForItemAtIndexPath:indexPath];
         _selectedSWChannelCell = channelCell;
         [channelCell customSetSelected:YES animated:NO];
+        [self endTutorial];
         [self openChannel:channels[indexPath.section]];
     } else
     if (collectionView == _autoCompleteCollectionView && !_isJoiningOrCreatingAChannel)
@@ -549,6 +641,11 @@
         {
             NSLog(@"done joining channel queryResult.text = %@, error = %@", queryResult.text, error.localizedDescription);
             [weakSelf setNavBarHighlighted:NO];
+            if (![self hasUserSeenWalkthrough])
+            {
+                _userAddedChannelNamedThisDuringWalkthrough = _channelQueryTerm;
+                [self createThirdWalkthroughWithChannelName:_channelQueryTerm];
+            }
         }];
     }
 }
@@ -709,6 +806,23 @@
 
 -(void)setNavBarHighlighted:(BOOL)highlighted
 {
+    
+    if (_firstWalkthrough)
+    {
+        [self animateTheDisappearanceOfWalkthroughView:_firstWalkthrough delay:0.0f completionBlock:^
+        {
+            [_firstWalkthrough removeFromSuperview];
+            _firstWalkthrough = nil;
+            
+            [self createSecondWalkthrough];
+        }];
+    }
+    
+    if (_thirdWalkthrough)
+    {
+        [self endTutorial];
+    }
+    
     [_addOrCreateContainer setBackgroundColor:[UIColor whiteColor]];
     _isJoiningOrCreatingAChannel = NO;
     if (navBarIsAnimating)
@@ -860,6 +974,13 @@
          NSLog(@"done query '%@' with requests: '%d'", originalQuery, request.results.count);
          if ([originalQuery isEqualToString:weakSelf.channelQueryTerm])
          {
+             if (_secondWalkthrough)
+             {
+                 [self animateTheDisappearanceOfWalkthroughView:_secondWalkthrough delay:0.0f completionBlock:^{
+                     [_secondWalkthrough removeFromSuperview];
+                     _secondWalkthrough = nil;
+                 }];
+             }
              weakSelf.channelQueryExists = [NSNumber numberWithBool:hasExactMatch];
              weakSelf.autoCompleteResults = request.results;
              [weakSelf.autoCompleteCollectionView reloadData];
@@ -896,6 +1017,9 @@
         [_addOrCreateContainer setBackgroundColor:[UIColor colorWithWhite:230/255.0f alpha:1.0f]];
         _isJoiningOrCreatingAChannel = YES;
         __weak SWChannelsViewController *weakSelf = self;
+        
+
+        
         [self removeAllAutoCompletesExcept:_channelQueryTerm];
         
         if ([_channelQueryExists boolValue])
@@ -903,12 +1027,22 @@
             [SWChannelModel joinChannel:_channelQueryTerm withCompletion:^(NSError *error)
             {
                 [weakSelf setNavBarHighlighted:NO];
+                if (![self hasUserSeenWalkthrough])
+                {
+                    _userAddedChannelNamedThisDuringWalkthrough = _channelQueryTerm;
+                    [self createThirdWalkthroughWithChannelName:_channelQueryTerm];
+                }
             }];
         } else
         {
             [SWChannelModel createChannel:_channelQueryTerm withCompletion:^(NSError *error)
             {
                 [weakSelf setNavBarHighlighted:NO];
+                if (![self hasUserSeenWalkthrough])
+                {
+                    _userAddedChannelNamedThisDuringWalkthrough = _channelQueryTerm;
+                    [self createThirdWalkthroughWithChannelName:_channelQueryTerm];
+                }
             }];
         }
     }
@@ -949,5 +1083,186 @@
     [self addOrCreateChannel:nil];
     return NO;
 }
+
+//generate walktrhoughs
+-(void)createFirstWalkThrough
+{
+    CGSize viewSize = CGSizeMake(584*0.5f, 140*0.5f);
+    UILabel *pressThePlusLabel = [[UILabel alloc] initWithFrame:CGRectMake( 0, 0, viewSize.width, viewSize.height)];
+    [pressThePlusLabel setTextAlignment:NSTextAlignmentCenter];
+    [pressThePlusLabel setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [pressThePlusLabel setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [pressThePlusLabel setText:@"Press the plus button to get started."];
+    
+    
+    _firstWalkthrough = [[WalkthroughView alloc] initWithFrame:CGRectMake( (self.view.bounds.size.width - viewSize.width)*0.5f, 308*0.5f, viewSize.width, viewSize.height)];
+    [_firstWalkthrough addSubview:pressThePlusLabel];
+
+    [self.view addSubview:_firstWalkthrough];
+    [self addParalaxShiftTiltToView:_firstWalkthrough];
+    [self animateTheAppearanceOfWalkthroughView:_firstWalkthrough delay:0.0f completionBlock:^{}];
+}
+
+-(void)animateTheAppearanceOfWalkthroughView:(UIView*)walkthroughView delay:(CGFloat)delay completionBlock:(void(^)(void))completionBlock
+{
+    walkthroughView.alpha = 0.0f;
+    walkthroughView.transform = CGAffineTransformConcat( CGAffineTransformMakeScale(0.7f, 0.7f), CGAffineTransformMakeTranslation(0, 40) );
+    
+    [UIView animateWithDuration:1.3f delay:delay usingSpringWithDamping:1.2 initialSpringVelocity:1.2 options:UIViewAnimationOptionCurveEaseIn animations:^
+    {
+        walkthroughView.alpha = 1.0f;
+        walkthroughView.transform = CGAffineTransformMakeTranslation(0, 0);
+    } completion:^(BOOL finished)
+    {
+        if (completionBlock)
+        {
+            completionBlock();
+        }
+    }];
+}
+
+-(void)createSecondWalkthrough
+{
+    CGSize size = CGSizeMake(555*0.5f, 291*0.5f);
+ 
+    
+    UILabel *thisIsHow = [[UILabel alloc] initWithFrame:CGRectMake( 0, 25, size.width, 20.5f)];
+    [thisIsHow setTextAlignment:NSTextAlignmentCenter];
+    [thisIsHow setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [thisIsHow setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [thisIsHow setText:@"This is how you add hashtags."];
+    
+    
+    UILabel *tryAddingTheHashtag = [[UILabel alloc] initWithFrame:CGRectMake( 0, thisIsHow.frame.size.height + thisIsHow.frame.origin.y + 4.5f, size.width, 20.5f)];
+    [tryAddingTheHashtag setTextAlignment:NSTextAlignmentCenter];
+    [tryAddingTheHashtag setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [tryAddingTheHashtag setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [tryAddingTheHashtag setText:@"Try adding the hashtag:"];
+    
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(158*0.5f, 198*0.5, 39*0.5f, 39*0.5f)];
+    [imageView setContentMode:UIViewContentModeScaleAspectFit];
+    [imageView setImage:[UIImage imageNamed:@"small_hashtag"]];
+    UILabel *channelName = [[UILabel alloc] initWithFrame:CGRectMake( 210*0.5f, 194*0.5f-2, 181*0.5f, 47*0.5f)];
+    [channelName setTextAlignment:NSTextAlignmentLeft];
+    [channelName setFont:[UIFont fontWithName:@"Avenir-Black" size:34/2]];
+    [channelName setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [channelName setText:@"newusers"];
+    
+    
+    _secondWalkthrough = [[WalkthroughView alloc] initWithFrame:CGRectMake((self.view.frame.size.width-size.width)*0.5f, 211*0.5f, size.width, size.height)];
+    [_secondWalkthrough addSubview:thisIsHow];
+    [_secondWalkthrough addSubview:tryAddingTheHashtag];
+    [_secondWalkthrough addSubview:imageView];
+    [_secondWalkthrough addSubview:channelName];
+    
+    
+    [self.view addSubview:_secondWalkthrough];
+    [self animateTheAppearanceOfWalkthroughView:_secondWalkthrough delay:0.0f completionBlock:^{}];
+    [self addParalaxShiftTiltToView:_secondWalkthrough];
+    
+}
+
+-(void)createThirdWalkthroughWithChannelName:(NSString*)channelName
+{
+    CGSize size = CGSizeMake(555*0.5f, 316*0.5f);
+    
+    [self bindToChannels];
+    
+    _thirdWalkthrough = [[WalkthroughView alloc] initWithFrame:CGRectMake((self.view.frame.size.width-size.width)*0.5f, 378*0.5f, size.width, size.height)];
+    
+    
+    UILabel *yourFirstHashtag = [[UILabel alloc] initWithFrame:CGRectMake( 0, 25, size.width, 20.5f)];
+    [yourFirstHashtag setTextAlignment:NSTextAlignmentCenter];
+    [yourFirstHashtag setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [yourFirstHashtag setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [yourFirstHashtag setText:@"Your first hashtag! W00t!"];
+    
+    UILabel *swipeSuggestion = [[UILabel alloc] initWithFrame:CGRectMake( 0, yourFirstHashtag.frame.size.height + yourFirstHashtag.frame.origin.y + 43.0f * 0.5f, size.width, 20.5f)];
+    [swipeSuggestion setTextAlignment:NSTextAlignmentCenter];
+    [swipeSuggestion setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [swipeSuggestion setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [swipeSuggestion setText:@"Swipe a hashtag to mute or leave it."];
+    
+    UILabel *tapSuggestion = [[UILabel alloc] initWithFrame:CGRectMake( 0, swipeSuggestion.frame.size.height + swipeSuggestion.frame.origin.y + 44.0f * 0.5f, size.width, 20.5f)];
+    [tapSuggestion setTextAlignment:NSTextAlignmentCenter];
+    [tapSuggestion setFont:[UIFont fontWithName:@"Avenir-Book" size:15]];
+    [tapSuggestion setTextColor:[UIColor colorWithHexString:@"464C58"]];
+    [tapSuggestion setText:@"Tap a hashtag to chat."];
+    
+    
+    [_thirdWalkthrough addSubview:yourFirstHashtag];
+    [_thirdWalkthrough addSubview:swipeSuggestion];
+    [_thirdWalkthrough addSubview:tapSuggestion];
+    
+    [self.view addSubview:_thirdWalkthrough];
+    
+    [self addParalaxShiftTiltToView:_thirdWalkthrough];
+    
+    
+    [self animateTheAppearanceOfWalkthroughView:_thirdWalkthrough delay:0.0f completionBlock:^{}];
+    
+}
+
+-(void)animateTheDisappearanceOfWalkthroughView:(UIView*)walkthroughView delay:(CGFloat)delay completionBlock:(void(^)(void))completionBlock
+{
+
+    
+    [UIView animateWithDuration:1.3f delay:delay usingSpringWithDamping:1.2 initialSpringVelocity:1.2 options:UIViewAnimationOptionCurveEaseOut animations:^
+     {
+         walkthroughView.alpha = 0.0f;
+         walkthroughView.transform = CGAffineTransformMakeScale(0.7f, 0.7f);
+//         walkthroughView.transform = CGAffineTransformMakeTranslation(-320, 0);
+     } completion:^(BOOL finished)
+     {
+         if (completionBlock)
+         {
+             completionBlock();
+         }
+     }];
+}
+
+-(void)addParalaxShiftTiltToView:(UIView*)view
+{
+    UIInterpolatingMotionEffect *verticalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.y"
+     type:UIInterpolatingMotionEffectTypeTiltAlongVerticalAxis];
+    verticalMotionEffect.minimumRelativeValue = @(-25);
+    verticalMotionEffect.maximumRelativeValue = @(25);
+    
+    // Set horizontal effect
+    UIInterpolatingMotionEffect *horizontalMotionEffect =
+    [[UIInterpolatingMotionEffect alloc]
+     initWithKeyPath:@"center.x"
+     type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
+    horizontalMotionEffect.minimumRelativeValue = @(-10);
+    horizontalMotionEffect.maximumRelativeValue = @(10);
+    
+    // Create group to combine both
+    UIMotionEffectGroup *group = [UIMotionEffectGroup new];
+    group.motionEffects = @[horizontalMotionEffect, verticalMotionEffect];
+    
+    // Add both effects to your view
+    [view addMotionEffect:group];
+}
+
+-(void)endTutorial
+{
+    [self animateTheDisappearanceOfWalkthroughView:_thirdWalkthrough delay:0.0f completionBlock:^{
+        [_thirdWalkthrough removeFromSuperview];
+        _thirdWalkthrough = nil;
+        
+        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+        [prefs setBool:YES forKey:Objc_kNSUSERDEFAULTS_BOOLKEY_userHasSeenWalkthrough];
+        [prefs synchronize];
+        
+        [self insertChannelNow];
+        
+    }];
+}
+
+
+
 
 @end

@@ -187,7 +187,7 @@ static QueryChannelRequest *pendingRequest;
     
     NSString *url2 = [NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, userId, channelName];
     Firebase *myChannelsRef = [[Firebase alloc] initWithUrl:url2];
-    [myChannelsRef setValue:@{@"lastSeen":@0, @"muted":@NO} andPriority:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSince1970] *1000] withCompletionBlock:^(NSError *error2, Firebase *firebase)
+    [myChannelsRef setValue:@{@"lastSeen":@0, @"muted":@NO} andPriority:kFirebaseServerValueTimestamp withCompletionBlock:^(NSError *error2, Firebase *firebase)
      {
          if (error2)
          {
@@ -288,65 +288,75 @@ static QueryChannelRequest *pendingRequest;
 
 
 #pragma mark functions
+-(id)initWithoutData
+{
+    if (self = [super init])
+    {
+        _isLoaded = NO;
+    }
+    return self;
+}
+-(void)doInitializationWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta
+{
+    isSynchronized = YES;
+    lastSeen = 0.0;
+    lastPriorityToSet = 0.0;
+    
+    [self initializeFrom:dictionary meta:meta andUrl:url];
+
+#warning what the fuck is going down below here? It does not update UI, only key-values and no keyvalue observing?  I think this is antiquated.
+    //        //firebase observing bellow
+    NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
+    NSString *lastSeenUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/lastSeen", Objc_kROOT_FIREBASE, myId, name];
+    //        Firebase *lastSeenFB = [[Firebase alloc] initWithUrl:lastSeenUrl];
+    //
+    //        [lastSeenFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
+    //        {
+    //
+    //            if ([snap.value isKindOfClass:[NSNumber class]])
+    //            {
+    //                double newLastSeen = [((NSNumber*)snap.value) doubleValue];
+    //                if (lastSeen != newLastSeen)
+    //                {
+    //                    lastSeen = newLastSeen;
+    //                    isSynchronized = NO;
+    //                    //self.delegate?.channel(self, receivedNewMessage: nil)
+    //                }
+    //            }
+    //        }];
+    
+    NSString *mutedUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/muted", Objc_kROOT_FIREBASE, myId, name];
+    mutedFirebase = [[Firebase alloc] initWithUrl:mutedUrl];
+    [mutedFirebase observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snapshot)
+     {
+         if ([snapshot.value isKindOfClass:[NSNumber class]])
+         {
+             BOOL isMuted = [((NSNumber*)snapshot.value) boolValue];
+             if (isMuted != muted)
+             {
+                 self.muted = isMuted; //setMuted:(BOOL) called
+             }
+         }
+     }];
+    
+    //channelReorder listener! set priority on this when value change on latestMessagePriorityUrl
+    NSString *latestMessagePriorityUrl = [NSString stringWithFormat:@"%@channels/%@/meta/latestMessagePriority", Objc_kROOT_FIREBASE, name];
+    latestMessagePriority = [[Firebase alloc] initWithUrl:latestMessagePriorityUrl];
+    [latestMessagePriority observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
+     {
+         NSNumber *priority = snapshot.value;
+         if (priority && [priority isKindOfClass:[NSNumber class]])
+         {
+             [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, myId, name]]
+              setPriority:priority];
+         }
+     }];
+}
 -(id)initWithDictionary:(NSDictionary*)dictionary andUrl:(NSString*)url andChannelMeta:(NSDictionary*)meta
 {
     if (self = [super init])
     {
-        isSynchronized = YES;
-        lastSeen = 0.0;
-        lastPriorityToSet = 0.0;
-        
-        [self initializeFrom:dictionary meta:meta andUrl:url];
-        
-        
-#warning what the fuck is going down below here? It does not update UI, only key-values and no keyvalue observing?  I think this is antiquated.
-//        //firebase observing bellow
-        NSString *myId = [[NSUserDefaults standardUserDefaults] objectForKey:Objc_kNSUSERDEFAULTS_KEY_userId];
-        NSString *lastSeenUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/lastSeen", Objc_kROOT_FIREBASE, myId, name];
-//        Firebase *lastSeenFB = [[Firebase alloc] initWithUrl:lastSeenUrl];
-//        
-//        [lastSeenFB observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snap)
-//        {
-//            
-//            if ([snap.value isKindOfClass:[NSNumber class]])
-//            {
-//                double newLastSeen = [((NSNumber*)snap.value) doubleValue];
-//                if (lastSeen != newLastSeen)
-//                {
-//                    lastSeen = newLastSeen;
-//                    isSynchronized = NO;
-//                    //self.delegate?.channel(self, receivedNewMessage: nil)
-//                }
-//            }
-//        }];
-        
-        NSString *mutedUrl = [NSString stringWithFormat:@"%@users/%@/channels/%@/muted", Objc_kROOT_FIREBASE, myId, name];
-        mutedFirebase = [[Firebase alloc] initWithUrl:mutedUrl];
-        [mutedFirebase observeEventType:FEventTypeValue withBlock:^(FDataSnapshot* snapshot)
-        {
-            if ([snapshot.value isKindOfClass:[NSNumber class]])
-            {
-                BOOL isMuted = [((NSNumber*)snapshot.value) boolValue];
-                if (isMuted != muted)
-                {
-                    self.muted = isMuted; //setMuted:(BOOL) called
-                }
-            }
-        }];
-        
-        //channelReorder listener! set priority on this when value change on latestMessagePriorityUrl
-        NSString *latestMessagePriorityUrl = [NSString stringWithFormat:@"%@channels/%@/meta/latestMessagePriority", Objc_kROOT_FIREBASE, name];
-        latestMessagePriority = [[Firebase alloc] initWithUrl:latestMessagePriorityUrl];
-        [latestMessagePriority observeEventType:FEventTypeValue withBlock:^(FDataSnapshot *snapshot)
-        {
-            NSNumber *priority = snapshot.value;
-            if (priority && [priority isKindOfClass:[NSNumber class]])
-            {
-                [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/channels/%@", Objc_kROOT_FIREBASE, myId, name]]
-                 setPriority:priority];
-            }
-        }];
-        
+        [self doInitializationWithDictionary:dictionary andUrl:url andChannelMeta:meta];
     }
     return self;
 }
