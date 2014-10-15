@@ -16,13 +16,13 @@
 +(void)RegisterRemoteNotifications
 {
 //#ifdef __IPHONE_8_0
-//    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)])
-//    {
-//        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-//                                                                                             |UIRemoteNotificationTypeSound
-//                                                                                             |UIRemoteNotificationTypeAlert) categories:nil];
-//        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
-//    } else
+    if ([[UIApplication sharedApplication] respondsToSelector:@selector(registerUserNotificationSettings:)])
+    {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
+                                                                                             |UIRemoteNotificationTypeSound
+                                                                                             |UIRemoteNotificationTypeAlert) categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    } else
 //#else
     {
         //register to receive notifications
