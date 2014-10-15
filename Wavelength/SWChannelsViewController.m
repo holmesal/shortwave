@@ -461,16 +461,28 @@
 -(void)insertChannelNow
 {
     NSLog(@"*****insertChannelNow**** %@", _userAddedChannelNamedThisDuringWalkthrough);
-    [queuedChannels sortUsingComparator:^(SWChannelModel *a, SWChannelModel *b)
+    [queuedChannels sortUsingComparator:^NSComparisonResult(SWChannelModel *a, SWChannelModel *b)
     {
         if (a.priority == b.priority)
         {
             int aIndx = [channelNamesOrdering indexOfObject:a.name];
             int bIndx = [channelNamesOrdering indexOfObject:b.name];
-            
-            return aIndx > bIndx;
+            //NSOrderedAscending = -1L, NSOrderedSame, NSOrderedDescending
+            if ( aIndx > bIndx )
+            {
+                return NSOrderedDescending;
+            } else
+            {
+                return NSOrderedAscending;
+            }
         }
-        return a.priority < b.priority;
+        if ( a.priority < b.priority )
+        {
+            return NSOrderedDescending;
+        } else
+        {
+            return NSOrderedAscending;
+        }
     }];
     
     NSLog(@"**printing channelNamesOrdering");

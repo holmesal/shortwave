@@ -149,8 +149,8 @@
     [[UIInterpolatingMotionEffect alloc]
      initWithKeyPath:@"center.x"
      type:UIInterpolatingMotionEffectTypeTiltAlongHorizontalAxis];
-    horizontalMotionEffect.minimumRelativeValue = @(-10);
-    horizontalMotionEffect.maximumRelativeValue = @(10);
+    horizontalMotionEffect.minimumRelativeValue = @(-25);
+    horizontalMotionEffect.maximumRelativeValue = @(25);
     
     // Create group to combine both
     UIMotionEffectGroup *group = [UIMotionEffectGroup new];
