@@ -24,6 +24,7 @@
 @interface SWChannelsViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UIGestureRecognizerDelegate, UITextFieldDelegate>
 
 
+@property (weak, nonatomic) IBOutlet UIButton *cancelAddButton;
 @property (strong, nonatomic) WalkthroughView *firstWalkthrough;
 @property (strong, nonatomic) WalkthroughView *secondWalkthrough;
 @property (strong, nonatomic) WalkthroughView *thirdWalkthrough;
@@ -167,6 +168,7 @@
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    _cancelAddButton.alpha = 0.0f;
     queuedChannels = [[NSMutableArray alloc] init];
     
     _addOrCreateContainer.alpha = 0.0f;
@@ -856,6 +858,11 @@
     
         [_addChannelAutoCompleteContainer setAlpha:highlighted ? 1.0f : 0.0f];
         
+        if ([self hasUserSeenWalkthrough])
+        {
+            _cancelAddButton.alpha = highlighted ? 1.0f : 0.0f;
+        }
+        
         if (!highlighted)
         {
             [_addChannelTextField setTransform:CGAffineTransformMakeScale(0.1, 1.0)];
@@ -1274,6 +1281,11 @@
     }];
 }
 
+- (IBAction)cancelAddButtonAction:(id)sender
+{
+    [self setNavBarHighlighted:NO];
+    
+}
 
 
 

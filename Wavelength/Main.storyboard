@@ -347,6 +347,16 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="bluebarFlat" highlightedImage="bluebarSelected" translatesAutoresizingMaskIntoConstraints="NO" id="Soe-fA-KtE">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="53"/>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d69-FI-TVb">
+                                        <rect key="frame" x="0.0" y="5" width="40" height="44"/>
+                                        <state key="normal" title="x">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelAddButtonAction:" destination="rNa-3c-ERD" eventType="touchUpInside" id="SV8-8I-8eB"/>
+                                        </connections>
+                                    </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="i5J-d7-uiO">
                                         <rect key="frame" x="30" y="5" width="260" height="44"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -582,6 +592,7 @@
                         <outlet property="addOrCreateLabel" destination="cyD-0H-eho" id="wba-dN-FSL"/>
                         <outlet property="autoCompleteCollectionView" destination="aVA-k0-KTw" id="eZk-KW-1Ub"/>
                         <outlet property="bluebarFlat" destination="Soe-fA-KtE" id="6F5-Gx-KdI"/>
+                        <outlet property="cancelAddButton" destination="d69-FI-TVb" id="yQT-c0-fzx"/>
                         <outlet property="channelsCollectionView" destination="ATT-u7-tu5" id="Pcc-Jk-mNg"/>
                         <outlet property="navBar" destination="Cyl-vy-rqG" id="rii-Lu-Swe"/>
                         <outlet property="navBarImageViewBG" destination="Soe-fA-KtE" id="ePD-jJ-KqB"/>
