@@ -927,7 +927,7 @@
 				INFOPLIST_FILE = "Wavelength/hashtag-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = hashtag;
-				PROVISIONING_PROFILE = "6579dc60-ad5f-4051-b487-0928d0b4d16b";
+				PROVISIONING_PROFILE = "4ac65d58-439a-4bae-ade7-226bb7871ece";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
