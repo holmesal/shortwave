@@ -438,6 +438,7 @@
 {
     NSString *filePathFromUrl = [self filePathForMp4Url:mp4Url];
 //    NSLog(@"filePathFromUrlMp4 = %@", filePathFromUrl);
+//    return;
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePathFromUrl])
     {
@@ -471,6 +472,7 @@
 
 -(void)loadImage:(NSString *)urlString completionBlock:(void (^)(UIImage *img, BOOL synchronous))completionBlock progressBlock:(void (^)(float progress))progressBlock
 {
+    
     NSString *name = [urlString MD5String];
     NSString *filePathFromUrl = [[self cacheDirectoryName] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.data", name ]];
     
@@ -484,13 +486,29 @@
     } else
     if ([[NSFileManager defaultManager] fileExistsAtPath:filePathFromUrl])
     {
-        NSData *imgData = [[NSData alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePathFromUrl]];
-        UIImage *img = [[UIImage alloc] initWithData:imgData];
+        dispatch_queue_t myQueue = dispatch_queue_create("LoadFileQueue",NULL);
+        dispatch_async(myQueue, ^{
+            // Perform long running process
+            
+            NSData *imgData = [[NSData alloc] initWithContentsOfURL:[NSURL fileURLWithPath:filePathFromUrl]];
+            UIImage *img = [[UIImage alloc] initWithData:imgData];
+            
+            img = [SWImageLoader reduceImage:img];
+            
+            
+            DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:img];
+            NSString *key = urlString;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Update the UI
+
+                [self.cache setObject:discardableImage forKey:key];
+                completionBlock(img, NO);
+            });
+        }); 
+
+
         
-        DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:img];
-        NSString *key = urlString;
-        [self.cache setObject:discardableImage forKey:key];
-        completionBlock(img, YES);
         
     } else
     {
@@ -526,7 +544,44 @@
     }
 }
 
-
++(UIImage*)imageWithImage:(UIImage*)image
+              scaledToSize:(CGSize)newSize;
+{
+    UIGraphicsBeginImageContext( newSize );
+    [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
++(UIImage*)reduceImage:(UIImage*)image
+{
+    return [SWImageLoader imageWithMaxSize:CGSizeMake(320*2, 680*2) fromImage:image];
+}
++(UIImage*)imageWithMaxSize:(CGSize)maxSize fromImage:(UIImage*)image
+{
+    CGSize originalImageSize = image.size;
+    
+    if (originalImageSize.height > maxSize.height || originalImageSize.width > maxSize.width)
+    {
+        CGSize targetSize;
+        CGSize fitWidthTargetSize = CGSizeMake(maxSize.width, maxSize.width/originalImageSize.width * originalImageSize.height);
+        
+        if (fitWidthTargetSize.height <= maxSize.height)
+        {
+            targetSize = fitWidthTargetSize;
+        } else
+        {
+            CGSize fitHeightTargetSize = CGSizeMake(maxSize.height/originalImageSize.height * originalImageSize.width, maxSize.height);
+            targetSize = fitHeightTargetSize;
+        }
+        
+        return [SWImageLoader imageWithImage:image scaledToSize:targetSize];
+        
+    }
+    
+    return image;
+}
 
 -(BOOL)hasImage:(NSString *)urlString
 {
@@ -534,13 +589,24 @@
     return discardableImage && [discardableImage getImage];
 }
 
+
 //internal helper methods
 -(void (^)(void))completionBlockForParcel:(DataLoadingParcel*)parcel completionBlock:(void (^)(UIImage *img, BOOL syncrhonous))completionBlock
 {
     return ^{
         NSData *data = parcel.receivedData;
+
+        
+       
+        NSLog(@"**image loaded '%@'", parcel.url.absoluteString);
         UIImage *image = [UIImage imageWithData:data];
-        //store discardableImage
+        NSLog(@"bytes %d size %@", data.length, NSStringFromCGSize([image size])); //store discardableImage
+        
+        image = [SWImageLoader reduceImage:image];
+        NSLog(@"**image reduced '%@'", parcel.url.absoluteString);
+//        NSLog(@"bytes %d size %@", data.length, NSStringFromCGSize([image size])); //store discardableImage
+        
+ 
         DiscardableImage *discardableImage = [[DiscardableImage alloc] initWithImage:image];
         NSString *key = [parcel key];
         

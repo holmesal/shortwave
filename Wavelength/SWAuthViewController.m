@@ -95,7 +95,7 @@
     [authButton.layer addSublayer:layer];
     
     isFirstTime = ![[NSUserDefaults standardUserDefaults] boolForKey:Objc_kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn];
-    if (!isFirstTime && NO)
+    if (!isFirstTime)
     {
         [self beginAuthWithFirebase];
     } else
@@ -182,7 +182,10 @@
         [UIView animateWithDuration:1.3f delay:0.1f usingSpringWithDamping:1.2f initialSpringVelocity:2.0f options:UIViewAnimationOptionCurveLinear animations:^
         {
             _hashtagCenterVertical.constant = 76.5f;
-            _welcomeLabel.alpha = 1.0f;
+            if (isFirstTime)
+            {
+                _welcomeLabel.alpha = 1.0f;
+            }
             _welcomeCenterConstraint.constant = -30.0f;
             [self.hashtagImageView.superview layoutIfNeeded];
         } completion:^(BOOL finished){}];

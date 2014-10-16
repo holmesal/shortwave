@@ -7,19 +7,18 @@
 //
 
 #import "SWTextCell.h"
+#import "CustomTextView.h"
 
 @interface SWTextCell ()
 
 
-@property (weak, nonatomic) IBOutlet UIImageView *profileImageView;
-@property (weak, nonatomic) IBOutlet UITextView *messageText;
+@property (strong, nonatomic) IBOutlet UITextView *messageText;
 
-@property (weak, nonatomic) IBOutlet UILabel *firstNameLabel;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *heightOfTextConstraint;
-@property (weak, nonatomic) IBOutlet UILabel *priorityLabel;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *textHeightConstraint;
 
 @property (weak, nonatomic) IBOutlet UIView *containerVIew;
+@property (weak, nonatomic) IBOutlet CustomTextView *customTextView;
 
 @end
 
@@ -27,10 +26,8 @@
 
 @synthesize ownerID;
 @synthesize messageText;
-@synthesize profileImageView;
-@synthesize firstNameLabel;
 
-@synthesize priorityLabel;
+
 @synthesize containerVIew;
 @synthesize textHeightConstraint;
 
@@ -40,13 +37,8 @@
 //    [profileImageView setContentMode:UIViewContentModeScaleAspectFill];
     messageText.dataDetectorTypes = UIDataDetectorTypeAll;
     
-    
-    CALayer *circle = [CALayer layer];
-    circle.cornerRadius = profileImageView.frame.size.height/2;
-    circle.frame = profileImageView.bounds;
-    circle.backgroundColor = [UIColor blackColor].CGColor;
-    
-    profileImageView.layer.mask = circle;
+    [messageText removeFromSuperview];
+//    [messageText setScrollEnabled:NO];
     containerVIew.transform = CGAffineTransformMakeRotation(M_PI);
 //    containerVIew.backgroundColor = [UIColor colorWithRed:1 green:0 blue:0 alpha:0.5];
 //    self.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.4];
@@ -66,24 +58,24 @@
     {
         [UIView animateWithDuration:0.6f delay:0.0f usingSpringWithDamping:1.2f initialSpringVelocity:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^
          {
-             profileImageView.alpha = targetAlpha;
+//             profileImageView.alpha = targetAlpha;
              self.messageText.alpha = targetAlpha;
          } completion:^(BOOL finishd){}];
     } else
     {
-        profileImageView.alpha = targetAlpha;
+//        profileImageView.alpha = targetAlpha;
         self.messageText.alpha  = targetAlpha;
     }
 }
 
 -(void)setProfileImage:(UIImage*)image
 {
-    self.profileImageView.image = image;
-    self.profileImageView.alpha = 0.0f;
-    [UIView animateWithDuration:0.15 delay:0.0f usingSpringWithDamping:0.8 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveLinear animations:^
-    {
-        self.profileImageView.alpha = 1.0f;
-    } completion:^(BOOL finished){}];
+//    self.profileImageView.image = image;
+//    self.profileImageView.alpha = 0.0f;
+//    [UIView animateWithDuration:0.15 delay:0.0f usingSpringWithDamping:0.8 initialSpringVelocity:1.0 options:UIViewAnimationOptionCurveLinear animations:^
+//    {
+//        self.profileImageView.alpha = 1.0f;
+//    } completion:^(BOOL finished){}];
 }
 
 -(void)setModel:(MessageModel *)model
@@ -96,16 +88,22 @@
     NSAttributedString *attributedText =[[NSAttributedString alloc] initWithString:model.text attributes:
                                          @{ NSFontAttributeName: font }] ;
     
+    [_customTextView setLabel:attributedText size:CGSizeMake(_customTextView.frame.size.width, model.cachedCellHeight + 10*3) font:font width:_customTextView.frame.size.width point:CGPointZero alignment:NSTextAlignmentLeft color:[messageText textColor]];
+    
 
     messageText.attributedText = attributedText;
     
 //    firstNameLabel.text = model.displayName;
-    priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
+//    priorityLabel.text = [NSString stringWithFormat:@"%f", model.priority];
     
-    self.profileImageView.image = nil;
-//    messageText.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-//    messageText.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.5];
-    textHeightConstraint.constant = [SWTextCell heightOfMessageTextViewWithInput:model.text].height + 10*3;
+//    self.profileImageView.image = nil;
+////    messageText.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+////    messageText.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.5];
+    textHeightConstraint.constant = model.cachedCellHeight + 10*3 - 7;
+    
+    
+//    - (void)_drawLabel:(NSString *)label withFont:(UIFont *)font forWidth:(CGFloat)width
+//atPoint:(CGPoint)point withAlignment:(UITextAlignment)alignment color:(UIColor *)color
     
     super.model = model;
 }
@@ -128,6 +126,9 @@
 //    CGSize size = [fakeLabel sizeThatFits:fakeLabel.frame.size];//[attributedText boundingRectWithSize:CGSizeMake(232, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
     CGSize size = [attributedText boundingRectWithSize:CGSizeMake(232-2-10, 400) options:(NSStringDrawingUsesLineFragmentOrigin) context:nil].size;
     
+//    size.height = 10*3;
+    
+    
     return size;
 }
 +(CGFloat)heightWithMessageModel:(MessageModel*)model
@@ -141,5 +142,7 @@
     
     return size.height;
 }
+
+
 
 @end

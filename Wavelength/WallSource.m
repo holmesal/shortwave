@@ -27,7 +27,7 @@
 
 #define kMAX_NUMBER_OF_MESSAGES 100
 #define kWallCollectionView_MAX_CELLS_INSERT 20
-#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.1f
+#define kWallCollectionView_CELL_INSERT_TIMEOUT 0.5f
 
 
 
@@ -492,7 +492,7 @@
 -(void)insertMessagesToWallNow:(id)sender
 {
     //no longer consider messages in queue as 'pending'
-    NSLog(@"are newest messages first?");
+//    NSLog(@"are newest messages first?");
     /*
      NSArray *sortedArray = [unsortedArray sortedArrayUsingComparator:^NSComparisonResult(NSDictionary* a, NSDictionary* b) {
      NSInteger rowA = ((NSIndexPath*)a[@"indexPath"]).row;
@@ -548,10 +548,10 @@
                 }
             }
             
-            NSLog(@"I want to insertSection %d", insertSectionIndex);
+//            NSLog(@"I want to insertSection %d", insertSectionIndex);
             [sections insertObject:newSection atIndex:insertSectionIndex];
             [indexSet addIndex:insertSectionIndex];
-            NSLog(@"insertSet = %@", indexSet);
+//            NSLog(@"insertSet = %@", indexSet);
         }
         
         for (MessageModel *messageModel in wallQueue)

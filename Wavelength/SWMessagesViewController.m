@@ -20,6 +20,8 @@
 #import "MessageFile.h"
 #import "SWChannelModel.h"
 #import "SWAtMentionCell.h"
+#import "SWImageLoader.h"
+#import "AppDelegate.h"
 
 #define kAutoCompleteCellHeight 40.0f
 
@@ -49,6 +51,8 @@
 @property (strong, nonatomic) UICollisionBehavior *collision;
 
 
+@property (strong, nonatomic) AVPlayer *player;
+
 ////upload specs
 //@property (strong, nonatomic) NSString *fileName;
 //@property (assign, nonatomic) CGSize imageSize;
@@ -59,6 +63,7 @@
 
 @implementation SWMessagesViewController
 @synthesize uploadProgressView;
+@synthesize player;
 
 @synthesize channelModel;
 -(void)setChannelModel:(SWChannelModel *)newValue
@@ -596,10 +601,26 @@
                 MessageGif *gifMessage = (MessageGif*)messageModel;
                 createTemopraryEnlargedView();
                 
-                AVPlayer *player = gifMessage.player;
+                
+                AppDelegate *appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+                SWImageLoader *imageLoader = appDelegate.imageLoader;
+                
+                player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:[imageLoader filePathForMp4Url:gifMessage.mp4]]];
+                player.muted = YES;
+                
+                //    playerLayer = [AVPlayerLayer playerLayerWithPlayer:_player];
+                
+                player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
+                
                 AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:player];
+                [player play];
                 playerLayer.bounds = self.view.bounds;
                 playerLayer.position = CGPointMake(playerLayer.bounds.size.width*0.5f, playerLayer.bounds.size.height*0.5f);
+                
+                [[NSNotificationCenter defaultCenter] addObserver:self
+                                                         selector:@selector(playerItemDidReachEnd:)
+                                                             name:AVPlayerItemDidPlayToEndTimeNotification
+                                                           object:[player currentItem]];
                 
                 [temporaryEnlargedView.layer addSublayer:playerLayer];
             }
@@ -617,6 +638,9 @@
                 } completion:^(BOOL finished){
                     [temporaryEnlargedView removeFromSuperview];
                     temporaryEnlargedView = nil;
+                    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[player currentItem]];
+                    player = nil;
+
                 }];
             }
         }
@@ -625,6 +649,19 @@
         default:
             break;
     }
+}
+
+-(void)playerItemDidReachEnd:(NSNotification*)note
+{
+    //    if (note.object == self.gifMessage.playerItem)
+    //    {
+    //
+    NSLog(@"playerItemDidReachEnd");
+    
+    [player seekToTime:kCMTimeZero];
+    //        [_player play];
+    //
+    //    }
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView

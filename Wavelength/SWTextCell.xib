@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6249" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -14,17 +14,17 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="33"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7OF-hz-CJz">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="33"/>
+                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7OF-hz-CJz">
+                        <rect key="frame" x="1" y="0.0" width="320" height="33"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S1x-dI-oeo">
                                 <rect key="frame" x="69" y="0.0" width="232" height="33"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="Tr4-AO-BTW"/>
                                     <constraint firstAttribute="width" constant="232" id="wi7-o6-lR3"/>
+                                    <constraint firstAttribute="height" constant="33" id="ySE-uM-rU4"/>
                                 </constraints>
-                                <mutableString key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</mutableString>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" red="0.078431372550000003" green="0.078431372550000003" blue="0.078431372550000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -32,16 +32,25 @@
                                     <userDefinedRuntimeAttribute type="string" keyPath="fontName" value="Avenir-Light"/>
                                 </userDefinedRuntimeAttributes>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uHQ-bw-yVc" customClass="CustomTextView">
+                                <rect key="frame" x="74" y="7" width="232" height="33"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="232" id="Hcc-eV-JuC"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="S1x-dI-oeo" firstAttribute="leading" secondItem="7OF-hz-CJz" secondAttribute="leading" constant="69" id="7Ya-Vs-Xcf"/>
                             <constraint firstItem="S1x-dI-oeo" firstAttribute="top" secondItem="7OF-hz-CJz" secondAttribute="top" id="M8i-E2-RMJ"/>
+                            <constraint firstItem="uHQ-bw-yVc" firstAttribute="top" secondItem="7OF-hz-CJz" secondAttribute="top" constant="7" id="b2i-Lf-C5c"/>
+                            <constraint firstItem="uHQ-bw-yVc" firstAttribute="leading" secondItem="7OF-hz-CJz" secondAttribute="leading" constant="74" id="uTw-5n-QGF"/>
+                            <constraint firstItem="uHQ-bw-yVc" firstAttribute="height" secondItem="7OF-hz-CJz" secondAttribute="height" id="zPv-8v-NXr"/>
                         </constraints>
                     </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -53,9 +62,15 @@
             <size key="customSize" width="320" height="33"/>
             <connections>
                 <outlet property="containerVIew" destination="7OF-hz-CJz" id="iSa-Sa-EhE"/>
+                <outlet property="customTextView" destination="uHQ-bw-yVc" id="S6s-5P-pwc"/>
                 <outlet property="messageText" destination="S1x-dI-oeo" id="OBH-lS-A5b"/>
-                <outlet property="textHeightConstraint" destination="Tr4-AO-BTW" id="vF2-le-68h"/>
+                <outlet property="textHeightConstraint" destination="ySE-uM-rU4" id="DBG-o8-RfA"/>
             </connections>
         </collectionViewCell>
     </objects>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>
