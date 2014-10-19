@@ -375,6 +375,8 @@
 {
     NSDictionary *thirdPartyUserData = user.thirdPartyUserData;
     NSString *firstName = thirdPartyUserData[@"first_name"];
+    NSString *lastName = thirdPartyUserData[@"last_name"];
+    
     NSDictionary *picture = thirdPartyUserData[@"picture"];
     
     Firebase *setPhotoFB = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/photo/", Objc_kROOT_FIREBASE, user.uid]];
@@ -390,14 +392,15 @@
         [setPhotoFB setValue:photo];
     }
     [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/firstName/", Objc_kROOT_FIREBASE, user.uid]] setValue:firstName];
-    
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/lastName/", Objc_kROOT_FIREBASE, user.uid]] setValue:lastName];
+
+    ;    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     [prefs setBool:YES forKey:Objc_kNSUSERDEFAULTS_BOOLKEY_userIsLoggedIn];
     [prefs setObject:user.uid forKey:Objc_kNSUSERDEFAULTS_KEY_userId];
     [prefs synchronize];
     
     
-    [[Mixpanel sharedInstance] createAlias:firstName forDistinctID:user.uid];
+    [[Mixpanel sharedInstance] createAlias:[NSString stringWithFormat:@"%@ %@", firstName, lastName] forDistinctID:user.uid];
     [[Mixpanel sharedInstance] identify:user.uid];
     [[Mixpanel sharedInstance] track:@"Authentication Success"];
     

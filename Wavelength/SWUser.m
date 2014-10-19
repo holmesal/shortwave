@@ -35,7 +35,7 @@
         
         if (!lastName)
         {
-            lastName = @"Lastname";
+            lastName = @"";
         }
         if (!userName)
         {
