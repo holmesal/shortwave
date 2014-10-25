@@ -462,6 +462,12 @@
 
 -(void)insertChannelNow
 {
+    if (insertChannelTimer)
+    {
+        [insertChannelTimer invalidate];
+        insertChannelTimer = nil;
+    }
+    
     NSLog(@"*****insertChannelNow**** %@", _userAddedChannelNamedThisDuringWalkthrough);
     [queuedChannels sortUsingComparator:^NSComparisonResult(SWChannelModel *a, SWChannelModel *b)
     {
@@ -525,14 +531,26 @@
             
             if (canAddChannelNow)
             {
-                channel.isLoaded = YES;
-                NSInteger index = [self whatActualIndexIsChannel:name];
-                [indexSet addIndex:index];
-                SWChannelModel *model = [allChannelsEver objectForKey:name];
-                NSLog(@"inserting channel '%@' at index \t\t'%d' priority = \t\t'%f' ", name, index, model.priority);
-                [self.channels insertObject:channel atIndex:index];
+                if (!channel.isLoaded)
+                {
+                    channel.isLoaded = YES;
+                    NSInteger index = [self whatActualIndexIsChannel:name];
+                    [indexSet addIndex:index];
+                    SWChannelModel *model = [allChannelsEver objectForKey:name];
+                    NSLog(@"inserting channel '%@' at index \t\t'%d' priority = \t\t'%f' ", name, index, model.priority);
+                    [self.channels insertObject:channel atIndex:index];
+                }
             }
         }
+        
+        NSLog(@"actual order");
+        int i = 0;
+        for (SWChannelModel *channlModel in channels)
+        {
+            NSLog(@"%d] -> %@", i, channlModel.name);
+            i++;
+        }
+        
         
         [weakSelf.channelsCollectionView insertSections:indexSet];
         
@@ -993,18 +1011,58 @@
          NSLog(@"done query '%@' with requests: '%d'", originalQuery, request.results.count);
          if ([originalQuery isEqualToString:weakSelf.channelQueryTerm])
          {
-             if (_secondWalkthrough)
+             
+             
+             //different behavior when still in tutorial mode
+             NSArray *results = request.results;
+             
+             if (![self hasUserSeenWalkthrough])
+             {
+        
+                 results = [request.results filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF.text == %@", @"newusers"]];
+                 
+                 if ([results lastObject])
+                 {
+                     hasExactMatch = YES;
+                 } else
+                 {
+                     hasExactMatch = NO;
+                 }
+             }
+             
+             if (_secondWalkthrough && hasExactMatch)
              {
                  [self animateTheDisappearanceOfWalkthroughView:_secondWalkthrough delay:0.0f completionBlock:^{
                      [_secondWalkthrough removeFromSuperview];
                      _secondWalkthrough = nil;
                  }];
              }
+             
              weakSelf.channelQueryExists = [NSNumber numberWithBool:hasExactMatch];
-             weakSelf.autoCompleteResults = request.results;
+             weakSelf.autoCompleteResults = results;
              [weakSelf.autoCompleteCollectionView reloadData];
              
-             [weakSelf setAddOrCreateButton:hasExactMatch ? @"Join" : @"Create" andChannel:originalQuery];
+             
+             if (![self hasUserSeenWalkthrough])
+             {
+                 if ([results count])
+                 {
+                     [weakSelf setAddOrCreateButton:@"Join" andChannel:@"newusers"];
+                 } else
+                 {
+                     [UIView animateWithDuration:0.3f animations:
+                     ^{
+                         weakSelf.addOrCreateContainer.alpha = 0.0f;
+                         if (!weakSelf.secondWalkthrough)
+                         {
+                             [weakSelf createSecondWalkthrough];
+                         }
+                     }];
+                 }
+             } else
+             {
+                 [weakSelf setAddOrCreateButton:hasExactMatch ? @"Join" : @"Create" andChannel:originalQuery];
+             }
          }
      }];
     

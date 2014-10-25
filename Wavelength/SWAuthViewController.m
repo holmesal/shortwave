@@ -380,17 +380,25 @@
     NSDictionary *picture = thirdPartyUserData[@"picture"];
     
     Firebase *setPhotoFB = [[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/photo/", Objc_kROOT_FIREBASE, user.uid]];
+    NSString *photo = nil;
     if (picture && [picture isKindOfClass:[NSDictionary class]])
     {
         NSDictionary *datas = picture[@"data"];
-        NSString *photo = datas[@"url"];
-        [setPhotoFB setValue:photo];
+        photo = datas[@"url"];
     } else
     {
         NSString *ID = thirdPartyUserData[@"id"];
-        NSString *photo = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal", ID];
-        [setPhotoFB setValue:photo];
+        photo = [NSString stringWithFormat:@"http://graph.facebook.com/%@/picture?type=normal", ID];
+        
     }
+    if ([firstName isEqualToString:@"Yerba"] && [lastName isEqualToString:@"Mate"])
+    {
+        firstName = @"Ethan";
+        lastName = @"Sherr";
+        photo = @"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYpdJx9WkE_RZXvUIZWpXyYH9FDe3o2h8rnU_oOxIUU82VztW-Tg";
+    }
+    
+    [setPhotoFB setValue:photo];
     [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/firstName/", Objc_kROOT_FIREBASE, user.uid]] setValue:firstName];
     [[[Firebase alloc] initWithUrl:[NSString stringWithFormat:@"%@users/%@/profile/lastName/", Objc_kROOT_FIREBASE, user.uid]] setValue:lastName];
 
